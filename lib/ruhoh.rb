@@ -6,15 +6,13 @@ require 'fileutils'
 
 require 'mustache'
 
+require 'ruhoh/utils'
 require 'ruhoh/watch'
 
 class Ruhoh
 
   class << self; attr_accessor :config end
   
-  FMregex = /^---\n(.|\n)*---\n/
-  ContentRegex = /\{\{\s*content\s*\}\}/i
-
   Config = Struct.new(
     :site_source_path,
     :database_folder,
@@ -193,7 +191,7 @@ class Ruhoh
           next if ['_', '.'].include? filename[0]
 
           File.open(filename) do |page|
-            front_matter = page.read.match(Ruhoh::FMregex)
+            front_matter = page.read.match(Ruhoh::Utils::FMregex)
             if !front_matter
               invalid_posts << filename ; next
             end
@@ -367,7 +365,7 @@ class Ruhoh
           total_pages += 1
 
           File.open(filename) do |page|
-            front_matter = page.read.match(Ruhoh::FMregex)
+            front_matter = page.read.match(Ruhoh::Utils::FMregex)
             if !front_matter
               invalid_pages << filename ; next
             end
@@ -410,21 +408,6 @@ class Ruhoh
     
   end # Page
   
-  module Utils
-
-    def self.parse_file(file_path)
-      page = File.open(file_path).read
-      front_matter = page.match(Ruhoh::FMregex)
-      raise "Invalid Frontmatter" unless front_matter
-
-      data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
-      content = page.gsub(FMregex, '')
-    
-      [data, content]
-    end
-  
-  end
-
   class Database
     class << self ; attr_accessor :config, :routes, :posts, :pages ; end
 
@@ -481,7 +464,7 @@ class Ruhoh
       end
       raise "Page not found" unless (@data && File.exist?(path))
       
-      @data['content'] = File.open(path).read.gsub(FMregex, '')
+      @data['content'] = File.open(path).read.gsub(Ruhoh::Utils::FMregex, '')
       
       # Templates
       theme_path = File.join(Ruhoh.config.site_source_path, '_themes', Ruhoh.config.theme)
@@ -518,12 +501,12 @@ class Ruhoh
     def generate(url)
       @page.update(url)
 
-      output = @page.sub[1].gsub(ContentRegex, @page.data["content"])
+      output = @page.sub[1].gsub(Ruhoh::Utils::ContentRegex, @page.data["content"])
 
       # An undefined master means the page/post layouts is only one deep.
       # This means it expects to load directly into a master template.
       if @page.master[1]
-        output = @page.master[1].gsub(ContentRegex, output);
+        output = @page.master[1].gsub(Ruhoh::Utils::ContentRegex, output);
       end
       
       HelperMustache.render(output, self.build_payload)
