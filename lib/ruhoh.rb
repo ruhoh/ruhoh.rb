@@ -31,7 +31,6 @@ class Ruhoh
     base_directory = Dir.getwd
     config = File.open(File.join(base_directory, 'ruhoh.json'), "r").read
     config = JSON.parse(config)
-
     site_config = YAML.load_file( File.join(config['site_source'], '_config.yml') )
     
     c = Config.new
@@ -126,92 +125,22 @@ class Ruhoh
     
   end #HelperMustache
   
-  
-  class Preview
-    
+  module Routes
+
     #[{"url" => "id"}, ... ]
-    def routes
-      return @routes if @routes
-
-      @routes = {}
-      self.pages.each_value { |page|
-        @routes[page['url']] = page['id'] 
+    def self.generate
+      routes = {}
+      Ruhoh::Pages.generate.each_value { |page|
+        routes[page['url']] = page['id'] 
       }
-      self.posts['dictionary'].each_value { |page|
-        @routes[page['url']] = page['id'] 
+      Ruhoh::Posts.generate['dictionary'].each_value { |page|
+        routes[page['url']] = page['id'] 
       }
       
-      @routes
+      routes
     end
     
-    def config
-      @config ||= YAML.load_file( File.join(Ruhoh.config.site_source_path, '_config.yml') )
-    end
-    
-    def pages
-      @pages ||= Ruhoh::Pages.generate
-    end
-    
-    def posts
-      @posts ||= Ruhoh::Posts.generate
-    end
-    
-    def payload
-      {
-        "config" => self.config,
-        "pages" => self.pages,
-        "_posts" => self.posts,
-        "ASSET_PATH" => File.join('/',Ruhoh.config.site_source_path.split('/').pop, '/_themes', Ruhoh.config.theme ),
-      }
-    end
-    
-    
-    def page(url)
-      url = '/index.html' if url == '/'
-      page_id = self.routes[url]
-      puts "PAGE_ID: #{page_id}"
-      raise "Need a page_id" unless page_id
-
-      # Resolve page
-      path = ''
-      if page = self.pages[page_id]
-        path = File.join( Ruhoh.config.site_source_path, page['id']) 
-      elsif page = self.posts['dictionary'][page_id]
-        path = File.join( Ruhoh.config.posts_path, page['id']) 
-      end
-      raise "Page not found" unless (page && File.exist?(path))
-
-      content = File.open(path).read
-      page['content'] = content.gsub(FMregex, '')
-
-      # Templates
-      sub = nil
-      master = nil
-      theme_path = File.join(Ruhoh.config.site_source_path, '_themes', Ruhoh.config.theme)
-      sub = File.join( theme_path, 'layouts', "#{page['layout']}.html")
-      sub = Ruhoh::Utils.parse_file(sub)
-      
-      if sub[0]['layout']
-        master = File.join( theme_path, 'layouts', "#{sub[0]['layout']}.html")
-        master = Ruhoh::Utils.parse_file(master)
-      end
-
-      output = sub[1].gsub(ContentRegex, page["content"])
-
-      # An undefined master means the page/post layouts is only one deep.
-      # This means it expects to load directly into a master template.
-      if master[1]
-        output = master[1].gsub(ContentRegex, output);
-      end
-      
-      payload = self.payload
-      payload['page'] = page
-
-      HelperMustache.render(output, payload)
-    end
-    
-  end
-  
+  end #Routes
   
   module Posts
     
@@ -543,5 +472,113 @@ class Ruhoh
     end
   
   end
+
+  class Database
+    class << self ; attr_accessor :config, :routes, :posts, :pages ; end
+
+    def self.get(name)
+      self.__send__ "update_#{name}" unless self.__send__ name.to_s
+      self.__send__ name.to_s
+    end
+
+    def self.update
+      Ruhoh.setup
+      self.update_config
+      self.update_routes
+      self.update_posts
+      self.update_pages
+    end
+    
+    def self.update_config
+      @config = YAML.load_file( File.join(Ruhoh.config.site_source_path, '_config.yml') )
+    end
+    
+    def self.update_routes
+      @routes = Ruhoh::Routes.generate
+    end
+    
+    def self.update_posts
+      @posts = Ruhoh::Posts.generate
+    end
+    
+    def self.update_pages
+      @pages = Ruhoh::Pages.generate
+    end
+    
+  end
+  
+  class Page
+    attr_accessor :id, :sub, :master, :data
+
+    def initialize 
+      @database = Ruhoh::Database
+    end
+    
+    def update(url)
+      
+      url = '/index.html' if url == '/'
+      page_id = @database.get(:routes)[url]
+      puts "PAGE_ID: #{page_id}"
+      raise "Need a page_id" unless page_id
+
+      path = ''
+      if @data = @database.get(:pages)[page_id]
+        path = File.join( Ruhoh.config.site_source_path, @data['id']) 
+      elsif @data = @database.get(:posts)['dictionary'][page_id]
+        path = File.join( Ruhoh.config.posts_path, @data['id']) 
+      end
+      raise "Page not found" unless (@data && File.exist?(path))
+      
+      @data['content'] = File.open(path).read.gsub(FMregex, '')
+      
+      # Templates
+      theme_path = File.join(Ruhoh.config.site_source_path, '_themes', Ruhoh.config.theme)
+      sub_path = File.join( theme_path, 'layouts', "#{@data['layout']}.html")
+      @sub = Ruhoh::Utils.parse_file(sub_path)
+      
+      if @sub[0]['layout']
+        @master = File.join( theme_path, 'layouts', "#{@sub[0]['layout']}.html")
+        @master = Ruhoh::Utils.parse_file(master)
+      end
+      
+    end
+  end
+  
+  class Preview
+
+    attr_accessor :page, :database
+
+    def initialize
+      @database = Ruhoh::Database
+      @page = Ruhoh::Page.new
+    end
+
+    def build_payload
+      {
+        "page"    => @page.data,
+        "config"  => @database.get(:config),
+        "pages"   => @database.get(:pages),
+        "_posts"  => @database.get(:posts),
+        "ASSET_PATH" => File.join('/',Ruhoh.config.site_source_path.split('/').pop, '/_themes', Ruhoh.config.theme ),
+      }
+    end
+    
+    def generate(url)
+      @page.update(url)
+
+      output = @page.sub[1].gsub(ContentRegex, @page.data["content"])
+
+      # An undefined master means the page/post layouts is only one deep.
+      # This means it expects to load directly into a master template.
+      if @page.master[1]
+        output = @page.master[1].gsub(ContentRegex, output);
+      end
+      
+      HelperMustache.render(output, self.build_payload)
+    end
+    
+  end
+  
+  
   
 end # Ruhoh  
