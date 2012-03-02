@@ -1,3 +1,5 @@
+require 'pp'
+
 class Ruhoh
   
   class HelperMustache < Mustache
@@ -29,6 +31,13 @@ class Ruhoh
       self.partials[name.to_s]
     end
   
+    def debug(sub_context)
+      puts "=>DEBUG:"
+      puts sub_context.class
+      puts sub_context.inspect
+      "<pre>#{sub_context.class}\n#{sub_context.pretty_inspect}</pre>"
+    end
+    
     def to_tags(sub_context)
       if sub_context.is_a?(Array)
         sub_context.map { |id|
@@ -65,7 +74,21 @@ class Ruhoh
       end
       pages
     end
-  
+    
+    def to_categories(sub_context)
+      if sub_context.is_a?(Array)
+        sub_context.map { |id|
+          self.context['_posts']['categories'][id] if self.context['_posts']['categories'][id]
+        }
+      else
+        cats = []
+        self.context['_posts']['categories'].each_value { |cat|
+          cats << cat
+        }
+        cats
+      end
+    end
+    
   end #HelperMustache
   
 end #Ruhoh
