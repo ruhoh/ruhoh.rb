@@ -29,7 +29,7 @@ class Ruhoh
     end
     
     def render
-      Ruhoh::Template.process(self)
+      Ruhoh::Templater.process(self)
     end
     
     def attributes

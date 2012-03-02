@@ -1,6 +1,6 @@
 class Ruhoh
 
-  module Template
+  module Templater
     
     def self.build_payload(page)
       {
@@ -28,6 +28,6 @@ class Ruhoh
       Ruhoh::HelperMustache.render(output, payload)
     end
     
-  end #Template
+  end #Templater
   
 end #Ruhoh
