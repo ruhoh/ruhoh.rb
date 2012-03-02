@@ -44,10 +44,8 @@ class Ruhoh
     end
     
     def attributes
-      {
-        "data" => @data,
-        "content" => @content
-      }
+      @data['content'] = @content
+      @data
     end
     
   end #Page
