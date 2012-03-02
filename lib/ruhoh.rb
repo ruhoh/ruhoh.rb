@@ -14,6 +14,7 @@ require 'ruhoh/parsers/layouts'
 require 'ruhoh/parsers/partials'
 require 'ruhoh/database'
 require 'ruhoh/helper_mustache'
+require 'ruhoh/template'
 require 'ruhoh/page'
 require 'ruhoh/watch'
 
@@ -54,36 +55,6 @@ class Ruhoh
     c.theme_path = File.join('_themes', c.theme)
     
     self.config = c
-  end
-  
-  module Template
-    
-    def self.build_payload(page)
-      {
-        "page"    => page.attributes,
-        "config"  => Ruhoh::Database.get(:config),
-        "pages"   => Ruhoh::Database.get(:pages),
-        "_posts"  => Ruhoh::Database.get(:posts),
-        "ASSET_PATH" => File.join('/', Ruhoh.config.site_source, Ruhoh.config.theme_path ),
-      }
-    end
-    
-    def self.process(page)
-      output = page.sub_layout['content'].gsub(Ruhoh::Utils::ContentRegex, page.content)
-
-      # An undefined master means the page/post layouts is only one deep.
-      # This means it expects to load directly into a master template.
-      if page.master_layout && page.master_layout['content']
-        output = page.master_layout['content'].gsub(Ruhoh::Utils::ContentRegex, output);
-      end
-      
-      self.render(output, self.build_payload(page))
-    end
-    
-    def self.render(output, payload)
-      Ruhoh::HelperMustache.render(output, payload)
-    end
-    
   end
   
 end # Ruhoh  
