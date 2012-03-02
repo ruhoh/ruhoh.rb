@@ -15,14 +15,15 @@ class Ruhoh
   class Preview
     
     def initialize
+      Ruhoh::DB.initialize
       @page = Ruhoh::Page.new
-      Ruhoh::Database.update
+      Ruhoh::Watch.start(@page)
     end
 
     def call(env)
       return favicon if env['PATH_INFO'] == '/favicon.ico'
       
-      @page.update(env['PATH_INFO'])
+      @page.change(env['PATH_INFO'])
       [200, {'Content-Type' => 'text/html'}, [@page.render]]
     end
     

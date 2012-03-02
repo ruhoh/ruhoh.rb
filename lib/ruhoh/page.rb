@@ -3,33 +3,44 @@ class Ruhoh
   class Page
     attr_accessor :data, :content, :sub_layout, :master_layout
 
-    def update(url)
-      self.find(url)
-      self.process_layouts
-    end
-    
-    def find(url)
+    # Change this page via a URL.
+    def change(url)
+      @id = nil
       url = '/index.html' if url == '/'
-      id = Ruhoh::Database.get(:routes)[url]
-      raise "Page id not found for url: #{url}" unless id
-      
-      @data = id =~ /^_posts/ ? Ruhoh::Database.get(:posts)['dictionary'][id] : Ruhoh::Database.get(:pages)[id]
-      raise "Page #{id} not found in database" unless @data
-
-      @content = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, id)['content']
+      @id = Ruhoh::DB.routes[url]
+      raise "Page id not found for url: #{url}" unless @id
     end
     
-    # Layouts
+    def process_data
+      @data = @id =~ /^_posts/ ? Ruhoh::DB.posts['dictionary'][@id] : Ruhoh::DB.pages[@id]
+      raise "Page #{@id} not found in database" unless @data
+
+      @content = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @id)['content']
+    end
+    
     def process_layouts
-      @sub_layout = Ruhoh::Database.get(:layouts)[@data['layout']]
+      @sub_layout = Ruhoh::DB.layouts[@data['layout']]
       
       if @sub_layout['data']['layout']
-        @master_layout = Ruhoh::Database.get(:layouts)[@sub_layout['data']['layout']]
+        @master_layout = Ruhoh::DB.layouts[@sub_layout['data']['layout']]
       end
     end
     
     def render
+      self.process_data
+      self.process_layouts
       Ruhoh::Templater.process(self)
+    end
+    
+    # This is the callback for when Ruhoh::DB changes, but we may not need it.
+    def update(name)
+      puts "page update callback: #{name}"
+      case name
+      when :layouts
+        self.process_layouts
+      when :posts || :pages
+        self.process_data
+      end
     end
     
     def attributes
