@@ -141,11 +141,11 @@ class Ruhoh
         
         if(prevYear == thisYear) 
           if(prevMonth == thisMonth)
-            collated.last['months'].last['posts'] << post # append to last year & month
+            collated.last['months'].last['posts'] << post['id'] # append to last year & month
           else
             collated.last['months'] << {
                 'month' => thisMonth,
-                'posts' => [post]
+                'posts' => [post['id']]
               } # create new month
           end
         else
@@ -153,7 +153,7 @@ class Ruhoh
             'year' => thisYear,
             'months' => [{ 
               'month' => thisMonth,
-              'posts' => [post]
+              'posts' => [post['id']]
             }]
           } # create new year & month
         end
