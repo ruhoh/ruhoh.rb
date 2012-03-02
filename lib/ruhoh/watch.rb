@@ -11,7 +11,7 @@ class Ruhoh
     #    of the website source files.
     #
     # Returns: Nothing
-    def self.start
+    def self.start(page)
       raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
       puts "=> Start watching: #{Ruhoh.paths.site_source}"
       glob = ''
@@ -33,11 +33,18 @@ class Ruhoh
       dw.add_observer {|*args| 
         args.each {|event|
           path = event['path'].gsub(Ruhoh.paths.site_source, '')
-
+          puts path
           if path =~ /^\/?_posts/
-            Ruhoh::Posts::generate
+            puts "Watch: update posts"
+            Ruhoh::DB.update(:posts)
+            Ruhoh::DB.update(:routes)
+          elsif path =~ /^\/?_themes/
+            puts "Watch: update themes"
+            Ruhoh::DB.update(:layouts)
           else
-            Ruhoh::Pages::generate
+            puts "Watch: update pages"
+            Ruhoh::DB.update(:pages)
+            Ruhoh::DB.update(:routes)
           end
   
           t = Time.now.strftime("%H:%M:%S")

@@ -22,7 +22,7 @@ class Ruhoh
     end
   
     def partials
-      @partials ||= Ruhoh::Database.get(:partials)
+      @partials ||= Ruhoh::DB.partials
     end
   
     def partial(name)

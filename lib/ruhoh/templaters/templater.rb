@@ -5,9 +5,9 @@ class Ruhoh
     def self.build_payload(page)
       {
         "page"    => page.attributes,
-        "config"  => Ruhoh::Database.get(:config),
-        "pages"   => Ruhoh::Database.get(:pages),
-        "_posts"  => Ruhoh::Database.get(:posts),
+        "config"  => Ruhoh::DB.config,
+        "pages"   => Ruhoh::DB.pages,
+        "_posts"  => Ruhoh::DB.posts,
         "ASSET_PATH" => Ruhoh.config.asset_path
       }
     end

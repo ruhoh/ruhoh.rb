@@ -2,11 +2,14 @@ require "observer"
 
 class Ruhoh
   
-  class Database
+  # Public: Database class for interacting with "data" in Ruhoh.
+  #
+  class DB
     
     class << self
       include Observable
-      
+      attr_reader :config, :routes, :posts, :pages, :layouts, :partials
+
       # Note this is class-level so you have to call it manually.
       def initialize
         @config       =  ''
@@ -18,10 +21,6 @@ class Ruhoh
         self.update!
       end
       
-      def get(name)
-        self.instance_variable_get("@#{name}")
-      end
-
       def update(name)
         self.instance_variable_set("@#{name}", 
           case name
@@ -53,6 +52,6 @@ class Ruhoh
       
     end #self
     
-  end #Database
+  end #DB
   
 end #Ruhoh
