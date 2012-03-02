@@ -417,9 +417,27 @@ class Ruhoh
     end
   end
   
+  module Layouts
+
+    # Generate layouts only from the active theme.
+    def self.generate
+      layouts = {}
+      FileUtils.cd(File.join(Ruhoh.config.site_source_path, Ruhoh.config.theme_path, 'layouts')) {
+        Dir.glob("**/*.*") { |filename|
+          next if FileTest.directory?(filename)
+          next if ['_','.'].include? filename[0]
+          id = File.basename(filename, File.extname(filename))
+          layouts[id] = Ruhoh::Utils.parse_file(Ruhoh.config.theme_path, 'layouts', filename)
+        }
+      }
+      layouts
+    end
+
+  end
+  
   class Database
     class << self
-      attr_accessor :config, :routes, :posts, :pages, :partials
+      attr_accessor :config, :routes, :posts, :pages, :layouts, :partials
     end
     
     def self.get(name)
@@ -431,6 +449,7 @@ class Ruhoh
       self.update_routes
       self.update_posts
       self.update_pages
+      self.update_layouts
       self.update_partials
     end
     
@@ -448,6 +467,10 @@ class Ruhoh
     
     def self.update_pages
       @pages = Ruhoh::Pages.generate
+    end
+
+    def self.update_layouts
+      @layouts = Ruhoh::Layouts.generate
     end
     
     def self.update_partials
@@ -478,10 +501,10 @@ class Ruhoh
     
     # Layouts
     def process_layouts
-      @sub_layout = Ruhoh::Utils.parse_file(Ruhoh.config.theme_path, 'layouts', "#{@data['layout']}.html")
+      @sub_layout = Ruhoh::Database.get(:layouts)[@data['layout']]
       
       if @sub_layout['data']['layout']
-        @master_layout = Ruhoh::Utils.parse_file(Ruhoh.config.theme_path, 'layouts', "#{@sub_layout['data']['layout']}.html")
+        @master_layout = Ruhoh::Database.get(:layouts)[@sub_layout['data']['layout']]
       end
     end
     
