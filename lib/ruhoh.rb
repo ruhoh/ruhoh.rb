@@ -14,13 +14,15 @@ class Ruhoh
   class << self; attr_accessor :config end
   
   Config = Struct.new(
+    :site_source,
     :site_source_path,
     :database_folder,
     :posts_path,
     :posts_data_path,
     :pages_data_path,
     :permalink,
-    :theme
+    :theme,
+    :theme_path
   )
 
   # Public: Setup Ruhoh utilities relative to the current directory
@@ -33,16 +35,20 @@ class Ruhoh
     site_config = YAML.load_file( File.join(config['site_source'], '_config.yml') )
     
     c = Config.new
-    c.site_source_path = File.join(base_directory, config['site_source'])
+    c.site_source = config['site_source']
+    c.site_source_path = File.join(base_directory, c.site_source)
     c.database_folder = '_database'
     c.posts_path = File.join(c.site_source_path, '_posts')
     c.posts_data_path = File.join(c.site_source_path, c.database_folder, 'posts_dictionary.yml')
     c.pages_data_path = File.join(c.site_source_path, c.database_folder, 'pages_dictionary.yml')
     c.permalink = site_config['permalink'] || :date # default is date in jekyll
     c.theme = site_config['theme']
+    c.theme_path = File.join('_themes', c.theme)
+    
     self.config = c
   end
-
+  Ruhoh.setup
+  
   def self.partials
     partials_path = './_client/partials'
     partials_manifest = JSON.parse(File.open("#{partials_path}/manifest.json").read)
@@ -59,11 +65,11 @@ class Ruhoh
   class HelperMustache < Mustache
 
     class HelperContext < Context
-      
+    
       # Overload find method to catch helper expressions
       def find(obj, key, default = nil)
         return super unless key.to_s.index('?')
-        
+      
         puts "=> Executing helper: #{key}"
         context, helper = key.to_s.split('?')
         context = context.empty? ? obj : super(obj, context)
@@ -72,19 +78,19 @@ class Ruhoh
       end  
 
     end #HelperContext
-    
+  
     def context
       @context ||= HelperContext.new(self)
     end
-    
+  
     def partials
       @partials ||= Ruhoh.partials
     end
-    
+  
     def partial(name)
       self.partials[name.to_s]
     end
-    
+  
     def to_tags(sub_context)
       if sub_context.is_a?(Array)
         sub_context.map { |id|
@@ -98,15 +104,15 @@ class Ruhoh
         tags
       end
     end
-    
+  
     def to_posts(sub_context)
       sub_context = sub_context.is_a?(Array) ? sub_context : self.context['_posts']['chronological']
-      
+    
       sub_context.map { |id|
         self.context['_posts']['dictionary'][id] if self.context['_posts']['dictionary'][id]
       }
     end
-    
+  
     def to_pages(sub_context)
       puts "=> call: pages_list with context: #{sub_context}"
       pages = []
@@ -121,7 +127,7 @@ class Ruhoh
       end
       pages
     end
-    
+  
   end #HelperMustache
   
   module Routes
@@ -185,10 +191,10 @@ class Ruhoh
       dictionary = {}
       invalid_posts = []
 
-      FileUtils.cd(Ruhoh.config.posts_path) {
-        Dir.glob("**/*.*") { |filename| 
+      FileUtils.cd(Ruhoh.config.site_source_path) {
+        Dir.glob("_posts/**/*.*") { |filename| 
           next if FileTest.directory?(filename)
-          next if ['_', '.'].include? filename[0]
+          next if ['.'].include? filename[0]
 
           File.open(filename) do |page|
             front_matter = page.read.match(Ruhoh::Utils::FMregex)
@@ -410,14 +416,12 @@ class Ruhoh
   
   class Database
     class << self ; attr_accessor :config, :routes, :posts, :pages ; end
-
+    
     def self.get(name)
-      self.__send__ "update_#{name}" unless self.__send__ name.to_s
       self.__send__ name.to_s
     end
 
     def self.update
-      Ruhoh.setup
       self.update_config
       self.update_routes
       self.update_posts
@@ -440,80 +444,78 @@ class Ruhoh
       @pages = Ruhoh::Pages.generate
     end
     
+    update
   end
   
   class Page
-    attr_accessor :id, :sub, :master, :data
+    attr_accessor :data, :content, :sub_layout, :master_layout
 
-    def initialize 
-      @database = Ruhoh::Database
+    def update(url)
+      self.find(url)
+      self.process_layouts
     end
     
-    def update(url)
-      
+    def find(url)
       url = '/index.html' if url == '/'
-      page_id = @database.get(:routes)[url]
-      puts "PAGE_ID: #{page_id}"
-      raise "Need a page_id" unless page_id
+      id = Ruhoh::Database.get(:routes)[url]
+      raise "Page id not found for url: #{url}" unless id
+      
+      @data = id =~ /^_posts/ ? Ruhoh::Database.get(:posts)['dictionary'][id] : Ruhoh::Database.get(:pages)[id]
+      raise "Page #{id} not found in database" unless @data
 
-      path = ''
-      if @data = @database.get(:pages)[page_id]
-        path = File.join( Ruhoh.config.site_source_path, @data['id']) 
-      elsif @data = @database.get(:posts)['dictionary'][page_id]
-        path = File.join( Ruhoh.config.posts_path, @data['id']) 
-      end
-      raise "Page not found" unless (@data && File.exist?(path))
-      
-      @data['content'] = File.open(path).read.gsub(Ruhoh::Utils::FMregex, '')
-      
-      # Templates
-      theme_path = File.join(Ruhoh.config.site_source_path, '_themes', Ruhoh.config.theme)
-      sub_path = File.join( theme_path, 'layouts', "#{@data['layout']}.html")
-      @sub = Ruhoh::Utils.parse_file(sub_path)
-      
-      if @sub[0]['layout']
-        @master = File.join( theme_path, 'layouts', "#{@sub[0]['layout']}.html")
-        @master = Ruhoh::Utils.parse_file(master)
-      end
-      
+      @content = Ruhoh::Utils.parse_file(id)['content']
     end
-  end
-  
-  class Preview
-
-    attr_accessor :page, :database
-
-    def initialize
-      @database = Ruhoh::Database
-      @page = Ruhoh::Page.new
+    
+    # Layouts
+    def process_layouts
+      @sub_layout = Ruhoh::Utils.parse_file(Ruhoh.config.theme_path, 'layouts', "#{@data['layout']}.html")
+      
+      if @sub_layout['data']['layout']
+        @master_layout = Ruhoh::Utils.parse_file(Ruhoh.config.theme_path, 'layouts', "#{@sub_layout['data']['layout']}.html")
+      end
     end
-
-    def build_payload
+    
+    def render
+      Ruhoh::Template.process(self)
+    end
+    
+    def attributes
       {
-        "page"    => @page.data,
-        "config"  => @database.get(:config),
-        "pages"   => @database.get(:pages),
-        "_posts"  => @database.get(:posts),
-        "ASSET_PATH" => File.join('/',Ruhoh.config.site_source_path.split('/').pop, '/_themes', Ruhoh.config.theme ),
+        "data" => @data,
+        "content" => @content
       }
     end
     
-    def generate(url)
-      @page.update(url)
-
-      output = @page.sub[1].gsub(Ruhoh::Utils::ContentRegex, @page.data["content"])
+  end
+  
+  module Template
+    
+    def self.build_payload(page)
+      {
+        "page"    => page.attributes,
+        "config"  => Ruhoh::Database.get(:config),
+        "pages"   => Ruhoh::Database.get(:pages),
+        "_posts"  => Ruhoh::Database.get(:posts),
+        "ASSET_PATH" => File.join('/', Ruhoh.config.site_source, Ruhoh.config.theme_path ),
+      }
+    end
+    
+    def self.process(page)
+      output = page.sub_layout['content'].gsub(Ruhoh::Utils::ContentRegex, page.content)
 
       # An undefined master means the page/post layouts is only one deep.
       # This means it expects to load directly into a master template.
-      if @page.master[1]
-        output = @page.master[1].gsub(Ruhoh::Utils::ContentRegex, output);
+      if page.master_layout && page.master_layout['content']
+        output = page.master_layout['content'].gsub(Ruhoh::Utils::ContentRegex, output);
       end
       
-      HelperMustache.render(output, self.build_payload)
+      self.render(output, self.build_payload(page))
+    end
+    
+    def self.render(output, payload)
+      Ruhoh::HelperMustache.render(output, payload)
     end
     
   end
-  
-  
   
 end # Ruhoh  
