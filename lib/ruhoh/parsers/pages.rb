@@ -33,10 +33,6 @@ class Ruhoh
         }
       }
 
-       open(Ruhoh.paths.pages_data, 'w') { |page|
-         page.puts dictionary.to_yaml
-       }
-
       if invalid_pages.empty?
         puts "=> #{total_pages - invalid_pages.count }/#{total_pages} pages processed."
       else

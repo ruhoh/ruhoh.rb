@@ -26,10 +26,6 @@ class Ruhoh
         'categories' => parse_categories(ordered_posts)
       }
 
-      open(Ruhoh.paths.posts_data, 'w') { |page|
-        page.puts data.to_yaml
-      }
-  
       if invalid_posts.empty?
         puts "=> #{dictionary.count}/#{dictionary.count + invalid_posts.count} posts processed."
       else
