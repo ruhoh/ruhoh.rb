@@ -19,7 +19,7 @@ class Ruhoh
     end
     
     def self.update_config
-      @config = YAML.load_file( File.join(Ruhoh.config.site_source_path, '_config.yml') )
+      @config = YAML.load_file( File.join(Ruhoh.paths.site_source, '_config.yml') )
     end
     
     def self.update_routes

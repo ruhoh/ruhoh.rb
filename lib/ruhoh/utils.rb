@@ -7,7 +7,7 @@ class Ruhoh
     
     # Relative file_path from site_source
     def self.parse_file(*args)
-      path = File.__send__ :join, args.unshift(Ruhoh.config.site_source_path)
+      path = File.__send__ :join, args
 
       raise "File not found: #{path}" unless File.exist?(path)
 

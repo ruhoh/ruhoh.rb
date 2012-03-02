@@ -11,7 +11,7 @@ class Ruhoh
       invalid_pages = []
       dictionary = {}
       total_pages = 0
-      FileUtils.cd(Ruhoh.config.site_source_path) {
+      FileUtils.cd(Ruhoh.paths.site_source) {
         Dir.glob("**/*.*") { |filename| 
           next if FileTest.directory?(filename)
           next if ['_', '.'].include? filename[0]
@@ -33,7 +33,7 @@ class Ruhoh
         }
       }
 
-       open(Ruhoh.config.pages_data_path, 'w') { |page|
+       open(Ruhoh.paths.pages_data, 'w') { |page|
          page.puts dictionary.to_yaml
        }
 

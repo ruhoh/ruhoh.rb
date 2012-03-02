@@ -16,7 +16,7 @@ class Ruhoh
       @data = id =~ /^_posts/ ? Ruhoh::Database.get(:posts)['dictionary'][id] : Ruhoh::Database.get(:pages)[id]
       raise "Page #{id} not found in database" unless @data
 
-      @content = Ruhoh::Utils.parse_file(id)['content']
+      @content = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, id)['content']
     end
     
     # Layouts

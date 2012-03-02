@@ -26,7 +26,7 @@ class Ruhoh
         'categories' => parse_categories(ordered_posts)
       }
 
-      open(Ruhoh.config.posts_data_path, 'w') { |page|
+      open(Ruhoh.paths.posts_data, 'w') { |page|
         page.puts data.to_yaml
       }
   
@@ -44,7 +44,7 @@ class Ruhoh
       dictionary = {}
       invalid_posts = []
 
-      FileUtils.cd(Ruhoh.config.site_source_path) {
+      FileUtils.cd(Ruhoh.paths.site_source) {
         Dir.glob("_posts/**/*.*") { |filename| 
           next if FileTest.directory?(filename)
           next if ['.'].include? filename[0]

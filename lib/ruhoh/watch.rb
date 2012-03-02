@@ -13,11 +13,11 @@ class Ruhoh
     # Returns: Nothing
     def self.start
       raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
-      puts "=> Start watching: #{Ruhoh.config.site_source_path}"
+      puts "=> Start watching: #{Ruhoh.paths.site_source}"
       glob = ''
     
       # Watch all files + all sub directories except for special folders e.g '_database'
-      Dir.chdir(Ruhoh.config.site_source_path) {
+      Dir.chdir(Ruhoh.paths.site_source) {
         dirs = Dir['*'].select { |x| File.directory?(x) }
         dirs -= [Ruhoh.config.database_folder]
         dirs = dirs.map { |x| "#{x}/**/*" }
@@ -25,14 +25,14 @@ class Ruhoh
         glob = dirs
       }
 
-      dw = DirectoryWatcher.new(Ruhoh.config.site_source_path, {
+      dw = DirectoryWatcher.new(Ruhoh.paths.site_source, {
         :glob => glob, 
         :pre_load => true
       })
       dw.interval = 1
       dw.add_observer {|*args| 
         args.each {|event|
-          path = event['path'].gsub(Ruhoh.config.site_source_path, '')
+          path = event['path'].gsub(Ruhoh.paths.site_source, '')
 
           if path =~ /^\/?_posts/
             Ruhoh::Posts::generate

@@ -8,7 +8,7 @@ class Ruhoh
         "config"  => Ruhoh::Database.get(:config),
         "pages"   => Ruhoh::Database.get(:pages),
         "_posts"  => Ruhoh::Database.get(:posts),
-        "ASSET_PATH" => File.join('/', Ruhoh.config.site_source, Ruhoh.config.theme_path ),
+        "ASSET_PATH" => Ruhoh.config.asset_path
       }
     end
     
