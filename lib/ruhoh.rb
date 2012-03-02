@@ -49,19 +49,6 @@ class Ruhoh
   end
   Ruhoh.setup
   
-  def self.partials
-    partials_path = './_client/partials'
-    partials_manifest = JSON.parse(File.open("#{partials_path}/manifest.json").read)
-    partials = {}
-    FileUtils.cd(partials_path) {
-      partials_manifest.each do |p|
-        next unless File.exist? p['path']
-        partials[p['name']] = File.open(p['path']).read
-      end  
-    }
-    partials
-  end
-  
   class HelperMustache < Mustache
 
     class HelperContext < Context
@@ -84,7 +71,7 @@ class Ruhoh
     end
   
     def partials
-      @partials ||= Ruhoh.partials
+      @partials ||= Ruhoh::Database.get(:partials)
     end
   
     def partial(name)
@@ -414,8 +401,26 @@ class Ruhoh
     
   end # Page
   
+  module Partials
+    
+    def self.generate
+      partials_path = './_client/partials'
+      partials_manifest = JSON.parse(File.open("#{partials_path}/manifest.json").read)
+      partials = {}
+      FileUtils.cd(partials_path) {
+        partials_manifest.each do |p|
+          next unless File.exist? p['path']
+          partials[p['name']] = File.open(p['path']).read
+        end  
+      }
+      partials
+    end
+  end
+  
   class Database
-    class << self ; attr_accessor :config, :routes, :posts, :pages ; end
+    class << self
+      attr_accessor :config, :routes, :posts, :pages, :partials
+    end
     
     def self.get(name)
       self.__send__ name.to_s
@@ -426,6 +431,7 @@ class Ruhoh
       self.update_routes
       self.update_posts
       self.update_pages
+      self.update_partials
     end
     
     def self.update_config
@@ -442,6 +448,10 @@ class Ruhoh
     
     def self.update_pages
       @pages = Ruhoh::Pages.generate
+    end
+    
+    def self.update_partials
+      @partials = Ruhoh::Partials.generate
     end
     
     update
