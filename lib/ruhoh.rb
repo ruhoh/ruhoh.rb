@@ -16,7 +16,7 @@ require 'ruhoh/database'
 require 'ruhoh/helper_mustache'
 require 'ruhoh/template'
 require 'ruhoh/page'
-require 'ruhoh/watch'
+require 'ruhoh/preview'
 
 class Ruhoh
 
