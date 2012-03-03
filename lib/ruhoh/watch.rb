@@ -7,11 +7,8 @@ class Ruhoh
     # The observer triggers data regeneration as files change
     # in order to keep the data up to date in real time.
     #
-    #  site_source - Required [String] Path to the root directory 
-    #    of the website source files.
-    #
     # Returns: Nothing
-    def self.start(page)
+    def self.start
       raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
       puts "=> Start watching: #{Ruhoh.paths.site_source}"
       glob = ''

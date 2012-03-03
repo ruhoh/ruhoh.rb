@@ -17,7 +17,7 @@ class Ruhoh
     def initialize
       Ruhoh::DB.initialize
       @page = Ruhoh::Page.new
-      Ruhoh::Watch.start(@page)
+      Ruhoh::Watch.start
     end
 
     def call(env)
