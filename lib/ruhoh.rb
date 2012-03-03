@@ -20,7 +20,14 @@ require 'ruhoh/preview'
 
 class Ruhoh
 
-  class << self; attr_accessor :config, :paths end
+  class << self; attr_accessor :folders, :config, :paths end
+  
+  Folders = Struct.new(
+    :database,
+    :themes,
+    :posts,
+    :layouts
+  )
   
   Config = Struct.new(
     :site_source,
@@ -44,24 +51,30 @@ class Ruhoh
   # of the application and its corresponding ruhoh.json file.
   #
   def self.setup
+    @folders = Folders.new
     @config = Config.new
     @paths = Paths.new
 
     config = File.open(File.join(Dir.getwd, 'ruhoh.json'), "r").read
     config = JSON.parse(config)
     site_config = YAML.load_file( File.join(config['site_source'], '_config.yml') )
+
+    @folders.database = '_database'
+    @folders.themes = '_themes'
+    @folders.posts = '_posts'
+    @folders.layouts = 'layouts'
     
     @config.site_source       = config['site_source']
     @config.permalink         = site_config['permalink'] || :date # default is date in jekyll
     @config.theme             = site_config['theme']
-    @config.asset_path        = File.join('/', @config.site_source, '_themes', @config.theme)
-    @config.database_folder   = '_database'
+    @config.asset_path        = File.join('/', @config.site_source, @folders.themes, @config.theme)
+    @config.database_folder   = @folders.database
     
     @paths.site_source = File.join(Dir.getwd, @config.site_source)
     @paths.partials    = File.join(Dir.getwd, '_client', 'partials') # TODO: change this path
-    @paths.posts       = self.absolute_path('_posts')
-    @paths.theme       = self.absolute_path('_themes', @config.theme)
-    @paths.layouts     = self.absolute_path('_themes', @config.theme, 'layouts')
+    @paths.posts       = self.absolute_path(@folders.posts)
+    @paths.theme       = self.absolute_path(@folders.themes, @config.theme)
+    @paths.layouts     = self.absolute_path(@folders.themes, @config.theme, @folders.layouts)
     @paths.posts_data  = self.absolute_path(@config.database_folder, 'posts_dictionary.yml')
     @paths.pages_data  = self.absolute_path(@config.database_folder, 'pages_dictionary.yml')
   end
