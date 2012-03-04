@@ -9,7 +9,7 @@ class Ruhoh
   #   require 'ruhoh'
   #
   #   Ruhoh.setup
-  #   use Rack::Static, {:root => '.', :urls => ["/#{Ruhoh.config.site_source}"]}
+  #   use Rack::Static, {:root => '.', :urls => ["/#{Ruhoh.folders.themes}"]}
   #   run Ruhoh::Preview.new
   #
   class Preview

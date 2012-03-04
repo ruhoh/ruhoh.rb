@@ -43,11 +43,11 @@ class Ruhoh
     end
     
     def write_data
-      File.open(Ruhoh.paths.posts_data, 'w') { |page|
+      File.open(Ruhoh.paths.database + '/posts_dictionary.yml', 'w') { |page|
         page.puts Ruhoh::DB.posts.to_yaml
       }
   
-      File.open(Ruhoh.paths.pages_data, 'w') { |page|
+      File.open(Ruhoh.paths.database + '/pages_dictionary.yml', 'w') { |page|
         page.puts Ruhoh::DB.pages.to_yaml
       }
     end

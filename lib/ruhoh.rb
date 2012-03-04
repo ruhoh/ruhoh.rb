@@ -23,69 +23,41 @@ class Ruhoh
 
   class << self; attr_accessor :folders, :config, :paths, :filters end
   
-  Folders = Struct.new(
-    :database,
-    :themes,
-    :posts,
-    :layouts
-  )
-  
-  Config = Struct.new(
-    :site_source,
-    :database_folder,
-    :permalink,
-    :theme,
-    :asset_path
-  )
-
+  Folders = Struct.new(:database, :posts, :themes, :layouts)
+  Filters = Struct.new(:posts, :pages, :static)
+  Config = Struct.new(:permalink, :theme, :asset_path)
   Paths = Struct.new(
     :site_source,
+    :database,
     :posts,
     :theme,
     :layouts,
     :partials,
-    :posts_data,
-    :pages_data,
   )
   
-  Filters = Struct.new(
-    :pages,
-    :static,
-    :posts,
-  )
-
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
   def self.setup
-    @folders = Folders.new
-    @config = Config.new
-    @paths = Paths.new
-    @filters = Filters.new
+    @folders    = Folders.new('_database', '_posts', '_themes', 'layouts')
+    @filters    = Filters.new
+    @config     = Config.new
+    @paths      = Paths.new
     
-    config = {}
-    config['site_source'] = Dir.getwd
+    config = { 'site_source' => Dir.getwd }
     site_config = YAML.load_file( File.join(config['site_source'], '_config.yml') )
 
-    @folders.database = '_database'
-    @folders.themes = '_themes'
-    @folders.posts = '_posts'
-    @folders.layouts = 'layouts'
-    
-    @config.site_source       = config['site_source']
-    @config.permalink         = site_config['permalink'] || :date # default is date in jekyll
+    @config.permalink         = site_config['permalink'] || :date
     @config.theme             = site_config['theme']
     @config.asset_path        = File.join('/', @folders.themes, @config.theme)
-    @config.database_folder   = @folders.database
     
     @paths.site_source = config['site_source']
-    @paths.partials    = File.join(Dir.getwd, '_client', 'partials') # TODO: change this path
+    @paths.database    = self.absolute_path(@folders.database)
     @paths.posts       = self.absolute_path(@folders.posts)
     @paths.theme       = self.absolute_path(@folders.themes, @config.theme)
     @paths.layouts     = self.absolute_path(@folders.themes, @config.theme, @folders.layouts)
-    @paths.posts_data  = self.absolute_path(@config.database_folder, 'posts_dictionary.yml')
-    @paths.pages_data  = self.absolute_path(@config.database_folder, 'pages_dictionary.yml')
-    
+    @paths.partials    = File.join(Dir.getwd, '_client', 'partials') # TODO: change this path
+
     # filename filters:
     @filters.pages = { 'names' => [], 'regexes' => [] }
     exclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']

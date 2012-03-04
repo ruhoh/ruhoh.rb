@@ -16,7 +16,7 @@ class Ruhoh
       # Watch all files + all sub directories except for special folders e.g '_database'
       Dir.chdir(Ruhoh.paths.site_source) {
         dirs = Dir['*'].select { |x| File.directory?(x) }
-        dirs -= [Ruhoh.config.database_folder]
+        dirs -= [Ruhoh.folders.database]
         dirs = dirs.map { |x| "#{x}/**/*" }
         dirs += ['*']
         glob = dirs
