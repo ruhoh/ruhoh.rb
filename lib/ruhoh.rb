@@ -46,7 +46,7 @@ class Ruhoh
     :posts_data,
     :pages_data,
   )
-
+  
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
@@ -54,9 +54,9 @@ class Ruhoh
     @folders = Folders.new
     @config = Config.new
     @paths = Paths.new
-
-    config = File.open(File.join(Dir.getwd, 'ruhoh.json'), "r").read
-    config = JSON.parse(config)
+    
+    config = {}
+    config['site_source'] = Dir.getwd
     site_config = YAML.load_file( File.join(config['site_source'], '_config.yml') )
 
     @folders.database = '_database'
@@ -67,10 +67,10 @@ class Ruhoh
     @config.site_source       = config['site_source']
     @config.permalink         = site_config['permalink'] || :date # default is date in jekyll
     @config.theme             = site_config['theme']
-    @config.asset_path        = File.join('/', @config.site_source, @folders.themes, @config.theme)
+    @config.asset_path        = File.join('/', @folders.themes, @config.theme)
     @config.database_folder   = @folders.database
     
-    @paths.site_source = File.join(Dir.getwd, @config.site_source)
+    @paths.site_source = config['site_source']
     @paths.partials    = File.join(Dir.getwd, '_client', 'partials') # TODO: change this path
     @paths.posts       = self.absolute_path(@folders.posts)
     @paths.theme       = self.absolute_path(@folders.themes, @config.theme)
