@@ -2,13 +2,10 @@ class Ruhoh
   
   class Compiler
     
-    def initialize(target_directory)
+    def initialize(target_directory = './_compiled')
       Ruhoh::DB.initialize
       @target = target_directory
       @page = Ruhoh::Page.new
-      
-      # Add a better way to do this.
-      Ruhoh.config.asset_path = File.join('/', Ruhoh.folders.themes, Ruhoh.config.theme)
     end
     
     def compile
