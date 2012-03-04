@@ -17,10 +17,11 @@ require 'ruhoh/templaters/helper_mustache'
 require 'ruhoh/templaters/templater'
 require 'ruhoh/page'
 require 'ruhoh/preview'
+require 'ruhoh/watch'
 
 class Ruhoh
 
-  class << self; attr_accessor :folders, :config, :paths end
+  class << self; attr_accessor :folders, :config, :paths, :filters end
   
   Folders = Struct.new(
     :database,
@@ -47,6 +48,12 @@ class Ruhoh
     :pages_data,
   )
   
+  Filters = Struct.new(
+    :pages,
+    :static,
+    :posts,
+  )
+
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
@@ -54,6 +61,7 @@ class Ruhoh
     @folders = Folders.new
     @config = Config.new
     @paths = Paths.new
+    @filters = Filters.new
     
     config = {}
     config['site_source'] = Dir.getwd
@@ -77,6 +85,14 @@ class Ruhoh
     @paths.layouts     = self.absolute_path(@folders.themes, @config.theme, @folders.layouts)
     @paths.posts_data  = self.absolute_path(@config.database_folder, 'posts_dictionary.yml')
     @paths.pages_data  = self.absolute_path(@config.database_folder, 'pages_dictionary.yml')
+    
+    # filename filters:
+    @filters.pages = { 'names' => [], 'regexes' => [] }
+    exclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
+    exclude.each {|node| 
+      @filters.pages['names'] << node if node.is_a?(String)
+      @filters.pages['regexes'] << node if node.is_a?(Regexp)
+    }
   end
   
   def self.absolute_path(*args)

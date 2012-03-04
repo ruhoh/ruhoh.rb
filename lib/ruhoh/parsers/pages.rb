@@ -13,8 +13,7 @@ class Ruhoh
       total_pages = 0
       FileUtils.cd(Ruhoh.paths.site_source) {
         Dir.glob("**/*.*") { |filename| 
-          next if FileTest.directory?(filename)
-          next if ['_', '.'].include? filename[0]
+          next unless self.is_valid_page?(filename)
           total_pages += 1
 
           File.open(filename) do |page|
@@ -42,7 +41,15 @@ class Ruhoh
       
       dictionary 
     end
-
+    
+    def self.is_valid_page?(filename)
+      return false if FileTest.directory?(filename)
+      return false if ['_', '.'].include? filename[0]
+      return false if Ruhoh.filters.pages['names'].include? filename
+      Ruhoh.filters.pages['regexes'].each {|regex| return false if filename =~ regex }
+      true
+    end
+    
     def self.titleize(filename)
       File.basename( filename, File.extname(filename) ).gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
     end
