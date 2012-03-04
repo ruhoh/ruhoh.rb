@@ -12,7 +12,8 @@ class Ruhoh
     end
     
     def process_data
-      @data = @id =~ /^_posts/ ? Ruhoh::DB.posts['dictionary'][@id] : Ruhoh::DB.pages[@id]
+      
+      @data = @id =~ Regexp.new("^#{Ruhoh.folders.posts}") ? Ruhoh::DB.posts['dictionary'][@id] : Ruhoh::DB.pages[@id]
       raise "Page #{@id} not found in database" unless @data
 
       @content = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @id)['content']

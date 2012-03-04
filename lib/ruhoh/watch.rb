@@ -31,11 +31,11 @@ class Ruhoh
         args.each {|event|
           path = event['path'].gsub(Ruhoh.paths.site_source, '')
           puts path
-          if path =~ /^\/?_posts/
+          if path =~ Regexp.new("^\/?#{Ruhoh.folders.posts}")
             puts "Watch: update posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
-          elsif path =~ /^\/?_themes/
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.themes}")
             puts "Watch: update themes"
             Ruhoh::DB.update(:layouts)
           else

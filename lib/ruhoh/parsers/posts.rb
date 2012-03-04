@@ -41,7 +41,7 @@ class Ruhoh
       invalid_posts = []
 
       FileUtils.cd(Ruhoh.paths.site_source) {
-        Dir.glob("_posts/**/*.*") { |filename| 
+        Dir.glob("#{Ruhoh.folders.posts}/**/*.*") { |filename| 
           next if FileTest.directory?(filename)
           next if ['.'].include? filename[0]
 
