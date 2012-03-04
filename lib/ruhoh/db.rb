@@ -8,11 +8,11 @@ class Ruhoh
     
     class << self
       include Observable
-      attr_reader :config, :routes, :posts, :pages, :layouts, :partials
+      attr_reader :site, :routes, :posts, :pages, :layouts, :partials
 
       # Note this is class-level so you have to call it manually.
       def initialize
-        @config       =  ''
+        @site       =  ''
         @routes       =  ''
         @posts        =  ''
         @pages        =  ''
@@ -24,8 +24,17 @@ class Ruhoh
       def update(name)
         self.instance_variable_set("@#{name}", 
           case name
-          when :config
-            YAML.load_file( File.join(Ruhoh.paths.site_source, '_config.yml') )
+          when :site
+            site = File.join(Ruhoh.paths.site_source, '_site.yml')
+            site = File.exist?(site) ? File.open(site).read : ''
+            site = YAML.load(site) || {}
+            
+            config = File.join(Ruhoh.paths.site_source, '_config.yml')
+            config = File.exist?(config) ? File.open(config).read : ''
+            config = YAML.load(config) || {}
+            
+            site['config'] = config
+            site
           when :routes
             Ruhoh::Routes.generate
           when :posts

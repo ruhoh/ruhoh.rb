@@ -5,7 +5,7 @@ class Ruhoh
     def self.build_payload(page)
       {
         "page"    => page.attributes,
-        "config"  => Ruhoh::DB.config,
+        "site"    => Ruhoh::DB.site,
         "pages"   => Ruhoh::DB.pages,
         "_posts"  => Ruhoh::DB.posts,
         "ASSET_PATH" => Ruhoh.config.asset_path
