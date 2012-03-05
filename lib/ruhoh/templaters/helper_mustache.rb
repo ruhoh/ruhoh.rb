@@ -23,12 +23,8 @@ class Ruhoh
       @context ||= HelperContext.new(self)
     end
   
-    def partials
-      @partials ||= Ruhoh::DB.partials
-    end
-  
     def partial(name)
-      self.partials[name.to_s]
+      Ruhoh::DB.partials[name.to_s]
     end
   
     def debug(sub_context)
