@@ -35,9 +35,10 @@ class Ruhoh
             puts "Watch: update posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.themes}")
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.templates}")
             puts "Watch: update themes"
             Ruhoh::DB.update(:layouts)
+            Ruhoh::DB.update(:partials)
           else
             puts "Watch: update pages"
             Ruhoh::DB.update(:pages)

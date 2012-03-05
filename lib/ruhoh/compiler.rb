@@ -36,7 +36,7 @@ class Ruhoh
     
     def theme
       FileUtils.mkdir_p File.join(@target, Ruhoh.config.asset_path)
-      FileUtils.cp_r Ruhoh.paths.theme, File.join(@target, Ruhoh.folders.themes)
+      FileUtils.cp_r Ruhoh.paths.theme, File.join(@target, Ruhoh.folders.templates)
     end
     
     def write_data

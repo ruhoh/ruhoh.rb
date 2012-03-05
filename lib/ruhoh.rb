@@ -23,7 +23,7 @@ class Ruhoh
 
   class << self; attr_accessor :folders, :config, :paths, :filters end
   
-  Folders = Struct.new(:database, :posts, :themes, :layouts)
+  Folders = Struct.new(:database, :posts, :templates, :themes, :layouts, :partials)
   Filters = Struct.new(:posts, :pages, :static)
   Config = Struct.new(:permalink, :theme, :asset_path)
   Paths = Struct.new(
@@ -33,13 +33,14 @@ class Ruhoh
     :theme,
     :layouts,
     :partials,
+    :global_partials
   )
   
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
   def self.setup
-    @folders    = Folders.new('_database', '_posts', '_themes', 'layouts')
+    @folders    = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials')
     @filters    = Filters.new
     @config     = Config.new
     @paths      = Paths.new
@@ -49,14 +50,17 @@ class Ruhoh
 
     @config.permalink         = site_config['permalink'] || :date
     @config.theme             = site_config['theme']
-    @config.asset_path        = File.join('/', @folders.themes, @config.theme)
+    @config.asset_path        = File.join('/', @folders.templates, @folders.themes, @config.theme)
     
     @paths.site_source = config['site_source']
     @paths.database    = self.absolute_path(@folders.database)
     @paths.posts       = self.absolute_path(@folders.posts)
-    @paths.theme       = self.absolute_path(@folders.themes, @config.theme)
-    @paths.layouts     = self.absolute_path(@folders.themes, @config.theme, @folders.layouts)
-    @paths.partials    = File.join(Dir.getwd, '_client', 'partials') # TODO: change this path
+
+    @paths.theme       = self.absolute_path(@folders.templates, @folders.themes, @config.theme)
+    @paths.layouts     = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.layouts)
+    @paths.partials    = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.partials)
+    @paths.global_partials = self.absolute_path(@folders.templates, @folders.partials)
+    
 
     # filename filters:
     @filters.pages = { 'names' => [], 'regexes' => [] }
