@@ -12,6 +12,7 @@ class Ruhoh
       FileUtils.mkdir @target unless File.exist?(@target)
       self.theme
       self.pages
+      self.media
     end
     
     def pages
@@ -36,7 +37,12 @@ class Ruhoh
     
     def theme
       FileUtils.mkdir_p File.join(@target, Ruhoh.config.asset_path)
-      FileUtils.cp_r Ruhoh.paths.theme, File.join(@target, Ruhoh.folders.templates)
+      FileUtils.cp_r Ruhoh.paths.theme, File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.themes)
+    end
+    
+    def media
+      FileUtils.mkdir_p File.join(@target, Ruhoh.folders.media)
+      FileUtils.cp_r Ruhoh.paths.media, File.join(@target)
     end
     
     def write_data

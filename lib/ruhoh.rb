@@ -23,7 +23,7 @@ class Ruhoh
 
   class << self; attr_accessor :folders, :config, :paths, :filters end
   
-  Folders = Struct.new(:database, :posts, :templates, :themes, :layouts, :partials)
+  Folders = Struct.new(:database, :posts, :templates, :themes, :layouts, :partials, :media)
   Filters = Struct.new(:posts, :pages, :static)
   Config = Struct.new(:permalink, :theme, :asset_path)
   Paths = Struct.new(
@@ -33,14 +33,15 @@ class Ruhoh
     :theme,
     :layouts,
     :partials,
-    :global_partials
+    :global_partials,
+    :media
   )
   
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
   def self.setup
-    @folders    = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials')
+    @folders    = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media")
     @filters    = Filters.new
     @config     = Config.new
     @paths      = Paths.new
@@ -60,6 +61,7 @@ class Ruhoh
     @paths.layouts     = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.layouts)
     @paths.partials    = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.partials)
     @paths.global_partials = self.absolute_path(@folders.templates, @folders.partials)
+    @paths.media = self.absolute_path(@folders.media)
     
 
     # filename filters:
