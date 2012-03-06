@@ -11,8 +11,14 @@ class Ruhoh
       raise "Page id not found for url: #{url}" unless @id
     end
     
+    def render
+      self.process_data
+      self.process_layouts
+      self.process_content
+      Ruhoh::Templater.expand_and_render(self)
+    end
+    
     def process_data
-      
       @data = @id =~ Regexp.new("^#{Ruhoh.folders.posts}") ? Ruhoh::DB.posts['dictionary'][@id] : Ruhoh::DB.pages[@id]
       raise "Page #{@id} not found in database" unless @data
 
@@ -27,10 +33,12 @@ class Ruhoh
       end
     end
     
-    def render
-      self.process_data
-      self.process_layouts
-      Ruhoh::Templater.process(self)
+    # We need to pre-process the content data
+    # in order to invoke converters on the result.
+    # Converters (markdown) always choke on the templating language.
+    def process_content
+      @content = Ruhoh::Templater.render(@content, self)
+      @content = Ruhoh::Converter.convert(self)
     end
     
     # This is the callback for when Ruhoh::DB changes, but we may not need it.

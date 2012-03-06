@@ -11,8 +11,18 @@ class Ruhoh
         "ASSET_PATH" => Ruhoh.config.asset_path
       }
     end
+
+    def self.expand_and_render(page)
+      self.render(self.expand(page), page)
+    end
     
-    def self.process(page)
+    def self.render(output, page)
+      Ruhoh::HelperMustache.render(output, self.build_payload(page))
+    end
+    
+    # Expand the page.
+    # Places page content into sub-template then into master template if available.
+    def self.expand(page)
       output = page.sub_layout['content'].gsub(Ruhoh::Utils::ContentRegex, page.content)
 
       # An undefined master means the page/post layouts is only one deep.
@@ -21,11 +31,7 @@ class Ruhoh
         output = page.master_layout['content'].gsub(Ruhoh::Utils::ContentRegex, output);
       end
       
-      self.render(output, self.build_payload(page))
-    end
-    
-    def self.render(output, payload)
-      Ruhoh::HelperMustache.render(output, payload)
+      output
     end
     
   end #Templater
