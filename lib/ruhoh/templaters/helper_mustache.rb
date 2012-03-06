@@ -85,6 +85,25 @@ class Ruhoh
       end
     end
     
+    def analytics
+      analytics_config = self.context['site']['config']['analytics']
+      return '' unless analytics_config && analytics_config['provider']
+      code = self.partial("analytics-providers/#{analytics_config['provider']}")
+      return "<h2 style='color:red'>!Analytics Provider partial for '#{analytics_config['provider']}' not found </h2>" if code.nil?
+
+      self.render(code)
+    end
+
+    def comments
+      comments_config = self.context['site']['config']['comments']
+      return '' unless comments_config && comments_config['provider']
+      code = self.partial("comments-providers/#{comments_config['provider']}")
+      puts "comments-provders/#{comments_config['provider']}"
+      return "<h2 style='color:red'>!Comments Provider partial for '#{comments_config['provider']}' not found </h2>" if code.nil?
+
+      self.render(code)
+    end
+    
   end #HelperMustache
   
 end #Ruhoh
