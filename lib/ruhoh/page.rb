@@ -49,6 +49,15 @@ class Ruhoh
       @data
     end
     
+    # Public: Formats the path to the compiled file based on the URL.
+    #
+    # Returns: [String] The relative path to the compiled file for this page.
+    def compiled_path
+      path = CGI.unescape(@data['url']).gsub(/^\//, '') #strip leading slash.
+      path += '/index.html' unless path =~ /\.html$/
+      path
+    end
+    
   end #Page
   
 end #Ruhoh

@@ -19,13 +19,11 @@ class Ruhoh
       processed = []
       
       FileUtils.cd(@target) {
-        Ruhoh::DB.posts['dictionary'].merge(Ruhoh::DB.pages).each_value do |page|
-          path = CGI.unescape(page['url']).gsub(/^\//, '') #strip leading slash.
-          path += '/index.html' unless path =~ /\.html$/
-
-          @page.change(page['id'])
-          FileUtils.mkdir_p File.dirname(path)
-          File.open(path, 'w') { |p| p.puts @page.render }
+        Ruhoh::DB.posts['dictionary'].merge(Ruhoh::DB.pages).each_value do |p|
+          @page.change(p['id'])
+          
+          FileUtils.mkdir_p File.dirname(@page.compiled_path)
+          File.open(@page.compiled_path, 'w') { |p| p.puts @page.render }
 
           processed << path
         end
