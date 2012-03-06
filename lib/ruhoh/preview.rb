@@ -23,7 +23,7 @@ class Ruhoh
     def call(env)
       return favicon if env['PATH_INFO'] == '/favicon.ico'
       
-      @page.change(env['PATH_INFO'])
+      @page.change_with_url(env['PATH_INFO'])
       [200, {'Content-Type' => 'text/html'}, [@page.render]]
     end
     

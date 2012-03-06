@@ -23,7 +23,7 @@ class Ruhoh
           path = CGI.unescape(page['url']).gsub(/^\//, '') #strip leading slash.
           path += '/index.html' unless path =~ /\.html$/
 
-          @page.change(page['url'])
+          @page.change(page['id'])
           FileUtils.mkdir_p File.dirname(path)
           File.open(path, 'w') { |p| p.puts @page.render }
 
