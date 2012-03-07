@@ -36,15 +36,15 @@ class Ruhoh
             site['config'] = config
             site
           when :routes
-            Ruhoh::Routes.generate
+            Ruhoh::Parsers::Routes.generate
           when :posts
-            Ruhoh::Posts.generate
+            Ruhoh::Parsers::Posts.generate
           when :pages
-            Ruhoh::Pages.generate
+            Ruhoh::Parsers::Pages.generate
           when :layouts
-            Ruhoh::Layouts.generate
+            Ruhoh::Parsers::Layouts.generate
           when :partials
-            Ruhoh::Partials.generate
+            Ruhoh::Parsers::Partials.generate
           else
             raise "Data type: '#{name}' is not a valid data type."
           end
