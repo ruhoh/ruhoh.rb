@@ -12,6 +12,7 @@ require 'ruhoh/parsers/pages'
 require 'ruhoh/parsers/routes'
 require 'ruhoh/parsers/layouts'
 require 'ruhoh/parsers/partials'
+require 'ruhoh/parsers/site'
 require 'ruhoh/db'
 require 'ruhoh/templaters/helper_mustache'
 require 'ruhoh/templaters/templater'
@@ -22,9 +23,10 @@ require 'ruhoh/watch'
 
 class Ruhoh
 
-  class << self; attr_accessor :folders, :config, :paths, :filters end
+  class << self; attr_reader :folders, :files, :config, :paths, :filters end
   
   Folders = Struct.new(:database, :posts, :templates, :themes, :layouts, :partials, :media)
+  Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
   Config = Struct.new(:permalink, :theme, :asset_path)
   Paths = Struct.new(
@@ -43,6 +45,7 @@ class Ruhoh
   #
   def self.setup
     @folders    = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media")
+    @files      = Files.new('_site.yml', '_config.yml')
     @filters    = Filters.new
     @config     = Config.new
     @paths      = Paths.new

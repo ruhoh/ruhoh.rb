@@ -25,16 +25,7 @@ class Ruhoh
         self.instance_variable_set("@#{name}", 
           case name
           when :site
-            site = File.join(Ruhoh.paths.site_source, '_site.yml')
-            site = File.exist?(site) ? File.open(site).read : ''
-            site = YAML.load(site) || {}
-            
-            config = File.join(Ruhoh.paths.site_source, '_config.yml')
-            config = File.exist?(config) ? File.open(config).read : ''
-            config = YAML.load(config) || {}
-            
-            site['config'] = config
-            site
+            Ruhoh::Parsers::Site.generate
           when :routes
             Ruhoh::Parsers::Routes.generate
           when :posts
