@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.authors           = ['Jade Dominguez']
   s.files            += Dir.glob("lib/**/*")
   s.description       = ''
+  s.executables = ["ruhoh"]
 end
