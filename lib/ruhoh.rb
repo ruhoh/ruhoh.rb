@@ -28,7 +28,7 @@ class Ruhoh
   Folders = Struct.new(:database, :posts, :templates, :themes, :layouts, :partials, :media)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
-  Config = Struct.new(:permalink, :theme, :asset_path)
+  Config = Struct.new(:permalink, :theme, :asset_path, :exclude)
   Paths = Struct.new(
     :site_source,
     :database,
@@ -59,10 +59,13 @@ class Ruhoh
   
   def self.setup_config
     site_config = Ruhoh::Utils.parse_file_as_yaml(File.join(@site_source, @files.config))
+    theme = site_config['theme'] ? site_config['theme'].to_s.gsub(/\s/, '') : ''
+    raise "Theme not specified in _config.yml" if theme.empty?
 
-    @config.permalink     = site_config['permalink'] || :date
-    @config.theme         = site_config['theme']
+    @config.theme         = theme
     @config.asset_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
+    @config.permalink     = site_config['permalink'] || :date
+    @config.exclude       = Array(site_config['exclude'] || nil)
   end
   
   def self.setup_paths
@@ -79,8 +82,10 @@ class Ruhoh
   
   # filename filters
   def self.setup_filters
+    exclude = @config.exclude + ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
+    exclude.uniq!
+    
     @filters.pages = { 'names' => [], 'regexes' => [] }
-    exclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
     exclude.each {|node| 
       @filters.pages['names'] << node if node.is_a?(String)
       @filters.pages['regexes'] << node if node.is_a?(Regexp)
