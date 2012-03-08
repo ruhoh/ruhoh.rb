@@ -9,7 +9,7 @@ module Posts
       Ruhoh.setup(SampleSitePath)
     end
     
-    pending "#generate" do
+    describe "#generate" do
       
       it 'should return a valid data structures for core API' do
         posts = Ruhoh::Parsers::Posts.generate
@@ -22,7 +22,6 @@ module Posts
       end
       
     end
-  
   
     describe "#process_posts" do
       
