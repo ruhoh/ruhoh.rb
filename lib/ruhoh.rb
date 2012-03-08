@@ -40,35 +40,45 @@ class Ruhoh
     :media
   )
   
+  @folders     = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media")
+  @files       = Files.new('_site.yml', '_config.yml')
+  @filters     = Filters.new
+  @config      = Config.new
+  @paths       = Paths.new
+  @site_source = Dir.getwd
+  
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
   def self.setup(site_source = nil)
-    @folders    = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media")
-    @files      = Files.new('_site.yml', '_config.yml')
-    @filters    = Filters.new
-    @config     = Config.new
-    @paths      = Paths.new
-    
-    config = { 'site_source' => site_source || Dir.getwd }
-    site_config = YAML.load_file( File.join(config['site_source'], '_config.yml') )
+    @site_source = site_source if site_source
+    self.setup_config
+    self.setup_paths
+    self.setup_filters
+  end
+  
+  def self.setup_config
+    site_config = Ruhoh::Utils.parse_file_as_yaml(File.join(@site_source, @files.config))
 
-    @config.permalink         = site_config['permalink'] || :date
-    @config.theme             = site_config['theme']
-    @config.asset_path        = File.join('/', @folders.templates, @folders.themes, @config.theme)
-    
-    @paths.site_source = config['site_source']
-    @paths.database    = self.absolute_path(@folders.database)
-    @paths.posts       = self.absolute_path(@folders.posts)
+    @config.permalink     = site_config['permalink'] || :date
+    @config.theme         = site_config['theme']
+    @config.asset_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
+  end
+  
+  def self.setup_paths
+    @paths.site_source      = @site_source
+    @paths.database         = self.absolute_path(@folders.database)
+    @paths.posts            = self.absolute_path(@folders.posts)
 
-    @paths.theme       = self.absolute_path(@folders.templates, @folders.themes, @config.theme)
-    @paths.layouts     = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.layouts)
-    @paths.partials    = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.partials)
-    @paths.global_partials = self.absolute_path(@folders.templates, @folders.partials)
-    @paths.media = self.absolute_path(@folders.media)
-    
-
-    # filename filters:
+    @paths.theme            = self.absolute_path(@folders.templates, @folders.themes, @config.theme)
+    @paths.layouts          = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.layouts)
+    @paths.partials         = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.partials)
+    @paths.global_partials  = self.absolute_path(@folders.templates, @folders.partials)
+    @paths.media            = self.absolute_path(@folders.media)
+  end
+  
+  # filename filters
+  def self.setup_filters
     @filters.pages = { 'names' => [], 'regexes' => [] }
     exclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
     exclude.each {|node| 
