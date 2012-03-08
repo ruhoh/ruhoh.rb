@@ -47,32 +47,28 @@ class Ruhoh
             next if FileTest.directory?(filename)
             next if ['.'].include? filename[0]
 
-            File.open(filename) do |page|
-              front_matter = page.read.match(Ruhoh::Utils::FMregex)
-              if !front_matter
-                invalid_posts << filename ; next
-              end
-        
-              post = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
-            
-              m, path, file_date, file_slug, ext = *filename.match(MATCHER)
-              post['date'] = post['date'] || file_date
-
-              ## Test for valid date
-              begin 
-                Time.parse(post['date'])
-              rescue
-                puts "Invalid date format on: #{filename}"
-                puts "Date should be: YYYY/MM/DD"
-                invalid_posts << filename
-                next
-              end
-            
-              post['id'] = filename
-              post['title'] = post['title'] || self.titleize(file_slug)
-              post['url'] = self.permalink(post)
-              dictionary[filename] = post
+            parsed_page = Ruhoh::Utils.parse_file(filename)
+            if parsed_page.empty?
+              invalid_pages << filename ; next
             end
+            
+            m, path, file_date, file_slug, ext = *filename.match(MATCHER)
+            parsed_page['data']['date'] = parsed_page['data']['date'] || file_date
+
+            ## Test for valid date
+            begin 
+              Time.parse(parsed_page['data']['date'])
+            rescue
+              puts "Invalid date format on: #{filename}"
+              puts "Date should be: YYYY/MM/DD"
+              invalid_posts << filename
+              next
+            end
+          
+            parsed_page['data']['id']     = filename
+            parsed_page['data']['title']  = parsed_page['data']['title'] || self.titleize(file_slug)
+            parsed_page['data']['url']    = self.permalink(parsed_page['data'])
+            dictionary[filename] = parsed_page['data']
           }
         }
 
