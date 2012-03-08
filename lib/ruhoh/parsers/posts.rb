@@ -104,17 +104,17 @@ class Ruhoh
       def self.permalink(post)
         date = Date.parse(post['date'])
         title = post['title'].downcase.gsub(' ', '-').gsub('.','')
-        format = case (post['permalink'] || Ruhoh.config.permalink)
-        when :pretty
+        format = case (post['permalink'] || Ruhoh.config.permalink.to_s)
+        when 'pretty'
           "/:categories/:year/:month/:day/:title/"
-        when :none
+        when 'none'
           "/:categories/:title.html"
-        when :date
+        when 'date'
           "/:categories/:year/:month/:day/:title.html"
         else
           post['permalink'] || Ruhoh.config.permalink
         end
-      
+        
         url = {
           "year"       => date.strftime("%Y"),
           "month"      => date.strftime("%m"),
@@ -122,7 +122,7 @@ class Ruhoh
           "title"      => CGI::escape(title),
           "i_day"      => date.strftime("%d").to_i.to_s,
           "i_month"    => date.strftime("%m").to_i.to_s,
-          "categories" => Array(post['categories'] || post['category']).join('/'),
+          "categories" => Array(post['categories'])[0] || '',
           "output_ext" => 'html' # what's this for?
         }.inject(format) { |result, token|
           result.gsub(/:#{Regexp.escape token.first}/, token.last)
@@ -202,9 +202,7 @@ class Ruhoh
         categories = {}
 
         ordered_posts.each do |post|
-          cats = post['categories'] ? post['categories'] : Array(post['category']).join('/')
-    
-          Array(cats).each do |cat|
+          Array(post['categories']).each do |cat|
             cat = Array(cat).join('/')
             if categories[cat]
               categories[cat]['count'] += 1
