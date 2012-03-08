@@ -18,19 +18,16 @@ class Ruhoh
             next unless self.is_valid_page?(filename)
             total_pages += 1
 
-            File.open(filename) do |page|
-              front_matter = page.read.match(Ruhoh::Utils::FMregex)
-              if !front_matter
-                invalid_pages << filename ; next
-              end
-
-              data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
-              data['id'] = filename
-              data['url'] = self.permalink(data)
-              data['title'] = data['title'] || self.titleize(filename)
-
-              dictionary[filename] = data
+            parsed_page = Ruhoh::Utils.parse_file(filename)
+            if parsed_page.empty?
+              invalid_pages << filename ; next
             end
+            
+            parsed_page['data']['id']     = filename
+            parsed_page['data']['url']    = self.permalink(parsed_page['data'])
+            parsed_page['data']['title']  = parsed_page['data']['title'] || self.titleize(filename)
+
+            dictionary[filename] = parsed_page['data']
           }
         }
 
@@ -44,11 +41,11 @@ class Ruhoh
         dictionary 
       end
     
-      def self.is_valid_page?(filename)
-        return false if FileTest.directory?(filename)
-        return false if ['_', '.'].include? filename[0]
-        return false if Ruhoh.filters.pages['names'].include? filename
-        Ruhoh.filters.pages['regexes'].each {|regex| return false if filename =~ regex }
+      def self.is_valid_page?(filepath)
+        return false if FileTest.directory?(filepath)
+        return false if ['_', '.'].include? filepath[0]
+        return false if Ruhoh.filters.pages['names'].include? filepath
+        Ruhoh.filters.pages['regexes'].each {|regex| return false if filepath =~ regex }
         true
       end
     
