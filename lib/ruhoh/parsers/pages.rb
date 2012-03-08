@@ -10,7 +10,7 @@ class Ruhoh
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         puts "=> Generating Pages..."
 
-        invalid_pages = []
+        invalid = []
         dictionary = {}
         total_pages = 0
         FileUtils.cd(Ruhoh.paths.site_source) {
@@ -20,7 +20,8 @@ class Ruhoh
 
             parsed_page = Ruhoh::Utils.parse_file(filename)
             if parsed_page.empty?
-              invalid_pages << filename ; next
+              error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
+              invalid << [filename, error] ; next
             end
             
             parsed_page['data']['id']     = filename
@@ -31,11 +32,11 @@ class Ruhoh
           }
         }
 
-        if invalid_pages.empty?
-          puts "=> #{total_pages - invalid_pages.count }/#{total_pages} pages processed."
+        if invalid.empty?
+          puts "=> #{total_pages - invalid.count }/#{total_pages} pages processed."
         else
           puts "=> Invalid pages not processed:"
-          puts invalid_pages.to_yaml
+          puts invalid.to_yaml
         end   
       
         dictionary 
