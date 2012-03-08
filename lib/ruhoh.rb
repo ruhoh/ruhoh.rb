@@ -25,6 +25,7 @@ class Ruhoh
 
   class << self; attr_reader :folders, :files, :config, :paths, :filters end
   
+  DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
   Folders = Struct.new(:database, :posts, :templates, :themes, :layouts, :partials, :media)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
@@ -87,7 +88,7 @@ class Ruhoh
   
   # filename filters
   def self.setup_filters
-    exclude = @config.exclude + ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
+    exclude = @config.exclude + DefaultExclude
     exclude.uniq!
     
     @filters.pages = { 'names' => [], 'regexes' => [] }
