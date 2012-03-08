@@ -4,7 +4,6 @@ class Ruhoh
     
     module Routes
 
-      #[{"url" => "id"}, ... ]
       def self.generate
         routes = {}
         Ruhoh::Parsers::Pages.generate.each_value { |page|
