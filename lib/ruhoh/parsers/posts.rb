@@ -12,14 +12,9 @@ class Ruhoh
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         puts "=> Generating Posts..."
 
-        dictionary, invalid_posts = process_posts
-        ordered_posts = []
-        dictionary.each_value { |val| ordered_posts << val }
-      
-        ordered_posts.sort! {
-          |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
-        }
-      
+        dictionary, invalid_posts = self.process_posts
+        ordered_posts = self.ordered_posts(dictionary)
+        
         data = {
           'dictionary' => dictionary,
           'chronological' => build_chronology(ordered_posts),
@@ -75,6 +70,16 @@ class Ruhoh
         [dictionary, invalid_posts]
       end
     
+      def self.ordered_posts(dictionary)
+        ordered_posts = []
+        dictionary.each_value { |val| ordered_posts << val }
+        ordered_posts.sort! {
+          |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
+        }
+
+        ordered_posts
+      end
+      
       # my-post-title ===> My Post Title
       def self.titleize(file_slug)
         file_slug.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
