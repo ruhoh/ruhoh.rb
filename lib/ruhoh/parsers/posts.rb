@@ -35,7 +35,7 @@ class Ruhoh
 
       def self.process_posts
         dictionary = {}
-        invalid_posts = []
+        invalid = []
 
         FileUtils.cd(Ruhoh.paths.site_source) {
           Dir.glob("#{Ruhoh.folders.posts}/**/*.*") { |filename| 
@@ -44,30 +44,34 @@ class Ruhoh
 
             parsed_page = Ruhoh::Utils.parse_file(filename)
             if parsed_page.empty?
-              invalid_pages << filename ; next
+              error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
+              invalid << [filename, error] ; next
+            end
+            data = parsed_page['data']
+            
+            filename_data = self.parse_filename(filename)
+            if filename_data.empty?
+              error = "Invalid filename format.\n Format should be: YYYY-MM-DD-my-post-title.ext"
+              invalid << [filename, error] ; next
             end
             
-            m, path, file_date, file_slug, ext = *filename.match(MATCHER)
-            parsed_page['data']['date'] = parsed_page['data']['date'] || file_date
+            data['date'] ||= filename_data['date']
 
-            ## Test for valid date
             begin 
-              Time.parse(parsed_page['data']['date'])
+              Time.parse(data['date'])
             rescue
-              puts "Invalid date format on: #{filename}"
-              puts "Date should be: YYYY/MM/DD"
-              invalid_posts << filename
-              next
+              error = "Invalid date format.\n Date should be: YYYY/MM/DD"
+              invalid << [filename, error] ; next
             end
           
-            parsed_page['data']['id']     = filename
-            parsed_page['data']['title']  = parsed_page['data']['title'] || self.titleize(file_slug)
-            parsed_page['data']['url']    = self.permalink(parsed_page['data'])
-            dictionary[filename] = parsed_page['data']
+            data['id']            = filename
+            data['title']         = data['title'] || self.titleize(filename_data['slug'])
+            data['url']           = self.permalink(data)
+            dictionary[filename]  = data
           }
         }
 
-        [dictionary, invalid_posts]
+        [dictionary, invalid]
       end
     
       def self.ordered_posts(dictionary)
@@ -78,6 +82,17 @@ class Ruhoh
         }
 
         ordered_posts
+      end
+      
+      def self.parse_filename(filename)
+        data = *filename.match(MATCHER)
+        return {} if data.empty?
+        {
+          "path" => data[1],
+          "date" => data[2],
+          "slug" => data[3],
+          "extension" => data[4]
+        }
       end
       
       # my-post-title ===> My Post Title
