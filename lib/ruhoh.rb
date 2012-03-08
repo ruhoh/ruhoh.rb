@@ -43,14 +43,14 @@ class Ruhoh
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
-  def self.setup
+  def self.setup(site_source = nil)
     @folders    = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media")
     @files      = Files.new('_site.yml', '_config.yml')
     @filters    = Filters.new
     @config     = Config.new
     @paths      = Paths.new
     
-    config = { 'site_source' => Dir.getwd }
+    config = { 'site_source' => site_source || Dir.getwd }
     site_config = YAML.load_file( File.join(config['site_source'], '_config.yml') )
 
     @config.permalink         = site_config['permalink'] || :date
