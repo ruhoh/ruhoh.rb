@@ -40,21 +40,26 @@ class Ruhoh
     :media
   )
   
-  @folders     = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media")
-  @files       = Files.new('_site.yml', '_config.yml')
-  @filters     = Filters.new
-  @config      = Config.new
-  @paths       = Paths.new
-  @site_source = Dir.getwd
   
   # Public: Setup Ruhoh utilities relative to the current directory
   # of the application and its corresponding ruhoh.json file.
   #
   def self.setup(site_source = nil)
+    self.reset
+
     @site_source = site_source if site_source
     self.setup_config
     self.setup_paths
     self.setup_filters
+  end
+  
+  def self.reset
+    @folders     = Folders.new('_database', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media")
+    @files       = Files.new('_site.yml', '_config.yml')
+    @filters     = Filters.new
+    @config      = Config.new
+    @paths       = Paths.new
+    @site_source = Dir.getwd
   end
   
   def self.setup_config
