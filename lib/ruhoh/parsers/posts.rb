@@ -16,11 +16,11 @@ class Ruhoh
         ordered_posts = self.ordered_posts(dictionary)
         
         data = {
-          'dictionary' => dictionary,
-          'chronological' => build_chronology(ordered_posts),
-          'collated' => collate(ordered_posts),
-          'tags' => parse_tags(ordered_posts),
-          'categories' => parse_categories(ordered_posts)
+          'dictionary'      => dictionary,
+          'chronological'   => self.build_chronology(ordered_posts),
+          'collated'        => self.collate(ordered_posts),
+          'tags'            => self.parse_tags(ordered_posts),
+          'categories'      => self.parse_categories(ordered_posts)
         }
 
         if invalid_posts.empty?
@@ -119,8 +119,8 @@ class Ruhoh
         url
       end
     
-      def self.build_chronology(posts)
-        posts.map { |post| post['id'] }
+      def self.build_chronology(ordered_posts)
+        ordered_posts.map { |post| post['id'] }
       end
 
       # Internal: Create a collated posts data structure.
@@ -132,14 +132,14 @@ class Ruhoh
       #   'months' : [{ 'month' : month, 
       #     'posts': [{}, {}, ..] }, ..] }, ..]
       # 
-      def self.collate(posts)
+      def self.collate(ordered_posts)
         collated = []
-        posts.each_with_index do |post, i|
+        ordered_posts.each_with_index do |post, i|
           thisYear = Time.parse(post['date']).strftime('%Y')
           thisMonth = Time.parse(post['date']).strftime('%B')
           if (i-1 >= 0)
-            prevYear = Time.parse(posts[i-1]['date']).strftime('%Y')
-            prevMonth = Time.parse(posts[i-1]['date']).strftime('%B')
+            prevYear = Time.parse(ordered_posts[i-1]['date']).strftime('%Y')
+            prevMonth = Time.parse(ordered_posts[i-1]['date']).strftime('%B')
           end
 
           if(prevYear == thisYear) 
@@ -166,10 +166,10 @@ class Ruhoh
         collated
       end
 
-      def self.parse_tags(posts)
+      def self.parse_tags(ordered_posts)
         tags = {}
   
-        posts.each do |post|
+        ordered_posts.each do |post|
           Array(post['tags']).each do |tag|
             if tags[tag]
               tags[tag]['count'] += 1
@@ -183,10 +183,10 @@ class Ruhoh
         tags
       end
 
-      def self.parse_categories(posts)
+      def self.parse_categories(ordered_posts)
         categories = {}
 
-        posts.each do |post|
+        ordered_posts.each do |post|
           cats = post['categories'] ? post['categories'] : Array(post['category']).join('/')
     
           Array(cats).each do |cat|
