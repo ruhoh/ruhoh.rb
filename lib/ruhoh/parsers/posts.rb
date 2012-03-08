@@ -132,11 +132,11 @@ class Ruhoh
         posts.each_with_index do |post, i|
           thisYear = Time.parse(post['date']).strftime('%Y')
           thisMonth = Time.parse(post['date']).strftime('%B')
-          if posts[i-1] 
+          if (i-1 >= 0)
             prevYear = Time.parse(posts[i-1]['date']).strftime('%Y')
             prevMonth = Time.parse(posts[i-1]['date']).strftime('%B')
           end
-        
+
           if(prevYear == thisYear) 
             if(prevMonth == thisMonth)
               collated.last['months'].last['posts'] << post['id'] # append to last year & month
