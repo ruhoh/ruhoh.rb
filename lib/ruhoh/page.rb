@@ -37,7 +37,9 @@ class Ruhoh
     # in order to invoke converters on the result.
     # Converters (markdown) always choke on the templating language.
     def process_content
-      @content = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @id)['content']
+      data = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @id)
+      raise "Invalid Frontmatter in page: #{@id}" if data.empty?
+      @content = data['content']
       @content = Ruhoh::Templater.render(@content, self)
       @content = Ruhoh::Converter.convert(self)
     end

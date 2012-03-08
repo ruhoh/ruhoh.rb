@@ -13,6 +13,7 @@ class Ruhoh
             next if ['_','.'].include? filename[0]
             id = File.basename(filename, File.extname(filename))
             layouts[id] = Ruhoh::Utils.parse_file(Ruhoh.paths.layouts, filename)
+            raise "Invalid Frontmatter in layout: #{filename}" if layouts[id].empty?
           }
         }
         layouts

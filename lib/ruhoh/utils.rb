@@ -23,7 +23,8 @@ class Ruhoh
 
       page = File.open(path).read
       front_matter = page.match(FMregex)
-      raise "Invalid Frontmatter" unless front_matter
+
+      return {} unless front_matter
 
       data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
 
