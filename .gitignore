@@ -1,6 +1,8 @@
 Thumbs.db
 .DS_Store
 
+.rspec
+
 Gemfile.lock
 .bundle/
 

@@ -3,6 +3,7 @@ require 'rubygems'
 require 'rake'
 require 'bundler'
 require 'ruhoh/version'
+require 'rspec/core/rake_task'
 
 name = Dir['*.gemspec'].first.split('.').first
 gemspec_file = "#{name}.gemspec"
@@ -46,3 +47,10 @@ task :gemspec do
   File.open(gemspec_file, 'w') { |io| io.write(spec) }
   puts "Updated #{gemspec_file}"
 end
+
+## Tests
+
+RSpec::Core::RakeTask.new('spec')
+
+desc "Run tests"
+task :default => :spec
