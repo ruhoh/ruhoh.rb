@@ -4,8 +4,19 @@ module Setup
   
   describe "Setup" do
     
-    describe "#setup_config" do
+    describe "#setup" do
       
+      it 'should setup config, paths, and filters' do
+        Ruhoh.should_receive(:setup_config)
+        Ruhoh.should_receive(:setup_paths)
+        Ruhoh.should_receive(:setup_filters)
+        Ruhoh.setup
+      end
+      
+    end
+    
+    describe "#setup_config" do
+
       context "Invalid _config.yml file" do
 
         it 'should raise an exception if theme is not specified.' do
@@ -52,17 +63,6 @@ module Setup
         
         Ruhoh.filters.pages['names'].should include('.secret')
         Ruhoh.filters.pages['regexes'].should include(/^test/)
-      end
-      
-    end
-    
-    describe "#setup" do
-      
-      it 'should setup config, paths, and filters' do
-        Ruhoh.should_receive(:setup_config)
-        Ruhoh.should_receive(:setup_paths)
-        Ruhoh.should_receive(:setup_filters)
-        Ruhoh.setup
       end
       
     end

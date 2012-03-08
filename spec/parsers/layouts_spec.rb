@@ -10,15 +10,15 @@ module Layouts
     end
     
     describe "#generate" do
+      let(:layouts){
+        Ruhoh::Parsers::Layouts.generate
+      }
       
       it 'should extract the correct layouts from a theme.' do
-        layouts = Ruhoh::Parsers::Layouts.generate
         layouts.keys.sort.should == ['default', 'page', 'post']
       end
       
       it 'should return a hash for each layout containing the keys "data" and "content"' do
-        layouts = Ruhoh::Parsers::Layouts.generate
-        
         layouts.each_value { |value|
           value.should have_key("data")
           value.should have_key("content")
