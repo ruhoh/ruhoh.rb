@@ -13,7 +13,10 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'ruhoh'
 
 RSpec.configure do |config|
-  # some (optional) config here
+  config.after(:each) do 
+    # Reset all configuration variables after each test.
+    Ruhoh.reset
+  end
 end
 
 SampleSitePath = File.expand_path(File.join(File.dirname(__FILE__), '../scaffolds/blog'))
