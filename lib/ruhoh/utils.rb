@@ -5,8 +5,9 @@ class Ruhoh
     FMregex = /^---\n(.|\n)*---\n/
     ContentRegex = /\{\{\s*content\s*\}\}/i
     
-    def self.parse_file_as_yaml(filepath)
-      raise "File does not exist: #{filepath}" unless File.exist? filepath
+    def self.parse_file_as_yaml(*args)
+      filepath = File.__send__ :join, args
+      return nil unless File.exist? filepath
 
       file = File.open(filepath)
       yaml = YAML.load(file) || {}

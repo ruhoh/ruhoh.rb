@@ -6,14 +6,8 @@ class Ruhoh
     module Site
       
       def self.generate
-        site = File.join(Ruhoh.paths.site_source, Ruhoh.files.site)
-        site = File.exist?(site) ? File.open(site).read : ''
-        site = YAML.load(site) || {}
-        
-        config = File.join(Ruhoh.paths.site_source, Ruhoh.files.config)
-        config = File.exist?(config) ? File.open(config).read : ''
-        config = YAML.load(config) || {}
-        
+        site = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.site_source, Ruhoh.files.site) || {}
+        config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.site_source, Ruhoh.files.config)
         site['config'] = config
         site
       end
