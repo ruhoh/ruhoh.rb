@@ -2,7 +2,13 @@ class Ruhoh
 
   class Page
     attr_reader :data, :content, :sub_layout, :master_layout
+    attr_accessor :templater, :converter
 
+    def initialize
+      @templater = Ruhoh::Templater
+      @converter = Ruhoh::Converter
+    end
+    
     # Public: Change this page using an id.
     def change(id)
       @data = nil
@@ -22,7 +28,7 @@ class Ruhoh
     def render
       self.process_layouts
       self.process_content
-      Ruhoh::Templater.expand_and_render(self)
+      @templater.render(self)
     end
     
     def process_layouts
@@ -39,9 +45,9 @@ class Ruhoh
     def process_content
       data = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @id)
       raise "Invalid Frontmatter in page: #{@id}" if data.empty?
-      @content = data['content']
-      @content = Ruhoh::Templater.render(@content, self)
-      @content = Ruhoh::Converter.convert(self)
+      
+      @content = @templater.parse(data['content'], self)
+      @content = @converter.convert(self)
     end
     
     # Public: Return page attributes suitable for inclusion in the
