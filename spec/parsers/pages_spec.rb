@@ -53,12 +53,7 @@ module Pages
           filepath = '.vim'
           Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
         end
-      
-        it "should return false for a filepath beginning with ." do
-          filepath = '.vim'
-          Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
-        end
-      
+
       end
       
       context "Exclude array is passed into config." do
