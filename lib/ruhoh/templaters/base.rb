@@ -2,7 +2,7 @@ class Ruhoh
   
   module Templaters
     
-    module Templater
+    module Base
     
       def self.build_payload(page)
         {
@@ -40,7 +40,7 @@ class Ruhoh
         output
       end
     
-    end #Templater
+    end #Base
   
   end #Templaters
   
