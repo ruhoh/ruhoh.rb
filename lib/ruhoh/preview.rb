@@ -15,7 +15,7 @@ class Ruhoh
   class Preview
     
     def initialize
-      Ruhoh::DB.initialize
+      Ruhoh::DB.update!
       @page = Ruhoh::Page.new
       Ruhoh::Watch.start
     end
