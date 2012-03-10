@@ -21,7 +21,7 @@ class Ruhoh
 
     # Parse arbitrary content relative to a given page.
     def self.parse(output, page)
-      Ruhoh::HelperMustache.render(output, self.build_payload(page))
+      Ruhoh::RMustache.render(output, self.build_payload(page))
     end
     
     # Expand the page.
