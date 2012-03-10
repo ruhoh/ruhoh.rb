@@ -43,16 +43,6 @@ class Ruhoh
       FileUtils.cp_r Ruhoh.paths.media, File.join(@target)
     end
     
-    def write_data
-      File.open(Ruhoh.paths.database + '/posts_dictionary.yml', 'w') { |page|
-        page.puts Ruhoh::DB.posts.to_yaml
-      }
-  
-      File.open(Ruhoh.paths.database + '/pages_dictionary.yml', 'w') { |page|
-        page.puts Ruhoh::DB.pages.to_yaml
-      }
-    end
-  
   end #Compiler
   
 end #Ruhoh
