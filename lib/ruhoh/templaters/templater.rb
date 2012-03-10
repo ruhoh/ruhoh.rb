@@ -11,12 +11,16 @@ class Ruhoh
         "ASSET_PATH" => Ruhoh.config.asset_path
       }
     end
-
-    def self.expand_and_render(page)
-      self.render(self.expand(page), page)
-    end
     
-    def self.render(output, page)
+    # Render a given page object.
+    # This is different from parse only in that rendering a page
+    # assumes we use page.content and its layouts as the incoming view.
+    def self.render(page)
+      self.parse(self.expand(page), page)
+    end
+
+    # Parse arbitrary content relative to a given page.
+    def self.parse(output, page)
       Ruhoh::HelperMustache.render(output, self.build_payload(page))
     end
     
