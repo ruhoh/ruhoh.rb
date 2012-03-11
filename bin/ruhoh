@@ -5,18 +5,5 @@ $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 require 'ruhoh'
 require 'ruhoh/client'
 
-help = <<HELP
-Ruhoh is the best static blog generator known to mankind.
-
-Basic Command Line Usage:
-  Test
-HELP
-
-case ARGV[0]
-when 'new'
-  Ruhoh::Client.new_blog(ARGV[1])
-when 'help'
-  puts help
-else
-  puts help
-end
+Ruhoh.setup
+Ruhoh::Client.new(ARGV)
