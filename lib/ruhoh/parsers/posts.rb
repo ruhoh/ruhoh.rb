@@ -104,16 +104,7 @@ class Ruhoh
       def self.permalink(post)
         date = Date.parse(post['date'])
         title = post['title'].downcase.gsub(' ', '-').gsub('.','')
-        format = case (post['permalink'] || Ruhoh.config.permalink.to_s)
-        when 'pretty'
-          "/:categories/:year/:month/:day/:title/"
-        when 'none'
-          "/:categories/:title.html"
-        when 'date'
-          "/:categories/:year/:month/:day/:title.html"
-        else
-          post['permalink'] || Ruhoh.config.permalink
-        end
+        format = post['permalink'] || Ruhoh.config.permalink  || "/:categories/:year/:month/:day/:title.html"
         
         url = {
           "year"       => date.strftime("%Y"),

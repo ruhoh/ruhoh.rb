@@ -71,7 +71,7 @@ class Ruhoh
 
     @config.theme         = theme
     @config.asset_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
-    @config.permalink     = site_config['permalink'] || :date
+    @config.permalink     = site_config['permalink']
     @config.exclude       = Array(site_config['exclude'] || nil)
   end
   
