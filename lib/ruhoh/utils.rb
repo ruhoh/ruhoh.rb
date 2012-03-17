@@ -2,7 +2,7 @@ class Ruhoh
   
   module Utils
     
-    FMregex = /^---\n(.|\n)*---\n/
+    FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
     ContentRegex = /\{\{\s*content\s*\}\}/i
     
     def self.parse_file_as_yaml(*args)
