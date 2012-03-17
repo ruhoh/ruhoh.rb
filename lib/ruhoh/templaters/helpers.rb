@@ -10,6 +10,11 @@ class Ruhoh
         Ruhoh::DB.partials[name.to_s]
       end
 
+      def raw_code(sub_context)
+        code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;')
+        "<pre><code>#{code}</code></pre>"
+      end
+      
       def debug(sub_context)
         puts "=>DEBUG:"
         puts sub_context.class
