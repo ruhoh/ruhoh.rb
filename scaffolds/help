@@ -1,0 +1,15 @@
+Ruhoh is the best static blog generator known to all humanity.
+
+Basic Command Line Usage:
+
+  new <BLOG NAME>
+  
+    # Create and format a new Blog directory skeleton.
+
+  page <NAME>
+
+    # Create a new page with the given filepath and default YAML FrontMatter.
+
+  post <TITLE> <YYYY-MM-DD>[OPTIONAL]
+
+    # Create a new post with the given title having default YAML FrontMatter. Date defaults to Today unless specifically passed.

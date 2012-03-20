@@ -3,25 +3,6 @@ class Ruhoh
   class Client
     PageTemplatePath = File.join(Ruhoh::Root, "scaffolds", "page.html")
     PostTemplatePath = File.join(Ruhoh::Root, "scaffolds", "post.html")
-
-    Help = <<HELP
-    Ruhoh is the best static blog generator known to all humanity.
-
-    Basic Command Line Usage:
-
-      new <BLOG NAME>
-      
-        # Create and format a new Blog directory skeleton.
-
-      page <NAME>
-
-        # Create a new page with the given filepath and default YAML FrontMatter.
-
-      post <TITLE> <YYYY-MM-DD>[OPTIONAL]
-
-        # Create a new post with the given title having default YAML FrontMatter. Date defaults to Today unless specifically passed.
-
-HELP
     
     def initialize(args)
       case args[0]
@@ -31,10 +12,10 @@ HELP
         self.new_page(args[1])
       when 'post'
         self.new_post(args[1], args[2])
-      when 'help'
-        puts Help
       else
-        puts Help
+        help = File.open(File.join(Ruhoh::Root, "scaffolds", 'help'))
+        puts help.read
+        help.close
       end
     end  
     
