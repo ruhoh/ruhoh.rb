@@ -19,7 +19,6 @@ class Ruhoh
     
     # Public: Change this page using a URL.
     def change_with_url(url)
-      url = '/index.html' if url == '/'
       id = Ruhoh::DB.routes[url]
       raise "Page id not found for url: #{url}" unless id
       self.change(id)
