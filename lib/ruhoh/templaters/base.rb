@@ -10,7 +10,8 @@ class Ruhoh
           "site"    => Ruhoh::DB.site,
           "pages"   => Ruhoh::DB.pages,
           "_posts"  => Ruhoh::DB.posts,
-          "ASSET_PATH" => Ruhoh.config.asset_path
+          "ASSET_PATH" => Ruhoh.config.asset_path,
+          "MEDIA_PATH" => Ruhoh.config.media_path
         }
       end
     

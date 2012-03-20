@@ -31,7 +31,7 @@ class Ruhoh
   Folders = Struct.new(:database, :posts, :drafts, :templates, :themes, :layouts, :partials, :media)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
-  Config = Struct.new(:permalink, :theme, :asset_path, :exclude)
+  Config = Struct.new(:permalink, :theme, :asset_path, :media_path, :exclude)
   Paths = Struct.new(
     :site_source,
     :database,
@@ -73,6 +73,7 @@ class Ruhoh
 
     @config.theme         = theme
     @config.asset_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
+    @config.media_path    = File.join('/', @folders.media)
     @config.permalink     = site_config['permalink']
     @config.exclude       = Array(site_config['exclude'] || nil)
   end
