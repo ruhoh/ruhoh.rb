@@ -42,7 +42,7 @@ module Setup
         
           Ruhoh.config.permalink.should == custom_permalink
           Ruhoh.config.theme.should == custom_theme
-          Ruhoh.config.asset_path.should == "/_templates/themes/#{custom_theme}"
+          Ruhoh.config.theme_path.should == "/_templates/themes/#{custom_theme}"
           Ruhoh.config.exclude.should == custom_exclude
         end
       

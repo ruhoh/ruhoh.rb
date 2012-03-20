@@ -28,10 +28,10 @@ class Ruhoh
   
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
-  Folders = Struct.new(:database, :posts, :drafts, :templates, :themes, :layouts, :partials, :media)
+  Folders = Struct.new(:database, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
-  Config = Struct.new(:permalink, :theme, :asset_path, :media_path, :exclude)
+  Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude)
   Paths = Struct.new(
     :site_source,
     :database,
@@ -41,7 +41,8 @@ class Ruhoh
     :layouts,
     :partials,
     :global_partials,
-    :media
+    :media,
+    :syntax
   )
   
   
@@ -58,7 +59,7 @@ class Ruhoh
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media")
+    @folders     = Folders.new('_database', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax")
     @files       = Files.new('_site.yml', '_config.yml')
     @filters     = Filters.new
     @config      = Config.new
@@ -72,8 +73,9 @@ class Ruhoh
     raise "Theme not specified in _config.yml" if theme.empty?
 
     @config.theme         = theme
-    @config.asset_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
+    @config.theme_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
     @config.media_path    = File.join('/', @folders.media)
+    @config.syntax_path   = File.join('/', @folders.templates, @folders.syntax)
     @config.permalink     = site_config['permalink']
     @config.exclude       = Array(site_config['exclude'] || nil)
   end
@@ -89,6 +91,7 @@ class Ruhoh
     @paths.partials         = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.partials)
     @paths.global_partials  = self.absolute_path(@folders.templates, @folders.partials)
     @paths.media            = self.absolute_path(@folders.media)
+    @paths.syntax           = self.absolute_path(@folders.templates, @folders.syntax)
   end
   
   # filename filters

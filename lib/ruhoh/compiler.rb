@@ -13,6 +13,7 @@ class Ruhoh
       self.theme
       self.pages
       self.media
+      self.syntax
     end
     
     def pages
@@ -34,13 +35,19 @@ class Ruhoh
     end
     
     def theme
-      FileUtils.mkdir_p File.join(@target, Ruhoh.config.asset_path)
+      FileUtils.mkdir_p File.join(@target, Ruhoh.config.theme_path)
       FileUtils.cp_r Ruhoh.paths.theme, File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.themes)
     end
     
     def media
       FileUtils.mkdir_p File.join(@target, Ruhoh.folders.media)
-      FileUtils.cp_r Ruhoh.paths.media, File.join(@target)
+      FileUtils.cp_r Ruhoh.paths.media, @target
+    end
+    
+    def syntax
+      syntax_path = File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.syntax)
+      FileUtils.mkdir_p syntax_path
+      FileUtils.cp_r "#{Ruhoh.paths.syntax}/.", syntax_path
     end
     
   end #Compiler
