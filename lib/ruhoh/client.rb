@@ -1,8 +1,9 @@
 class Ruhoh
   
   class Client
-    
-    Root = File.expand_path(File.join(File.dirname(__FILE__), '../..'))
+    PageTemplatePath = File.join(Ruhoh::Root, "scaffolds", "page.html")
+    PostTemplatePath = File.join(Ruhoh::Root, "scaffolds", "post.html")
+
     Help = <<HELP
     Ruhoh is the best static blog generator known to all humanity.
 
@@ -52,34 +53,31 @@ HELP
       end
 
       FileUtils.mkdir_p File.dirname(filename)
-      puts "Creating new post: #{filename}"
-      File.open(filename, 'w') do |post|
-        post.puts "---"
-        post.puts "layout: post"
-        post.puts "title: \"#{title.gsub(/-/,' ')}\""
-        post.puts "categories: "
-        post.puts "tags: []"
-        post.puts "---"
+      File.open(PostTemplatePath) do |template|
+        File.open(filename, 'w') do |post|
+          post.puts template.read
+        end
       end
+      
+      puts "\e[32mCreated new post:\e[0m #{filename}"
     end
       
     def new_page(name)
       name ||= "new-page.md"
-      filename = File.join(Ruhoh.paths.site_source, name)
+      filename = File.join(Ruhoh.paths.site_source, name.gsub(/\s/, '-'))
       filename = File.join(filename, "index.html") if File.extname(filename) == ""
-      title = File.basename(filename, File.extname(filename)).gsub(/[\W\_]/, " ").gsub(/\b\w/){$&.upcase}
       if File.exist?(filename)
         abort("Create new page: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
       end
 
       FileUtils.mkdir_p File.dirname(filename)
-      puts "Creating new page: #{filename}"
-      File.open(filename, 'w') do |post|
-        post.puts "---"
-        post.puts "layout: page"
-        post.puts "title: \"#{title}\""
-        post.puts "---"
+      File.open(PageTemplatePath) do |template|
+        File.open(filename, 'w') do |page|
+          page.puts template.read
+        end
       end
+      
+      puts "\e[32mCreated new page:\e[0m #{filename}"
     end
     
     def new_blog(name)
@@ -88,7 +86,7 @@ HELP
         exit 0
       end
 
-      source_directory = File.join(Root, 'scaffolds/blog')
+      source_directory = File.join(Ruhoh::Root, 'scaffolds/blog')
       target_directory = File.join(Dir.pwd, name)
 
       if File.exist?(target_directory)
