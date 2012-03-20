@@ -56,6 +56,14 @@ class Ruhoh
         else
           self.context[:pages].each_value {|page| pages << page }
         end
+        
+        pages.each_with_index do |page, i| 
+          next unless page['id'] == self.context[:page]['id']
+          active_page = page.dup
+          active_page['is_active_page'] = true
+          pages[i] = active_page
+        end
+        
         pages
       end
 
