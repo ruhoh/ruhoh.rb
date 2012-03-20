@@ -66,6 +66,7 @@ class Ruhoh
     def compiled_path
       raise "ID is null: Id must be set via page.change(id) or page.change_with_url(url)" if @id.nil?
       path = CGI.unescape(@data['url']).gsub(/^\//, '') #strip leading slash.
+      path = "index.html" if path.empty?
       path += '/index.html' unless path =~ /\.html$/
       path
     end
