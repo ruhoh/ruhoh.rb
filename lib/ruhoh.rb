@@ -26,6 +26,7 @@ class Ruhoh
 
   class << self; attr_reader :folders, :files, :config, :paths, :filters end
   
+  Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
   Folders = Struct.new(:database, :posts, :templates, :themes, :layouts, :partials, :media)
   Files = Struct.new(:site, :config)
