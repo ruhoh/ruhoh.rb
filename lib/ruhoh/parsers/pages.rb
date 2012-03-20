@@ -51,7 +51,9 @@ class Ruhoh
       end
     
       def self.titleize(filename)
-        File.basename( filename, File.extname(filename) ).gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
+        name = File.basename( filename, File.extname(filename) )
+        name = filename.split('/')[-2] if name == 'index'
+        name.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
       end
     
       def self.permalink(page)
