@@ -74,8 +74,10 @@ class Ruhoh
       end
 
       def analytics
+        return '' if self.context['page']['analytics'].to_s == 'false'
         analytics_config = self.context['site']['config']['analytics']
         return '' unless analytics_config && analytics_config['provider']
+        
         code = self.partial("analytics/#{analytics_config['provider']}")
         return "<h2 style='color:red'>!Analytics Provider partial for '#{analytics_config['provider']}' not found </h2>" if code.nil?
 
@@ -83,6 +85,7 @@ class Ruhoh
       end
 
       def comments
+        return '' if self.context['page']['comments'].to_s == 'false'
         comments_config = self.context['site']['config']['comments']
         return '' unless comments_config && comments_config['provider']
         code = self.partial("comments/#{comments_config['provider']}")
