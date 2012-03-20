@@ -5,6 +5,7 @@ class Ruhoh
     PageTemplatePath = File.join(Ruhoh::Root, "scaffolds", "page.html")
     PostTemplatePath = File.join(Ruhoh::Root, "scaffolds", "post.html")
     LayoutTemplatePath = File.join(Ruhoh::Root, "scaffolds", "layout.html")
+    ThemeTemplatePath = File.join(Ruhoh::Root, "scaffolds", "theme")
     
     def initialize(args)
       case args[0]
@@ -18,6 +19,8 @@ class Ruhoh
         self.new_post(args[1], args[2], 'draft')
       when 'layout'
         self.new_layout(args[1])
+      when 'theme'
+        self.new_theme(args[1])
       else
         help = File.open(File.join(Ruhoh::Root, "scaffolds", 'help'))
         puts help.read
@@ -87,6 +90,23 @@ class Ruhoh
       puts "=> #{target_directory}"
     end
     
+    def new_theme(name)
+      if name.nil?
+        puts "Name must be specified"
+        exit 0
+      end
+
+      target_directory = File.expand_path(File.join(Ruhoh.paths.theme, '..', name.gsub(/\s/, '-').downcase))
+      
+      if File.exist?(target_directory)
+        abort("Create new theme: \e[31mAborted!\e[0m") if ask("#{target_directory} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
+      end
+
+      FileUtils.mkdir target_directory unless File.exist?(target_directory)
+      FileUtils.cp_r "#{ThemeTemplatePath}/.", target_directory
+      
+      puts "\e[32mCreated new theme scaffold:\e[0m #{target_directory}"
+    end
     
     def new_layout(name)
       filename = File.join(Ruhoh.paths.layouts, name.gsub(/\s/, '-').downcase) + ".html"
@@ -103,7 +123,6 @@ class Ruhoh
       
       puts "\e[32mCreated new layout:\e[0m #{filename}"
     end
-    
     
     def ask(message, valid_options)
       if valid_options
