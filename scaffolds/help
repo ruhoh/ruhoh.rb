@@ -13,3 +13,15 @@ Basic Command Line Usage:
   post <TITLE> <YYYY-MM-DD>[OPTIONAL]
 
     # Create a new post with the given title having default YAML FrontMatter. Date defaults to Today unless specifically passed.
+
+  draft <TITLE> <YYYY-MM-DD>[OPTIONAL]
+    
+    # Create a new post-draft. Works the same as the post method but saves to the draft folder rather than post folder.
+    
+  layout <NAME>
+  
+    # Create a new layout for the currently active theme.
+    
+  theme <NAME>
+  
+    # Create a new theme scaffold.
