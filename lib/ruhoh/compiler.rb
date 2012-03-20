@@ -4,7 +4,7 @@ class Ruhoh
     
     def initialize(target_directory = './_compiled')
       Ruhoh::DB.update!
-      @target = target_directory
+      @target = target_directory || './_compiled'
       @page = Ruhoh::Page.new
     end
     
@@ -21,11 +21,11 @@ class Ruhoh
       FileUtils.cd(@target) {
         Ruhoh::DB.posts['dictionary'].merge(Ruhoh::DB.pages).each_value do |p|
           @page.change(p['id'])
-          
+
           FileUtils.mkdir_p File.dirname(@page.compiled_path)
           File.open(@page.compiled_path, 'w') { |p| p.puts @page.render }
 
-          processed << path
+          processed << p
         end
       }
 

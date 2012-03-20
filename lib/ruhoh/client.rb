@@ -1,3 +1,5 @@
+require 'ruhoh/compiler'
+
 class Ruhoh
   
   class Client
@@ -21,6 +23,8 @@ class Ruhoh
         self.new_layout(args[1])
       when 'theme'
         self.new_theme(args[1])
+      when 'compile'
+        self.compile(args[1])
       else
         help = File.open(File.join(Ruhoh::Root, "scaffolds", 'help'))
         puts help.read
@@ -122,6 +126,10 @@ class Ruhoh
       end
       
       puts "\e[32mCreated new layout:\e[0m #{filename}"
+    end
+    
+    def compile(target_directory=nil)
+      Ruhoh::Compiler.new(target_directory).compile
     end
     
     def ask(message, valid_options)
