@@ -30,22 +30,27 @@ class Ruhoh
       dw.add_observer {|*args| 
         args.each {|event|
           path = event['path'].gsub(Ruhoh.paths.site_source, '')
-          puts path
+
           if path =~ Regexp.new("^\/?#{Ruhoh.folders.posts}")
-            puts "Watch: update posts"
+            type = "Posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.drafts}")
+            type = "Drafts"
+            Ruhoh::DB.update(:drafts)
+            Ruhoh::DB.update(:routes)
           elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.templates}")
-            puts "Watch: update themes"
+            type = "Themes"
             Ruhoh::DB.update(:layouts)
             Ruhoh::DB.update(:partials)
           else
-            puts "Watch: update pages"
+            type = "Pages"
             Ruhoh::DB.update(:pages)
             Ruhoh::DB.update(:routes)
           end
-  
+          
           t = Time.now.strftime("%H:%M:%S")
+          puts "\e[33m Watch: Update #{type} \e[0m"
           puts "[#{t}] regeneration: #{args.size} files changed"
         }
       }
