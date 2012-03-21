@@ -31,7 +31,13 @@ class Ruhoh
         args.each {|event|
           path = event['path'].gsub(Ruhoh.paths.site_source, '')
 
-          if path =~ Regexp.new("^\/?#{Ruhoh.folders.posts}")
+          if path == "/#{Ruhoh.files.site}"
+            type = "Site"
+            Ruhoh::DB.update(:site)
+          elsif path == "/#{Ruhoh.files.config}"
+            type = "Config"
+            Ruhoh::DB.update(:site)
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.posts}")
             type = "Posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
