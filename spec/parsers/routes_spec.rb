@@ -20,24 +20,29 @@ module Routes
       }
       let(:posts){
         { 
-          "dictionary" => 
-          {
+          "dictionary" => {
             "post1.md" => {'url' => '/post1.html', "id" => "post1.md"},
             "post2.md" => {'url' => '/post2.html', "id" => "post2.md"},
             "post3.md" => {'url' => '/post3.html', "id" => "post3.md"},
           }
         }
       }
+      let(:drafts){
+        {
+          "draft1.md" => {'url' => '/draft1.html', "id" => "draft1.md"},
+        }
+      }
       
-      it 'should return a dictionary/hash with urls as keys that map to post/page ids as values' do
+      it 'should return a dictionary/hash with urls as keys that map to post/draft/page ids as values' do
         Ruhoh::Parsers::Pages.should_receive(:generate).and_return(pages)
         Ruhoh::Parsers::Posts.should_receive(:generate).and_return(posts)
+        Ruhoh::Parsers::Posts.should_receive(:generate_drafts).and_return(drafts)
         
         routes = Ruhoh::Parsers::Routes.generate
         
         routes.should be_a_kind_of(Hash)
-        routes.keys.sort.should == ['/blah.html', '/no.html', '/post1.html', '/post2.html', '/post3.html', '/yes.html']
-        routes.values.sort.should == ['blah.md', 'no.md', 'post1.md', 'post2.md', 'post3.md', 'yes.md']
+        routes.keys.sort.should == ['/blah.html', '/draft1.html', '/no.html', '/post1.html', '/post2.html', '/post3.html', '/yes.html']
+        routes.values.sort.should == ['blah.md', 'draft1.md',  'no.md', 'post1.md', 'post2.md', 'post3.md', 'yes.md']
       end
 
     end

@@ -69,6 +69,7 @@ module DB
         Ruhoh::DB.should_receive(:update).with(:site).ordered
         Ruhoh::DB.should_receive(:update).with(:routes).ordered
         Ruhoh::DB.should_receive(:update).with(:posts).ordered
+        Ruhoh::DB.should_receive(:update).with(:drafts).ordered
         Ruhoh::DB.should_receive(:update).with(:pages).ordered
         Ruhoh::DB.should_receive(:update).with(:layouts).ordered
         Ruhoh::DB.should_receive(:update).with(:partials).ordered

@@ -27,12 +27,12 @@ module Posts
       
       context "A valid post" do
         it 'should extract valid posts from source directory.' do
-          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts
+          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts(Ruhoh.folders.posts)
           dictionary.keys.sort.should ==  ['_posts/2012-01-01-hello-world.md']
         end
         
         it 'should return a properly formatted hash for each post' do
-          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts
+          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts(Ruhoh.folders.posts)
 
           dictionary.each_value { |value|
             value.should have_key("layout")
@@ -49,7 +49,7 @@ module Posts
           Dir.should_receive(:glob).and_yield(post_path)
           Ruhoh::Utils.stub(:parse_file).and_return({"data" => {"date" => "2012-01-01"}})
           
-          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts
+          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts(Ruhoh.folders.posts)
           
           dictionary.should_not include(post_path)
           invalid[0][0].should == post_path
@@ -62,7 +62,7 @@ module Posts
           Dir.should_receive(:glob).and_yield(post_path)
           Ruhoh::Utils.stub(:parse_file).and_return({"data" => {"title" => "meep"}})
           
-          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts
+          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts(Ruhoh.folders.posts)
           
           dictionary.should_not include(post_path)
           invalid[0][0].should == post_path
@@ -75,7 +75,7 @@ module Posts
           Dir.should_receive(:glob).and_yield(post_path)
           Ruhoh::Utils.stub(:parse_file).and_return({"data" => {"date" => "2012-51-01"}})
           
-          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts
+          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts(Ruhoh.folders.posts)
           
           dictionary.should_not include(post_path)
           invalid[0][0].should == post_path
@@ -88,7 +88,7 @@ module Posts
           Dir.should_receive(:glob).and_yield(post_path)
           Ruhoh::Utils.stub(:parse_file).and_return({})
           
-          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts
+          dictionary, invalid = Ruhoh::Parsers::Posts.process_posts(Ruhoh.folders.posts)
           
           dictionary.should_not include(post_path)
           invalid[0][0].should == post_path
