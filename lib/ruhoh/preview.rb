@@ -22,6 +22,7 @@ class Ruhoh
 
     def call(env)
       return favicon if env['PATH_INFO'] == '/favicon.ico'
+      return drafts if env['PATH_INFO'] == '/_drafts'
       
       @page.change_with_url(env['PATH_INFO'])
       [200, {'Content-Type' => 'text/html'}, [@page.render]]
@@ -31,6 +32,17 @@ class Ruhoh
       [200, {'Content-Type' => 'image/x-icon'}, ['']]
     end
 
+    def drafts
+      html = '<h3>Drafts</h3>'
+      html += '<ul>'
+      Ruhoh::DB.drafts.each_value do |draft|
+        html += "<li><a href='#{draft['url']}'>#{draft['title']}</a></li>"
+      end
+      html += '</ul>'
+      
+      [200, {'Content-Type' => 'text/html'}, [html]]
+    end
+    
   end #Preview
   
 end #Ruhoh
