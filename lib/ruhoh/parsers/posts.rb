@@ -12,9 +12,9 @@ class Ruhoh
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         puts "=> Generating Posts..."
 
-        dictionary, invalid_posts = self.process_posts
-        ordered_posts = self.ordered_posts(dictionary)
+        dictionary, invalid_posts = self.process_posts(Ruhoh.folders.posts)
         
+        ordered_posts = self.ordered_posts(dictionary)
         data = {
           'dictionary'      => dictionary,
           'chronological'   => self.build_chronology(ordered_posts),
@@ -26,32 +26,48 @@ class Ruhoh
         if invalid_posts.empty?
           puts "=> #{dictionary.count}/#{dictionary.count + invalid_posts.count} posts processed."
         else
-          puts "=> Invalid posts not processed:"
-          puts invalid_posts.to_yaml
+          puts "=> \e[31m Invalid posts not processed: \e[0m"
+          puts invalid_posts
         end
-      
+        
         data
       end
 
-      def self.process_posts
+      def self.generate_drafts
+        raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
+        puts "=> Generating Drafts..."
+        
+        drafts, invalid_drafts = self.process_posts(Ruhoh.folders.drafts)
+        
+        if invalid_drafts.empty?
+          puts "=> #{drafts.count}/#{drafts.count + invalid_drafts.count} drafts processed."
+        else
+          puts "=> \e[31m Invalid drafts not processed: \e[0m"
+          puts invalid_drafts
+        end
+        
+        drafts
+      end
+        
+      def self.process_posts(directory)
         dictionary = {}
         invalid = []
 
         FileUtils.cd(Ruhoh.paths.site_source) {
-          Dir.glob("#{Ruhoh.folders.posts}/**/*.*") { |filename| 
+          Dir.glob("#{directory}/**/*.*") { |filename| 
             next if FileTest.directory?(filename)
             next if ['.'].include? filename[0]
 
             parsed_page = Ruhoh::Utils.parse_file(filename)
             if parsed_page.empty?
-              error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
+              error = "\e[31m Invalid YAML Front Matter.\e[0m Ensure this page has valid YAML, even if it's empty."
               invalid << [filename, error] ; next
             end
             data = parsed_page['data']
             
             filename_data = self.parse_filename(filename)
             if filename_data.empty?
-              error = "Invalid filename format.\n Format should be: YYYY-MM-DD-my-post-title.ext"
+              error = "\e[31m Invalid Filename Format.\e[0m Format should be: YYYY-MM-DD-my-post-title.ext"
               invalid << [filename, error] ; next
             end
             
@@ -60,7 +76,7 @@ class Ruhoh
             begin 
               Time.parse(data['date'])
             rescue
-              error = "Invalid date format.\n Date should be: YYYY/MM/DD"
+              error = "\e[31m Invalid Date Format.\e[0m Date should be: YYYY/MM/DD"
               invalid << [filename, error] ; next
             end
           
@@ -73,7 +89,7 @@ class Ruhoh
 
         [dictionary, invalid]
       end
-    
+
       def self.ordered_posts(dictionary)
         ordered_posts = []
         dictionary.each_value { |val| ordered_posts << val }

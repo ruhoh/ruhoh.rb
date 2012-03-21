@@ -12,7 +12,15 @@ class Ruhoh
     # Public: Change this page using an id.
     def change(id)
       @data = nil
-      @data = id =~ Regexp.new("^#{Ruhoh.folders.posts}") ? Ruhoh::DB.posts['dictionary'][id] : Ruhoh::DB.pages[id]
+      
+      @data = if id =~ Regexp.new("^#{Ruhoh.folders.posts}")
+        Ruhoh::DB.posts['dictionary'][id] 
+      elsif id =~ Regexp.new("^#{Ruhoh.folders.drafts}")
+        Ruhoh::DB.drafts[id] 
+      else
+        Ruhoh::DB.pages[id]
+      end
+      
       raise "Page #{id} not found in database" unless @data
       @id = id
     end

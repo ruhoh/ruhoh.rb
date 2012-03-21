@@ -9,10 +9,15 @@ class Ruhoh
         Ruhoh::Parsers::Pages.generate.each_value { |page|
           routes[page['url']] = page['id'] 
         }
+        
+        Ruhoh::Parsers::Posts.generate_drafts.each_value { |page|
+          routes[page['url']] = page['id'] 
+        }
+
         Ruhoh::Parsers::Posts.generate['dictionary'].each_value { |page|
           routes[page['url']] = page['id'] 
         }
-      
+        
         routes
       end
     
