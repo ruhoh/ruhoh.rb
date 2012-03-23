@@ -3,13 +3,12 @@ require 'ruhoh/compiler'
 class Ruhoh
   
   class Client
-    BlogTemplatePath = File.join(Ruhoh::Root, 'scaffolds/blog')
-    PageTemplatePath = File.join(Ruhoh::Root, "scaffolds", "page.html")
-    PostTemplatePath = File.join(Ruhoh::Root, "scaffolds", "post.html")
-    LayoutTemplatePath = File.join(Ruhoh::Root, "scaffolds", "layout.html")
-    ThemeTemplatePath = File.join(Ruhoh::Root, "scaffolds", "theme")
+    
+    Paths = Struct.new(:blog_template, :page_template, :post_template, :layout_template, :theme_template)
     
     def initialize(args)
+      self.setup_paths
+      
       case args[0]
       when 'new'
         self.new_blog(args[1])
@@ -31,7 +30,16 @@ class Ruhoh
         help.close
       end
     end  
-
+    
+    def setup_paths
+      @paths = Paths.new
+      @paths.blog_template    = File.join(Ruhoh::Root, "scaffolds", "blog")
+      @paths.page_template    = File.join(Ruhoh::Root, "scaffolds", "page.html")
+      @paths.post_template    = File.join(Ruhoh::Root, "scaffolds", "post.html")
+      @paths.layout_template  = File.join(Ruhoh::Root, "scaffolds", "layout.html")
+      @paths.theme_template   = File.join(Ruhoh::Root, "scaffolds", "theme")
+    end
+    
     def new_post(title, date, type='post')
       title ||= "new-post"
       slug = title.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
@@ -47,7 +55,7 @@ class Ruhoh
       end
 
       FileUtils.mkdir_p File.dirname(filename)
-      File.open(PostTemplatePath) do |template|
+      File.open(@paths.post_template) do |template|
         File.open(filename, 'w') do |post|
           post.puts template.read
         end
@@ -65,7 +73,7 @@ class Ruhoh
       end
 
       FileUtils.mkdir_p File.dirname(filename)
-      File.open(PageTemplatePath) do |template|
+      File.open(@paths.page_template) do |template|
         File.open(filename, 'w') do |page|
           page.puts template.read
         end
@@ -88,7 +96,7 @@ class Ruhoh
       end
 
       FileUtils.mkdir target_directory
-      FileUtils.cp_r "#{BlogTemplatePath}/.", target_directory
+      FileUtils.cp_r "#{@paths.blog_template}/.", target_directory
       
       puts "=> Blog successfully cloned to:"
       puts "=> #{target_directory}"
@@ -107,7 +115,7 @@ class Ruhoh
       end
 
       FileUtils.mkdir target_directory unless File.exist?(target_directory)
-      FileUtils.cp_r "#{ThemeTemplatePath}/.", target_directory
+      FileUtils.cp_r "#{@paths.theme_template}/.", target_directory
       
       puts "\e[32mCreated new theme scaffold:\e[0m #{target_directory}"
     end
@@ -119,7 +127,7 @@ class Ruhoh
       end
       
       FileUtils.mkdir_p File.dirname(filename)
-      File.open(LayoutTemplatePath) do |template|
+      File.open(@paths.layout_template) do |template|
         File.open(filename, 'w') do |page|
           page.puts template.read
         end
