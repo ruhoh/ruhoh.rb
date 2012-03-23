@@ -10,9 +10,9 @@ class Ruhoh
   #
   #   Ruhoh.setup
   #   use Rack::Static, {:urls => ["/#{Ruhoh.folders.media}", "/#{Ruhoh.folders.templates}"]}
-  #   run Ruhoh::Preview.new
+  #   run Ruhoh::Previewer.new
   #
-  class Preview
+  class Previewer
     
     def initialize
       Ruhoh::DB.update!
@@ -43,6 +43,6 @@ class Ruhoh
       [200, {'Content-Type' => 'text/html'}, [html]]
     end
     
-  end #Preview
+  end #Previewer
   
 end #Ruhoh

@@ -19,7 +19,7 @@ require 'ruhoh/templaters/rmustache'
 require 'ruhoh/templaters/base'
 require 'ruhoh/converters/converter'
 require 'ruhoh/page'
-require 'ruhoh/preview'
+require 'ruhoh/previewer'
 require 'ruhoh/watch'
 
 class Ruhoh
