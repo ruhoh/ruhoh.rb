@@ -26,7 +26,7 @@ class Ruhoh
       when 'compile'
         self.compile(args[1])
       else
-        help = File.open(File.join(Ruhoh::Root, "scaffolds", 'help'))
+        help = File.open(File.join(Ruhoh::Root, 'help'))
         puts help.read
         help.close
       end

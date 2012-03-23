@@ -17,7 +17,7 @@ class Ruhoh
       end
 
       def self.system_partials
-        self.process(File.join(Ruhoh::Root, 'scaffolds', 'partials'))
+        self.process(File.join(Ruhoh::Root, 'system_partials'))
       end
 
       def self.process(path)
