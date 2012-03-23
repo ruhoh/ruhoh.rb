@@ -52,7 +52,7 @@ class Ruhoh
     
       def self.titleize(filename)
         name = File.basename( filename, File.extname(filename) )
-        name = filename.split('/')[-2] if name == 'index'
+        name = filename.split('/')[-2] if name == 'index' && !filename.index('/').nil?
         name.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
       end
     
