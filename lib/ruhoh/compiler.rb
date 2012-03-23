@@ -2,9 +2,9 @@ class Ruhoh
   
   class Compiler
     
-    def initialize(target_directory = './_compiled')
+    def initialize(target_directory)
       Ruhoh::DB.update!
-      @target = target_directory || './_compiled'
+      @target = target_directory || "./#{Ruhoh.paths.compiled}"
       @page = Ruhoh::Page.new
     end
     

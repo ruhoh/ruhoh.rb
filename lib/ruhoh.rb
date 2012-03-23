@@ -28,7 +28,7 @@ class Ruhoh
   
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
-  Folders = Struct.new(:database, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax)
+  Folders = Struct.new(:database, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
   Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude)
@@ -42,7 +42,8 @@ class Ruhoh
     :partials,
     :global_partials,
     :media,
-    :syntax
+    :syntax,
+    :compiled
   )
   
   
@@ -59,7 +60,7 @@ class Ruhoh
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax")
+    @folders     = Folders.new('_database', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
     @files       = Files.new('_site.yml', '_config.yml')
     @filters     = Filters.new
     @config      = Config.new
@@ -92,6 +93,7 @@ class Ruhoh
     @paths.global_partials  = self.absolute_path(@folders.templates, @folders.partials)
     @paths.media            = self.absolute_path(@folders.media)
     @paths.syntax           = self.absolute_path(@folders.templates, @folders.syntax)
+    @paths.compiled         = self.absolute_path(@folders.compiled)
   end
   
   # filename filters
