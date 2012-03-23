@@ -4,7 +4,7 @@ class Ruhoh
     
     def initialize(target_directory)
       Ruhoh::DB.update!
-      @target = target_directory || "./#{Ruhoh.paths.compiled}"
+      @target = target_directory || "./#{Ruhoh.folders.compiled}"
       @page = Ruhoh::Page.new
     end
     
