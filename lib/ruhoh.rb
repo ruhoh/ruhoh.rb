@@ -8,6 +8,7 @@ require 'mustache'
 
 require 'ruhoh/utils'
 require 'ruhoh/friend'
+require 'ruhoh/parsers/drafts'
 require 'ruhoh/parsers/posts'
 require 'ruhoh/parsers/pages'
 require 'ruhoh/parsers/routes'
