@@ -35,14 +35,18 @@ class Ruhoh
       def ensure_bucket(bucket)
         AWS::S3::Bucket.find(bucket)
       rescue
-        puts "'#{@bucket}' bucket not found, trying to create..."
+        Ruhoh::Friend.say { 
+          yellow "'#{@bucket}' bucket not found, trying to create..."
+        }
         AWS::S3::Bucket.create(bucket, :access => :public_read)
 
         if AWS::S3::Service.response.success?
-          puts "\e[32m Bucket created! \e[0m" 
+          Ruhoh::Friend.say { green "Bucket created!" }
         else
-          puts "\e[32m Bucket creation failed! \e[0m"
-          puts "Perhaps you will need to manually create the bucket."
+          Ruhoh::Friend.say { 
+            red "Bucket creation failed!"
+            plain "Perhaps you will need to manually create the bucket."
+          }
           exit
         end
       end
@@ -54,9 +58,9 @@ class Ruhoh
         end
 
         if AWS::S3::Service.response.success?
-          puts "\e[32m #{filepath}: success! \e[0m"
+          Ruhoh::Friend.say { green "#{filepath}: success!" }
         else
-          puts "\e[31m #{filepath}: failure! \e[0m"
+          Ruhoh::Friend.say { green "#{filepath}: failure!" }
         end
       end
     

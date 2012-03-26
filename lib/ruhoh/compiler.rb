@@ -27,11 +27,10 @@ class Ruhoh
           File.open(@page.compiled_path, 'w') { |p| p.puts @page.render }
 
           processed << p
+          Ruhoh::Friend.say { green "processed: #{p['id']}" }
         end
       }
 
-      puts "=> Posts Processed:"
-      puts processed
     end
     
     def theme

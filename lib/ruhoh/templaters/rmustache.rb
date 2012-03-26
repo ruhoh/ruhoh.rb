@@ -10,8 +10,6 @@ class Ruhoh
         # Overload find method to catch helper expressions
         def find(obj, key, default = nil)
           return super unless key.to_s.index('?')
-      
-          puts "=> Executing helper: #{key}"
           context, helper = key.to_s.split('?')
           context = context.empty? ? obj : super(obj, context)
 

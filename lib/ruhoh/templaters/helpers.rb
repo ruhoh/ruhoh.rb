@@ -16,9 +16,12 @@ class Ruhoh
       end
       
       def debug(sub_context)
-        puts "=>DEBUG:"
-        puts sub_context.class
-        puts sub_context.inspect
+        Ruhoh::Friend.say { 
+          yellow "?debug:"
+          magenta sub_context.class
+          cyan sub_context.inspect
+        }
+        
         "<pre>#{sub_context.class}\n#{sub_context.pretty_inspect}</pre>"
       end
 
@@ -45,7 +48,6 @@ class Ruhoh
       end
 
       def to_pages(sub_context)
-        puts "=> call: pages_list with context: #{sub_context}"
         pages = []
         if sub_context.is_a?(Array) 
           sub_context.each do |id|

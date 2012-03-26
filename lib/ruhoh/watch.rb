@@ -10,7 +10,9 @@ class Ruhoh
     # Returns: Nothing
     def self.start
       raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
-      puts "=> Start watching: #{Ruhoh.paths.site_source}"
+      Ruhoh::Friend.say {
+        plain "=> Start watching: #{Ruhoh.paths.site_source}"
+      }
       glob = ''
     
       # Watch all files + all sub directories except for special folders e.g '_database'
@@ -55,9 +57,9 @@ class Ruhoh
             Ruhoh::DB.update(:routes)
           end
           
-          t = Time.now.strftime("%H:%M:%S")
-          puts "\e[33m Watch: Update #{type} \e[0m"
-          puts "[#{t}] regeneration: #{args.size} files changed"
+          Ruhoh::Friend.say {
+            yellow "Watch [#{Time.now.strftime("%H:%M:%S")}] [Update #{type}] : #{args.size} files changed"
+          }
         }
       }
 
