@@ -10,8 +10,8 @@ class Ruhoh
       #
       def self.generate
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
-
-        dictionary, invalid = self.process_posts(Ruhoh.folders.posts)
+        
+        dictionary, invalid = self.process('drafts')
         
         ordered_posts = self.ordered_posts(dictionary)
         data = {
@@ -21,7 +21,6 @@ class Ruhoh
           'tags'            => self.parse_tags(ordered_posts),
           'categories'      => self.parse_categories(ordered_posts)
         }
-
 
         report = "#{dictionary.count}/#{dictionary.count + invalid.count} posts processed."
         if dictionary.empty? && invalid.empty?
@@ -41,9 +40,10 @@ class Ruhoh
       def self.generate_drafts
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         
-        drafts, invalid = self.process_posts(Ruhoh.folders.drafts)
+        drafts, invalid = self.process('drafts')
         
         report = "#{drafts.count}/#{drafts.count + invalid.count} drafts processed."
+        
         if drafts.empty? && invalid.empty?
           Ruhoh::Friend.say { plain "0 drafts to process." }
         elsif invalid.empty?
@@ -57,46 +57,51 @@ class Ruhoh
         
         drafts
       end
-        
-      def self.process_posts(directory)
+      
+      def self.process(type)
         dictionary = {}
         invalid = []
+        
+        self.files(type).each do |filename|
+          parsed_page = Ruhoh::Utils.parse_file(filename)
+          if parsed_page.empty?
+            error = "Invalid YAML Front Matter. Ensure this page has valid YAML, even if it's empty."
+            invalid << [filename, error] ; next
+          end
+          data = parsed_page['data']
+          
+          filename_data = self.parse_filename(filename)
+          if filename_data.empty?
+            error = "Invalid Filename Format. Format should be: YYYY-MM-DD-my-post-title.ext"
+            invalid << [filename, error] ; next
+          end
+          
+          data['date'] ||= filename_data['date']
 
+          begin 
+            Time.parse(data['date'])
+          rescue
+            error = "Invalid Date Format. Date should be: YYYY/MM/DD"
+            invalid << [filename, error] ; next
+          end
+        
+          data['id']            = filename
+          data['title']         = data['title'] || self.titleize(filename_data['slug'])
+          data['url']           = self.permalink(data)
+          dictionary[filename]  = data
+        end
+        
+        [dictionary, invalid]
+      end
+      
+      def self.files(type)
         FileUtils.cd(Ruhoh.paths.site_source) {
-          Dir.glob("#{directory}/**/*.*") { |filename| 
+          return Dir["#{Ruhoh.folders.__send__(type)}/**/*.*"].select { |filename|
             next if FileTest.directory?(filename)
             next if ['.'].include? filename[0]
-
-            parsed_page = Ruhoh::Utils.parse_file(filename)
-            if parsed_page.empty?
-              error = "\e[31m Invalid YAML Front Matter.\e[0m Ensure this page has valid YAML, even if it's empty."
-              invalid << [filename, error] ; next
-            end
-            data = parsed_page['data']
-            
-            filename_data = self.parse_filename(filename)
-            if filename_data.empty?
-              error = "\e[31m Invalid Filename Format.\e[0m Format should be: YYYY-MM-DD-my-post-title.ext"
-              invalid << [filename, error] ; next
-            end
-            
-            data['date'] ||= filename_data['date']
-
-            begin 
-              Time.parse(data['date'])
-            rescue
-              error = "\e[31m Invalid Date Format.\e[0m Date should be: YYYY/MM/DD"
-              invalid << [filename, error] ; next
-            end
-          
-            data['id']            = filename
-            data['title']         = data['title'] || self.titleize(filename_data['slug'])
-            data['url']           = self.permalink(data)
-            dictionary[filename]  = data
+            true
           }
         }
-
-        [dictionary, invalid]
       end
 
       def self.ordered_posts(dictionary)
