@@ -1,16 +1,14 @@
 class Ruhoh
-
   module Parsers
-    
     module Routes
 
       def self.generate
         routes = {}
-        Ruhoh::Parsers::Pages.generate.each_value { |page|
+        Ruhoh::DB.pages.each_value { |page|
           routes[page['url']] = page['id'] 
         }
 
-        Ruhoh::Parsers::Posts.generate['dictionary'].each_value { |page|
+        Ruhoh::DB.posts['dictionary'].each_value { |page|
           routes[page['url']] = page['id'] 
         }
         
@@ -18,7 +16,5 @@ class Ruhoh
       end
     
     end #Routes
-  
   end #Parsers
-  
 end #Ruhoh
