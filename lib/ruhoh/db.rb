@@ -19,7 +19,7 @@ class Ruhoh
           when :posts
             Ruhoh::Parsers::Posts.generate
           when :drafts
-            Ruhoh::Parsers::Posts.generate_drafts
+            Ruhoh::Parsers::Drafts.generate
           when :pages
             Ruhoh::Parsers::Pages.generate
           when :layouts
