@@ -27,7 +27,12 @@ class Ruhoh
     
     # Public: Change this page using a URL.
     def change_with_url(url)
-      id = Ruhoh::DB.routes[url]
+      id = if url =~ Regexp.new("^/#{Ruhoh.folders.drafts}")
+        url.gsub(/^\//,'')
+      else
+        Ruhoh::DB.routes[url]
+      end
+      
       raise "Page id not found for url: #{url}" unless id
       self.change(id)
     end
