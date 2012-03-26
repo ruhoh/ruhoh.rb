@@ -71,6 +71,14 @@ class Ruhoh
   
   def self.setup_config
     site_config = Ruhoh::Utils.parse_file_as_yaml(@site_source, @files.config)
+    unless site_config
+      Ruhoh::Friend.say {
+        red "Empty site_config"
+        red "Please ensure ./#{Ruhoh.files.config} exists and contains valid YAML"
+      }
+      exit
+    end
+    
     theme = site_config['theme'] ? site_config['theme'].to_s.gsub(/\s/, '') : ''
     raise "Theme not specified in _config.yml" if theme.empty?
 
