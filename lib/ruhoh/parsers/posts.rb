@@ -9,32 +9,18 @@ class Ruhoh
       def self.generate
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         
-        dictionary, invalid = self.process
-        
+        dictionary = self.process
         ordered_posts = self.ordered_posts(dictionary)
-        data = {
+
+        {
           'dictionary'      => dictionary,
           'chronological'   => self.build_chronology(ordered_posts),
           'collated'        => self.collate(ordered_posts),
           'tags'            => self.parse_tags(ordered_posts),
           'categories'      => self.parse_categories(ordered_posts)
         }
-
-        report = "#{dictionary.count}/#{dictionary.count + invalid.count} posts processed."
-        if dictionary.empty? && invalid.empty?
-          Ruhoh::Friend.say { plain "0 posts to process." }
-        elsif invalid.empty?
-          Ruhoh::Friend.say { green report }
-        else
-          Ruhoh::Friend.say {
-            yellow report
-            list "Posts not processed:", invalid
-          }
-        end
-        
-        data
       end
-
+      
       def self.process
         dictionary = {}
         invalid = []
@@ -68,7 +54,22 @@ class Ruhoh
           dictionary[filename]  = data
         end
         
-        [dictionary, invalid]
+        self.report(dictionary, invalid)
+        dictionary
+      end
+      
+      def self.report(dictionary, invalid)
+        output = "#{dictionary.count}/#{dictionary.count + invalid.count} posts processed."
+        if dictionary.empty? && invalid.empty?
+          Ruhoh::Friend.say { plain "0 posts to process." }
+        elsif invalid.empty?
+          Ruhoh::Friend.say { green output }
+        else
+          Ruhoh::Friend.say {
+            yellow output
+            list "Posts not processed:", invalid
+          }
+        end
       end
       
       def self.files
