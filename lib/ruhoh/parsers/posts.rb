@@ -11,7 +11,7 @@ class Ruhoh
       def self.generate
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         
-        dictionary, invalid = self.process('drafts')
+        dictionary, invalid = self.process_posts
         
         ordered_posts = self.ordered_posts(dictionary)
         data = {
@@ -40,7 +40,7 @@ class Ruhoh
       def self.generate_drafts
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         
-        drafts, invalid = self.process('drafts')
+        drafts, invalid = self.process_drafts
         
         report = "#{drafts.count}/#{drafts.count + invalid.count} drafts processed."
         
@@ -58,11 +58,32 @@ class Ruhoh
         drafts
       end
       
-      def self.process(type)
+      def self.process_drafts
         dictionary = {}
         invalid = []
         
-        self.files(type).each do |filename|
+        self.files('drafts').each do |filename|
+          parsed_page = Ruhoh::Utils.parse_file(filename)
+          if parsed_page.empty?
+            error = "Invalid YAML Front Matter. Ensure this page has valid YAML, even if it's empty."
+            invalid << [filename, error] ; next
+          end
+          data = parsed_page['data']
+
+          data['id']            = filename
+          #data['url']           = self.permalink(data)
+          data['url']           = filename
+          dictionary[filename]  = data
+        end
+        
+        [dictionary, invalid]
+      end
+      
+      def self.process_posts
+        dictionary = {}
+        invalid = []
+        
+        self.files('posts').each do |filename|
           parsed_page = Ruhoh::Utils.parse_file(filename)
           if parsed_page.empty?
             error = "Invalid YAML Front Matter. Ensure this page has valid YAML, even if it's empty."
