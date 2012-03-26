@@ -10,9 +10,8 @@ class Ruhoh
       #
       def self.generate
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
-        puts "=> Generating Posts..."
 
-        dictionary, invalid_posts = self.process_posts(Ruhoh.folders.posts)
+        dictionary, invalid = self.process_posts(Ruhoh.folders.posts)
         
         ordered_posts = self.ordered_posts(dictionary)
         data = {
@@ -23,11 +22,17 @@ class Ruhoh
           'categories'      => self.parse_categories(ordered_posts)
         }
 
-        if invalid_posts.empty?
-          puts "=> #{dictionary.count}/#{dictionary.count + invalid_posts.count} posts processed."
+
+        report = "#{dictionary.count}/#{dictionary.count + invalid.count} posts processed."
+        if dictionary.empty? && invalid.empty?
+          Ruhoh::Friend.say { plain "0 posts to process." }
+        elsif invalid.empty?
+          Ruhoh::Friend.say { green report }
         else
-          puts "=> \e[31m Invalid posts not processed: \e[0m"
-          puts invalid_posts
+          Ruhoh::Friend.say {
+            yellow report
+            list "Posts not processed:", invalid
+          }
         end
         
         data
@@ -35,15 +40,19 @@ class Ruhoh
 
       def self.generate_drafts
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
-        puts "=> Generating Drafts..."
         
-        drafts, invalid_drafts = self.process_posts(Ruhoh.folders.drafts)
+        drafts, invalid = self.process_posts(Ruhoh.folders.drafts)
         
-        if invalid_drafts.empty?
-          puts "=> #{drafts.count}/#{drafts.count + invalid_drafts.count} drafts processed."
+        report = "#{drafts.count}/#{drafts.count + invalid.count} drafts processed."
+        if drafts.empty? && invalid.empty?
+          Ruhoh::Friend.say { plain "0 drafts to process." }
+        elsif invalid.empty?
+          Ruhoh::Friend.say { green report }
         else
-          puts "=> \e[31m Invalid drafts not processed: \e[0m"
-          puts invalid_drafts
+          Ruhoh::Friend.say {
+            yellow report
+            list "Drafts not processed:", invalid
+          }
         end
         
         drafts

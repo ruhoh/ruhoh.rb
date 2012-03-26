@@ -8,7 +8,6 @@ class Ruhoh
       #
       def self.generate
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
-        puts "=> Generating Pages..."
 
         invalid = []
         dictionary = {}
@@ -31,14 +30,21 @@ class Ruhoh
             dictionary[filename] = parsed_page['data']
           }
         }
-
-        if invalid.empty?
-          puts "=> #{total_pages - invalid.count }/#{total_pages} pages processed."
+        
+        report = "#{total_pages - invalid.count }/#{total_pages} pages processed."
+        
+        if total_pages.zero? && invalid.empty?
+          Ruhoh::Friend.say { plain "0 pages to process." }
+        elsif invalid.empty?
+          Ruhoh::Friend.say { green report }
         else
-          puts "=> Invalid pages not processed:"
-          puts invalid.to_yaml
-        end   
-      
+          
+          Ruhoh::Friend.say {
+            yellow report
+            list "Pages not processed:", invalid
+          }
+        end
+
         dictionary 
       end
     
