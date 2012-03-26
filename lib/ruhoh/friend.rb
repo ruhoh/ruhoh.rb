@@ -17,8 +17,8 @@ class Ruhoh
       end
       
       def list(caption, listings)
+        red("  " + caption)
         listings.each do |pair|
-          red("  " + caption)
           cyan("    - " + pair[0])
           cyan("      " + pair[1])
         end
