@@ -9,36 +9,31 @@ class Ruhoh
       def self.generate
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
 
+        pages = self.files
         invalid = []
         dictionary = {}
-        total_pages = 0
-        FileUtils.cd(Ruhoh.paths.site_source) {
-          Dir.glob("**/*.*") { |filename| 
-            next unless self.is_valid_page?(filename)
-            total_pages += 1
 
-            parsed_page = Ruhoh::Utils.parse_file(filename)
-            if parsed_page.empty?
-              error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
-              invalid << [filename, error] ; next
-            end
-            
-            parsed_page['data']['id']     = filename
-            parsed_page['data']['url']    = self.permalink(parsed_page['data'])
-            parsed_page['data']['title']  = parsed_page['data']['title'] || self.titleize(filename)
+        pages.each do |filename|
+          parsed_page = Ruhoh::Utils.parse_file(filename)
+          if parsed_page.empty?
+            error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
+            invalid << [filename, error] ; next
+          end
+          
+          parsed_page['data']['id']     = filename
+          parsed_page['data']['url']    = self.permalink(parsed_page['data'])
+          parsed_page['data']['title']  = parsed_page['data']['title'] || self.titleize(filename)
 
-            dictionary[filename] = parsed_page['data']
-          }
-        }
+          dictionary[filename] = parsed_page['data']
+        end
+          
+        report = "#{pages.count - invalid.count }/#{pages.count} pages processed."
         
-        report = "#{total_pages - invalid.count }/#{total_pages} pages processed."
-        
-        if total_pages.zero? && invalid.empty?
+        if pages.count.zero? && invalid.empty?
           Ruhoh::Friend.say { plain "0 pages to process." }
         elsif invalid.empty?
           Ruhoh::Friend.say { green report }
         else
-          
           Ruhoh::Friend.say {
             yellow report
             list "Pages not processed:", invalid
@@ -47,7 +42,16 @@ class Ruhoh
 
         dictionary 
       end
-    
+
+      def self.files
+        FileUtils.cd(Ruhoh.paths.site_source) {
+          return Dir["**/*.*"].select { |filename| 
+            next unless self.is_valid_page?(filename)
+            true
+          }
+        }
+      end
+      
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['_', '.'].include? filepath[0]
