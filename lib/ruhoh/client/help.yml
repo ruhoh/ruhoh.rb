@@ -1,14 +1,15 @@
 ---
 description: |
-  Ruhoh is the best static blog generator known to all humanity.
 
-  >> Basic Command Line Usage:
-    
+  Ruhoh is a nifty, modular static blog generator.
+  It is the Universal Static Blog API.
+  Visit http://www.ruhoh.com for complete usage and documentation.
+
 commands:
   - 
     "command" : "new <directory_path>"
     "desc" : |
-      Create a new blog directory based on Ruhoh specification.
+      Create a new blog directory based on the Ruhoh specification.
   -
     "command" : "compile"
     "desc" : |

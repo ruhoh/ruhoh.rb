@@ -5,11 +5,11 @@ class Ruhoh
     
     Paths = Struct.new(:blog_template, :page_template, :post_template, :layout_template, :theme_template)
     
-    def initialize(args, options)
+    def initialize(data)
       self.setup_paths
-      self.setup_options(args, options)
-
-      cmd = (args[0] == 'new') ? 'blog' : (args[0] || 'help')
+      self.setup_options(data)
+      
+      cmd = (data[:args][0] == 'new') ? 'blog' : (data[:args][0] || 'help')
       Ruhoh::Friend.say { 
         red "Command not found"
         exit 
@@ -18,9 +18,10 @@ class Ruhoh
       self.__send__(cmd)
     end  
     
-    def setup_options(args, options)
-      @args = args
-      @options = options
+    def setup_options(data)
+      @args = data[:args]
+      @options = data[:options]
+      @opt_parser = data[:opt_parser]
       @options.ext = (@options.ext || 'md').gsub('.', '')
     end
     
@@ -33,12 +34,18 @@ class Ruhoh
       @paths.theme_template   = File.join(Ruhoh::Root, "scaffolds", "theme")
     end
 
-    # Public: Show Client Utility help documentation.
+    # Internal: Show Client Utility help documentation.
     def help
       file = File.join(Ruhoh::Root, 'lib', 'ruhoh', 'client', 'help.yml')
       content = Ruhoh::Utils.parse_file_as_yaml(file)
+      options = @opt_parser.help
       Ruhoh::Friend.say { 
         plain content['description']
+        plain ''
+        plain options
+        plain ''
+        plain 'Commands:'
+        plain ''
         content['commands'].each do |a|
           green("  " + a["command"])
           plain("    "+ a["desc"])
@@ -295,6 +302,7 @@ class Ruhoh
       print message
       STDIN.gets.chomp
     end
+    
     
   end #Client
 end #Ruhoh

@@ -9,26 +9,24 @@ require 'optparse'
 Options = Struct.new(:title, :date, :ext, :verbose)
 options = Options.new
 
-OptionParser.new do |opts|
-  opts.banner = "Usage: example.rb [options]"
-
-  opts.on("-t", "--title [TITLE]", "Specify post title.") do |title|
-    options.title = title
-  end
+opt_parser = OptionParser.new do |opts|
+  opts.banner = 'Use `ruhoh help` for full command list.'
   
-  opts.on("-d", "--date [DATE]", "Specify custom post date.") do |date|
-    options.date = date
-  end
-  
-  opts.on("-e", "--ext [EXT]", "Specify custom filename extension.") do |ext|
+  opts.on("-e", "--ext [EXT]", "Specify filename extension. Defaults to '.md' ") do |ext|
     options.ext = ext
   end
   
-  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-      options.verbose = v
-    end
+  opts.on("-v", "--[no-]verbose", "Run verbosely. For pages, shows extra title, url meta-data.") do |v|
+    options.verbose = v
+  end
     
-end.parse!
+end
+opt_parser.parse!
 
 Ruhoh.setup
-Ruhoh::Client.new(ARGV, options)
+Ruhoh::Client.new({
+  :args => ARGV,
+  :options => options,
+  :opt_parser => opt_parser
+})
+
