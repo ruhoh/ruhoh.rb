@@ -3,7 +3,32 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require 'ruhoh'
-require 'ruhoh/client'
+require 'ruhoh/client/client'
+require 'optparse'
+
+Options = Struct.new(:title, :date, :ext, :verbose)
+options = Options.new
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: example.rb [options]"
+
+  opts.on("-t", "--title [TITLE]", "Specify post title.") do |title|
+    options.title = title
+  end
+  
+  opts.on("-d", "--date [DATE]", "Specify custom post date.") do |date|
+    options.date = date
+  end
+  
+  opts.on("-e", "--ext [EXT]", "Specify custom filename extension.") do |ext|
+    options.ext = ext
+  end
+  
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+      options.verbose = v
+    end
+    
+end.parse!
 
 Ruhoh.setup
-Ruhoh::Client.new(ARGV)
+Ruhoh::Client.new(ARGV, options)
