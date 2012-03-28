@@ -14,10 +14,9 @@ class Ruhoh
             error = "Invalid YAML Front Matter. Ensure this page has valid YAML, even if it's empty."
             invalid << [filename, error] ; next
           end
-          data = parsed_page['data']
 
+          data                  = parsed_page['data']
           data['id']            = filename
-          #data['url']           = self.permalink(data)
           data['url']           = "/#{filename}"
           dictionary[filename]  = data
         end
