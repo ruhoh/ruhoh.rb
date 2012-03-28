@@ -35,6 +35,10 @@ class Ruhoh
       }
     end
   
+    def self.relative_path(filename)
+      filename.gsub( Regexp.new("^#{Ruhoh.paths.site_source}/"), '' )
+    end
+    
   end
   
 end #Ruhoh
