@@ -63,7 +63,7 @@ class Ruhoh
       
       Ruhoh::Friend.say { 
         green "New draft:" 
-        green Ruhoh::Utils.relative_path(filename)
+        green Ruhoh.relative_path(filename)
       }
     end
     
@@ -93,7 +93,7 @@ class Ruhoh
 
       Ruhoh::Friend.say { 
         green "Published post:"
-        green Ruhoh::Utils.relative_path(filename)
+        green Ruhoh.relative_path(filename)
       }
     end
     
@@ -107,7 +107,7 @@ class Ruhoh
 
       Ruhoh::Friend.say { 
         yellow "Unpublished post:"
-        yellow Ruhoh::Utils.relative_path(post)
+        yellow Ruhoh.relative_path(post)
       }
     end
     
@@ -135,7 +135,7 @@ class Ruhoh
       
       Ruhoh::Friend.say { 
         green "New page:"
-        plain Ruhoh::Utils.relative_path(filename)
+        plain Ruhoh.relative_path(filename)
       }
     end
 

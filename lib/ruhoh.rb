@@ -121,5 +121,9 @@ class Ruhoh
   def self.absolute_path(*args)
     File.__send__ :join, args.unshift(self.paths.site_source)
   end
+  
+  def self.relative_path(filename)
+    filename.gsub( Regexp.new("^#{self.paths.site_source}/"), '' )
+  end
     
 end # Ruhoh  
