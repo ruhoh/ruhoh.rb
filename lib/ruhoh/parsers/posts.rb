@@ -41,21 +41,41 @@ class Ruhoh
           
           data['date'] ||= filename_data['date']
 
-          begin 
-            Time.parse(data['date'])
-          rescue
-            error = "Invalid Date Format. Date should be: YYYY/MM/DD"
+          unless self.formatted_date(data['date'])
+            error = "Invalid Date Format. Date should be: YYYY-MM-DD"
             invalid << [filename, error] ; next
           end
         
+          data['date']          = data['date'].to_s
           data['id']            = filename
-          data['title']         = data['title'] || self.titleize(filename_data['slug'])
+          data['title']         = data['title'] || filename_data['title']
           data['url']           = self.permalink(data)
           dictionary[filename]  = data
         end
         
         self.report(dictionary, invalid)
         dictionary
+      end
+      
+      
+      def self.process_file(filename)
+        p = Ruhoh::Utils.parse_file(filename)
+        filename_data = self.parse_filename(filename)
+        
+        if p['data']['title'].nil? || p['data']['title'].gsub(/\s/, '').empty?
+          p['data']['title'] = filename_data['title'] || nil
+        end
+
+        p['data']['date'] ||= filename_data['date']
+        p['data']['date'] = self.formatted_date(p['data']['date'] || Time.now)
+        
+        p
+      end
+      
+      def self.formatted_date(date)
+        Time.parse(date.to_s).strftime('%Y-%m-%d')
+      rescue
+        false
       end
       
       def self.report(dictionary, invalid)
@@ -99,6 +119,7 @@ class Ruhoh
           "path" => data[1],
           "date" => data[2],
           "slug" => data[3],
+          "title" => self.titleize(data[3]),
           "extension" => data[4]
         }
       end
@@ -108,6 +129,15 @@ class Ruhoh
         file_slug.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
       end
     
+      # My Post Title ===> my-post-title
+      def self.to_slug(title)
+        title.downcase.strip.gsub(/\s/, '-').gsub(/[^\w-]/, '')
+      end
+        
+      def self.to_filename(data)
+        File.join(Ruhoh.paths.posts, "#{self.formatted_date(data['date'])}-#{self.to_slug(data['title'])}.#{data['ext']}")
+      end
+      
       # Another blatently stolen method from Jekyll
       def self.permalink(post)
         date = Date.parse(post['date'])
