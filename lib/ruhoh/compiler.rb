@@ -9,7 +9,8 @@ class Ruhoh
     end
     
     def compile
-      FileUtils.mkdir @target unless File.exist?(@target)
+      FileUtils.rm_r @target if File.exist?(@target)
+      FileUtils.mkdir @target
       self.theme
       self.pages
       self.media
