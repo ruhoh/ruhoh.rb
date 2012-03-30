@@ -30,11 +30,17 @@ class Ruhoh
       data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
 
       { 
-        "data" => data, 
+        "data" => self.format_meta(data),
         "content" => page.gsub(FMregex, '')
       }
     end
-  
+    
+    def self.format_meta(data)
+      data['categories'] = Array(data['categories'])
+      data['tags'] = Array(data['tags'])
+      data
+    end
+    
   end
   
 end #Ruhoh
