@@ -1,0 +1,16 @@
+title : Blog Title
+tagline: Blog Tagline
+author :
+  name : Firstname Lastname
+  email : blah@email.test
+  github : username
+  twitter : username
+  feedburner : feedname
+
+navigation :
+  - archive.html
+  - tags.html
+  - categories.html
+  - pages.html
+  - about.md
+  

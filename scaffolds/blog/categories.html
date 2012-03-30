@@ -1,0 +1,21 @@
+---
+layout: page
+title: Categories
+header: Posts By Category
+group: navigation
+---
+
+<ul class="tag_box inline">
+{{# ?to_categories }}
+  {{> categories_list }}
+{{/ ?to_categories }}
+</ul>
+
+{{# ?to_categories }}
+  <h2>{{ name }} ({{ count }})</h2>
+  <ul>
+    {{# posts?to_posts }}
+      {{> posts_list }}
+    {{/ posts?to_posts }}
+  </ul>
+{{/ ?to_categories }}

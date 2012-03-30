@@ -1,0 +1,33 @@
+---
+version : 0.0.1
+permalink: /:categories/:title
+theme : twitter
+
+production_url : http://sample.com
+
+comments :
+  provider : disqus
+  disqus :
+    short_name : jekyllbootstrap
+  livefyre :
+    site_id : 123
+  intensedebate :
+    account : 123abc
+  facebook :
+    appid : 123
+    num_posts: 5
+    width: 580
+    colorscheme: light
+
+analytics :
+  provider : google
+  google : 
+      tracking_id : 'UA-123-12'
+  getclicky :
+    site_id : 
+
+syntax :
+  provider : google_prettify
+  google_prettify : 
+      theme: twitter-bootstrap
+      linenums : true

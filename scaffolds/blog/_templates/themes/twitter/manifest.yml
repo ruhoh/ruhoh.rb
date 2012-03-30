@@ -1,0 +1,11 @@
+---
+name : twitter
+website : http://twitter.github.com/bootstrap
+git_url : git://github.com/ruhoh/theme-twitter.git
+source_url : https://github.com/ruhoh/theme-twitter
+author:
+  name : "Jacob Thornton and Mark Otto"
+  website : http://twitter.github.com/bootstrap
+  
+ruhoh:
+  version: '0.0.x'
