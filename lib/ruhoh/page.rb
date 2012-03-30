@@ -46,10 +46,14 @@ class Ruhoh
     
     def process_layouts
       raise "ID is null: Id must be set via page.change(id) or page.change_with_url(url)" if @id.nil?
-      @sub_layout = Ruhoh::DB.layouts[@data['layout']]
-      
-      if @sub_layout['data']['layout']
+      if @data['layout']
+        @sub_layout = Ruhoh::DB.layouts[@data['layout']]
+        raise "Layout does not exist: #{@data['layout']}" unless @sub_layout
+      end
+    
+      if @sub_layout && @sub_layout['data']['layout']
         @master_layout = Ruhoh::DB.layouts[@sub_layout['data']['layout']]
+        raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
       end
     end
     

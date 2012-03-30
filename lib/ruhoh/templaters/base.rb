@@ -31,7 +31,11 @@ class Ruhoh
       # Expand the page.
       # Places page content into sub-template then into master template if available.
       def self.expand(page)
-        output = page.sub_layout['content'].gsub(Ruhoh::Utils::ContentRegex, page.content)
+        if page.sub_layout
+          output = page.sub_layout['content'].gsub(Ruhoh::Utils::ContentRegex, page.content)
+        else
+          output = page.content
+        end
 
         # An undefined master means the page/post layouts is only one deep.
         # This means it expects to load directly into a master template.
