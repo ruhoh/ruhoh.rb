@@ -15,7 +15,7 @@ class Ruhoh
         exit 
       } unless self.respond_to?(cmd)
 
-      Ruhoh.setup unless cmd == 'blog'
+      Ruhoh.setup unless ['help','blog'].include?(cmd)
 
       self.__send__(cmd)
     end  
