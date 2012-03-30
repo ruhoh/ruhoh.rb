@@ -218,7 +218,12 @@ class Ruhoh
             if tags[tag]
               tags[tag]['count'] += 1
             else
-              tags[tag] = { 'count' => 1, 'name' => tag, 'posts' => [] }
+              tags[tag] = { 
+                'count' => 1, 
+                'name' => tag,
+                'url'  => "/tags.html##{tag}-ref",
+                'posts' => [] 
+              }
             end 
 
             tags[tag]['posts'] << post['id']
@@ -236,7 +241,12 @@ class Ruhoh
             if categories[cat]
               categories[cat]['count'] += 1
             else
-              categories[cat] = { 'count' => 1, 'name' => cat, 'posts' => [] }
+              categories[cat] = { 
+                'count' => 1, 
+                'name' => cat, 
+                'url'  => "/categories.html##{cat}-ref",
+                'posts' => []
+              }
             end 
 
             categories[cat]['posts'] << post['id']
