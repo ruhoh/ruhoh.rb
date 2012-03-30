@@ -73,6 +73,7 @@ class Ruhoh
       Ruhoh::Friend.say { 
         green "New draft:" 
         green Ruhoh.relative_path(filename)
+        green 'View drafts at the URL: /_drafts'
       }
     end
     
