@@ -83,6 +83,28 @@ class Ruhoh
         end
       end
 
+      def next(sub_context)
+        return unless sub_context.is_a?(String) || sub_context.is_a?(Hash)
+        id = sub_context.is_a?(Hash) ? sub_context['id'] : sub_context
+        return unless id
+        index = self.context['_posts']['chronological'].index(id)
+        return unless index && (index-1 >= 0)
+        next_id = self.context['_posts']['chronological'][index-1]
+        return unless next_id
+        self.to_posts([next_id])
+      end
+      
+      def previous(sub_context)
+        return unless sub_context.is_a?(String) || sub_context.is_a?(Hash)
+        id = sub_context.is_a?(Hash) ? sub_context['id'] : sub_context
+        return unless id
+        index = self.context['_posts']['chronological'].index(id)
+        return unless index && (index+1 >= 0)
+        prev_id = self.context['_posts']['chronological'][index+1]
+        return unless prev_id
+        self.to_posts([prev_id])
+      end
+            
       def analytics
         return '' if self.context['page']['analytics'].to_s == 'false'
         analytics_config = self.context['site']['config']['analytics']
