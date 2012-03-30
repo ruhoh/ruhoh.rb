@@ -23,7 +23,6 @@ opt_parser = OptionParser.new do |opts|
 end
 opt_parser.parse!
 
-Ruhoh.setup
 Ruhoh::Client.new({
   :args => ARGV,
   :options => options,

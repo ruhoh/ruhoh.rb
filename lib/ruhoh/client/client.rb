@@ -15,6 +15,8 @@ class Ruhoh
         exit 
       } unless self.respond_to?(cmd)
 
+      Ruhoh.setup unless cmd == 'blog'
+
       self.__send__(cmd)
     end  
     
@@ -179,7 +181,7 @@ class Ruhoh
     
     # Public: Create a new theme scaffold with the given name.
     def theme
-      name = @args[2]
+      name = @args[1]
       Ruhoh::Friend.say { 
         red "Please specify a theme name." 
         cyan "ex: ruhoh new theme the-rain"
@@ -203,7 +205,7 @@ class Ruhoh
 
     # Public: Create a new layout file for the active theme.
     def layout
-      name = @args[2]
+      name = @args[1]
       Ruhoh::Friend.say { 
         red "Please specify a layout name." 
         cyan "ex: ruhoh new layout splash"
@@ -224,7 +226,7 @@ class Ruhoh
       
       Ruhoh::Friend.say {
         green "New layout:"
-        green filename
+        plain Ruhoh.relative_path(filename)
       }
     end
 
