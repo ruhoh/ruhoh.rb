@@ -8,10 +8,11 @@ class Ruhoh
         {
           "db"      => {
             "pages" =>  Ruhoh::DB.pages,
+            "posts" => Ruhoh::DB.posts,
           },
+          
           "page"    => page.attributes,
           "site"    => Ruhoh::DB.site,
-          "_posts"  => Ruhoh::DB.posts,
           "THEME_PATH" => Ruhoh.config.theme_path,
           "SYNTAX_PATH" => Ruhoh.config.syntax_path,
           "MEDIA_PATH" => Ruhoh.config.media_path

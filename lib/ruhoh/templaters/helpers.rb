@@ -5,17 +5,21 @@ class Ruhoh
   module Templaters
     
     module Helpers
-
+      
+      def partial(name)
+        Ruhoh::DB.partials[name.to_s]
+      end
+      
       def pages
         pages = []
         self.context['db']['pages'].each_value {|page| pages << page }
         pages
       end
       
-      def partial(name)
-        Ruhoh::DB.partials[name.to_s]
+      def posts
+        self.to_posts(nil)
       end
-
+      
       def raw_code(sub_context)
         code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;')
         "<pre><code>#{code}</code></pre>"
@@ -34,11 +38,11 @@ class Ruhoh
       def to_tags(sub_context)
         if sub_context.is_a?(Array)
           sub_context.map { |id|
-            self.context['_posts']['tags'][id] if self.context['_posts']['tags'][id]
+            self.context['db']['posts']['tags'][id] if self.context['db']['posts']['tags'][id]
           }
         else
           tags = []
-          self.context['_posts']['tags'].each_value { |tag|
+          self.context['db']['posts']['tags'].each_value { |tag|
             tags << tag
           }
           tags
@@ -46,10 +50,10 @@ class Ruhoh
       end
 
       def to_posts(sub_context)
-        sub_context = sub_context.is_a?(Array) ? sub_context : self.context['_posts']['chronological']
+        sub_context = sub_context.is_a?(Array) ? sub_context : self.context['db']['posts']['chronological']
 
         sub_context.map { |id|
-          self.context['_posts']['dictionary'][id] if self.context['_posts']['dictionary'][id]
+          self.context['db']['posts']['dictionary'][id] if self.context['db']['posts']['dictionary'][id]
         }
       end
 
@@ -78,11 +82,11 @@ class Ruhoh
       def to_categories(sub_context)
         if sub_context.is_a?(Array)
           sub_context.map { |id|
-            self.context['_posts']['categories'][id] if self.context['_posts']['categories'][id]
+            self.context['db']['posts']['categories'][id] if self.context['db']['posts']['categories'][id]
           }
         else
           cats = []
-          self.context['_posts']['categories'].each_value { |cat|
+          self.context['db']['posts']['categories'].each_value { |cat|
             cats << cat
           }
           cats
@@ -93,9 +97,9 @@ class Ruhoh
         return unless sub_context.is_a?(String) || sub_context.is_a?(Hash)
         id = sub_context.is_a?(Hash) ? sub_context['id'] : sub_context
         return unless id
-        index = self.context['_posts']['chronological'].index(id)
+        index = self.context['db']['posts']['chronological'].index(id)
         return unless index && (index-1 >= 0)
-        next_id = self.context['_posts']['chronological'][index-1]
+        next_id = self.context['db']['posts']['chronological'][index-1]
         return unless next_id
         self.to_posts([next_id])
       end
@@ -104,9 +108,9 @@ class Ruhoh
         return unless sub_context.is_a?(String) || sub_context.is_a?(Hash)
         id = sub_context.is_a?(Hash) ? sub_context['id'] : sub_context
         return unless id
-        index = self.context['_posts']['chronological'].index(id)
+        index = self.context['db']['posts']['chronological'].index(id)
         return unless index && (index+1 >= 0)
-        prev_id = self.context['_posts']['chronological'][index+1]
+        prev_id = self.context['db']['posts']['chronological'][index+1]
         return unless prev_id
         self.to_posts([prev_id])
       end
