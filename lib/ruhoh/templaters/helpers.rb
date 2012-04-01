@@ -6,6 +6,12 @@ class Ruhoh
     
     module Helpers
 
+      def pages
+        pages = []
+        self.context['db']['pages'].each_value {|page| pages << page }
+        pages
+      end
+      
       def partial(name)
         Ruhoh::DB.partials[name.to_s]
       end
@@ -51,12 +57,12 @@ class Ruhoh
         pages = []
         if sub_context.is_a?(Array) 
           sub_context.each do |id|
-            if self.context[:pages][id]
-              pages << self.context[:pages][id]
+            if self.context['db']['pages'][id]
+              pages << self.context['db']['pages'][id]
             end
           end
         else
-          self.context[:pages].each_value {|page| pages << page }
+          self.context['db']['pages'].each_value {|page| pages << page }
         end
         
         pages.each_with_index do |page, i| 

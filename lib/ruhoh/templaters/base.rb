@@ -6,9 +6,11 @@ class Ruhoh
     
       def self.build_payload(page)
         {
+          "db"      => {
+            "pages" =>  Ruhoh::DB.pages,
+          },
           "page"    => page.attributes,
           "site"    => Ruhoh::DB.site,
-          "pages"   => Ruhoh::DB.pages,
           "_posts"  => Ruhoh::DB.posts,
           "THEME_PATH" => Ruhoh.config.theme_path,
           "SYNTAX_PATH" => Ruhoh.config.syntax_path,
