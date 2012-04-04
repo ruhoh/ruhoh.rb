@@ -8,13 +8,15 @@ class Ruhoh
       @page = Ruhoh::Page.new
     end
     
+    # TODO: seems rather dangerous to delete the incoming target directory?
     def compile
       FileUtils.rm_r @target if File.exist?(@target)
-      FileUtils.mkdir @target
+      FileUtils.mkdir_p @target
       self.theme
       self.pages
       self.media
       self.syntax
+      true
     end
     
     def pages
