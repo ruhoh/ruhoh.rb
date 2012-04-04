@@ -35,16 +35,19 @@ class Ruhoh
     end
     
     def theme
+      return unless FileTest.directory? Ruhoh.paths.theme
       FileUtils.mkdir_p File.join(@target, Ruhoh.config.theme_path)
       FileUtils.cp_r Ruhoh.paths.theme, File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.themes)
     end
     
     def media
+      return unless FileTest.directory? Ruhoh.paths.media
       FileUtils.mkdir_p File.join(@target, Ruhoh.folders.media)
-      FileUtils.cp_r Ruhoh.paths.media, @target
+      FileUtils.cp_r Ruhoh.paths.media, @target 
     end
     
     def syntax
+      return unless FileTest.directory? Ruhoh.paths.syntax
       syntax_path = File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.syntax)
       FileUtils.mkdir_p syntax_path
       FileUtils.cp_r "#{Ruhoh.paths.syntax}/.", syntax_path
