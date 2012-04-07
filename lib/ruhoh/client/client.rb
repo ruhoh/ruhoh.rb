@@ -130,7 +130,7 @@ class Ruhoh
         exit
       } if (name.nil? || name.gsub(/\s/, '').empty?)
 
-      filename = File.join(Ruhoh.paths.site_source, name.gsub(/\s/, '-'))
+      filename = File.join(Ruhoh.paths.pages, name.gsub(/\s/, '-'))
       filename = File.join(filename, "index.#{@options.ext}") if File.extname(filename) == ""
       if File.exist?(filename)
         abort("Create new page: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'

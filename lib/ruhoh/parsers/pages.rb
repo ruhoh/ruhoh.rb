@@ -14,17 +14,18 @@ class Ruhoh
         dictionary = {}
 
         pages.each do |filename|
+          id = self.make_id(filename)
           parsed_page = Ruhoh::Utils.parse_file(filename)
           if parsed_page.empty?
             error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
             invalid << [filename, error] ; next
           end
           
-          parsed_page['data']['id']     = filename
+          parsed_page['data']['id']     = id
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
           parsed_page['data']['title']  = parsed_page['data']['title'] || self.titleize(filename)
 
-          dictionary[filename] = parsed_page['data']
+          dictionary[id] = parsed_page['data']
         end
           
         report = "#{pages.count - invalid.count }/#{pages.count} pages processed."
@@ -45,7 +46,7 @@ class Ruhoh
 
       def self.files
         FileUtils.cd(Ruhoh.paths.site_source) {
-          return Dir["**/*.*"].select { |filename| 
+          return Dir["#{Ruhoh.folders.pages}/**/*.*"].select { |filename|
             next unless self.is_valid_page?(filename)
             true
           }
@@ -54,12 +55,16 @@ class Ruhoh
       
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
-        return false if ['_', '.'].include? filepath[0]
+        return false if ['.'].include? filepath[0]
         return false if Ruhoh.filters.pages['names'].include? filepath
         Ruhoh.filters.pages['regexes'].each {|regex| return false if filepath =~ regex }
         true
       end
     
+      def self.make_id(filename)
+        filename.gsub(Regexp.new("^#{Ruhoh.folders.pages}/"), '')
+      end
+      
       def self.titleize(filename)
         name = File.basename( filename, File.extname(filename) )
         name = filename.split('/')[-2] if name == 'index' && !filename.index('/').nil?

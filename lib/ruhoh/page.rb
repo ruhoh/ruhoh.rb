@@ -12,12 +12,13 @@ class Ruhoh
     # Public: Change this page using an id.
     def change(id)
       @data = nil
-      
+      @path = id
       @data = if id =~ Regexp.new("^#{Ruhoh.folders.posts}")
         Ruhoh::DB.posts['dictionary'][id] 
       elsif id =~ Regexp.new("^#{Ruhoh.folders.drafts}")
         Ruhoh::DB.drafts[id] 
       else
+        @path = "#{Ruhoh.folders.pages}/#{id}"
         Ruhoh::DB.pages[id]
       end
       
@@ -32,7 +33,6 @@ class Ruhoh
       else
         Ruhoh::DB.routes[url]
       end
-      
       raise "Page id not found for url: #{url}" unless id
       self.change(id)
     end
@@ -62,8 +62,8 @@ class Ruhoh
     # Converters (markdown) always choke on the templating language.
     def process_content
       raise "ID is null: Id must be set via page.change(id) or page.change_with_url(url)" if @id.nil?
-      data = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @id)
-      raise "Invalid Frontmatter in page: #{@id}" if data.empty?
+      data = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @path)
+      raise "Invalid Frontmatter in page: #{@path}" if data.empty?
       
       @content = @templater.parse(data['content'], self)
       @content = @converter.convert(self)

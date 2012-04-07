@@ -30,13 +30,14 @@ class Ruhoh
   
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
-  Folders = Struct.new(:database, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
+  Folders = Struct.new(:database, :pages, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
   Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude)
   Paths = Struct.new(
     :site_source,
     :database,
+    :pages,
     :posts,
     :drafts,
     :theme,
@@ -62,7 +63,7 @@ class Ruhoh
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
+    @folders     = Folders.new('_database', '_pages', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
     @files       = Files.new('_site.yml', '_config.yml')
     @filters     = Filters.new
     @config      = Config.new
@@ -94,6 +95,7 @@ class Ruhoh
   def self.setup_paths
     @paths.site_source      = @site_source
     @paths.database         = self.absolute_path(@folders.database)
+    @paths.pages            = self.absolute_path(@folders.pages)
     @paths.posts            = self.absolute_path(@folders.posts)
     @paths.drafts           = self.absolute_path(@folders.drafts)
 
