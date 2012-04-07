@@ -1,5 +1,0 @@
----
-layout : page
----
-
-## About Me
