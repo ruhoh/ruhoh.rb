@@ -3,7 +3,8 @@ require 'ruhoh/compiler'
 class Ruhoh
   class Client
     
-    Paths = Struct.new(:blog_template, :page_template, :post_template, :layout_template, :theme_template)
+    Paths = Struct.new(:page_template, :post_template, :layout_template, :theme_template)
+    BlogScaffold = 'git://github.com/ruhoh/blog.git'
     
     def initialize(data)
       self.setup_paths
@@ -29,7 +30,6 @@ class Ruhoh
     
     def setup_paths
       @paths = Paths.new
-      @paths.blog_template    = File.join(Ruhoh::Root, "scaffolds", "blog")
       @paths.page_template    = File.join(Ruhoh::Root, "scaffolds", "page.html")
       @paths.post_template    = File.join(Ruhoh::Root, "scaffolds", "post.html")
       @paths.layout_template  = File.join(Ruhoh::Root, "scaffolds", "layout.html")
@@ -170,13 +170,20 @@ class Ruhoh
         plain "  Specify another directory or `rm -rf` this directory first."
         exit
       } if File.exist?(target_directory)
-        
-      FileUtils.mkdir target_directory
-      FileUtils.cp_r "#{@paths.blog_template}/.", target_directory
       
       Ruhoh::Friend.say { 
-        green "Blog cloned to:"
-        green "#{target_directory}"
+        plain "Trying this command:"
+        cyan "  git clone #{BlogScaffold} #{target_directory}"
+
+        if system('git', 'clone', BlogScaffold, target_directory)
+          green "Success! Now do..."
+          cyan "  cd #{target_directory}"
+          cyan "  rackup -p9292"
+          cyan "  http://localhost:9292"
+        else
+          red "Could not git clone blog scaffold. Please try it manually:"
+          cyan "  git clone git://github.com/ruhoh/blog.git #{target_directory}"
+        end
       }
     end
     
