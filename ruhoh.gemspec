@@ -49,35 +49,6 @@ Gem::Specification.new do |s|
     lib/ruhoh/version.rb
     lib/ruhoh/watch.rb
     ruhoh.gemspec
-    scaffolds/blog/_config.yml
-    scaffolds/blog/_drafts/.gitkeep
-    scaffolds/blog/_posts/.gitkeep
-    scaffolds/blog/_site.yml
-    scaffolds/blog/_templates/partials/categories_list
-    scaffolds/blog/_templates/partials/pages_list
-    scaffolds/blog/_templates/partials/posts_collate
-    scaffolds/blog/_templates/partials/posts_list
-    scaffolds/blog/_templates/partials/tags_list
-    scaffolds/blog/_templates/syntax/google_prettify/default.css
-    scaffolds/blog/_templates/syntax/google_prettify/desert.css
-    scaffolds/blog/_templates/syntax/google_prettify/sons-of-obsidian.css
-    scaffolds/blog/_templates/syntax/google_prettify/sunburst.css
-    scaffolds/blog/_templates/syntax/google_prettify/twitter-bootstrap.css
-    scaffolds/blog/_templates/themes/twitter/bootstrap/css/bootstrap.min.css
-    scaffolds/blog/_templates/themes/twitter/bootstrap/img/glyphicons-halflings-white.png
-    scaffolds/blog/_templates/themes/twitter/bootstrap/img/glyphicons-halflings.png
-    scaffolds/blog/_templates/themes/twitter/css/style.css
-    scaffolds/blog/_templates/themes/twitter/layouts/default.html
-    scaffolds/blog/_templates/themes/twitter/layouts/page.html
-    scaffolds/blog/_templates/themes/twitter/layouts/post.html
-    scaffolds/blog/_templates/themes/twitter/manifest.yml
-    scaffolds/blog/about.md
-    scaffolds/blog/archive.html
-    scaffolds/blog/categories.html
-    scaffolds/blog/config.ru
-    scaffolds/blog/index.html
-    scaffolds/blog/pages.html
-    scaffolds/blog/tags.html
     scaffolds/layout.html
     scaffolds/page.html
     scaffolds/post.html
