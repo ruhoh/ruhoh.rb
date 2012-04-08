@@ -17,7 +17,7 @@ class Ruhoh
       end
       
       def posts
-        self.to_posts(nil)
+        self.to_posts(self.context['db']['posts']['chronological'])
       end
       
       def categories
@@ -48,11 +48,9 @@ class Ruhoh
       end
 
       def to_posts(sub_context)
-        sub_context = sub_context.is_a?(Array) ? sub_context : self.context['db']['posts']['chronological']
-
-        sub_context.map { |id|
-          self.context['db']['posts']['dictionary'][id] if self.context['db']['posts']['dictionary'][id]
-        }
+        Array(sub_context).map { |id|
+          self.context['db']['posts']['dictionary'][id]
+        }.compact
       end
 
       def to_pages(sub_context)
