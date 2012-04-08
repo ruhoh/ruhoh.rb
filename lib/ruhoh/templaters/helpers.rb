@@ -1,9 +1,7 @@
 require 'pp'
 
 class Ruhoh
-
   module Templaters
-    
     module Helpers
       
       def partial(name)
@@ -13,7 +11,7 @@ class Ruhoh
       def pages
         pages = []
         self.context['db']['pages'].each_value {|page| pages << page }
-        pages
+        self.mark_active_page(pages)
       end
       
       def posts
@@ -54,27 +52,12 @@ class Ruhoh
       end
 
       def to_pages(sub_context)
-        pages = []
-        if sub_context.is_a?(Array) 
-          sub_context.each do |id|
-            if self.context['db']['pages'][id]
-              pages << self.context['db']['pages'][id]
-            end
-          end
-        else
-          self.context['db']['pages'].each_value {|page| pages << page }
-        end
-        
-        pages.each_with_index do |page, i| 
-          next unless page['id'] == self.context[:page]['id']
-          active_page = page.dup
-          active_page['is_active_page'] = true
-          pages[i] = active_page
-        end
-        
-        pages
+        pages = Array(sub_context).map { |id|
+          self.context['db']['pages'][id]
+        }.compact
+        self.mark_active_page(pages)
       end
-
+      
       def to_categories(sub_context)
         Array(sub_context).map { |id|
           self.context['db']['posts']['categories'][id] 
@@ -95,7 +78,7 @@ class Ruhoh
         return unless index && (index-1 >= 0)
         next_id = self.context['db']['posts']['chronological'][index-1]
         return unless next_id
-        self.to_posts([next_id])
+        self.to_posts(next_id)
       end
       
       def previous(sub_context)
@@ -106,7 +89,7 @@ class Ruhoh
         return unless index && (index+1 >= 0)
         prev_id = self.context['db']['posts']['chronological'][index+1]
         return unless prev_id
-        self.to_posts([prev_id])
+        self.to_posts(prev_id)
       end
             
       def analytics
@@ -156,8 +139,17 @@ class Ruhoh
         self.render(code)
       end
       
+      # Marks the active page if exists in the given pages Array
+      def mark_active_page(pages)
+        pages.each_with_index do |page, i| 
+          next unless page['id'] == self.context[:page]['id']
+          active_page = page.dup
+          active_page['is_active_page'] = true
+          pages[i] = active_page
+        end
+        pages
+      end
+      
     end #Helpers
-  
   end #Templaters
-  
 end #Ruhoh
