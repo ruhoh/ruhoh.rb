@@ -20,6 +20,12 @@ class Ruhoh
         self.to_posts(nil)
       end
       
+      def categories
+        cats = []
+        self.context['db']['posts']['categories'].each_value { |cat| cats << cat }
+        cats
+      end
+      
       def raw_code(sub_context)
         code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;')
         "<pre><code>#{code}</code></pre>"
@@ -80,17 +86,9 @@ class Ruhoh
       end
 
       def to_categories(sub_context)
-        if sub_context.is_a?(Array)
-          sub_context.map { |id|
-            self.context['db']['posts']['categories'][id] if self.context['db']['posts']['categories'][id]
-          }
-        else
-          cats = []
-          self.context['db']['posts']['categories'].each_value { |cat|
-            cats << cat
-          }
-          cats
-        end
+        Array(sub_context).map { |id|
+          self.context['db']['posts']['categories'][id] 
+        }.compact
       end
 
       def next(sub_context)
