@@ -26,6 +26,12 @@ class Ruhoh
         cats
       end
       
+      def tags
+        tags = []
+        self.context['db']['posts']['categories'].each_value { |tag| tags << tag }
+        tags
+      end
+      
       def raw_code(sub_context)
         code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;')
         "<pre><code>#{code}</code></pre>"
@@ -39,20 +45,6 @@ class Ruhoh
         }
         
         "<pre>#{sub_context.class}\n#{sub_context.pretty_inspect}</pre>"
-      end
-
-      def to_tags(sub_context)
-        if sub_context.is_a?(Array)
-          sub_context.map { |id|
-            self.context['db']['posts']['tags'][id] if self.context['db']['posts']['tags'][id]
-          }
-        else
-          tags = []
-          self.context['db']['posts']['tags'].each_value { |tag|
-            tags << tag
-          }
-          tags
-        end
       end
 
       def to_posts(sub_context)
@@ -90,7 +82,13 @@ class Ruhoh
           self.context['db']['posts']['categories'][id] 
         }.compact
       end
-
+      
+      def to_tags(sub_context)
+        Array(sub_context).map { |id|
+          self.context['db']['posts']['tags'][id] 
+        }.compact
+      end
+      
       def next(sub_context)
         return unless sub_context.is_a?(String) || sub_context.is_a?(Hash)
         id = sub_context.is_a?(Hash) ? sub_context['id'] : sub_context
