@@ -4,13 +4,13 @@ class Ruhoh
     
     module Base
     
-      def self.build_payload(page)
+      def self.build_payload(page=nil)
         {
           "db" => {
             "pages" =>  Ruhoh::DB.pages,
             "posts" => Ruhoh::DB.posts,
           },
-          "page" => page.attributes,
+          "page" => (page ? page.attributes : {}),
           "site" => Ruhoh::DB.site,
           "paths" => {
             "theme"   => Ruhoh.config.theme_path,

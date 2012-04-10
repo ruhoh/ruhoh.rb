@@ -43,6 +43,10 @@ commands:
     "desc" : |
       List all pages.
   -
+    "command" : "payload"
+    "desc" : |
+      List the full payload hash as given to the templater. Note page is blank for example purposes.
+  -
     "command" : "layout <name>"
     "desc" : |
       Create a new layout for the currently active theme.

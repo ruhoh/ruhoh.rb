@@ -253,6 +253,15 @@ class Ruhoh
       self.list(:pages)
     end
  
+    # Return the payload hash for inspection/study.
+    def payload
+      require 'pp'
+      Ruhoh::DB.update!
+      Ruhoh::Friend.say {
+        plain Ruhoh::Templaters::Base.build_payload.pretty_inspect
+      }
+    end
+    
     # Internal: Outputs a list of the given data-type to the terminal.
     def list(type)
       Ruhoh::DB.update(type)
