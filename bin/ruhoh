@@ -20,6 +20,12 @@ opt_parser = OptionParser.new do |opts|
     options.verbose = v
   end
     
+  opts.on("--version", "Display current gem and ruhoh specification versions.") do
+    puts "ruhoh " + Ruhoh::VERSION
+    puts "RuhohSpec " + Ruhoh::RuhohSpec
+    exit 0
+  end
+  
 end
 opt_parser.parse!
 
