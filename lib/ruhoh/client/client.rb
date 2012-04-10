@@ -60,7 +60,7 @@ class Ruhoh
     def draft
       filename = File.join(Ruhoh.paths.drafts, "#{Time.now.to_i}.#{@options.ext}")
       if File.exist?(filename)
-        sleep 1 ; self.write(args) ; exit
+        sleep 1 ; self.draft(args) ; exit
       end
       
       FileUtils.mkdir_p File.dirname(filename)
