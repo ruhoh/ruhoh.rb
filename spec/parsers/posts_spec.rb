@@ -6,7 +6,7 @@ module Posts
     
     before(:each) do
       Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
-      Ruhoh.setup(SampleSitePath)
+      Ruhoh.setup(:source => SampleSitePath)
     end
     
     describe "#generate" do

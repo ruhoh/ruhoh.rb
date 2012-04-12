@@ -8,7 +8,7 @@ module Pages
       
       before(:each) do
         Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
-        Ruhoh.setup(SampleSitePath)
+        Ruhoh.setup(:source => SampleSitePath)
       end
       
       let(:pages){
@@ -16,7 +16,7 @@ module Pages
       }
       
       it 'should extract valid pages from source directory.' do
-        pages.keys.sort.should ==  ['about.md', 'archive.html', 'categories.html', 'index.md', 'pages.md', 'tags.html']
+        pages.keys.sort.should ==  ['about.md', 'archive.html', 'categories.html', 'index.html', 'pages.html', 'tags.html']
       end
       
       it 'should return a properly formatted hash for each page' do
@@ -36,7 +36,7 @@ module Pages
         
         before(:each) do
           Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
-          Ruhoh.setup(SampleSitePath)
+          Ruhoh.setup(:source => SampleSitePath)
         end
         
         it "should return true for a valid page filepath" do
@@ -64,7 +64,7 @@ module Pages
             'theme' => "twitter",
             'exclude' => filepath
           })
-          Ruhoh.setup(SampleSitePath)
+          Ruhoh.setup(:source => SampleSitePath)
           
           Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
         end
@@ -77,7 +77,7 @@ module Pages
             'theme' => "twitter",
             'exclude' => /^test/
           })
-          Ruhoh.setup(SampleSitePath)
+          Ruhoh.setup(:source => SampleSitePath)
           
           Ruhoh::Parsers::Pages.is_valid_page?(filepath1).should == false
           Ruhoh::Parsers::Pages.is_valid_page?(filepath2).should == false

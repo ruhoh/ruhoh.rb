@@ -6,7 +6,7 @@ module Page
     
     before(:each) do
       Ruhoh::Utils.stub(:parse_file_as_yaml).and_return({'theme' => "twitter"})
-      Ruhoh.setup(SampleSitePath)
+      Ruhoh.setup(:source => SampleSitePath)
     end
     
     describe "Page initialization" do

@@ -8,7 +8,7 @@ module Site
 
       before(:each) do
         Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
-        Ruhoh.setup(SampleSitePath)
+        Ruhoh.setup(:source => SampleSitePath)
       end
       
       it 'should parse the config and site yaml files' do

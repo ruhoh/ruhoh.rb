@@ -9,7 +9,7 @@ module DB
     
     before(:each) do
       Ruhoh::Utils.stub(:parse_file_as_yaml).and_return({'theme' => "twitter"})
-      Ruhoh.setup(SampleSitePath)
+      Ruhoh.setup(:source => SampleSitePath)
     end
     
     context "database has not been updated" do
