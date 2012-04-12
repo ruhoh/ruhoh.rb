@@ -12,8 +12,10 @@ class Ruhoh
       file = File.open(filepath)
       yaml = YAML.load(file) || {}
       file.close  
-      
       yaml
+    rescue Psych::SyntaxError => e
+      Ruhoh.log.error("ERROR in #{filepath}: #{e.message}")
+      nil
     end
     
     def self.parse_file(*args)
@@ -33,6 +35,9 @@ class Ruhoh
         "data" => self.format_meta(data),
         "content" => page.gsub(FMregex, '')
       }
+    rescue Psych::SyntaxError => e
+      Ruhoh.log.error("ERROR in #{path}: #{e.message}")
+      nil
     end
     
     def self.format_meta(data)

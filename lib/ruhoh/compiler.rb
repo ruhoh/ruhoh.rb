@@ -20,8 +20,6 @@ class Ruhoh
     end
     
     def pages
-      processed = []
-      
       FileUtils.cd(@target) {
         Ruhoh::DB.posts['dictionary'].merge(Ruhoh::DB.pages).each_value do |p|
           @page.change(p['id'])
@@ -29,7 +27,6 @@ class Ruhoh
           FileUtils.mkdir_p File.dirname(@page.compiled_path)
           File.open(@page.compiled_path, 'w') { |p| p.puts @page.render }
 
-          processed << p
           Ruhoh::Friend.say { green "processed: #{p['id']}" }
         end
       }
