@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
     lib/ruhoh/db.rb
     lib/ruhoh/deployers/s3.rb
     lib/ruhoh/friend.rb
+    lib/ruhoh/logger.rb
     lib/ruhoh/page.rb
     lib/ruhoh/parsers/drafts.rb
     lib/ruhoh/parsers/layouts.rb
