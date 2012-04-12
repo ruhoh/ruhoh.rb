@@ -6,6 +6,7 @@ require 'fileutils'
 
 require 'mustache'
 
+require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
 require 'ruhoh/parsers/drafts'
@@ -26,7 +27,12 @@ require 'ruhoh/watch'
 
 class Ruhoh
 
-  class << self; attr_reader :folders, :files, :config, :paths, :filters end
+  class << self
+    attr_accessor :log
+    attr_reader :folders, :files, :config, :paths, :filters
+  end
+  
+  @log = Ruhoh::Logger.new
   
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
@@ -50,16 +56,14 @@ class Ruhoh
   )
   
   
-  # Public: Setup Ruhoh utilities relative to the current directory
-  # of the application and its corresponding ruhoh.json file.
-  #
-  def self.setup(site_source = nil)
+  # Public: Setup Ruhoh utilities relative to the current application directory.
+  # Returns boolean on success/failure
+  def self.setup(opts={})
+    @log.log_file = opts[:log_file] if opts[:log_file]
     self.reset
+    @site_source = opts[:source] if opts[:source]
 
-    @site_source = site_source if site_source
-    self.setup_config
-    self.setup_paths
-    self.setup_filters
+    !!(self.setup_config && self.setup_paths && self.setup_filters)
   end
   
   def self.reset
@@ -73,17 +77,18 @@ class Ruhoh
   
   def self.setup_config
     site_config = Ruhoh::Utils.parse_file_as_yaml(@site_source, @files.config)
+    
     unless site_config
-      Ruhoh::Friend.say {
-        red "Empty site_config"
-        red "Please ensure ./#{Ruhoh.files.config} exists and contains valid YAML"
-      }
-      exit
+      Ruhoh.log.error("Empty site_config.\nEnsure ./#{Ruhoh.files.config} exists and contains valid YAML")
+      return false
     end
     
     theme = site_config['theme'] ? site_config['theme'].to_s.gsub(/\s/, '') : ''
-    raise "Theme not specified in _config.yml" if theme.empty?
-
+    if theme.empty?
+      Ruhoh.log.error("Theme not specified in _config.yml")
+      return false
+    end
+    
     @config.theme         = theme
     @config.theme_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
     @config.media_path    = File.join('/', @folders.media)
@@ -106,6 +111,7 @@ class Ruhoh
     @paths.media            = self.absolute_path(@folders.media)
     @paths.syntax           = self.absolute_path(@folders.templates, @folders.syntax)
     @paths.compiled         = self.absolute_path(@folders.compiled)
+    @paths
   end
   
   # filename filters
@@ -118,6 +124,7 @@ class Ruhoh
       @filters.pages['names'] << node if node.is_a?(String)
       @filters.pages['regexes'] << node if node.is_a?(Regexp)
     }
+    @filters
   end
   
   def self.absolute_path(*args)
