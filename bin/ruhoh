@@ -3,7 +3,9 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require 'ruhoh'
+require 'ruhoh/version'
 require 'ruhoh/client/client'
+
 require 'optparse'
 
 Options = Struct.new(:title, :date, :ext, :verbose)
