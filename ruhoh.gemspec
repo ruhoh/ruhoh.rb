@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name              = "ruhoh"
   s.version           = Ruhoh::Version
   s.date              = Time.now.strftime('%Y-%m-%d')
-  s.license           = "http://unlicense.org/"
+  s.license           = "http://www.opensource.org/licenses/MIT"
   s.summary           = 'Ruby based library to process your Ruhoh static blog.'
   s.homepage          = "http://github.com/ruhoh/ruhoh.rb"
   s.email             = "plusjade@gmail.com"
