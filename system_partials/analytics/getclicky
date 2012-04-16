@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script>
 var clicky_site_ids = clicky_site_ids || [];
 clicky_site_ids.push({{ site.config.analytics.getclicky.site_id }});
 (function() {
