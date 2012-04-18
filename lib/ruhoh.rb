@@ -1,4 +1,7 @@
 require 'yaml'
+require 'psych'
+YAML::ENGINE.yamler = 'psych'
+
 require 'json'
 require 'time'
 require 'cgi'
