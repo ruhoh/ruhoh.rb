@@ -1,0 +1,6 @@
+12.18.2012
+  0.1.2  : Fix bug with YAML psych/syck errors.
+  0.1.1  : @tkellen tidies up partials + fix 'paths.theme' error in theme scaffold.
+12.4.2012
+  0.1.0  : Initial public release.
+
