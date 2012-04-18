@@ -91,7 +91,7 @@ class Ruhoh
         exit
       } unless draft['data']['date']
       
-      draft['data']['ext'] = @options.ext
+      draft['data']['ext'] = File.extname(id).gsub('.','')
       filename = Ruhoh::Parsers::Posts.to_filename(draft['data'])
 
       if File.exist?(filename)
