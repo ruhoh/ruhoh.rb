@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     README.md
     Rakefile
     bin/ruhoh
+    history.txt
     lib/ruhoh.rb
     lib/ruhoh/client/client.rb
     lib/ruhoh/client/help.yml

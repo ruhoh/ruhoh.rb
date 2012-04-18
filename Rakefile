@@ -10,13 +10,9 @@ gemspec_file = "#{name}.gemspec"
 gem_file = "#{name}-#{Ruhoh::VERSION}.gem"
 
 task :release => :build do
-  unless `git branch` =~ /^\* master$/
-    puts "You must be on the master branch to release!"
-    exit!
-  end
   sh "git commit --allow-empty -m 'Release #{Ruhoh::VERSION}'"
   sh "git tag v#{Ruhoh::VERSION}"
-  sh "git push origin master"
+  sh "git push origin master --tags"
   sh "git push origin v#{Ruhoh::VERSION}"
   sh "gem push pkg/#{name}-#{Ruhoh::VERSION}.gem"
 end
