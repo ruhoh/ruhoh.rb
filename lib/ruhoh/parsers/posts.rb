@@ -2,7 +2,8 @@ class Ruhoh
   module Parsers
     module Posts
     
-      MATCHER = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
+      DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
+      Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
       # Public: Generate the Posts dictionary.
       #
@@ -35,7 +36,7 @@ class Ruhoh
           
           filename_data = self.parse_filename(filename)
           if filename_data.empty?
-            error = "Invalid Filename Format. Format should be: YYYY-MM-DD-my-post-title.ext"
+            error = "Invalid Filename Format. Format should be: my-post-title.ext"
             invalid << [filename, error] ; next
           end
           
@@ -57,7 +58,7 @@ class Ruhoh
         dictionary
       end
       
-      
+      # Used in the client implementation to turn a draft into a post.  
       def self.process_file(filename)
         p = Ruhoh::Utils.parse_file(filename)
         filename_data = self.parse_filename(filename)
@@ -113,8 +114,13 @@ class Ruhoh
       end
       
       def self.parse_filename(filename)
-        data = *filename.match(MATCHER)
+        data = *filename.match(DateMatcher)
+        data = *filename.match(Matcher) if data.empty?
         return {} if data.empty?
+        
+        # shift elements forward so indices match.
+        data.unshift(nil) unless filename =~ DateMatcher
+
         {
           "path" => data[1],
           "date" => data[2],
@@ -134,8 +140,9 @@ class Ruhoh
         title.downcase.strip.gsub(/\s/, '-').gsub(/[^\w-]/, '')
       end
         
+      # Used in the client implementation to turn a draft into a post.  
       def self.to_filename(data)
-        File.join(Ruhoh.paths.posts, "#{self.formatted_date(data['date'])}-#{self.to_slug(data['title'])}.#{data['ext']}")
+        File.join(Ruhoh.paths.posts, "#{self.to_slug(data['title'])}.#{data['ext']}")
       end
       
       # Another blatently stolen method from Jekyll
