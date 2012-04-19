@@ -1,6 +1,10 @@
-12.18.2012
-  0.1.2  : Fix bug with YAML psych/syck errors.
-  0.1.1  : @tkellen tidies up partials + fix 'paths.theme' error in theme scaffold.
+19.4.2012
+  0.1.3  - BUG: Fix drafts not maintaining file extension when publishing
+           BUG: tags helper should use tags database.
+           BUG: Fix for properly handling filepaths on Windows machines.
+18.4.2012
+  0.1.2  - BUG: Fix bug with YAML psych/syck errors.
+  0.1.1  - @tkellen tidies up partials + fix 'paths.theme' error in theme scaffold.
 12.4.2012
-  0.1.0  : Initial public release.
+  0.1.0  - Initial public release.
 
