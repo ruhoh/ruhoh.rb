@@ -26,7 +26,7 @@ class Ruhoh
       
       def tags
         tags = []
-        self.context['db']['posts']['categories'].each_value { |tag| tags << tag }
+        self.context['db']['posts']['tags'].each_value { |tag| tags << tag }
         tags
       end
       
