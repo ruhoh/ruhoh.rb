@@ -20,7 +20,6 @@ class Ruhoh
     
     def self.parse_file(*args)
       path = File.__send__(:join, args)
-      path = File.join(Ruhoh.paths.site_source, path) unless path[0] == '/'
       
       raise "File not found: #{path}" unless File.exist?(path)
 
