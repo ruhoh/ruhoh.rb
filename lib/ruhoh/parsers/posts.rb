@@ -10,11 +10,12 @@ class Ruhoh
       def self.generate
         raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
         
-        dictionary = self.process
-        ordered_posts = self.ordered_posts(dictionary)
+        results = self.process
+        ordered_posts = self.ordered_posts(results['posts'])
 
         {
-          'dictionary'      => dictionary,
+          'dictionary'      => results['posts'],
+          'drafts'          => results['drafts'],
           'chronological'   => self.build_chronology(ordered_posts),
           'collated'        => self.collate(ordered_posts),
           'tags'            => self.parse_tags(ordered_posts),
@@ -24,8 +25,9 @@ class Ruhoh
       
       def self.process
         dictionary = {}
+        drafts = []
         invalid = []
-        
+
         self.files.each do |filename|
           parsed_page = Ruhoh::Utils.parse_file(filename)
           if parsed_page.empty?
@@ -46,7 +48,12 @@ class Ruhoh
             error = "Invalid Date Format. Date should be: YYYY-MM-DD"
             invalid << [filename, error] ; next
           end
-        
+
+          if data['type'] == 'draft'
+            next if Ruhoh.config.env == 'production'
+            drafts << filename 
+          end  
+          
           data['date']          = data['date'].to_s
           data['id']            = filename
           data['title']         = data['title'] || filename_data['title']
@@ -55,7 +62,11 @@ class Ruhoh
         end
         
         self.report(dictionary, invalid)
-        dictionary
+        
+        { 
+          "posts" => dictionary,
+          "drafts" => drafts
+        }
       end
       
       # Used in the client implementation to turn a draft into a post.  
