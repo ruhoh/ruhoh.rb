@@ -220,9 +220,20 @@ class Ruhoh
     
     # Internal: Outputs a list of the given data-type to the terminal.
     def list(type)
-      Ruhoh::DB.update(type)
-      data = Ruhoh::DB.__send__(type)
-      data = data['dictionary'] if type == :posts
+      data = case type
+      when :posts
+        Ruhoh::DB.update(:posts)
+        Ruhoh::DB.posts['dictionary']
+      when :drafts
+        Ruhoh::DB.update(:posts)
+        drafts = Ruhoh::DB.posts['drafts']
+        h = {}
+        drafts.each {|id| h[id] = Ruhoh::DB.posts['dictionary'][id]}
+        h
+      when :pages
+        Ruhoh::DB.update(:pages)
+        Ruhoh::DB.pages
+      end  
 
       if @options.verbose
         Ruhoh::Friend.say {
