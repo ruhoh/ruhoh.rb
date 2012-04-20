@@ -6,7 +6,7 @@ class Ruhoh
   class DB
     class << self
       include Observable
-      WhiteList = [:site, :posts, :drafts, :pages, :routes, :layouts, :partials]
+      WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials]
       self.__send__ :attr_reader, *WhiteList
 
       def update(name)
@@ -18,8 +18,6 @@ class Ruhoh
             Ruhoh::Parsers::Routes.generate
           when :posts
             Ruhoh::Parsers::Posts.generate
-          when :drafts
-            Ruhoh::Parsers::Drafts.generate
           when :pages
             Ruhoh::Parsers::Pages.generate
           when :layouts

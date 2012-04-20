@@ -14,7 +14,6 @@ require 'mustache'
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
-require 'ruhoh/parsers/drafts'
 require 'ruhoh/parsers/posts'
 require 'ruhoh/parsers/pages'
 require 'ruhoh/parsers/routes'
@@ -41,7 +40,7 @@ class Ruhoh
   
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
-  Folders = Struct.new(:database, :pages, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
+  Folders = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
   Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
@@ -50,7 +49,6 @@ class Ruhoh
     :database,
     :pages,
     :posts,
-    :drafts,
     :theme,
     :layouts,
     :partials,
@@ -72,7 +70,7 @@ class Ruhoh
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_pages', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
+    @folders     = Folders.new('_database', '_pages', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
     @files       = Files.new('_site.yml', '_config.yml')
     @filters     = Filters.new
     @config      = Config.new
@@ -109,7 +107,6 @@ class Ruhoh
     @paths.database         = self.absolute_path(@folders.database)
     @paths.pages            = self.absolute_path(@folders.pages)
     @paths.posts            = self.absolute_path(@folders.posts)
-    @paths.drafts           = self.absolute_path(@folders.drafts)
 
     @paths.theme            = self.absolute_path(@folders.templates, @folders.themes, @config.theme)
     @paths.layouts          = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.layouts)
