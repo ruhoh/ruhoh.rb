@@ -36,7 +36,6 @@ Gem::Specification.new do |s|
     lib/ruhoh/friend.rb
     lib/ruhoh/logger.rb
     lib/ruhoh/page.rb
-    lib/ruhoh/parsers/drafts.rb
     lib/ruhoh/parsers/layouts.rb
     lib/ruhoh/parsers/pages.rb
     lib/ruhoh/parsers/partials.rb

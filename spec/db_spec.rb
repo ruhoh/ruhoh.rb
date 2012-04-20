@@ -45,12 +45,6 @@ module DB
         Ruhoh::DB.posts.should == {'test' => 'hi'}
       end
       
-      it "should run the drafts parser when updating :drafts" do
-        Ruhoh::Parsers::Drafts.should_receive(:generate).and_return({'test' => 'hi'})
-        Ruhoh::DB.update(:drafts)
-        Ruhoh::DB.drafts.should == {'test' => 'hi'}
-      end
-      
       it "should run the pages parser when updating :pages" do
         Ruhoh::Parsers::Pages.should_receive(:generate).and_return({'test' => 'hi'})
         Ruhoh::DB.update(:pages)
@@ -74,7 +68,6 @@ module DB
       it "should call update for all WhiteListed variables." do
         Ruhoh::DB.should_receive(:update).with(:site).ordered
         Ruhoh::DB.should_receive(:update).with(:posts).ordered
-        Ruhoh::DB.should_receive(:update).with(:drafts).ordered
         Ruhoh::DB.should_receive(:update).with(:pages).ordered
         Ruhoh::DB.should_receive(:update).with(:routes).ordered
         Ruhoh::DB.should_receive(:update).with(:layouts).ordered

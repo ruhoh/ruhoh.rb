@@ -15,8 +15,6 @@ class Ruhoh
       @path = id
       @data = if id =~ Regexp.new("^#{Ruhoh.folders.posts}")
         Ruhoh::DB.posts['dictionary'][id] 
-      elsif id =~ Regexp.new("^#{Ruhoh.folders.drafts}")
-        Ruhoh::DB.drafts[id] 
       else
         @path = "#{Ruhoh.folders.pages}/#{id}"
         Ruhoh::DB.pages[id]
@@ -28,11 +26,7 @@ class Ruhoh
     
     # Public: Change this page using a URL.
     def change_with_url(url)
-      id = if url =~ Regexp.new("^/#{Ruhoh.folders.drafts}")
-        url.gsub(/^\//,'')
-      else
-        Ruhoh::DB.routes[url]
-      end
+      id = Ruhoh::DB.routes[url]
       raise "Page id not found for url: #{url}" unless id
       self.change(id)
     end
