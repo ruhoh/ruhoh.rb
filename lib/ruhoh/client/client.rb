@@ -7,6 +7,7 @@ class Ruhoh
     BlogScaffold = 'git://github.com/ruhoh/blog.git'
     
     def initialize(data)
+      @iterator = 0
       self.setup_paths
       self.setup_options(data)
       
@@ -58,10 +59,10 @@ class Ruhoh
     # Public: Create a new draft file.
     # Requires no settings as it is meant to be fastest way to create content.
     def draft
-      filename = File.join(Ruhoh.paths.drafts, "#{Time.now.to_i}.#{@options.ext}")
-      if File.exist?(filename)
-        sleep 1 ; self.draft(args) ; exit
-      end
+      begin
+        filename = File.join(Ruhoh.paths.drafts, "untitled-#{@iterator}.#{@options.ext}")
+        @iterator += 1
+      end while File.exist?(filename)
       
       FileUtils.mkdir_p File.dirname(filename)
       File.open(@paths.post_template) do |template|
