@@ -60,16 +60,15 @@ class Ruhoh
     # Requires no settings as it is meant to be fastest way to create content.
     def draft
       begin
-        filename = File.join(Ruhoh.paths.drafts, "untitled-#{@iterator}.#{@options.ext}")
+        filename = File.join(Ruhoh.paths.posts, "untitled-#{@iterator}.#{@options.ext}")
         @iterator += 1
       end while File.exist?(filename)
       
       FileUtils.mkdir_p File.dirname(filename)
-      File.open(@paths.post_template) do |template|
-        File.open(filename, 'w') do |post|
-          post.puts template.read
-        end
-      end
+
+      output = File.open(@paths.post_template) { |f| f.read }
+      output = output.gsub('{{DATE}}', Ruhoh::Parsers::Posts.formatted_date(Time.now))
+      File.open(filename, 'w') {|f| f.puts output }
       
       Ruhoh::Friend.say { 
         green "New draft:" 
