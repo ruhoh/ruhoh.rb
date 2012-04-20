@@ -15,6 +15,7 @@ class Ruhoh
   class Previewer
     
     def initialize
+      Ruhoh.config.env ||= 'development'
       Ruhoh::DB.update!
       @page = Ruhoh::Page.new
       Ruhoh::Watch.start

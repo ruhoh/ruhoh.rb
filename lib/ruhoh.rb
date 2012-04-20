@@ -42,7 +42,7 @@ class Ruhoh
   Folders = Struct.new(:database, :pages, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
   Files = Struct.new(:site, :config)
   Filters = Struct.new(:posts, :pages, :static)
-  Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude)
+  Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
   Paths = Struct.new(
     :site_source,
     :database,
@@ -98,6 +98,8 @@ class Ruhoh
     @config.syntax_path   = File.join('/', @folders.templates, @folders.syntax)
     @config.permalink     = site_config['permalink']
     @config.exclude       = Array(site_config['exclude'] || nil)
+    @config.env           = site_config['env'] || nil
+    @config
   end
   
   def self.setup_paths
