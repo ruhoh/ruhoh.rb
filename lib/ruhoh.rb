@@ -35,27 +35,15 @@ class Ruhoh
   end
   
   @log = Ruhoh::Logger.new
-  
-  Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
-  Folders = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
-  Files = Struct.new(:site, :config, :dashboard)
-  Filters = Struct.new(:posts, :pages, :static)
-  Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
-  Paths = Struct.new(
-    :site_source,
-    :database,
-    :pages,
-    :posts,
-    :theme,
-    :layouts,
-    :partials,
-    :global_partials,
-    :media,
-    :syntax,
-    :compiled,
-    :dashboard
-  )
+
+  Root      = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  Folders   = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
+  Files     = Struct.new(:site, :config, :dashboard)
+  Filters   = Struct.new(:posts, :pages, :static)
+  Config    = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
+  Paths     = Struct.new(
+                :site_source, :database, :pages, :posts, :theme, :layouts, :partials, :global_partials, :media, :syntax,
+                :compiled, :dashboard)
   
   
   # Public: Setup Ruhoh utilities relative to the current application directory.
@@ -120,7 +108,7 @@ class Ruhoh
   
   # filename filters
   def self.setup_filters
-    exclude = @config.exclude + DefaultExclude
+    exclude = @config.exclude
     exclude.uniq!
     
     @filters.pages = { 'names' => [], 'regexes' => [] }
@@ -139,4 +127,4 @@ class Ruhoh
     filename.gsub( Regexp.new("^#{self.paths.site_source}/"), '' )
   end
     
-end # Ruhoh  
+end # Ruhoh
