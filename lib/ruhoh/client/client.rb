@@ -77,50 +77,6 @@ class Ruhoh
       }
     end
     
-    # Public: Publishes the last active draft file.
-    def publish
-      id = self.last('draft')
-      Ruhoh::Friend.say { yellow "No draft to publish." ; exit } if id.nil?
-      Ruhoh::Friend.say { plain "Publishing draft: #{id}" }
-      draft = Ruhoh::Parsers::Posts.process_file(id)
-
-      Ruhoh::Friend.say { red "Draft title cannot be blank." ; exit } unless draft['data']['title']
-      Ruhoh::Friend.say {
-        red "Invalid date format: #{draft['data']['date']}"
-        red "Date format must be YYYY-MM-DD."
-        exit
-      } unless draft['data']['date']
-      
-      draft['data']['ext'] = File.extname(id).gsub('.','')
-      filename = Ruhoh::Parsers::Posts.to_filename(draft['data'])
-
-      if File.exist?(filename)
-        abort("\e[31m Aborted! \e[0m") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
-      end
-      
-      FileUtils.mkdir_p File.dirname(filename)
-      FileUtils.mv id, filename
-
-      Ruhoh::Friend.say { 
-        green "Published post:"
-        green Ruhoh.relative_path(filename)
-      }
-    end
-    
-    # Public: Unpublishes the last active post file.
-    def unpublish
-      post = self.last('post')
-      Ruhoh::Friend.say { yellow "No post to unpublish." ; exit } if post.nil?
-      Ruhoh::Friend.say { plain "Unpublishing post: #{post}" }
-
-      FileUtils.mv post, File.join(Ruhoh.paths.drafts, File.basename(post))
-
-      Ruhoh::Friend.say { 
-        yellow "Unpublished post:"
-        yellow Ruhoh.relative_path(post)
-      }
-    end
-    
     # Public: Create a new page file.
     def page
       name = @args[1]
@@ -298,8 +254,6 @@ class Ruhoh
       case type
       when 'post'
         Ruhoh::Parsers::Posts.files
-      when 'draft'
-        Ruhoh::Parsers::Drafts.files
       when 'page'
         Ruhoh::Parsers::Pages.files
       else
