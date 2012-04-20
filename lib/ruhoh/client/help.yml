@@ -19,14 +19,6 @@ commands:
     "desc" : |
       Create a new draft.
   -
-    "command" : "publish"
-    "desc" : |
-      Publish the last active draft file.
-  -
-    "command" : "unpublish"
-    "desc" : |
-      UnPublish the last active post file.
-  -
     "command" : "page <path>"
     "desc" : |
       Create a new page at the given path.
