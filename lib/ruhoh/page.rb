@@ -1,5 +1,4 @@
 class Ruhoh
-
   class Page
     attr_reader :id, :data, :content, :sub_layout, :master_layout
     attr_accessor :templater, :converter
@@ -11,7 +10,7 @@ class Ruhoh
     
     # Public: Change this page using an id.
     def change(id)
-      @data = nil
+      self.reset
       @path = id
       @data = if id =~ Regexp.new("^#{Ruhoh.folders.posts}")
         Ruhoh::DB.posts['dictionary'][id] 
@@ -82,6 +81,13 @@ class Ruhoh
       path
     end
     
+    def reset
+      @id = nil
+      @data = nil
+      @content = nil
+      @sub_layout = nil
+      @master_layout = nil
+    end
+    
   end #Page
-  
 end #Ruhoh
