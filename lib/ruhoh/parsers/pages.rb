@@ -71,8 +71,20 @@ class Ruhoh
         name.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
       end
     
+      # Build the permalink for the given page.
+      # Only recognize 'convertable' extensions for Markdown at the moment.
+      # This means 'non-convertable' extensions should pass-through.
+      #
+      # Returns [String] the permalink for this page.
       def self.permalink(page)
-        url = '/' + page['id'].gsub(File.extname(page['id']), '.html')
+        ext = File.extname(page['id'])
+        url = '/'
+        url += if ['.md', '.markdown'].include?(ext)
+          page['id'].gsub(Regexp.new("#{ext}$"), '.html')
+        else
+          page['id']
+        end
+        
         # sanitize url
         url = url.split('/').reject{ |part| part =~ /^\.+$/ }.join('/')
         url.gsub!(/\/index.html$/, '')
