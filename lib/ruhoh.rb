@@ -6,6 +6,7 @@ require 'json'
 require 'time'
 require 'cgi'
 require 'fileutils'
+require 'nokogiri'
 
 require 'mustache'
 
