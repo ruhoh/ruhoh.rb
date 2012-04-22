@@ -9,7 +9,7 @@ module Posts
       Ruhoh.setup(:source => SampleSitePath)
     end
     
-    describe "#generate" do
+    pending "#generate" do
       
       it 'should return a valid data structures for core API' do
         posts = Ruhoh::Parsers::Posts.generate
@@ -31,11 +31,10 @@ module Posts
           dictionary.keys.sort.should ==  ['_posts/2012-01-01-hello-world.md']
         end
         
-        it 'should return a properly formatted hash for each post' do
+        pending 'should return a properly formatted hash for each post' do
           dictionary = Ruhoh::Parsers::Posts.process
 
           dictionary.each_value { |value|
-            value.should have_key("layout")
             value.should have_key("id")
             value.should have_key("url")
             value.should have_key("title")
@@ -94,7 +93,7 @@ module Posts
     end
     
     describe "#parse_filename" do
-      it "should parse a post filename into corresponding metadata" do
+      it "should parse a post filename with DATE into corresponding metadata" do
         filename = '_posts/2011-10-10-my-post-title.md'
         data = Ruhoh::Parsers::Posts.parse_filename(filename)
 
@@ -104,8 +103,17 @@ module Posts
         data['extension'].should == ".md"
       end
       
-      it "should return a blank hash if the filename format is invalid" do
+      it "should parse a post filename without DATE into corresponding metadata" do
         filename = '_posts/my-post-title.md'
+        data = Ruhoh::Parsers::Posts.parse_filename(filename)
+        data['path'].should == "_posts/"
+        data['date'].should == nil
+        data['slug'].should == "my-post-title"
+        data['extension'].should == ".md"
+      end
+      
+      it "should return a blank hash if the filename has no extension and therefore invalid" do
+        filename = '_posts/my-post-title'
         data = Ruhoh::Parsers::Posts.parse_filename(filename)
         data.should == {}
       end

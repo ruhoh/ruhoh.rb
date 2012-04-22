@@ -19,5 +19,4 @@ RSpec.configure do |config|
   end
 end
 
-SampleSitePath = File.expand_path(File.join(File.dirname(__FILE__), '../scaffolds/blog'))
-
+SampleSitePath = '/Users/jade/Dropbox/active/ruhoh/blog'
