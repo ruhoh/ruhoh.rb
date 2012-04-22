@@ -15,7 +15,8 @@ class Ruhoh
 
         pages.each do |filename|
           id = self.make_id(filename)
-          parsed_page = Ruhoh::Utils.parse_file(filename)
+          parsed_page = ''
+          FileUtils.cd(Ruhoh.paths.site_source) { parsed_page = Ruhoh::Utils.parse_file(filename) }
           if parsed_page.empty?
             error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
             invalid << [filename, error] ; next
