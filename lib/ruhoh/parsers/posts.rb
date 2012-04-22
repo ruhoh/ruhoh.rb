@@ -128,17 +128,23 @@ class Ruhoh
         data = *filename.match(DateMatcher)
         data = *filename.match(Matcher) if data.empty?
         return {} if data.empty?
-        
-        # shift elements forward so indices match.
-        data.unshift(nil) unless filename =~ DateMatcher
 
-        {
-          "path" => data[1],
-          "date" => data[2],
-          "slug" => data[3],
-          "title" => self.titleize(data[3]),
-          "extension" => data[4]
-        }
+        if filename =~ DateMatcher
+          {
+            "path" => data[1],
+            "date" => data[2],
+            "slug" => data[3],
+            "title" => self.titleize(data[3]),
+            "extension" => data[4]
+          }
+        else
+          {
+            "path" => data[1],
+            "slug" => data[2],
+            "title" => self.titleize(data[2]),
+            "extension" => data[3]
+          }
+        end
       end
       
       # my-post-title ===> My Post Title
