@@ -7,7 +7,7 @@ class Ruhoh
       # Public: Generate the Pages dictionary.
       #
       def self.generate
-        raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
+        Ruhoh.ensure_setup
 
         pages = self.files
         invalid = []
