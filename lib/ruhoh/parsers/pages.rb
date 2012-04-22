@@ -24,7 +24,7 @@ class Ruhoh
           
           parsed_page['data']['id']     = id
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
-          parsed_page['data']['title']  = parsed_page['data']['title'] || self.titleize(filename)
+          parsed_page['data']['title']  = parsed_page['data']['title'] || self.to_title(filename)
 
           dictionary[id] = parsed_page['data']
         end
@@ -54,7 +54,7 @@ class Ruhoh
         filename.gsub(Regexp.new("^#{Ruhoh.folders.pages}/"), '')
       end
       
-      def self.titleize(filename)
+      def self.to_title(filename)
         name = File.basename( filename, File.extname(filename) )
         name = filename.split('/')[-2] if name == 'index' && !filename.index('/').nil?
         name.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}

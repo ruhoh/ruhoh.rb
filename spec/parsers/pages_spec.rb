@@ -83,7 +83,7 @@ module Pages
     end
     
     
-    describe "#titleize"
+    describe "#to_title"
     describe "#permalink"
     
   end

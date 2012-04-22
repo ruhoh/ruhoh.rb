@@ -106,21 +106,21 @@ class Ruhoh
             "path" => data[1],
             "date" => data[2],
             "slug" => data[3],
-            "title" => self.titleize(data[3]),
+            "title" => self.to_title(data[3]),
             "extension" => data[4]
           }
         else
           {
             "path" => data[1],
             "slug" => data[2],
-            "title" => self.titleize(data[2]),
+            "title" => self.to_title(data[2]),
             "extension" => data[3]
           }
         end
       end
       
       # my-post-title ===> My Post Title
-      def self.titleize(file_slug)
+      def self.to_title(file_slug)
         file_slug.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
       end
     

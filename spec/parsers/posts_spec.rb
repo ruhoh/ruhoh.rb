@@ -159,10 +159,10 @@ module Posts
       end
     end
     
-    describe "#titleize" do
+    describe "#to_title" do
       it "should prettify a filename slug for use as a title/header" do
         file_slug = 'my-post-title'
-        title = Ruhoh::Parsers::Posts.titleize(file_slug)
+        title = Ruhoh::Parsers::Posts.to_title(file_slug)
         title.should == "My Post Title"
       end
     end
