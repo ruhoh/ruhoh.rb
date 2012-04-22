@@ -70,21 +70,6 @@ class Ruhoh
         }
       end
       
-      # Used in the client implementation to turn a draft into a post.  
-      def self.process_file(filename)
-        p = Ruhoh::Utils.parse_file(filename)
-        filename_data = self.parse_filename(filename)
-        
-        if p['data']['title'].nil? || p['data']['title'].gsub(/\s/, '').empty?
-          p['data']['title'] = filename_data['title'] || nil
-        end
-
-        p['data']['date'] ||= filename_data['date']
-        p['data']['date'] = self.formatted_date(p['data']['date'] || Time.now)
-        
-        p
-      end
-      
       def self.formatted_date(date)
         Time.parse(date.to_s).strftime('%Y-%m-%d')
       rescue
