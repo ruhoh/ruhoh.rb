@@ -8,7 +8,7 @@ class Ruhoh
       # Public: Generate the Posts dictionary.
       #
       def self.generate
-        raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
+        Ruhoh.ensure_setup
         
         results = self.process
         ordered_posts = self.ordered_posts(results['posts'])

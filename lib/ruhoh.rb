@@ -127,4 +127,8 @@ class Ruhoh
     filename.gsub( Regexp.new("^#{self.paths.site_source}/"), '' )
   end
     
+  def self.ensure_setup
+    raise 'Ruhoh has not been setup. Please call: Ruhoh.setup' unless Ruhoh.config && Ruhoh.paths
+  end  
+  
 end # Ruhoh
