@@ -29,19 +29,7 @@ class Ruhoh
           dictionary[id] = parsed_page['data']
         end
           
-        report = "#{pages.count - invalid.count }/#{pages.count} pages processed."
-        
-        if pages.count.zero? && invalid.empty?
-          Ruhoh::Friend.say { plain "0 pages to process." }
-        elsif invalid.empty?
-          Ruhoh::Friend.say { green report }
-        else
-          Ruhoh::Friend.say {
-            yellow report
-            list "Pages not processed:", invalid
-          }
-        end
-
+        Ruhoh::Utils.report('Pages', dictionary, invalid)  
         dictionary 
       end
 

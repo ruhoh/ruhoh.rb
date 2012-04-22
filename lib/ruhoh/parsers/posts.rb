@@ -62,7 +62,7 @@ class Ruhoh
           dictionary[filename]  = data
         end
         
-        self.report(dictionary, invalid)
+        Ruhoh::Utils.report('Posts', dictionary, invalid)
         
         { 
           "posts" => dictionary,
@@ -89,20 +89,6 @@ class Ruhoh
         Time.parse(date.to_s).strftime('%Y-%m-%d')
       rescue
         false
-      end
-      
-      def self.report(dictionary, invalid)
-        output = "#{dictionary.count}/#{dictionary.count + invalid.count} posts processed."
-        if dictionary.empty? && invalid.empty?
-          Ruhoh::Friend.say { plain "0 posts to process." }
-        elsif invalid.empty?
-          Ruhoh::Friend.say { green output }
-        else
-          Ruhoh::Friend.say {
-            yellow output
-            list "Posts not processed:", invalid
-          }
-        end
       end
       
       def self.files
