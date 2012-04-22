@@ -45,6 +45,21 @@ class Ruhoh
       data
     end
     
+    
+    def self.report(name, collection, invalid)
+      output = "#{collection.count}/#{collection.count + invalid.count} #{name} processed."
+      if collection.empty? && invalid.empty?
+        Ruhoh::Friend.say { plain "0 #{name} to process." }
+      elsif invalid.empty?
+        Ruhoh::Friend.say { green output }
+      else
+        Ruhoh::Friend.say {
+          yellow output
+          list "#{name} not processed:", invalid
+        }
+      end
+    end
+    
   end
   
 end #Ruhoh
