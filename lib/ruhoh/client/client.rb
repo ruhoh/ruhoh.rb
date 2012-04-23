@@ -212,7 +212,7 @@ class Ruhoh
     # Return the payload hash for inspection/study.
     def payload
       require 'pp'
-      Ruhoh::DB.update!
+      Ruhoh::DB.update_all
       Ruhoh::Friend.say {
         plain Ruhoh::Templaters::Base.build_payload.pretty_inspect
       }

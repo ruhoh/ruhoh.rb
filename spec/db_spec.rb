@@ -64,7 +64,7 @@ module DB
       end
     end
     
-    describe "#update!" do
+    describe "#update_all" do
       it "should call update for all WhiteListed variables." do
         Ruhoh::DB.should_receive(:update).with(:site).ordered
         Ruhoh::DB.should_receive(:update).with(:posts).ordered
@@ -72,7 +72,7 @@ module DB
         Ruhoh::DB.should_receive(:update).with(:routes).ordered
         Ruhoh::DB.should_receive(:update).with(:layouts).ordered
         Ruhoh::DB.should_receive(:update).with(:partials).ordered
-        Ruhoh::DB.update!
+        Ruhoh::DB.update_all
       end
     end
     

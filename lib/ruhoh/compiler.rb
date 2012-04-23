@@ -6,7 +6,7 @@ class Ruhoh
       Ruhoh.config.env ||= 'production'
       Ruhoh::Friend.say { plain "Compiling for environment: '#{Ruhoh.config.env}'" }
 
-      Ruhoh::DB.update!
+      Ruhoh::DB.update_all
       @target = target_directory || "./#{Ruhoh.folders.compiled}"
       @page = Ruhoh::Page.new
     end

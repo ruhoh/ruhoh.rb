@@ -16,7 +16,7 @@ class Ruhoh
     
     def initialize
       Ruhoh.config.env ||= 'development'
-      Ruhoh::DB.update!
+      Ruhoh::DB.update_all
       @page = Ruhoh::Page.new
       Ruhoh::Watch.start
     end

@@ -26,7 +26,7 @@ class Ruhoh
         )
       end
 
-      def update!
+      def update_all
         WhiteList.each do |var|
           self.__send__ :update, var
         end
