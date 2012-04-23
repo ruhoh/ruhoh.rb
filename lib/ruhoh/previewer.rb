@@ -26,7 +26,10 @@ class Ruhoh
       dash = File.basename(Ruhoh.files.dashboard, File.extname(Ruhoh.files.dashboard))
       return admin if ["/#{dash}", "/#{dash}/"].include?(env['PATH_INFO'])
       
-      @page.change_with_url(env['PATH_INFO'])
+      id = Ruhoh::DB.routes[env['PATH_INFO']]
+      raise "Page id not found for url: #{env['PATH_INFO']}" unless id
+      @page.change(id)
+
       [200, {'Content-Type' => 'text/html'}, [@page.render]]
     end
     

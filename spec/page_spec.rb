@@ -72,31 +72,6 @@ module Page
 
     end
 
-    describe "#change_with_url" do
-      let(:page){ Ruhoh::Page.new }
-      
-      context "An invalid URL" do
-        it "should raise error" do
-          lambda { page.change_with_url('/cool-url') }.should raise_error
-        end
-      end
-        
-      context "A valid URL" do
-        let(:routes){
-          { "/super/cool/page-id.html" => "page-id.md" }
-        }
-        before(:all) do
-          Ruhoh::Parsers::Routes.stub(:generate).and_return(routes)
-          Ruhoh::DB.update(:routes)
-        end
-        
-        it "should call self.change with the proper id from the routes hash" do
-          page.should_receive(:change).with("page-id.md")
-          page.change_with_url("/super/cool/page-id.html")
-        end
-      end  
-    end
-    
     describe "#render" do
       let(:page){ Ruhoh::Page.new }
       it "should raise error if id not set" do
