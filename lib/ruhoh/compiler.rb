@@ -24,7 +24,7 @@ class Ruhoh
     
     def pages
       FileUtils.cd(@target) {
-        Ruhoh::DB.posts['dictionary'].merge(Ruhoh::DB.pages).each_value do |p|
+        Ruhoh::DB.all_pages.each_value do |p|
           @page.change(p['id'])
 
           FileUtils.mkdir_p File.dirname(@page.compiled_path)

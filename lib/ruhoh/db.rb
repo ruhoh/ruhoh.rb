@@ -25,7 +25,11 @@ class Ruhoh
           end
         )
       end
-
+      
+      def all_pages
+        self.posts['dictionary'].merge(self.pages)
+      end
+      
       def update_all
         WhiteList.each do |var|
           self.__send__ :update, var
