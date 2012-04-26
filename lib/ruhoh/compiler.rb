@@ -16,6 +16,7 @@ class Ruhoh
       self.pages
       self.media
       self.syntax
+      self.rss
       true
     end
     
@@ -50,6 +51,29 @@ class Ruhoh
       syntax_path = File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.syntax)
       FileUtils.mkdir_p syntax_path
       FileUtils.cp_r "#{Ruhoh.paths.syntax}/.", syntax_path
+    end
+
+    def rss
+      feed = Nokogiri::XML::Builder.new do |xml|
+        xml.rss(:version => '2.0') {
+          xml.channel {
+            xml.title_ Ruhoh::DB.site['title']
+            xml.link_ Ruhoh::DB.site['config']['production_url']
+            #xml.generator "Ruhoh (v#{Ruhoh.version}"
+            xml.pubDate_ Time.now
+            Ruhoh::DB.posts['chronological'].each do |postid|
+              post = Ruhoh::DB.posts['dictionary'][postid]
+              xml.item {
+                xml.title_ post['title']
+                xml.link "#{Ruhoh::DB.site['config']['production_url']}#{post['url']}"
+                xml.pubDate_ post['date']
+                xml.description_ (post['description'] ? post['description'] : post['content'])
+              }
+            end
+          }
+        }
+      end
+      File.open(File.join(@target,'rss.xml'), 'w'){ |p| p.puts feed.to_xml }
     end
     
   end #Compiler
