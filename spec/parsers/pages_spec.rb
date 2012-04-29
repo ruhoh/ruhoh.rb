@@ -9,14 +9,34 @@ module Pages
       before(:each) do
         Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
         Ruhoh.setup(:source => SampleSitePath)
+        
+        the_pages_dir = File.join SampleSitePath, "_pages"
+
+        FileUtils.remove_dir(the_pages_dir, 1) if Dir.exists? the_pages_dir
+        Dir.mkdir the_pages_dir
+
+        expected_pages.each do |page_name| 
+          full_file_name = File.join(the_pages_dir, page_name)
+          File.open full_file_name, "w+" do |file|
+            file.puts <<-TEXT
+---
+title: #{page_name} (test)
+---  
+            TEXT
+          end
+        end
       end
       
+      let(:expected_pages) {
+        %w{about.md archive.html categories.html index.html pages.html sitemap.txt tags.html}
+      }
+
       let(:pages){
         Ruhoh::Parsers::Pages.generate
       }
       
       it 'should extract valid pages from source directory.' do
-        pages.keys.sort.should ==  ['about.md', 'archive.html', 'categories.html', 'index.html', 'pages.html', 'sitemap.txt', 'tags.html']
+        pages.keys.sort.should == ['about.md', 'archive.html', 'categories.html', 'index.html', 'pages.html', 'sitemap.txt', 'tags.html']
       end
       
       it 'should return a properly formatted hash for each page' do
