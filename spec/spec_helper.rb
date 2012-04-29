@@ -19,4 +19,7 @@ RSpec.configure do |config|
   end
 end
 
-SampleSitePath = '/Users/jade/Dropbox/active/ruhoh/blog'
+SampleSitePath = '__tmp'
+
+Dir.rmdir SampleSitePath if Dir.exists? SampleSitePath
+Dir.mkdir SampleSitePath
