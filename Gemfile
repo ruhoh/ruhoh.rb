@@ -9,4 +9,5 @@ gem 'psych'
 
 group :development do
   gem 'rspec'
+  gem 'rake'
 end
