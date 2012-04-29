@@ -14,7 +14,6 @@ require 'mustache'
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
-require 'ruhoh/parsers/drafts'
 require 'ruhoh/parsers/posts'
 require 'ruhoh/parsers/pages'
 require 'ruhoh/parsers/routes'
@@ -38,27 +37,15 @@ class Ruhoh
   end
   
   @log = Ruhoh::Logger.new
-  
-  Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  DefaultExclude = ['Gemfile', 'Gemfile.lock', 'config.ru', 'README.md']
-  Folders = Struct.new(:database, :pages, :posts, :drafts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
-  Files = Struct.new(:site, :config)
-  Filters = Struct.new(:posts, :pages, :static)
-  Config = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude)
-  Paths = Struct.new(
-    :site_source,
-    :database,
-    :pages,
-    :posts,
-    :drafts,
-    :theme,
-    :layouts,
-    :partials,
-    :global_partials,
-    :media,
-    :syntax,
-    :compiled
-  )
+
+  Root      = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  Folders   = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
+  Files     = Struct.new(:site, :config, :dashboard)
+  Filters   = Struct.new(:posts, :pages, :static)
+  Config    = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
+  Paths     = Struct.new(
+                :site_source, :database, :pages, :posts, :theme, :layouts, :partials, :global_partials, :media, :syntax,
+                :compiled, :dashboard)
   
   
   # Public: Setup Ruhoh utilities relative to the current application directory.
@@ -72,8 +59,8 @@ class Ruhoh
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_pages', '_posts', '_drafts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
-    @files       = Files.new('_site.yml', '_config.yml')
+    @folders     = Folders.new('_database', '_pages', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
+    @files       = Files.new('_site.yml', '_config.yml', 'dash.html')
     @filters     = Filters.new
     @config      = Config.new
     @paths       = Paths.new
@@ -100,6 +87,8 @@ class Ruhoh
     @config.syntax_path   = File.join('/', @folders.templates, @folders.syntax)
     @config.permalink     = site_config['permalink']
     @config.exclude       = Array(site_config['exclude'] || nil)
+    @config.env           = site_config['env'] || nil
+    @config
   end
   
   def self.setup_paths
@@ -107,7 +96,6 @@ class Ruhoh
     @paths.database         = self.absolute_path(@folders.database)
     @paths.pages            = self.absolute_path(@folders.pages)
     @paths.posts            = self.absolute_path(@folders.posts)
-    @paths.drafts           = self.absolute_path(@folders.drafts)
 
     @paths.theme            = self.absolute_path(@folders.templates, @folders.themes, @config.theme)
     @paths.layouts          = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.layouts)
@@ -116,12 +104,13 @@ class Ruhoh
     @paths.media            = self.absolute_path(@folders.media)
     @paths.syntax           = self.absolute_path(@folders.templates, @folders.syntax)
     @paths.compiled         = self.absolute_path(@folders.compiled)
+    @paths.dashboard        = self.absolute_path(@files.dashboard)
     @paths
   end
   
   # filename filters
   def self.setup_filters
-    exclude = @config.exclude + DefaultExclude
+    exclude = @config.exclude
     exclude.uniq!
     
     @filters.pages = { 'names' => [], 'regexes' => [] }
@@ -140,4 +129,8 @@ class Ruhoh
     filename.gsub( Regexp.new("^#{self.paths.site_source}/"), '' )
   end
     
-end # Ruhoh  
+  def self.ensure_setup
+    raise 'Ruhoh has not been setup. Please call: Ruhoh.setup' unless Ruhoh.config && Ruhoh.paths
+  end  
+  
+end # Ruhoh

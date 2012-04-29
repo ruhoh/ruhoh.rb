@@ -22,3 +22,5 @@ doc
 
 # jeweler generated
 pkg
+.rvmrc
+__tmp/

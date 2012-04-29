@@ -15,6 +15,7 @@ class Ruhoh
   class Previewer
     
     def initialize
+      Ruhoh.config.env ||= 'development'
       Ruhoh::DB.update!
       @page = Ruhoh::Page.new
       Ruhoh::Watch.start
@@ -22,7 +23,8 @@ class Ruhoh
 
     def call(env)
       return favicon if env['PATH_INFO'] == '/favicon.ico'
-      return drafts if ["/#{Ruhoh.folders.drafts}", "/#{Ruhoh.folders.drafts}/"].include?(env['PATH_INFO'])
+      dash = File.basename(Ruhoh.files.dashboard, File.extname(Ruhoh.files.dashboard))
+      return admin if ["/#{dash}", "/#{dash}/"].include?(env['PATH_INFO'])
       
       @page.change_with_url(env['PATH_INFO'])
       [200, {'Content-Type' => 'text/html'}, [@page.render]]
@@ -32,17 +34,14 @@ class Ruhoh
       [200, {'Content-Type' => 'image/x-icon'}, ['']]
     end
 
-    def drafts
-      html = '<h3>Drafts</h3>'
-      html += '<ul>'
-      Ruhoh::DB.drafts.each_value do |draft|
-        html += "<li><a href='#{draft['url']}'>#{draft['id']}: #{draft['title']}</a></li>"
-      end
-      html += '</ul>'
+    def admin
+      system_dash  = File.join(Ruhoh::Root, Ruhoh.files.dashboard)
+      template     = File.open(File.exist?(Ruhoh.paths.dashboard) ? Ruhoh.paths.dashboard : system_dash) {|f| f.read }
+      output       = Ruhoh::Templaters::Base.parse(template, nil)
       
-      [200, {'Content-Type' => 'text/html'}, [html]]
+      [200, {'Content-Type' => 'text/html'}, [output]]
     end
-    
+        
   end #Previewer
   
 end #Ruhoh

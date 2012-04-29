@@ -9,7 +9,7 @@ class Ruhoh
     #
     # Returns: Nothing
     def self.start
-      raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
+      Ruhoh.ensure_setup
       Ruhoh::Friend.say {
         plain "=> Start watching: #{Ruhoh.paths.site_source}"
       }
@@ -42,10 +42,6 @@ class Ruhoh
           elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.posts}")
             type = "Posts"
             Ruhoh::DB.update(:posts)
-            Ruhoh::DB.update(:routes)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.drafts}")
-            type = "Drafts"
-            Ruhoh::DB.update(:drafts)
             Ruhoh::DB.update(:routes)
           elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.templates}")
             type = "Themes"

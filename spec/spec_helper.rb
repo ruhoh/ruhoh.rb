@@ -19,5 +19,7 @@ RSpec.configure do |config|
   end
 end
 
-SampleSitePath = File.expand_path(File.join(File.dirname(__FILE__), '../scaffolds/blog'))
+SampleSitePath = '__tmp'
 
+FileUtils.remove_dir(SampleSitePath,1) if Dir.exists? SampleSitePath
+Dir.mkdir SampleSitePath

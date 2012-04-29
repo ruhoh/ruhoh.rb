@@ -3,6 +3,9 @@ class Ruhoh
   class Compiler
     
     def initialize(target_directory)
+      Ruhoh.config.env ||= 'production'
+      Ruhoh::Friend.say { plain "Compiling for environment: '#{Ruhoh.config.env}'" }
+
       Ruhoh::DB.update!
       @target = target_directory || "./#{Ruhoh.folders.compiled}"
       @page = Ruhoh::Page.new

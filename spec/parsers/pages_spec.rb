@@ -9,19 +9,38 @@ module Pages
       before(:each) do
         Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
         Ruhoh.setup(:source => SampleSitePath)
+        
+        the_pages_dir = File.join SampleSitePath, "_pages"
+
+        FileUtils.remove_dir(the_pages_dir, 1) if Dir.exists? the_pages_dir
+        Dir.mkdir the_pages_dir
+
+        expected_pages.each do |page_name| 
+          full_file_name = File.join(the_pages_dir, page_name)
+          File.open full_file_name, "w+" do |file|
+            file.puts <<-TEXT
+---
+title: #{page_name} (test)
+---  
+            TEXT
+          end
+        end
       end
       
+      let(:expected_pages) {
+        %w{about.md archive.html categories.html index.html pages.html sitemap.txt tags.html}
+      }
+
       let(:pages){
         Ruhoh::Parsers::Pages.generate
       }
       
       it 'should extract valid pages from source directory.' do
-        pages.keys.sort.should ==  ['about.md', 'archive.html', 'categories.html', 'index.html', 'pages.html', 'tags.html']
+        pages.keys.sort.should == ['about.md', 'archive.html', 'categories.html', 'index.html', 'pages.html', 'sitemap.txt', 'tags.html']
       end
       
       it 'should return a properly formatted hash for each page' do
         pages.each_value { |value|
-          value.should have_key("layout")
           value.should have_key("id")
           value.should have_key("url")
           value.should have_key("title")
@@ -42,11 +61,6 @@ module Pages
         it "should return true for a valid page filepath" do
           filepath = 'about.md'
           Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == true
-        end
-      
-        it "should return false for a filepath beginning with _" do
-          filepath = '_blah/about.md'
-          Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
         end
       
         it "should return false for a filepath beginning with ." do
@@ -89,8 +103,8 @@ module Pages
     end
     
     
-    pending "#titleize"
-    pending "#permalink"
+    describe "#titleize"
+    describe "#permalink"
     
   end
   

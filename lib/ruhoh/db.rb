@@ -1,12 +1,8 @@
-require "observer"
-
 class Ruhoh
-  
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
     class << self
-      include Observable
-      WhiteList = [:site, :posts, :drafts, :pages, :routes, :layouts, :partials]
+      WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials]
       self.__send__ :attr_reader, *WhiteList
 
       def update(name)
@@ -18,8 +14,6 @@ class Ruhoh
             Ruhoh::Parsers::Routes.generate
           when :posts
             Ruhoh::Parsers::Posts.generate
-          when :drafts
-            Ruhoh::Parsers::Drafts.generate
           when :pages
             Ruhoh::Parsers::Pages.generate
           when :layouts
@@ -30,8 +24,6 @@ class Ruhoh
             raise "Data type: '#{name}' is not a valid data type."
           end
         )
-        changed
-        notify_observers(name)
       end
 
       def update!
@@ -41,7 +33,5 @@ class Ruhoh
       end
       
     end #self
-    
   end #DB
-  
 end #Ruhoh

@@ -7,7 +7,7 @@ class Ruhoh
       # Public: Generate the Pages dictionary.
       #
       def self.generate
-        raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
+        Ruhoh.ensure_setup
 
         pages = self.files
         invalid = []
@@ -15,7 +15,8 @@ class Ruhoh
 
         pages.each do |filename|
           id = self.make_id(filename)
-          parsed_page = Ruhoh::Utils.parse_file(filename)
+          parsed_page = ''
+          FileUtils.cd(Ruhoh.paths.site_source) { parsed_page = Ruhoh::Utils.parse_file(filename) }
           if parsed_page.empty?
             error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
             invalid << [filename, error] ; next
@@ -28,19 +29,7 @@ class Ruhoh
           dictionary[id] = parsed_page['data']
         end
           
-        report = "#{pages.count - invalid.count }/#{pages.count} pages processed."
-        
-        if pages.count.zero? && invalid.empty?
-          Ruhoh::Friend.say { plain "0 pages to process." }
-        elsif invalid.empty?
-          Ruhoh::Friend.say { green report }
-        else
-          Ruhoh::Friend.say {
-            yellow report
-            list "Pages not processed:", invalid
-          }
-        end
-
+        Ruhoh::Utils.report('Pages', dictionary, invalid)  
         dictionary 
       end
 
@@ -71,8 +60,20 @@ class Ruhoh
         name.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
       end
     
+      # Build the permalink for the given page.
+      # Only recognize 'convertable' extensions for Markdown at the moment.
+      # This means 'non-convertable' extensions should pass-through.
+      #
+      # Returns [String] the permalink for this page.
       def self.permalink(page)
-        url = '/' + page['id'].gsub(File.extname(page['id']), '.html')
+        ext = File.extname(page['id'])
+        url = '/'
+        url += if ['.md', '.markdown'].include?(ext)
+          page['id'].gsub(Regexp.new("#{ext}$"), '.html')
+        else
+          page['id']
+        end
+        
         # sanitize url
         url = url.split('/').reject{ |part| part =~ /^\.+$/ }.join('/')
         url.gsub!(/\/index.html$/, '')

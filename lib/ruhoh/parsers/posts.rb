@@ -2,18 +2,20 @@ class Ruhoh
   module Parsers
     module Posts
     
-      MATCHER = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
+      DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
+      Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
       # Public: Generate the Posts dictionary.
       #
       def self.generate
-        raise "Ruhoh.config cannot be nil.\n To set config call: Ruhoh.setup" unless Ruhoh.config
+        Ruhoh.ensure_setup
         
-        dictionary = self.process
-        ordered_posts = self.ordered_posts(dictionary)
+        results = self.process
+        ordered_posts = self.ordered_posts(results['posts'])
 
         {
-          'dictionary'      => dictionary,
+          'dictionary'      => results['posts'],
+          'drafts'          => results['drafts'],
           'chronological'   => self.build_chronology(ordered_posts),
           'collated'        => self.collate(ordered_posts),
           'tags'            => self.parse_tags(ordered_posts),
@@ -23,10 +25,12 @@ class Ruhoh
       
       def self.process
         dictionary = {}
+        drafts = []
         invalid = []
-        
+
         self.files.each do |filename|
-          parsed_page = Ruhoh::Utils.parse_file(filename)
+          parsed_page = ''
+          FileUtils.cd(Ruhoh.paths.site_source) { parsed_page = Ruhoh::Utils.parse_file(filename) }
           if parsed_page.empty?
             error = "Invalid YAML Front Matter. Ensure this page has valid YAML, even if it's empty."
             invalid << [filename, error] ; next
@@ -35,7 +39,7 @@ class Ruhoh
           
           filename_data = self.parse_filename(filename)
           if filename_data.empty?
-            error = "Invalid Filename Format. Format should be: YYYY-MM-DD-my-post-title.ext"
+            error = "Invalid Filename Format. Format should be: my-post-title.ext"
             invalid << [filename, error] ; next
           end
           
@@ -45,7 +49,12 @@ class Ruhoh
             error = "Invalid Date Format. Date should be: YYYY-MM-DD"
             invalid << [filename, error] ; next
           end
-        
+
+          if data['type'] == 'draft'
+            next if Ruhoh.config.env == 'production'
+            drafts << filename 
+          end  
+          
           data['date']          = data['date'].to_s
           data['id']            = filename
           data['title']         = data['title'] || filename_data['title']
@@ -53,11 +62,15 @@ class Ruhoh
           dictionary[filename]  = data
         end
         
-        self.report(dictionary, invalid)
-        dictionary
+        Ruhoh::Utils.report('Posts', dictionary, invalid)
+        
+        { 
+          "posts" => dictionary,
+          "drafts" => drafts
+        }
       end
       
-      
+      # Used in the client implementation to turn a draft into a post.  
       def self.process_file(filename)
         p = Ruhoh::Utils.parse_file(filename)
         filename_data = self.parse_filename(filename)
@@ -76,20 +89,6 @@ class Ruhoh
         Time.parse(date.to_s).strftime('%Y-%m-%d')
       rescue
         false
-      end
-      
-      def self.report(dictionary, invalid)
-        output = "#{dictionary.count}/#{dictionary.count + invalid.count} posts processed."
-        if dictionary.empty? && invalid.empty?
-          Ruhoh::Friend.say { plain "0 posts to process." }
-        elsif invalid.empty?
-          Ruhoh::Friend.say { green output }
-        else
-          Ruhoh::Friend.say {
-            yellow output
-            list "Posts not processed:", invalid
-          }
-        end
       end
       
       def self.files
@@ -113,15 +112,26 @@ class Ruhoh
       end
       
       def self.parse_filename(filename)
-        data = *filename.match(MATCHER)
+        data = *filename.match(DateMatcher)
+        data = *filename.match(Matcher) if data.empty?
         return {} if data.empty?
-        {
-          "path" => data[1],
-          "date" => data[2],
-          "slug" => data[3],
-          "title" => self.titleize(data[3]),
-          "extension" => data[4]
-        }
+
+        if filename =~ DateMatcher
+          {
+            "path" => data[1],
+            "date" => data[2],
+            "slug" => data[3],
+            "title" => self.titleize(data[3]),
+            "extension" => data[4]
+          }
+        else
+          {
+            "path" => data[1],
+            "slug" => data[2],
+            "title" => self.titleize(data[2]),
+            "extension" => data[3]
+          }
+        end
       end
       
       # my-post-title ===> My Post Title
@@ -134,8 +144,9 @@ class Ruhoh
         title.downcase.strip.gsub(/\s/, '-').gsub(/[^\w-]/, '')
       end
         
+      # Used in the client implementation to turn a draft into a post.  
       def self.to_filename(data)
-        File.join(Ruhoh.paths.posts, "#{self.formatted_date(data['date'])}-#{self.to_slug(data['title'])}.#{data['ext']}")
+        File.join(Ruhoh.paths.posts, "#{self.to_slug(data['title'])}.#{data['ext']}")
       end
       
       # Another blatently stolen method from Jekyll
