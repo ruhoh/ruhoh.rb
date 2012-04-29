@@ -9,9 +9,8 @@ class Ruhoh
       filepath = File.__send__ :join, args
       return nil unless File.exist? filepath
 
-      file = File.open(filepath)
+      file = File.open(filepath, 'r:UTF-8') {|f| f.read }
       yaml = YAML.load(file) || {}
-      file.close  
       yaml
     rescue Psych::SyntaxError => e
       Ruhoh.log.error("ERROR in #{filepath}: #{e.message}")
@@ -23,7 +22,7 @@ class Ruhoh
       
       raise "File not found: #{path}" unless File.exist?(path)
 
-      page = File.open(path).read
+      page = File.open(path, 'r:UTF-8') {|f| f.read }
       front_matter = page.match(FMregex)
 
       return {} unless front_matter

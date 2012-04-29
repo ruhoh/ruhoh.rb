@@ -1,3 +1,5 @@
+# encoding: UTF-8
+Encoding.default_internal = 'UTF-8'
 require 'yaml'
 require 'psych'
 YAML::ENGINE.yamler = 'psych'

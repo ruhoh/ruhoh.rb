@@ -28,7 +28,7 @@ class Ruhoh
           @page.change(p['id'])
 
           FileUtils.mkdir_p File.dirname(@page.compiled_path)
-          File.open(@page.compiled_path, 'w') { |p| p.puts @page.render }
+          File.open(@page.compiled_path, 'w:UTF-8') { |p| p.puts @page.render }
 
           Ruhoh::Friend.say { green "processed: #{p['id']}" }
         end
