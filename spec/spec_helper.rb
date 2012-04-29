@@ -21,5 +21,5 @@ end
 
 SampleSitePath = '__tmp'
 
-Dir.rmdir SampleSitePath if Dir.exists? SampleSitePath
+FileUtils.remove_dir(SampleSitePath,1) if Dir.exists? SampleSitePath
 Dir.mkdir SampleSitePath
