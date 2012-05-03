@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mustache', "~> 0.99"
   s.add_dependency 'directory_watcher', "~> 1.4"
   s.add_dependency 'maruku', "~> 0.6"
+  s.add_dependency 'psych', "~> 1.3"
   
   # = MANIFEST =
   s.files = %w[
