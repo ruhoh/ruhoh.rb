@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style type="text/css">
+    /*!
+     * Bootstrap v2.0.2
+     *
+     * Copyright 2012 Twitter, Inc
+     * Licensed under the Apache License v2.0
+     * http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Designed and built with all the love in the world @twitter by @mdo and @fat.
+     */
+    .clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";}
+    .clearfix:after{clear:both;}
+    .hide-text{overflow:hidden;text-indent:100%;white-space:nowrap;}
+    .input-block-level{display:block;width:100%;min-height:28px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
+    article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block;}
+    audio,canvas,video{display:inline-block;*display:inline;*zoom:1;}
+    audio:not([controls]){display:none;}
+    html{font-size:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+    a:focus{outline:thin dotted #333;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px;}
+    a:hover,a:active{outline:0;}
+    sub,sup{position:relative;font-size:75%;line-height:0;vertical-align:baseline;}
+    sup{top:-0.5em;}
+    sub{bottom:-0.25em;}
+    img{height:auto;border:0;-ms-interpolation-mode:bicubic;vertical-align:middle;}
+    button,input,select,textarea{margin:0;font-size:100%;vertical-align:middle;}
+    button,input{*overflow:visible;line-height:normal;}
+    button::-moz-focus-inner,input::-moz-focus-inner{padding:0;border:0;}
+    button,input[type="button"],input[type="reset"],input[type="submit"]{cursor:pointer;-webkit-appearance:button;}
+    input[type="search"]{-webkit-appearance:textfield;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;}
+    input[type="search"]::-webkit-search-decoration,input[type="search"]::-webkit-search-cancel-button{-webkit-appearance:none;}
+    textarea{overflow:auto;vertical-align:top;}
+    body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#333333;background-color:#ffffff;}
+    a{color:#0088cc;text-decoration:none;}
+    a:hover{color:#005580;text-decoration:underline;}
+    
+    /* deep purple: #2E2633 */
+    /* deep red #99173C */
+    body, html {
+      font-size:14px;
+      height:100%;
+      color: #2E2633;
+    }
+    a, a:hover {
+      color: #2E2633;
+      text-decoration:none;
+    }
+    ul {
+      list-style:none;
+      margin:0; padding:0;
+    }
+    #wrapper {
+      margin:auto;
+      width:500px;
+      min-height:100%;
+      position:relative;
+      border-left:2px solid #99173C;
+    }
+    .page-pane {
+      padding:20px 0;
+      width:500px;
+    }
+    
+/* ----------------------------------------- */
+    #nav-wrapper { 
+      position:absolute;
+      top:20px;
+      left:-202px;
+    }
+    #nav {
+      position:fixed;
+      line-height:2em;
+      width:200px;
+    }
+    #nav li {margin-bottom:3px;}
+    #nav li a {
+      display:block;
+      padding:0 25px;
+      line-height:50px;
+      border-radius:5px 0 0 5px;
+      font-size:20px;
+      font-weight:bold;
+      font-family:verdana;
+      text-align:right;
+    }
+    #nav li a:hover { 
+      background:#DCE9BE;
+    }
+    #nav li a.active { 
+      background:#99173C;
+      color:#FFF;
+    }
+    
+/* ----------------------------------------- */
+    ul.page-list {
+      line-height:1.5em;
+    }
+    ul.page-list li {
+      margin-bottom:3px;
+    }  
+    ul.page-list li a{
+      display:block;
+      overflow:hidden;
+      padding:10px 25px;
+      font-family:courier;
+      border-radius:0 5px 5px 0;
+      line-height:24px;
+    }
+    ul.page-list li a:hover { 
+      background:#DCE9BE;
+    }
+    ul.page-list li a span.title{
+      font-size:18px;
+      font-weight:bold;
+    }
+    ul.page-list li a span.date{
+      position:absolute;
+      right:25px;
+      font-size:12px;
+    }
+    ul.page-list li a span.id {
+      font-size:12px;
+    }
+  </style>
+</head>
+<body>
+<div id="wrapper">
+  
+  <div id="nav-wrapper">
+    <ul id="nav">
+      <li><a href="#drafts" class="active">Drafts</a></li>
+      <li><a href="#public">Posts</a></li>
+      <li><a href="#pages">Pages</a></li>
+    </ul>
+  </div>
+
+  <div id="drafts" class="page-pane">
+    <ul class="page-list">
+    {{# db.posts.drafts?to_posts }}
+      <li>
+        <a href="{{url}}">
+          <span class="title">{{title}}</span>
+          <span class="date">{{date}}</span>
+          <br><span class="id">{{id}}</span></small>
+        </a>
+      </li>
+    {{/ db.posts.drafts?to_posts }}
+    </ul>
+  </div>  
+
+  <div id="public" class="page-pane" style="display:none">
+    <ul class="page-list">
+  {{#posts}}
+    {{^ type }}
+      <li>
+        <a href="{{url}}">
+          <span class="title">{{title}}</span>
+          <span class="date">{{date}}</span>
+          <br><span class="id">{{id}}</span></small>
+        </a>
+      </li>
+    {{/ type }}
+  {{/posts}}
+    </ul>
+  </div>
+
+  <div id="pages" class="page-pane" style="display:none">
+    <ul class="page-list">
+    {{#pages}}
+      <li>
+        <a href="{{url}}">
+          <span class="title">{{title}}</span>
+          <span class="date">{{date}}</span>
+          <br><span class="id">{{id}}</span></small>
+        </a>
+      </li>
+    {{/pages}}
+    </ul>
+  </div>
+
+</div>
+  
+  <script>
+    // Tabs is a small script for showing/hiding the different page lists.
+    // This mostly likely only works in modern browsers but
+    // I'd rather not add jQuery as a dependency until it's really warranted.
+    var Tabs = {
+      panes : document.getElementsByClassName('page-pane'),
+      nav : document.getElementById('nav'),
+      listEntries : this.nav.children,
+      links : [],
+      
+      init : function(){
+        for (var i = 0; i < Tabs.listEntries.length; ++i) {  
+          Tabs.links.push(Tabs.listEntries[i].firstChild);
+        }
+        
+        Tabs.nav.addEventListener('click', function(e){
+          e.preventDefault();
+          if (e.target.tagName.toLowerCase() !== 'a') return;
+          
+          Tabs.clearActive();
+          Tabs.hidePanes();
+          e.target.className = 'active';
+          var id = e.target.href.split('#')[1];
+          document.getElementById(id).style.display = 'block';
+        }, false)
+      },
+      
+      clearActive : function(){
+        for (var i = 0; i < Tabs.links.length; ++i)
+          Tabs.links[i].className = '';
+      },
+      
+      hidePanes : function(){
+        for (var i = 0; i < Tabs.panes.length; ++i)
+          Tabs.panes[i].style.display = 'none';
+      }
+    }
+    Tabs.init();
+  </script>
+</body>
+</html>
