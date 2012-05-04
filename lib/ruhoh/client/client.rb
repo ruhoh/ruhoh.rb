@@ -105,6 +105,19 @@ class Ruhoh
       }
     end
 
+    # Public: Update draft filenames to their corresponding titles.
+    def titleize
+       Ruhoh::Parsers::Posts.files.each do |file|
+          next unless File.basename(file) =~ /^untitled/
+          parsed_page = Ruhoh::Utils.parse_file(file)
+          next unless parsed_page['data']['title']
+          new_name = Ruhoh::Parsers::Posts.to_slug(parsed_page['data']['title'])
+          new_file = File.join(File.dirname(file), "#{new_name}#{File.extname(file)}")
+          FileUtils.mv(file, new_file)
+          Ruhoh::Friend.say { green "Renamed #{file} to: #{new_file}" }
+       end
+    end
+    
     # Public: Compile to static website.
     def compile
       Ruhoh::Compiler.new(@args[1]).compile

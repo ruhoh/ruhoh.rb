@@ -23,6 +23,10 @@ commands:
     "desc" : |
       Create a new page at the given path.
   -
+    "command" : "titleize"
+    "desc" : |
+      Update draft filenames to their corresponding titles. Drafts without titles are ignored.
+  -    
     "command" : "drafts"
     "desc" : |
       List all drafts.
