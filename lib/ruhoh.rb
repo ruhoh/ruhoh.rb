@@ -28,6 +28,7 @@ require 'ruhoh/converters/converter'
 require 'ruhoh/page'
 require 'ruhoh/previewer'
 require 'ruhoh/watch'
+require 'ruhoh/program'
 
 class Ruhoh
 

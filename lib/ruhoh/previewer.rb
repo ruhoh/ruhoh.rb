@@ -1,24 +1,15 @@
 class Ruhoh
-  
   # Public: Rack application used to render singular pages via their URL.
   # 
-  # Examples
-  #
-  #  In config.ru:
-  #
-  #   require 'ruhoh'
-  #
-  #   Ruhoh.setup
-  #   use Rack::Static, {:urls => ["/#{Ruhoh.folders.media}", "/#{Ruhoh.folders.templates}"]}
-  #   run Ruhoh::Previewer.new
+  # This class depends on a correctly loaded Ruhoh environment;
+  # it should only be used as part of a Ruhoh 'program' routine.
+  # See Ruhoh::Program for usage.
   #
   class Previewer
     
-    def initialize
+    def initialize(page)
       Ruhoh.config.env ||= 'development'
-      Ruhoh::DB.update_all
-      @page = Ruhoh::Page.new
-      Ruhoh::Watch.start
+      @page = page
     end
 
     def call(env)
@@ -46,5 +37,4 @@ class Ruhoh
     end
         
   end #Previewer
-  
 end #Ruhoh
