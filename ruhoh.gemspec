@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     README.md
     Rakefile
     bin/ruhoh
+    dash.html
     history.txt
     lib/ruhoh.rb
     lib/ruhoh/client/client.rb
@@ -44,6 +45,7 @@ Gem::Specification.new do |s|
     lib/ruhoh/parsers/routes.rb
     lib/ruhoh/parsers/site.rb
     lib/ruhoh/previewer.rb
+    lib/ruhoh/program.rb
     lib/ruhoh/templaters/base.rb
     lib/ruhoh/templaters/helpers.rb
     lib/ruhoh/templaters/rmustache.rb
