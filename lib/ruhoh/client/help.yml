@@ -15,7 +15,7 @@ commands:
     "desc" : |
       Compile to static website.
   -
-    "command" : "draft"
+    "command" : "post | draft"
     "desc" : |
       Create a new draft.
   -

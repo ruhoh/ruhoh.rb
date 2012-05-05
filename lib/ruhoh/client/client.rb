@@ -73,9 +73,10 @@ class Ruhoh
       Ruhoh::Friend.say { 
         green "New draft:" 
         green Ruhoh.relative_path(filename)
-        green 'View drafts at the URL: /_drafts'
+        green 'View drafts at the URL: /dash'
       }
     end
+    alias_method :post, :draft
     
     # Public: Create a new page file.
     def page
