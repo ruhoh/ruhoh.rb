@@ -43,7 +43,7 @@ class Ruhoh
   Folders   = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
   Files     = Struct.new(:site, :config, :dashboard)
   Filters   = Struct.new(:posts, :pages, :static)
-  Config    = Struct.new(:permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
+  Config    = Struct.new(:permalink, :pages_permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
   Paths     = Struct.new(
                 :site_source, :database, :pages, :posts, :theme, :layouts, :partials, :global_partials, :media, :syntax,
                 :compiled, :dashboard)
@@ -87,6 +87,7 @@ class Ruhoh
     @config.media_path    = File.join('/', @folders.media)
     @config.syntax_path   = File.join('/', @folders.templates, @folders.syntax)
     @config.permalink     = site_config['permalink']
+    @config.pages_permalink = site_config['pages']['permalink'] rescue nil
     @config.exclude       = Array(site_config['exclude'] || nil)
     @config.env           = site_config['env'] || nil
     @config

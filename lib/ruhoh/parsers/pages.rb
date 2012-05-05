@@ -1,7 +1,5 @@
 class Ruhoh
-
   module Parsers
-    
     module Pages
     
       # Public: Generate the Pages dictionary.
@@ -66,24 +64,24 @@ class Ruhoh
       #
       # Returns [String] the permalink for this page.
       def self.permalink(page)
-        ext = File.extname(page['id'])
         url = '/'
+        ext = File.extname(page['id'])
         url += if ['.md', '.markdown'].include?(ext)
           page['id'].gsub(Regexp.new("#{ext}$"), '.html')
         else
           page['id']
         end
         
-        # sanitize url
-        url = url.split('/').reject{ |part| part =~ /^\.+$/ }.join('/')
-        url.gsub!(/\/index.html$/, '')
+        url = url.split('/').reject{ |part| part[0] == '.' }.join('/')
+        url = url.gsub(/\/index.html$/, '')
+        if page['permalink'] == 'pretty' || Ruhoh.config.pages_permalink == 'pretty'
+          url = url.gsub(/\.html$/, '') 
+        end
         url = "/" if url.empty?
-        
+
         url
       end
     
     end # Pages
-  
   end #Parsers
-  
 end #Ruhoh
