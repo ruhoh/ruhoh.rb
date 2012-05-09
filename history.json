@@ -1,0 +1,51 @@
+[
+  { "version" : "0.2.0",
+    "date" : "4.5.2012",
+    "changes" : [
+      "[change] Dates in post filenames are now optional but will be required in metadata.",
+      "[remove] _draft folder. Drafts are now simply a 'type' of post.",
+      "[remove] publish and un-publish in favor of specifying 'type' meta attribute.",
+      "[add]    titleize method to client which renames draft filenames to their titles if set.",
+      "[change] /_draft panel is now /dash with updated UI.",
+      "[change] - rackup configuration is now through Ruhoh::Program.preview."
+    ],
+    "features" : [
+      "Maintain file extensions for files that don't respond to a converter.",
+      "Add 'development'/'production' environment configuration flag.",
+      "@ben-biddington Introduces local temporary directory as SampleSitePath.",
+      "@ben-biddington adds Travis integration."
+    ]
+  },
+  { "version" : "0.1.4",
+    "date" : "4.5.2012",
+    "bugs" : [
+      "Fix invalid byte sequence in US-ASCII by forcing UTF-8"
+    ]
+  },
+  { "version" : "0.1.3",
+    "date" : "19.4.2012",
+    "bugs" : [
+      "Fix drafts not maintaining file extension when publishing",
+      "Tags helper should use tags database.",
+      "Fix for properly handling filepaths on Windows machines."
+    ]
+  },
+  { "version" : "0.1.2",
+    "date" : "18.4.2012",
+    "bugs" : [
+      "Fix bug with YAML psych/syck errors"
+    ]
+  },
+  { "version" : "0.1.1",
+    "date" : "18.4.2012",
+    "bugs" : [
+      "@tkellen tidies up partials + fix 'paths.theme' error in theme scaffold."
+    ]
+  },
+  { "version" : "0.1.0",
+    "date" : "12.4.2012",
+    "features" : [
+      "Initial public release"
+    ]
+  }
+]  
