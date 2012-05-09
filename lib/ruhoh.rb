@@ -112,14 +112,7 @@ class Ruhoh
   
   # filename filters
   def self.setup_filters
-    exclude = @config.exclude
-    exclude.uniq!
-    
-    @filters.pages = { 'names' => [], 'regexes' => [] }
-    exclude.each {|node| 
-      @filters.pages['names'] << node if node.is_a?(String)
-      @filters.pages['regexes'] << node if node.is_a?(Regexp)
-    }
+    @filters.pages = @config.exclude.map {|node| Regexp.new(node) }
     @filters
   end
   

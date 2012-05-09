@@ -43,8 +43,7 @@ class Ruhoh
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
-        return false if Ruhoh.filters.pages['names'].include? filepath
-        Ruhoh.filters.pages['regexes'].each {|regex| return false if filepath =~ regex }
+        Ruhoh.filters.pages.each {|regex| return false if filepath =~ regex }
         true
       end
     
