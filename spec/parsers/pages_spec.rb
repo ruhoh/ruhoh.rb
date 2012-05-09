@@ -72,24 +72,23 @@ title: #{page_name} (test)
       
       context "Exclude array is passed into config." do
         
-        it "should return false for a filepath matching a string in exclude array" do
+        it "should return false for a page whose filepath matches a page exclude regular expression." do
           filepath = 'about.md'
           Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({
             'theme' => "twitter",
-            'exclude' => filepath
+            'pages' => {'exclude' => "#{filepath}$"}
           })
           Ruhoh.setup(:source => SampleSitePath)
-          
           Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
         end
         
-        it "should return false for a filepath matching a regular expression in exclude array" do
+        it "should return false for a page filepath matching a regular expression in pages exclude array" do
           filepath1 = 'test/about.md'
           filepath2 = 'test/yay.md'
           filepath3 = 'vest/yay.md'
           Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({
             'theme' => "twitter",
-            'exclude' => /^test/
+            'pages' => {'exclude' => ['^test', 'blah'] }
           })
           Ruhoh.setup(:source => SampleSitePath)
           

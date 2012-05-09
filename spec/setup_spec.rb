@@ -35,14 +35,14 @@ module Setup
           Ruhoh.config.permalink.should == custom_permalink
           Ruhoh.config.theme.should == custom_theme
           Ruhoh.config.theme_path.should == "/_templates/themes/#{custom_theme}"
-          Ruhoh.config.exclude.should == custom_exclude
+          Ruhoh.config.exclude['posts'].should == custom_exclude
         end
       end
     end
     
     describe "#setup_filters" do
       it 'should add custom exclude filters to the filters variable' do
-        custom_exclude = ['.secret', /^test/]
+        custom_exclude = ['.secret', '^test']
         Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({
           'theme' => "twitter",
           'exclude' => custom_exclude
@@ -50,8 +50,8 @@ module Setup
         Ruhoh.setup_config
         Ruhoh.setup_filters
         
-        Ruhoh.filters.pages['names'].should include('.secret')
-        Ruhoh.filters.pages['regexes'].should include(/^test/)
+        Ruhoh.filters.posts.should include(/.secret/)
+        Ruhoh.filters.posts.should include(/^test/)
       end
     end
   end
