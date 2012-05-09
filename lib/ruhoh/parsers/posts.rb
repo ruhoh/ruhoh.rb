@@ -79,13 +79,19 @@ class Ruhoh
       def self.files
         FileUtils.cd(Ruhoh.paths.site_source) {
           return Dir["#{Ruhoh.folders.posts}/**/*.*"].select { |filename|
-            next if FileTest.directory?(filename)
-            next if ['.'].include? filename[0]
+            next unless self.is_valid_page?(filename)
             true
           }
         }
       end
-
+      
+      def self.is_valid_page?(filepath)
+        return false if FileTest.directory?(filepath)
+        return false if ['.'].include? filepath[0]
+        Ruhoh.filters.posts.each {|regex| return false if filepath =~ regex }
+        true
+      end
+      
       def self.ordered_posts(dictionary)
         ordered_posts = []
         dictionary.each_value { |val| ordered_posts << val }

@@ -88,7 +88,11 @@ class Ruhoh
     @config.syntax_path   = File.join('/', @folders.templates, @folders.syntax)
     @config.permalink     = site_config['permalink']
     @config.pages_permalink = site_config['pages']['permalink'] rescue nil
-    @config.exclude       = Array(site_config['exclude'] || nil)
+    excluded_pages = site_config['pages']['exclude'] rescue nil
+    @config.exclude       = {
+      "posts" => Array(site_config['exclude'] || nil),
+      "pages" => Array(excluded_pages),
+    }
     @config.env           = site_config['env'] || nil
     @config
   end
@@ -112,7 +116,8 @@ class Ruhoh
   
   # filename filters
   def self.setup_filters
-    @filters.pages = @config.exclude.map {|node| Regexp.new(node) }
+    @filters.pages = @config.exclude['pages'].map {|node| Regexp.new(node) }
+    @filters.posts = @config.exclude['posts'].map {|node| Regexp.new(node) }
     @filters
   end
   
