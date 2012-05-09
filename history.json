@@ -1,4 +1,15 @@
 [
+  {
+    "version" : "0.2.1",
+    "date" : "9.5.2012",
+    "changes" : [
+      "Treat all exclude values for posts/pages filenames as regular expressions. Strings are passed to Regex.new()"
+    ],
+    "features" : [
+      "Define 'pretty' paths for pages without using folder/index.md format.",
+      "Add ability to exclude files from posts folder."
+    ]
+  },
   { "version" : "0.2.0",
     "date" : "4.5.2012",
     "changes" : [

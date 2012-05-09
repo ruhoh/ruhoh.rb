@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
     Rakefile
     bin/ruhoh
     dash.html
-    history.txt
+    history.json
     lib/ruhoh.rb
     lib/ruhoh/client/client.rb
     lib/ruhoh/client/help.yml
