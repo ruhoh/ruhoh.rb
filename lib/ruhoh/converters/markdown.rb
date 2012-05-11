@@ -7,8 +7,12 @@ class Ruhoh
       end
       
       def self.convert(page)
-        require 'maruku'
-        Maruku.new(page.content).to_html
+        require 'redcarpet'
+        markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(:with_toc_data => true),
+          :autolink => true, 
+          :fenced_code_blocks => true, 
+        )
+        markdown.render(page.content)
       end
     end
   end
