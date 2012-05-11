@@ -31,7 +31,7 @@ require 'ruhoh/watch'
 require 'ruhoh/program'
 
 class Ruhoh
-
+  
   class << self
     attr_accessor :log
     attr_reader :folders, :files, :config, :paths, :filters
@@ -40,13 +40,13 @@ class Ruhoh
   @log = Ruhoh::Logger.new
 
   Root      = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  Folders   = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled)
+  Folders   = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled, :plugins)
   Files     = Struct.new(:site, :config, :dashboard)
   Filters   = Struct.new(:posts, :pages, :static)
   Config    = Struct.new(:permalink, :pages_permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
   Paths     = Struct.new(
                 :site_source, :database, :pages, :posts, :theme, :layouts, :partials, :global_partials, :media, :syntax,
-                :compiled, :dashboard)
+                :compiled, :dashboard, :plugins)
   
   
   # Public: Setup Ruhoh utilities relative to the current application directory.
@@ -56,11 +56,11 @@ class Ruhoh
     self.reset
     @site_source = opts[:source] if opts[:source]
 
-    !!(self.setup_config && self.setup_paths && self.setup_filters)
+    !!(self.setup_config && self.setup_paths && self.setup_filters && self.setup_plugins)
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_pages', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled')
+    @folders     = Folders.new('_database', '_pages', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled', '_plugins')
     @files       = Files.new('_site.yml', '_config.yml', 'dash.html')
     @filters     = Filters.new
     @config      = Config.new
@@ -111,6 +111,7 @@ class Ruhoh
     @paths.syntax           = self.absolute_path(@folders.templates, @folders.syntax)
     @paths.compiled         = self.absolute_path(@folders.compiled)
     @paths.dashboard        = self.absolute_path(@files.dashboard)
+    @paths.plugins          = self.absolute_path(@folders.plugins)
     @paths
   end
   
@@ -119,6 +120,12 @@ class Ruhoh
     @filters.pages = @config.exclude['pages'].map {|node| Regexp.new(node) }
     @filters.posts = @config.exclude['posts'].map {|node| Regexp.new(node) }
     @filters
+  end
+  
+  def self.setup_plugins
+    plugins = Dir[File.join(self.paths.plugins, "**/*.rb")]
+    plugins.each {|f| require f } unless plugins.empty?
+    true
   end
   
   def self.absolute_path(*args)
