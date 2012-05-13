@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack', "~> 1.4"
   s.add_dependency 'mustache', "~> 0.99"
   s.add_dependency 'directory_watcher', "~> 1.4"
-  s.add_dependency 'maruku', "~> 0.6"
+  s.add_dependency 'redcarpet', "~> 2.1"
   s.add_dependency 'psych', "~> 1.3"
   
   # = MANIFEST =
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
     lib/ruhoh/client/help.yml
     lib/ruhoh/compiler.rb
     lib/ruhoh/converters/converter.rb
+    lib/ruhoh/converters/markdown.rb
     lib/ruhoh/db.rb
     lib/ruhoh/deployers/s3.rb
     lib/ruhoh/friend.rb
