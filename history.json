@@ -1,5 +1,15 @@
 [
   {
+    "version" : "0.3.0",
+    "date" : "13.5.2012",
+    "changes" : [
+      "Change markdown parser from maruku to redcarpet. Adds support for fenced code blocks and autolinking."
+    ],
+    "features" : [
+      "Add plugin architecture for custom mustache helpers, custom converters, and custom compile tasks."
+    ]
+  },
+  {
     "version" : "0.2.1",
     "date" : "9.5.2012",
     "changes" : [
