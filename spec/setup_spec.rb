@@ -7,6 +7,7 @@ module Setup
         Ruhoh.should_receive(:setup_config).and_return(true)
         Ruhoh.should_receive(:setup_paths).and_return(true)
         Ruhoh.should_receive(:setup_filters).and_return(true)
+        Ruhoh.should_receive(:setup_plugins).and_return(true)
         Ruhoh.setup
       end
     end
