@@ -56,8 +56,13 @@ class Ruhoh
     @log.log_file = opts[:log_file] if opts[:log_file]
     self.reset
     @site_source = opts[:source] if opts[:source]
-
-    !!(self.setup_config && self.setup_paths && self.setup_filters && self.setup_plugins)
+    
+    if (self.setup_config && self.setup_paths && self.setup_filters)
+      self.setup_plugins unless opts[:enable_plugins] == false
+      true
+    else
+      false
+    end
   end
   
   def self.reset
@@ -126,7 +131,6 @@ class Ruhoh
   def self.setup_plugins
     plugins = Dir[File.join(self.paths.plugins, "**/*.rb")]
     plugins.each {|f| require f } unless plugins.empty?
-    true
   end
   
   def self.absolute_path(*args)
