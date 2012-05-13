@@ -1,60 +1,66 @@
 class Ruhoh
-  
-  class Compiler
-    
-    def initialize(target_directory)
+  module Compiler
+
+    # TODO: seems rather dangerous to delete the incoming target directory?
+    def self.compile(target_directory = nil, page = nil)
       Ruhoh.config.env ||= 'production'
       Ruhoh::Friend.say { plain "Compiling for environment: '#{Ruhoh.config.env}'" }
-
-      Ruhoh::DB.update_all
-      @target = target_directory || "./#{Ruhoh.folders.compiled}"
-      @page = Ruhoh::Page.new
-    end
-    
-    # TODO: seems rather dangerous to delete the incoming target directory?
-    def compile
-      FileUtils.rm_r @target if File.exist?(@target)
-      FileUtils.mkdir_p @target
-      self.theme
-      self.pages
-      self.media
-      self.syntax
+      target = target_directory || "./#{Ruhoh.folders.compiled}"
+      page = page || Ruhoh::Page.new
+      
+      FileUtils.rm_r target if File.exist?(target)
+      FileUtils.mkdir_p target
+      
+      self.constants.each {|c|
+        task = self.const_get(c)
+        next unless task.respond_to?(:run)
+        task.run(target, page)
+      }  
       true
     end
     
-    def pages
-      FileUtils.cd(@target) {
-        Ruhoh::DB.all_pages.each_value do |p|
-          @page.change(p['id'])
+    module Defaults
 
-          FileUtils.mkdir_p File.dirname(@page.compiled_path)
-          File.open(@page.compiled_path, 'w:UTF-8') { |p| p.puts @page.render }
+      def self.run(target, page)
+        self.pages(target, page)
+        self.theme(target, page)
+        self.media(target, page)
+        self.syntax(target, page)
+      end
+      
+      def self.pages(target, page)
+        FileUtils.cd(target) {
+          Ruhoh::DB.all_pages.each_value do |p|
+            page.change(p['id'])
 
-          Ruhoh::Friend.say { green "processed: #{p['id']}" }
-        end
-      }
+            FileUtils.mkdir_p File.dirname(page.compiled_path)
+            File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render }
 
-    end
-    
-    def theme
-      return unless FileTest.directory? Ruhoh.paths.theme
-      FileUtils.mkdir_p File.join(@target, Ruhoh.config.theme_path)
-      FileUtils.cp_r Ruhoh.paths.theme, File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.themes)
-    end
-    
-    def media
-      return unless FileTest.directory? Ruhoh.paths.media
-      FileUtils.mkdir_p File.join(@target, Ruhoh.folders.media)
-      FileUtils.cp_r Ruhoh.paths.media, @target 
-    end
-    
-    def syntax
-      return unless FileTest.directory? Ruhoh.paths.syntax
-      syntax_path = File.join(@target, Ruhoh.folders.templates, Ruhoh.folders.syntax)
-      FileUtils.mkdir_p syntax_path
-      FileUtils.cp_r "#{Ruhoh.paths.syntax}/.", syntax_path
-    end
-    
+            Ruhoh::Friend.say { green "processed: #{p['id']}" }
+          end
+        }
+      end
+
+      def self.theme(target, page)
+        return unless FileTest.directory? Ruhoh.paths.theme
+        FileUtils.mkdir_p File.join(target, Ruhoh.config.theme_path)
+        FileUtils.cp_r Ruhoh.paths.theme, File.join(target, Ruhoh.folders.templates, Ruhoh.folders.themes)
+      end
+
+      def self.media(target, page)
+        return unless FileTest.directory? Ruhoh.paths.media
+        FileUtils.mkdir_p File.join(target, Ruhoh.folders.media)
+        FileUtils.cp_r Ruhoh.paths.media, target
+      end
+
+      def self.syntax(target, page)
+        return unless FileTest.directory? Ruhoh.paths.syntax
+        syntax_path = File.join(target, Ruhoh.folders.templates, Ruhoh.folders.syntax)
+        FileUtils.mkdir_p syntax_path
+        FileUtils.cp_r "#{Ruhoh.paths.syntax}/.", syntax_path
+      end
+      
+    end #Defaults
+
   end #Compiler
-  
 end #Ruhoh

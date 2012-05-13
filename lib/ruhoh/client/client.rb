@@ -121,7 +121,8 @@ class Ruhoh
     
     # Public: Compile to static website.
     def compile
-      Ruhoh::Compiler.new(@args[1]).compile
+      Ruhoh::DB.update_all
+      Ruhoh::Compiler.compile(@args[1])
     end
     
     # Public: Create a new blog at the directory provided.
