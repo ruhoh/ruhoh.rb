@@ -144,7 +144,7 @@ class Ruhoh
       def self.permalink(post)
         date = Date.parse(post['date'])
         title = post['title'].downcase.gsub(' ', '-').gsub('.','')
-        format = post['permalink'] || Ruhoh.config.permalink  || "/:categories/:year/:month/:day/:title.html"
+        format = post['permalink'] || Ruhoh.config.posts.permalink  || "/:categories/:year/:month/:day/:title.html"
         
         url = {
           "year"       => date.strftime("%Y"),

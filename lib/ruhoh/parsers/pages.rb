@@ -73,7 +73,7 @@ class Ruhoh
         
         url = url.split('/').reject{ |part| part[0] == '.' }.join('/')
         url = url.gsub(/\/index.html$/, '')
-        if page['permalink'] == 'pretty' || Ruhoh.config.pages_permalink == 'pretty'
+        if page['permalink'] == 'pretty' || Ruhoh.config.pages.permalink == 'pretty'
           url = url.gsub(/\.html$/, '') 
         end
         url = "/" if url.empty?

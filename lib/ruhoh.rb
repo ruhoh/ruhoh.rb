@@ -44,7 +44,9 @@ class Ruhoh
   Folders   = Struct.new(:database, :pages, :posts, :layouts, :assets, :partials, :media, :syntax, :compiled, :plugins)
   Files     = Struct.new(:site, :config, :dashboard)
   Filters   = Struct.new(:posts, :pages, :static)
-  Config    = Struct.new(:permalink, :pages_permalink, :theme, :asset_path, :media_path, :syntax_path, :exclude, :env)
+  Config    = Struct.new(:posts, :pages, :theme, :asset_path, :media_path, :syntax_path, :env)
+  PagesConfig = Struct.new(:permalink, :exclude)
+  PostsConfig = Struct.new(:permalink, :exclude)
   Paths     = Struct.new(
                 :site_source, :database, :pages, :posts, :theme, :layouts, :assets, :partials, :global_partials, :media, :syntax,
                 :compiled, :dashboard, :plugins)
@@ -92,14 +94,17 @@ class Ruhoh
     @config.asset_path    = "/#{@config.theme}/#{@folders.assets}"
     @config.media_path    = "/#{@folders.media}"
     @config.syntax_path   = "/#{@folders.syntax}"
-    @config.permalink     = site_config['permalink']
-    @config.pages_permalink = site_config['pages']['permalink'] rescue nil
+    
+    @config.posts = PostsConfig.new()
+    @config.posts.permalink = site_config['permalink']
+    @config.posts.exclude = Array(site_config['exclude'] || nil)
+    
+    @config.pages = PagesConfig.new()
+    @config.pages.permalink = site_config['pages']['permalink'] rescue nil
     excluded_pages = site_config['pages']['exclude'] rescue nil
-    @config.exclude       = {
-      "posts" => Array(site_config['exclude'] || nil),
-      "pages" => Array(excluded_pages),
-    }
-    @config.env           = site_config['env'] || nil
+    @config.pages.exclude = Array(excluded_pages)
+
+    @config.env = site_config['env'] || nil
     @config
   end
   
@@ -125,8 +130,8 @@ class Ruhoh
   
   # filename filters
   def self.setup_filters
-    @filters.pages = @config.exclude['pages'].map {|node| Regexp.new(node) }
-    @filters.posts = @config.exclude['posts'].map {|node| Regexp.new(node) }
+    @filters.pages = @config.pages.exclude.map {|node| Regexp.new(node) }
+    @filters.posts = @config.posts.exclude.map {|node| Regexp.new(node) }
     @filters
   end
   
