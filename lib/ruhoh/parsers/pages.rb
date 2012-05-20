@@ -8,17 +8,12 @@ class Ruhoh
         Ruhoh.ensure_setup
 
         pages = self.files
-        invalid = []
         dictionary = {}
 
         pages.each do |filename|
           id = self.make_id(filename)
           parsed_page = ''
           FileUtils.cd(Ruhoh.paths.site_source) { parsed_page = Ruhoh::Utils.parse_file(filename) }
-          if parsed_page.empty?
-            error = "Invalid Yaml Front Matter.\n Ensure this page has valid YAML, even if it's empty."
-            invalid << [filename, error] ; next
-          end
           
           parsed_page['data']['id']     = id
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
@@ -30,7 +25,7 @@ class Ruhoh
           dictionary[id] = parsed_page['data']
         end
           
-        Ruhoh::Utils.report('Pages', dictionary, invalid)  
+        Ruhoh::Utils.report('Pages', dictionary, [])  
         dictionary 
       end
 
