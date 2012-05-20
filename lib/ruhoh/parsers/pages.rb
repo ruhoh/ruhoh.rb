@@ -56,14 +56,14 @@ class Ruhoh
       end
     
       # Build the permalink for the given page.
-      # Only recognize 'convertable' extensions for Markdown at the moment.
+      # Only recognize extensions registered from a 'convertable' module.
       # This means 'non-convertable' extensions should pass-through.
       #
       # Returns [String] the permalink for this page.
       def self.permalink(page)
         url = '/'
         ext = File.extname(page['id'])
-        url += if ['.md', '.markdown'].include?(ext)
+        url += if Ruhoh::Converter.extensions.include?(ext)
           page['id'].gsub(Regexp.new("#{ext}$"), '.html')
         else
           page['id']
