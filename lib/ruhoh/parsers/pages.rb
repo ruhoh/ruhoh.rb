@@ -23,7 +23,10 @@ class Ruhoh
           parsed_page['data']['id']     = id
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
           parsed_page['data']['title']  = parsed_page['data']['title'] || self.to_title(filename)
-
+          if parsed_page['data']['layout'].nil?
+            parsed_page['data']['layout'] = Ruhoh.config.pages.layout
+          end
+          
           dictionary[id] = parsed_page['data']
         end
           

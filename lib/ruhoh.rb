@@ -45,8 +45,8 @@ class Ruhoh
   Files     = Struct.new(:site, :config, :dashboard)
   Filters   = Struct.new(:posts, :pages, :static)
   Config    = Struct.new(:posts, :pages, :theme, :asset_path, :media_path, :syntax_path, :env)
-  PagesConfig = Struct.new(:permalink, :exclude)
-  PostsConfig = Struct.new(:permalink, :exclude)
+  PagesConfig = Struct.new(:permalink, :layout, :exclude)
+  PostsConfig = Struct.new(:permalink, :layout, :exclude)
   Paths     = Struct.new(
                 :site_source, :database, :pages, :posts, :theme, :layouts, :assets, :partials, :global_partials, :media, :syntax,
                 :compiled, :dashboard, :plugins)
@@ -97,10 +97,14 @@ class Ruhoh
     
     @config.posts = PostsConfig.new()
     @config.posts.permalink = site_config['permalink']
+    @config.posts.layout = site_config['posts']['layout'] rescue nil
+    @config.posts.layout = 'post' if @config.posts.layout.nil?
     @config.posts.exclude = Array(site_config['exclude'] || nil)
     
     @config.pages = PagesConfig.new()
     @config.pages.permalink = site_config['pages']['permalink'] rescue nil
+    @config.pages.layout = site_config['pages']['layout'] rescue nil
+    @config.pages.layout = 'page' if @config.pages.layout.nil?
     excluded_pages = site_config['pages']['exclude'] rescue nil
     @config.pages.exclude = Array(excluded_pages)
 

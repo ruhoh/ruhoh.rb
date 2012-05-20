@@ -59,6 +59,7 @@ class Ruhoh
           data['id']            = filename
           data['title']         = data['title'] || filename_data['title']
           data['url']           = self.permalink(data)
+          data['layout']        = Ruhoh.config.posts.layout if data['layout'].nil?
           dictionary[filename]  = data
         end
         
