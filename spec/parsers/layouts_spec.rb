@@ -10,7 +10,7 @@ module Layouts
       Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => expected_theme})
       Ruhoh.setup(:source => SampleSitePath)
 
-      the_layouts_dir = File.join SampleSitePath, "_templates", "themes", expected_theme, "layouts"
+      the_layouts_dir = File.join SampleSitePath, expected_theme, Ruhoh.folders.layouts
 
       FileUtils.remove_dir(the_layouts_dir, 1) if Dir.exists? the_layouts_dir
       FileUtils.makedirs the_layouts_dir

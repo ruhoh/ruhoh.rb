@@ -43,7 +43,7 @@ class Ruhoh
             type = "Posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.templates}")
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.config.theme}")
             type = "Themes"
             Ruhoh::DB.update(:layouts)
             Ruhoh::DB.update(:partials)

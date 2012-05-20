@@ -41,12 +41,12 @@ class Ruhoh
   @log = Ruhoh::Logger.new
 
   Root      = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  Folders   = Struct.new(:database, :pages, :posts, :templates, :themes, :layouts, :partials, :media, :syntax, :compiled, :plugins)
+  Folders   = Struct.new(:database, :pages, :posts, :layouts, :assets, :partials, :media, :syntax, :compiled, :plugins)
   Files     = Struct.new(:site, :config, :dashboard)
   Filters   = Struct.new(:posts, :pages, :static)
-  Config    = Struct.new(:permalink, :pages_permalink, :theme, :theme_path, :media_path, :syntax_path, :exclude, :env)
+  Config    = Struct.new(:permalink, :pages_permalink, :theme, :asset_path, :media_path, :syntax_path, :exclude, :env)
   Paths     = Struct.new(
-                :site_source, :database, :pages, :posts, :theme, :layouts, :partials, :global_partials, :media, :syntax,
+                :site_source, :database, :pages, :posts, :theme, :layouts, :assets, :partials, :global_partials, :media, :syntax,
                 :compiled, :dashboard, :plugins)
   
   
@@ -66,7 +66,7 @@ class Ruhoh
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_pages', '_posts', '_templates', 'themes', 'layouts', 'partials', "_media", "syntax", '_compiled', '_plugins')
+    @folders     = Folders.new('_database', '_pages', '_posts', 'layouts', 'assets', '_partials', "_media", "_syntax", '_compiled', '_plugins')
     @files       = Files.new('_site.yml', '_config.yml', 'dash.html')
     @filters     = Filters.new
     @config      = Config.new
@@ -89,9 +89,9 @@ class Ruhoh
     end
     
     @config.theme         = theme
-    @config.theme_path    = File.join('/', @folders.templates, @folders.themes, @config.theme)
-    @config.media_path    = File.join('/', @folders.media)
-    @config.syntax_path   = File.join('/', @folders.templates, @folders.syntax)
+    @config.asset_path    = "/#{@config.theme}/#{@folders.assets}"
+    @config.media_path    = "/#{@folders.media}"
+    @config.syntax_path   = "/#{@folders.syntax}"
     @config.permalink     = site_config['permalink']
     @config.pages_permalink = site_config['pages']['permalink'] rescue nil
     excluded_pages = site_config['pages']['exclude'] rescue nil
@@ -109,12 +109,14 @@ class Ruhoh
     @paths.pages            = self.absolute_path(@folders.pages)
     @paths.posts            = self.absolute_path(@folders.posts)
 
-    @paths.theme            = self.absolute_path(@folders.templates, @folders.themes, @config.theme)
-    @paths.layouts          = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.layouts)
-    @paths.partials         = self.absolute_path(@folders.templates, @folders.themes, @config.theme, @folders.partials)
-    @paths.global_partials  = self.absolute_path(@folders.templates, @folders.partials)
+    @paths.theme            = self.absolute_path(@config.theme)
+    @paths.layouts          = self.absolute_path(@config.theme, @folders.layouts)
+    @paths.assets           = self.absolute_path(@config.theme, @folders.assets)
+    @paths.partials         = self.absolute_path(@config.theme, @folders.partials)
+
+    @paths.global_partials  = self.absolute_path(@folders.partials)
     @paths.media            = self.absolute_path(@folders.media)
-    @paths.syntax           = self.absolute_path(@folders.templates, @folders.syntax)
+    @paths.syntax           = self.absolute_path(@folders.syntax)
     @paths.compiled         = self.absolute_path(@folders.compiled)
     @paths.dashboard        = self.absolute_path(@files.dashboard)
     @paths.plugins          = self.absolute_path(@folders.plugins)

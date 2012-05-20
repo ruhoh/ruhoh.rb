@@ -19,7 +19,12 @@ class Ruhoh
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions
-        use Rack::Static, {:urls => ["/#{Ruhoh.folders.media}", "/#{Ruhoh.folders.templates}"]}
+        use Rack::Static, {:urls => [
+            Ruhoh.config.media_path,
+            Ruhoh.config.asset_path,
+            Ruhoh.config.syntax_path
+          ]
+        }
         run Ruhoh::Previewer.new(Ruhoh::Page.new)
       }
     end

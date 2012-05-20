@@ -43,8 +43,10 @@ class Ruhoh
 
       def self.theme(target, page)
         return unless FileTest.directory? Ruhoh.paths.theme
-        FileUtils.mkdir_p File.join(target, Ruhoh.config.theme_path)
-        FileUtils.cp_r Ruhoh.paths.theme, File.join(target, Ruhoh.folders.templates, Ruhoh.folders.themes)
+        url_parts = Ruhoh.config.asset_path.split('/')
+        target_asset_path = File.__send__(:join, url_parts.unshift(target))
+        FileUtils.mkdir_p target_asset_path
+        FileUtils.cp_r File.join(Ruhoh.paths.assets, '.'), target_asset_path
       end
 
       def self.media(target, page)
@@ -55,7 +57,7 @@ class Ruhoh
 
       def self.syntax(target, page)
         return unless FileTest.directory? Ruhoh.paths.syntax
-        syntax_path = File.join(target, Ruhoh.folders.templates, Ruhoh.folders.syntax)
+        syntax_path = File.join(target, Ruhoh.folders.syntax)
         FileUtils.mkdir_p syntax_path
         FileUtils.cp_r "#{Ruhoh.paths.syntax}/.", syntax_path
       end

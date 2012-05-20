@@ -13,7 +13,8 @@ class Ruhoh
           "page" => (page ? page.attributes : {}),
           "site" => Ruhoh::DB.site,
           "paths" => {
-            "theme"   => Ruhoh.config.theme_path,
+            "theme"   => Ruhoh.config.asset_path,
+            "asset"   => Ruhoh.config.asset_path,
             "syntax"  => Ruhoh.config.syntax_path,
             "media"   => Ruhoh.config.media_path
           }
