@@ -19,18 +19,20 @@ class Ruhoh
     
     def self.parse_file(*args)
       path = File.__send__(:join, args)
-      
       raise "File not found: #{path}" unless File.exist?(path)
 
       page = File.open(path, 'r:UTF-8') {|f| f.read }
+
       front_matter = page.match(FMregex)
-
-      return {} unless front_matter
-
-      data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
-
+      if front_matter
+        data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
+        data = self.format_meta(data)
+      else
+        data = {}
+      end
+      
       { 
-        "data" => self.format_meta(data),
+        "data" => data,
         "content" => page.gsub(FMregex, '')
       }
     rescue Psych::SyntaxError => e

@@ -49,8 +49,6 @@ class Ruhoh
     def process_content
       self.ensure_id
       data = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @path)
-      raise "Invalid Frontmatter in page: #{@path}" if data.empty?
-      
       @content = @templater.parse(data['content'], self)
       @content = @converter.convert(self)
     end
