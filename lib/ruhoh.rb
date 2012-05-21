@@ -19,6 +19,7 @@ require 'ruhoh/parsers/pages'
 require 'ruhoh/parsers/routes'
 require 'ruhoh/parsers/layouts'
 require 'ruhoh/parsers/partials'
+require 'ruhoh/parsers/widgets'
 require 'ruhoh/parsers/site'
 require 'ruhoh/db'
 require 'ruhoh/templaters/helpers'
@@ -41,14 +42,14 @@ class Ruhoh
   @log = Ruhoh::Logger.new
 
   Root      = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  Folders   = Struct.new(:database, :pages, :posts, :layouts, :assets, :partials, :media, :syntax, :compiled, :plugins)
+  Folders   = Struct.new(:database, :pages, :posts, :layouts, :assets, :partials, :media, :widgets, :compiled, :plugins)
   Files     = Struct.new(:site, :config, :dashboard)
   Filters   = Struct.new(:posts, :pages, :static)
-  Config    = Struct.new(:posts, :pages, :theme, :asset_path, :media_path, :syntax_path, :env)
+  Config    = Struct.new(:posts, :pages, :theme, :asset_path, :media_path, :widget_path, :env)
   PagesConfig = Struct.new(:permalink, :layout, :exclude)
   PostsConfig = Struct.new(:permalink, :layout, :exclude)
   Paths     = Struct.new(
-                :site_source, :database, :pages, :posts, :theme, :layouts, :assets, :partials, :global_partials, :media, :syntax,
+                :site_source, :database, :pages, :posts, :theme, :layouts, :assets, :partials, :global_partials, :media, :widgets,
                 :compiled, :dashboard, :plugins)
   
   
@@ -60,7 +61,11 @@ class Ruhoh
     @site_source = opts[:source] if opts[:source]
     
     if (self.setup_config && self.setup_paths && self.setup_filters)
-      self.setup_plugins unless opts[:enable_plugins] == false
+      Ruhoh::Parsers::Widgets.generate
+      unless opts[:enable_plugins] == false
+        Ruhoh::Parsers::Widgets.generate_user_widgets
+        self.setup_plugins
+      end  
       true
     else
       false
@@ -68,7 +73,7 @@ class Ruhoh
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_pages', '_posts', 'layouts', 'assets', '_partials', "_media", "_syntax", '_compiled', '_plugins')
+    @folders     = Folders.new('_database', '_pages', '_posts', 'layouts', 'assets', '_partials', "_media", "_widgets", '_compiled', '_plugins')
     @files       = Files.new('_site.yml', '_config.yml', 'dash.html')
     @filters     = Filters.new
     @config      = Config.new
@@ -93,7 +98,7 @@ class Ruhoh
     @config.theme         = theme
     @config.asset_path    = "/#{@config.theme}/#{@folders.assets}"
     @config.media_path    = "/#{@folders.media}"
-    @config.syntax_path   = "/#{@folders.syntax}"
+    @config.widget_path   = "/#{@folders.widgets}"
     
     @config.posts = PostsConfig.new()
     @config.posts.permalink = site_config['permalink']
@@ -125,7 +130,7 @@ class Ruhoh
 
     @paths.global_partials  = self.absolute_path(@folders.partials)
     @paths.media            = self.absolute_path(@folders.media)
-    @paths.syntax           = self.absolute_path(@folders.syntax)
+    @paths.widgets          = self.absolute_path(@folders.widgets)
     @paths.compiled         = self.absolute_path(@folders.compiled)
     @paths.dashboard        = self.absolute_path(@files.dashboard)
     @paths.plugins          = self.absolute_path(@folders.plugins)

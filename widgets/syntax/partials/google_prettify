@@ -1,5 +1,5 @@
 <!-- Google Prettify -->
-<link rel="stylesheet" href="{{ paths.syntax }}/google_prettify/{{ site.config.syntax.google_prettify.theme }}.css" type="text/css" media="screen" charset="utf-8">
+<link rel="stylesheet" href="{{ paths.widget }}/syntax/assets/google_prettify/{{ site.config.syntax.google_prettify.theme }}.css" type="text/css" media="screen" charset="utf-8">
 <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"></script>
 <script>
   var pres = document.getElementsByTagName("pre");

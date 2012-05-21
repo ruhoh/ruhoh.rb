@@ -15,7 +15,7 @@ class Ruhoh
           "paths" => {
             "theme"   => Ruhoh.config.asset_path,
             "asset"   => Ruhoh.config.asset_path,
-            "syntax"  => Ruhoh.config.syntax_path,
+            "widget" => Ruhoh.config.widget_path,
             "media"   => Ruhoh.config.media_path
           }
         }

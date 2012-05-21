@@ -92,53 +92,6 @@ class Ruhoh
         self.to_posts(prev_id)
       end
             
-      def analytics
-        return '' if self.context['page']['analytics'].to_s == 'false'
-        analytics_config = self.context['site']['config']['analytics']
-        return '' unless analytics_config && analytics_config['provider']
-        
-        if analytics_config['provider'] == "custom"
-          code = self.partial("custom_analytics")
-        else
-          code = self.partial("analytics/#{analytics_config['provider']}")
-        end
-
-        return "<h2 style='color:red'>!Analytics Provider partial for '#{analytics_config['provider']}' not found </h2>" if code.nil?
-
-        self.render(code)
-      end
-
-      def comments
-        return '' if self.context['page']['comments'].to_s == 'false'
-        comments_config = self.context['site']['config']['comments']
-        return '' unless comments_config && comments_config['provider']
-        
-        if comments_config['provider'] == "custom"
-          code = self.partial("custom_comments")
-        else
-          code = self.partial("comments/#{comments_config['provider']}")
-        end
-        
-        return "<h2 style='color:red'>!Comments Provider partial for '#{comments_config['provider']}' not found </h2>" if code.nil?
-
-        self.render(code)
-      end
-    
-      def syntax
-        syntax_config = self.context['site']['config']['syntax']
-        return '' unless syntax_config && syntax_config['provider']
-        
-        if syntax_config['provider'] == "custom"
-          code = self.partial("custom_syntax")
-        else
-          code = self.partial("syntax/#{syntax_config['provider']}")
-        end
-        
-        return "<h2 style='color:red'>!Syntax Provider partial for '#{syntax_config['provider']}' not found </h2>" if code.nil?
-
-        self.render(code)
-      end
-      
       # Marks the active page if exists in the given pages Array
       def mark_active_page(pages)
         pages.each_with_index do |page, i| 

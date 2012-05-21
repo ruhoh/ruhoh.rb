@@ -22,7 +22,7 @@ class Ruhoh
         use Rack::Static, {:urls => [
             Ruhoh.config.media_path,
             Ruhoh.config.asset_path,
-            Ruhoh.config.syntax_path
+            Ruhoh.config.widget_path
           ]
         }
         run Ruhoh::Previewer.new(Ruhoh::Page.new)
