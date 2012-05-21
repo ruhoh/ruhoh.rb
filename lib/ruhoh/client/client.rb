@@ -3,7 +3,7 @@ require 'ruhoh/compiler'
 class Ruhoh
   class Client
     
-    Paths = Struct.new(:page_template, :post_template, :layout_template, :theme_template)
+    Paths = Struct.new(:page_template, :draft_template, :post_template, :layout_template, :theme_template)
     BlogScaffold = 'git://github.com/ruhoh/blog.git'
     
     def initialize(data)
@@ -32,6 +32,7 @@ class Ruhoh
     def setup_paths
       @paths = Paths.new
       @paths.page_template    = File.join(Ruhoh::Root, "scaffolds", "page.html")
+      @paths.draft_template   = File.join(Ruhoh::Root, "scaffolds", "draft.html")
       @paths.post_template    = File.join(Ruhoh::Root, "scaffolds", "post.html")
       @paths.layout_template  = File.join(Ruhoh::Root, "scaffolds", "layout.html")
       @paths.theme_template   = File.join(Ruhoh::Root, "scaffolds", "theme")
@@ -56,27 +57,35 @@ class Ruhoh
       }
     end
     
-    # Public: Create a new draft file.
-    # Requires no settings as it is meant to be fastest way to create content.
     def draft
+      self.draft_or_post(:draft)
+    end
+
+    def post
+      self.draft_or_post(:post)
+    end
+    
+    def draft_or_post(type)
       begin
-        filename = File.join(Ruhoh.paths.posts, "untitled-#{@iterator}.#{@options.ext}")
+        name = @args[1] || "untitled-#{type}"
+        name = "#{name}-#{@iterator}" unless @iterator.zero?
+        name = Ruhoh::Parsers::Posts.to_slug(name)
+        filename = File.join(Ruhoh.paths.posts, "#{name}.#{@options.ext}")
         @iterator += 1
       end while File.exist?(filename)
       
       FileUtils.mkdir_p File.dirname(filename)
 
-      output = File.open(@paths.post_template) { |f| f.read }
+      output = File.open(@paths.send("#{type}_template")) { |f| f.read }
       output = output.gsub('{{DATE}}', Ruhoh::Parsers::Posts.formatted_date(Time.now))
       File.open(filename, 'w') {|f| f.puts output }
       
       Ruhoh::Friend.say { 
-        green "New draft:" 
+        green "New #{type}:" 
         green Ruhoh.relative_path(filename)
         green 'View drafts at the URL: /dash'
       }
     end
-    alias_method :post, :draft
     
     # Public: Create a new page file.
     def page

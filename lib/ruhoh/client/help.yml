@@ -15,9 +15,13 @@ commands:
     "desc" : |
       Compile to static website.
   -
-    "command" : "post | draft"
+    "command" : "draft <title>"
     "desc" : |
-      Create a new draft.
+      Create a new draft. Post title is optional.
+  -
+    "command" : "post <title>"
+    "desc" : |
+      Create a new post. Post title is optional.
   -
     "command" : "page <path>"
     "desc" : |
