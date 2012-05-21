@@ -5,7 +5,9 @@ class Ruhoh
     module Helpers
       
       def partial(name)
-        Ruhoh::DB.partials[name.to_s]
+        p = Ruhoh::DB.partials[name.to_s]
+        Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
+        p
       end
       
       def pages
