@@ -58,6 +58,8 @@ class Ruhoh
     def attributes
       self.ensure_id
       @data['content'] = @content
+      @data['sub_layout'] = @sub_layout['id']
+      @data['master_layout'] = @master_layout['id']
       @data
     end
     

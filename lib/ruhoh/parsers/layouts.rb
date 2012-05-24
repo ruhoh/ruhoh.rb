@@ -7,7 +7,9 @@ class Ruhoh
         layouts = {}
         self.files.each do |filename|
           id = File.basename(filename, File.extname(filename))
-          layouts[id] = Ruhoh::Utils.parse_file(Ruhoh.paths.layouts, filename)
+          data = Ruhoh::Utils.parse_file(Ruhoh.paths.layouts, filename)
+          data['id'] = id
+          layouts[id] = data
         end
         
         Ruhoh::Utils.report('Layouts', layouts, [])
@@ -23,7 +25,6 @@ class Ruhoh
           }
         }
       end
-      
       
     end #Layouts
   end #Parsers
