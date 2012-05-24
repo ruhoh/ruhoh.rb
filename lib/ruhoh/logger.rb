@@ -26,7 +26,7 @@ class Ruhoh
     
     def to_file
       return unless self.log_file && @buffer.size > 0
-      File.open(self.log_file, "a") { |f|
+      File.open(self.log_file, 'a:UTF-8') { |f|
         f.puts '---'
         f.puts Time.now.utc
         f.puts @buffer.slice!(0..-1).join

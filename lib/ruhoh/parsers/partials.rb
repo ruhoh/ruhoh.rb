@@ -22,7 +22,7 @@ class Ruhoh
           Dir.glob("**/*").each { |filename|
             next if FileTest.directory?(filename)
             next if ['.'].include? filename[0]
-            File.open(filename) { |f| partials[filename] = f.read }
+            File.open(filename, 'r:UTF-8') { |f| partials[filename] = f.read }
           }
         }
         partials

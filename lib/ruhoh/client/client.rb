@@ -76,9 +76,9 @@ class Ruhoh
       
       FileUtils.mkdir_p File.dirname(filename)
 
-      output = File.open(@paths.send("#{type}_template")) { |f| f.read }
+      output = File.open(@paths.send("#{type}_template"), 'r:UTF-8') { |f| f.read }
       output = output.gsub('{{DATE}}', Ruhoh::Parsers::Posts.formatted_date(Time.now))
-      File.open(filename, 'w') {|f| f.puts output }
+      File.open(filename, 'w:UTF-8') {|f| f.puts output }
       
       Ruhoh::Friend.say { 
         green "New #{type}:" 
@@ -103,8 +103,8 @@ class Ruhoh
       end
 
       FileUtils.mkdir_p File.dirname(filename)
-      File.open(@paths.page_template) do |template|
-        File.open(filename, 'w') do |page|
+      File.open(@paths.page_template, 'r:UTF-8') do |template|
+        File.open(filename, 'w:UTF-8') do |page|
           page.puts template.read
         end
       end
@@ -207,7 +207,7 @@ class Ruhoh
       
       FileUtils.mkdir_p File.dirname(filename)
       File.open(@paths.layout_template) do |template|
-        File.open(filename, 'w') do |page|
+        File.open(filename, 'w:UTF-8') do |page|
           page.puts template.read
         end
       end

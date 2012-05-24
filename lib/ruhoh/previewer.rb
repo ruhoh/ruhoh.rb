@@ -30,7 +30,7 @@ class Ruhoh
 
     def admin
       system_dash  = File.join(Ruhoh::Root, Ruhoh.files.dashboard)
-      template     = File.open(File.exist?(Ruhoh.paths.dashboard) ? Ruhoh.paths.dashboard : system_dash) {|f| f.read }
+      template     = File.open(File.exist?(Ruhoh.paths.dashboard) ? Ruhoh.paths.dashboard : system_dash, 'r:UTF-8') {|f| f.read }
       output       = Ruhoh::Templaters::Base.parse(template, nil)
       
       [200, {'Content-Type' => 'text/html'}, [output]]
