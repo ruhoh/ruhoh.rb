@@ -61,11 +61,7 @@ class Ruhoh
     @site_source = opts[:source] if opts[:source]
     
     if (self.setup_config && self.setup_paths && self.setup_filters)
-      Ruhoh::Parsers::Widgets.generate
-      unless opts[:enable_plugins] == false
-        Ruhoh::Parsers::Widgets.generate_user_widgets
-        self.setup_plugins
-      end  
+      self.setup_plugins unless opts[:enable_plugins] == false
       true
     else
       false

@@ -1,7 +1,5 @@
 class Ruhoh
-
   module Templaters  
-
     class RMustache < Mustache
       include Ruhoh::Templaters::Helpers
 
@@ -22,8 +20,21 @@ class Ruhoh
         @context ||= RContext.new(self)
       end
 
-    end #RMustache
-  
-  end #Templaters
+      def widget(name)
+        return '' if self.context['page'][name.to_s].to_s == 'false'
+        Ruhoh::DB.widgets[name.to_s]['layout']
+      end
+      
+      def method_missing(name, *args, &block)
+        return self.widget(name.to_s) if Ruhoh::DB.widgets.has_key?(name.to_s)
+        super
+      end
 
+      def respond_to?(method)
+        return true if Ruhoh::DB.widgets.has_key?(method.to_s)
+        super
+      end
+      
+    end #RMustache
+  end #Templaters
 end #Ruhoh
