@@ -7,7 +7,7 @@ class Ruhoh
         layouts = {}
         self.files.each do |filename|
           id = File.basename(filename, File.extname(filename))
-          data = Ruhoh::Utils.parse_file(Ruhoh.paths.layouts, filename)
+          data = Ruhoh::Utils.parse_file(Ruhoh.paths.theme.layouts, filename)
           data['id'] = id
           layouts[id] = data
         end
@@ -17,7 +17,7 @@ class Ruhoh
       end
 
       def self.files
-        FileUtils.cd(Ruhoh.paths.layouts) {
+        FileUtils.cd(Ruhoh.paths.theme.layouts) {
           return Dir["**/*.*"].select { |filename|
             next if FileTest.directory?(filename)
             next if ['_','.'].include? filename[0]

@@ -19,13 +19,27 @@ class Ruhoh
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions
-        use Rack::Static, {:urls => [
-            Ruhoh.config.media_path,
-            Ruhoh.config.asset_path,
-            Ruhoh.config.widget_path
-          ]
-        }
-        run Ruhoh::Previewer.new(Ruhoh::Page.new)
+        use Rack::Static, {:urls => ["/#{Ruhoh.folders.media}"] }
+        
+        # Serve theme assets
+        map Ruhoh.config.assets.stylesheets do
+          run Rack::File.new("theme-fluid/stylesheets")
+        end
+        map Ruhoh.config.assets.scripts do
+          run Rack::File.new("theme-fluid/scripts")
+        end
+        map Ruhoh.config.assets.widgets do
+          run Rack::File.new("theme-fluid/widgets")
+        end
+        
+        # Serve widget javascripts
+        map '/assets/widgets' do
+          run Rack::File.new("_widgets")
+        end
+
+        map '/' do
+          run Ruhoh::Previewer.new(Ruhoh::Page.new)
+        end
       }
     end
     

@@ -20,6 +20,7 @@ require 'ruhoh/parsers/routes'
 require 'ruhoh/parsers/layouts'
 require 'ruhoh/parsers/partials'
 require 'ruhoh/parsers/widgets'
+require 'ruhoh/parsers/assets'
 require 'ruhoh/parsers/site'
 require 'ruhoh/db'
 require 'ruhoh/templaters/helpers'
@@ -45,9 +46,12 @@ class Ruhoh
   Folders   = Struct.new(:database, :pages, :posts, :layouts, :assets, :partials, :media, :widgets, :compiled, :plugins)
   Files     = Struct.new(:site, :config, :dashboard)
   Filters   = Struct.new(:posts, :pages, :static)
-  Config    = Struct.new(:posts, :pages, :theme, :asset_path, :media_path, :widget_path, :env)
+  Config    = Struct.new(:posts, :pages, :theme, :assets, :env)
   PagesConfig = Struct.new(:permalink, :layout, :exclude)
   PostsConfig = Struct.new(:permalink, :layout, :exclude)
+  ThemeStructure = Struct.new(:name, :layouts, :stylesheets, :scripts, :media, :widgets, :partials)
+  AssetUrls = Struct.new(:stylesheets, :scripts, :media, :widgets)
+  Assets = Struct.new(:stylesheets, :scripts, :media)
   Paths     = Struct.new(
                 :site_source, :database, :pages, :posts, :theme, :layouts, :assets, :partials, :global_partials, :media, :widgets,
                 :compiled, :dashboard, :plugins)
@@ -91,11 +95,14 @@ class Ruhoh
       return false
     end
     
-    @config.theme         = theme
-    @config.asset_path    = "/#{@config.theme}/#{@folders.assets}"
-    @config.media_path    = "/#{@folders.media}"
-    @config.widget_path   = "/#{@folders.widgets}"
-    
+    @config.theme = theme
+
+    @config.assets = AssetUrls.new
+    @config.assets.media = "/#{@folders.assets}/#{@config.theme}/media"
+    @config.assets.stylesheets = "/#{@folders.assets}/#{@config.theme}/stylesheets"
+    @config.assets.scripts = "/#{@folders.assets}/#{@config.theme}/scripts"
+    @config.assets.widgets   = "/#{@folders.assets}/#{@folders.widgets}"
+
     @config.posts = PostsConfig.new()
     @config.posts.permalink = site_config['permalink']
     @config.posts.layout = site_config['posts']['layout'] rescue nil
@@ -118,12 +125,16 @@ class Ruhoh
     @paths.database         = self.absolute_path(@folders.database)
     @paths.pages            = self.absolute_path(@folders.pages)
     @paths.posts            = self.absolute_path(@folders.posts)
-
-    @paths.theme            = self.absolute_path(@config.theme)
-    @paths.layouts          = self.absolute_path(@config.theme, @folders.layouts)
-    @paths.assets           = self.absolute_path(@config.theme, @folders.assets)
-    @paths.partials         = self.absolute_path(@config.theme, @folders.partials)
-
+    
+    @paths.theme            = ThemeStructure.new
+    @paths.theme.name       = self.absolute_path(@config.theme)
+    @paths.theme.layouts    = self.absolute_path(@config.theme, @folders.layouts)
+    @paths.theme.stylesheets   = self.absolute_path(@config.theme, 'stylesheets')
+    @paths.theme.scripts    = self.absolute_path(@config.theme, 'scripts')
+    @paths.theme.media      = self.absolute_path(@config.theme, 'media')
+    @paths.theme.widgets    = self.absolute_path(@config.theme, 'widgets')
+    @paths.theme.partials   = self.absolute_path(@config.theme, 'partials')
+    
     @paths.global_partials  = self.absolute_path(@folders.partials)
     @paths.media            = self.absolute_path(@folders.media)
     @paths.widgets          = self.absolute_path(@folders.widgets)

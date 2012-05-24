@@ -20,6 +20,24 @@ class Ruhoh
         @context ||= RContext.new(self)
       end
 
+      def assets
+        buffer = ''
+        master_layout = self.context['page']['master_layout']
+        sub_layout = self.context['page']['sub_layout']
+        stylesheets = Ruhoh::DB.assets['stylesheets'][master_layout] || []
+        stylesheets += Ruhoh::DB.assets['stylesheets'][sub_layout] || []
+        stylesheets += Ruhoh::DB.assets['stylesheets']['widgets'] || []
+        stylesheets.each do |url|
+          buffer += "<link href=\"#{url}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
+        end
+        buffer += "\n"
+        Ruhoh::DB.assets['scripts'].each do |s|
+          buffer += "<script src=\"#{s}\"></script>\n"
+        end
+        
+        buffer
+      end
+      
       def widget(name)
         return '' if self.context['page'][name.to_s].to_s == 'false'
         Ruhoh::DB.widgets[name.to_s]['layout']
