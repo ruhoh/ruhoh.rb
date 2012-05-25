@@ -7,11 +7,11 @@ class Ruhoh
       end
       
       def self.theme_partials
-        self.process(Ruhoh.paths.theme.partials)
+        self.process(Ruhoh.paths.theme_partials)
       end
       
       def self.global_partials
-        self.process(Ruhoh.paths.global_partials)
+        self.process(Ruhoh.paths.partials)
       end
       
       def self.process(path)

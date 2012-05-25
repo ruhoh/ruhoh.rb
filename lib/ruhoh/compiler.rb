@@ -5,7 +5,7 @@ class Ruhoh
     def self.compile(target_directory = nil, page = nil)
       Ruhoh.config.env ||= 'production'
       Ruhoh::Friend.say { plain "Compiling for environment: '#{Ruhoh.config.env}'" }
-      target = target_directory || "./#{Ruhoh.folders.compiled}"
+      target = target_directory || "./#{Ruhoh.names.compiled}"
       page = page || Ruhoh::Page.new
       
       FileUtils.rm_r target if File.exist?(target)
@@ -51,13 +51,13 @@ class Ruhoh
 
       def self.media(target, page)
         return unless FileTest.directory? Ruhoh.paths.media
-        FileUtils.mkdir_p File.join(target, Ruhoh.folders.media)
+        FileUtils.mkdir_p File.join(target, Ruhoh.names.media)
         FileUtils.cp_r Ruhoh.paths.media, target
       end
 
       def self.syntax(target, page)
         return unless FileTest.directory? Ruhoh.paths.syntax
-        syntax_path = File.join(target, Ruhoh.folders.syntax)
+        syntax_path = File.join(target, Ruhoh.names.syntax)
         FileUtils.mkdir_p syntax_path
         FileUtils.cp_r "#{Ruhoh.paths.syntax}/.", syntax_path
       end

@@ -12,10 +12,10 @@ class Ruhoh
     def change(id)
       self.reset
       @path = id
-      @data = if id =~ Regexp.new("^#{Ruhoh.folders.posts}")
+      @data = if id =~ Regexp.new("^#{Ruhoh.names.posts}")
         Ruhoh::DB.posts['dictionary'][id] 
       else
-        @path = "#{Ruhoh.folders.pages}/#{id}"
+        @path = "#{Ruhoh.names.pages}/#{id}"
         Ruhoh::DB.pages[id]
       end
       

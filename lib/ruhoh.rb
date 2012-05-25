@@ -8,12 +8,16 @@ require 'json'
 require 'time'
 require 'cgi'
 require 'fileutils'
+require 'ostruct'
 
 require 'mustache'
 
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
+require 'ruhoh/config'
+require 'ruhoh/paths'
+require 'ruhoh/urls'
 require 'ruhoh/parsers/posts'
 require 'ruhoh/parsers/pages'
 require 'ruhoh/parsers/routes'
@@ -37,118 +41,51 @@ class Ruhoh
   
   class << self
     attr_accessor :log
-    attr_reader :folders, :files, :config, :paths, :filters
+    attr_reader :config, :names, :paths, :root, :urls
   end
   
   @log = Ruhoh::Logger.new
-
-  Root      = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  Folders   = Struct.new(:database, :pages, :posts, :layouts, :assets, :partials, :media, :widgets, :compiled, :plugins)
-  Files     = Struct.new(:site, :config, :dashboard)
-  Filters   = Struct.new(:posts, :pages, :static)
-  Config    = Struct.new(:posts, :pages, :theme, :assets, :env)
-  PagesConfig = Struct.new(:permalink, :layout, :exclude)
-  PostsConfig = Struct.new(:permalink, :layout, :exclude)
-  ThemeStructure = Struct.new(:name, :layouts, :stylesheets, :scripts, :media, :widgets, :partials)
-  AssetUrls = Struct.new(:stylesheets, :scripts, :media, :widgets)
-  Assets = Struct.new(:stylesheets, :scripts, :media)
-  Paths     = Struct.new(
-                :site_source, :database, :pages, :posts, :theme, :layouts, :assets, :partials, :global_partials, :media, :widgets,
-                :compiled, :dashboard, :plugins)
-  
+  Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  Names = {
+    :assets => 'assets',
+    :base_config => 'config.yml',
+    :compiled => 'compiled',
+    :dashboard_file => 'dash.html',
+    :layouts => 'layouts',
+    :media => 'media',
+    :pages => 'pages',
+    :partials => 'partials',
+    :plugins => 'plugins',
+    :posts => 'posts',
+    :scripts => 'scripts',
+    :site_data => 'site.yml',
+    :stylesheets => 'stylesheets',
+    :theme_config => 'theme.json',
+    :widgets => 'widgets',
+    :widget_config => 'config.yml'
+  }
   
   # Public: Setup Ruhoh utilities relative to the current application directory.
   # Returns boolean on success/failure
   def self.setup(opts={})
-    @log.log_file = opts[:log_file] if opts[:log_file]
     self.reset
+    @log.log_file = opts[:log_file] if opts[:log_file]
     @site_source = opts[:source] if opts[:source]
     
-    if (self.setup_config && self.setup_paths && self.setup_filters)
-      self.setup_plugins unless opts[:enable_plugins] == false
-      true
-    else
-      false
-    end
+    @root     = Root
+    @names    = OpenStruct.new(Names)
+    @config   = Ruhoh::Config.generate(@names.base_config)
+    @paths    = Ruhoh::Paths.generate(@config, @site_source)
+    @urls     = Ruhoh::Urls.generate(@config)
+
+    return false unless(@config && @paths && @urls)
+    
+    self.setup_plugins unless opts[:enable_plugins] == false
+    true
   end
   
   def self.reset
-    @folders     = Folders.new('_database', '_pages', '_posts', 'layouts', 'assets', '_partials', "_media", "_widgets", '_compiled', '_plugins')
-    @files       = Files.new('_site.yml', '_config.yml', 'dash.html')
-    @filters     = Filters.new
-    @config      = Config.new
-    @paths       = Paths.new
     @site_source = Dir.getwd
-  end
-  
-  def self.setup_config
-    site_config = Ruhoh::Utils.parse_file_as_yaml(@site_source, @files.config)
-    
-    unless site_config
-      Ruhoh.log.error("Empty site_config.\nEnsure ./#{Ruhoh.files.config} exists and contains valid YAML")
-      return false
-    end
-    
-    theme = site_config['theme'] ? site_config['theme'].to_s.gsub(/\s/, '') : ''
-    if theme.empty?
-      Ruhoh.log.error("Theme not specified in _config.yml")
-      return false
-    end
-    
-    @config.theme = theme
-
-    @config.assets = AssetUrls.new
-    @config.assets.media = "/#{@folders.assets}/#{@config.theme}/media"
-    @config.assets.stylesheets = "/#{@folders.assets}/#{@config.theme}/stylesheets"
-    @config.assets.scripts = "/#{@folders.assets}/#{@config.theme}/scripts"
-    @config.assets.widgets   = "/#{@folders.assets}/#{@folders.widgets}"
-
-    @config.posts = PostsConfig.new()
-    @config.posts.permalink = site_config['permalink']
-    @config.posts.layout = site_config['posts']['layout'] rescue nil
-    @config.posts.layout = 'post' if @config.posts.layout.nil?
-    @config.posts.exclude = Array(site_config['exclude'] || nil)
-    
-    @config.pages = PagesConfig.new()
-    @config.pages.permalink = site_config['pages']['permalink'] rescue nil
-    @config.pages.layout = site_config['pages']['layout'] rescue nil
-    @config.pages.layout = 'page' if @config.pages.layout.nil?
-    excluded_pages = site_config['pages']['exclude'] rescue nil
-    @config.pages.exclude = Array(excluded_pages)
-
-    @config.env = site_config['env'] || nil
-    @config
-  end
-  
-  def self.setup_paths
-    @paths.site_source      = @site_source
-    @paths.database         = self.absolute_path(@folders.database)
-    @paths.pages            = self.absolute_path(@folders.pages)
-    @paths.posts            = self.absolute_path(@folders.posts)
-    
-    @paths.theme            = ThemeStructure.new
-    @paths.theme.name       = self.absolute_path(@config.theme)
-    @paths.theme.layouts    = self.absolute_path(@config.theme, @folders.layouts)
-    @paths.theme.stylesheets   = self.absolute_path(@config.theme, 'stylesheets')
-    @paths.theme.scripts    = self.absolute_path(@config.theme, 'scripts')
-    @paths.theme.media      = self.absolute_path(@config.theme, 'media')
-    @paths.theme.widgets    = self.absolute_path(@config.theme, 'widgets')
-    @paths.theme.partials   = self.absolute_path(@config.theme, 'partials')
-    
-    @paths.global_partials  = self.absolute_path(@folders.partials)
-    @paths.media            = self.absolute_path(@folders.media)
-    @paths.widgets          = self.absolute_path(@folders.widgets)
-    @paths.compiled         = self.absolute_path(@folders.compiled)
-    @paths.dashboard        = self.absolute_path(@files.dashboard)
-    @paths.plugins          = self.absolute_path(@folders.plugins)
-    @paths
-  end
-  
-  # filename filters
-  def self.setup_filters
-    @filters.pages = @config.pages.exclude.map {|node| Regexp.new(node) }
-    @filters.posts = @config.posts.exclude.map {|node| Regexp.new(node) }
-    @filters
   end
   
   def self.setup_plugins
@@ -156,14 +93,6 @@ class Ruhoh
     plugins.each {|f| require f } unless plugins.empty?
   end
   
-  def self.absolute_path(*args)
-    File.__send__ :join, args.unshift(self.paths.site_source)
-  end
-  
-  def self.relative_path(filename)
-    filename.gsub( Regexp.new("^#{self.paths.site_source}/"), '' )
-  end
-    
   def self.ensure_setup
     raise 'Ruhoh has not been setup. Please call: Ruhoh.setup' unless Ruhoh.config && Ruhoh.paths
   end  

@@ -55,7 +55,7 @@ class Ruhoh
           data['id']            = filename
           data['title']         = data['title'] || filename_data['title']
           data['url']           = self.permalink(data)
-          data['layout']        = Ruhoh.config.posts.layout if data['layout'].nil?
+          data['layout']        = Ruhoh.config.posts_layout if data['layout'].nil?
           dictionary[filename]  = data
         end
         
@@ -75,7 +75,7 @@ class Ruhoh
       
       def self.files
         FileUtils.cd(Ruhoh.paths.site_source) {
-          return Dir["#{Ruhoh.folders.posts}/**/*.*"].select { |filename|
+          return Dir["#{Ruhoh.names.posts}/**/*.*"].select { |filename|
             next unless self.is_valid_page?(filename)
             true
           }
@@ -85,7 +85,7 @@ class Ruhoh
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
-        Ruhoh.filters.posts.each {|regex| return false if filepath =~ regex }
+        Ruhoh.config.posts_exclude.each {|regex| return false if filepath =~ regex }
         true
       end
       
@@ -141,7 +141,7 @@ class Ruhoh
       def self.permalink(post)
         date = Date.parse(post['date'])
         title = post['title'].downcase.gsub(' ', '-').gsub('.','')
-        format = post['permalink'] || Ruhoh.config.posts.permalink  || "/:categories/:year/:month/:day/:title.html"
+        format = post['permalink'] || Ruhoh.config.posts_permalink  || "/:categories/:year/:month/:day/:title.html"
         
         url = {
           "year"       => date.strftime("%Y"),

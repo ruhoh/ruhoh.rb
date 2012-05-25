@@ -45,8 +45,11 @@ class Ruhoh
       data['tags'] = Array(data['tags'])
       data
     end
-    
-    
+
+    def self.relative_path(filename)
+      filename.gsub(Regexp.new("^#{Ruhoh.paths.site_source}/"), '')
+    end
+        
     def self.report(name, collection, invalid)
       output = "#{collection.count}/#{collection.count + invalid.count} #{name} processed."
       if collection.empty? && invalid.empty?

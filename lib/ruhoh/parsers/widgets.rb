@@ -27,7 +27,7 @@ class Ruhoh
       def self.widgets
         names = []
         FileUtils.cd(Ruhoh.paths.widgets) { names += Dir["*"] }
-        FileUtils.cd(File.join(Ruhoh::Root, 'widgets')) { names += Dir["*"] }
+        FileUtils.cd(Ruhoh.paths.system_widgets) { names += Dir["*"] }
         names.uniq!
         names
       end
@@ -36,8 +36,8 @@ class Ruhoh
       #
       # Returns Hash of configuration params.
       def self.process_config(widget_name)
-        system_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh::Root, 'widgets', widget_name, 'config.yml') || {}
-        user_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.widgets, widget_name, 'config.yml') || {}
+        system_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.base_config) || {}
+        user_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.widgets, widget_name, Ruhoh.names.base_config) || {}
         config = Ruhoh::Utils.deep_merge(system_config, user_config)
         config['layout'] ||= widget_name
         config['stylesheet'] ||= widget_name
@@ -59,7 +59,7 @@ class Ruhoh
           if File.exist?(script_file)
             scripts << "#{widget_name}.js"
           else
-            script_file = File.join(Ruhoh::Root, 'widgets', widget_name, 'scripts', "#{widget_name}.js")
+            script_file = File.join(Ruhoh.paths.system_widgets, widget_name, 'scripts', "#{widget_name}.js")
             scripts << "#{widget_name}.js" if File.exist?(script_file)
           end
         end
@@ -74,7 +74,7 @@ class Ruhoh
       def self.process_layout(config, widget_name)
         layout = File.join(Ruhoh.paths.widgets, widget_name, 'layouts', "#{config['layout']}.html")
         unless File.exist?(layout)
-          layout = File.join(Ruhoh::Root, 'widgets', widget_name, 'layouts', "#{config['layout']}.html")
+          layout = File.join(Ruhoh.paths.system_widgets, widget_name, 'layouts', "#{config['layout']}.html")
         end
         return '' unless File.exist?(layout)
 

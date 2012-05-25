@@ -82,7 +82,7 @@ class Ruhoh
       
       Ruhoh::Friend.say { 
         green "New #{type}:" 
-        green Ruhoh.relative_path(filename)
+        green Ruhoh::Utils.relative_path(filename)
         green 'View drafts at the URL: /dash'
       }
     end
@@ -111,7 +111,7 @@ class Ruhoh
       
       Ruhoh::Friend.say { 
         green "New page:"
-        plain Ruhoh.relative_path(filename)
+        plain Ruhoh::Utils.relative_path(filename)
       }
     end
 
@@ -214,7 +214,7 @@ class Ruhoh
       
       Ruhoh::Friend.say {
         green "New layout:"
-        plain Ruhoh.relative_path(filename)
+        plain Ruhoh::Utils.relative_path(filename)
       }
     end
 

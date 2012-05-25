@@ -14,8 +14,7 @@ class Ruhoh
 
     def call(env)
       return favicon if env['PATH_INFO'] == '/favicon.ico'
-      dash = File.basename(Ruhoh.files.dashboard, File.extname(Ruhoh.files.dashboard))
-      return admin if ["/#{dash}", "/#{dash}/"].include?(env['PATH_INFO'])
+      return admin if [Ruhoh.urls.dashboard, "#{Ruhoh.urls.dashboard}/"].include?(env['PATH_INFO'])
       
       id = Ruhoh::DB.routes[env['PATH_INFO']]
       raise "Page id not found for url: #{env['PATH_INFO']}" unless id
@@ -29,9 +28,8 @@ class Ruhoh
     end
 
     def admin
-      system_dash  = File.join(Ruhoh::Root, Ruhoh.files.dashboard)
-      template     = File.open(File.exist?(Ruhoh.paths.dashboard) ? Ruhoh.paths.dashboard : system_dash, 'r:UTF-8') {|f| f.read }
-      output       = Ruhoh::Templaters::Base.parse(template, nil)
+      template = File.open(File.exist?(Ruhoh.paths.dashboard) ? Ruhoh.paths.dashboard : Ruhoh.paths.system_dashboard, 'r:UTF-8') {|f| f.read }
+      output = Ruhoh::Templaters::Base.parse(template, nil)
       
       [200, {'Content-Type' => 'text/html'}, [output]]
     end

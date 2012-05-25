@@ -14,7 +14,7 @@ class Ruhoh
       #
       # Returns Hash of configuration parameters
       def self.theme_config
-        config_file = File.join(Ruhoh.paths.theme.name, 'theme.json')
+        config_file = File.join(Ruhoh.paths.theme_config)
 
         if File.exist?(config_file)
           File.open(config_file, 'r:UTF-8') {|f| JSON.parse(f.read) }
@@ -35,8 +35,8 @@ class Ruhoh
         stylesheets = theme_config['stylesheets'].dup
         if stylesheets.is_a? Hash
           stylesheets.each do |key, value|
-            next if key == "widgets"
-            stylesheets[key] = Array(value).map { |v| "#{Ruhoh.config.assets.stylesheets}/#{v}" }
+            next if key == Ruhoh.names.widgets
+            stylesheets[key] = Array(value).map { |v| "#{Ruhoh.urls.theme_stylesheets}/#{v}" }
           end
         end
 
@@ -44,9 +44,9 @@ class Ruhoh
         Ruhoh::DB.widgets.each_key do |name|
           stylesheet = theme_config['stylesheets']['widgets'][name] rescue "#{name}.css"
           stylesheet ||=  "#{name}.css"
-          file = File.join(Ruhoh.paths.theme.widgets, name, "stylesheets", stylesheet)
+          file = File.join(Ruhoh.paths.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet)
           next unless File.exists?(file)
-          stylesheets['widgets'] << "#{Ruhoh.config.assets.widgets}/#{name}/stylesheets/#{stylesheet}"
+          stylesheets['widgets'] << "#{Ruhoh.urls.theme_widgets}/#{name}/#{Ruhoh.names.stylesheets}/#{stylesheet}"
         end
         
         stylesheets
@@ -62,7 +62,7 @@ class Ruhoh
         scripts = theme_config['scripts'] || []
         Ruhoh::DB.widgets.each_value do |h|
           scripts += Array(h["scripts"]).map! {|path| 
-            "/assets/widgets/#{h['name']}/scripts/#{path}"
+            "#{Ruhoh.urls.widgets}/#{h['name']}/#{Ruhoh.names.scripts}/#{path}"
           } if h["scripts"]
         end
 

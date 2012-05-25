@@ -18,7 +18,6 @@ class Ruhoh
       # Watch all files + all sub directories except for special folders e.g '_database'
       Dir.chdir(Ruhoh.paths.site_source) {
         dirs = Dir['*'].select { |x| File.directory?(x) }
-        dirs -= [Ruhoh.folders.database]
         dirs = dirs.map { |x| "#{x}/**/*" }
         dirs += ['*']
         glob = dirs
@@ -33,13 +32,13 @@ class Ruhoh
         args.each {|event|
           path = event['path'].gsub(Ruhoh.paths.site_source, '')
 
-          if path == "/#{Ruhoh.files.site}"
+          if path == "/#{Ruhoh.names.site_data}"
             type = "Site"
             Ruhoh::DB.update(:site)
-          elsif path == "/#{Ruhoh.files.config}"
+          elsif path == "/#{Ruhoh.names.base_config}"
             type = "Config"
             Ruhoh::DB.update(:site)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.folders.posts}")
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.posts}")
             type = "Posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)

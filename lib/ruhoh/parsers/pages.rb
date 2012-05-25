@@ -19,7 +19,7 @@ class Ruhoh
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
           parsed_page['data']['title']  = parsed_page['data']['title'] || self.to_title(filename)
           if parsed_page['data']['layout'].nil?
-            parsed_page['data']['layout'] = Ruhoh.config.pages.layout
+            parsed_page['data']['layout'] = Ruhoh.config.pages_layout
           end
           
           dictionary[id] = parsed_page['data']
@@ -31,7 +31,7 @@ class Ruhoh
 
       def self.files
         FileUtils.cd(Ruhoh.paths.site_source) {
-          return Dir["#{Ruhoh.folders.pages}/**/*.*"].select { |filename|
+          return Dir["#{Ruhoh.names.pages}/**/*.*"].select { |filename|
             next unless self.is_valid_page?(filename)
             true
           }
@@ -41,12 +41,12 @@ class Ruhoh
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
-        Ruhoh.filters.pages.each {|regex| return false if filepath =~ regex }
+        Ruhoh.config.pages_exclude.each {|regex| return false if filepath =~ regex }
         true
       end
     
       def self.make_id(filename)
-        filename.gsub(Regexp.new("^#{Ruhoh.folders.pages}/"), '')
+        filename.gsub(Regexp.new("^#{Ruhoh.names.pages}/"), '')
       end
       
       def self.to_title(filename)
@@ -71,7 +71,7 @@ class Ruhoh
         
         url = url.split('/').reject{ |part| part[0] == '.' }.join('/')
         url = url.gsub(/\/index.html$/, '')
-        if page['permalink'] == 'pretty' || Ruhoh.config.pages.permalink == 'pretty'
+        if page['permalink'] == 'pretty' || Ruhoh.config.pages_permalink == 'pretty'
           url = url.gsub(/\.html$/, '') 
         end
         url = "/" if url.empty?
