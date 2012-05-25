@@ -3,24 +3,15 @@ class Ruhoh
     module Assets
 
       def self.generate
-        theme_config = self.theme_config
-        {
-          'stylesheets' => self.stylesheets(theme_config),
-          'scripts' => self.scripts(theme_config)
-        }
-      end
-      
-      # Get the theme config file.
-      #
-      # Returns Hash of configuration parameters
-      def self.theme_config
-        config_file = File.join(Ruhoh.paths.theme_config)
-
-        if File.exist?(config_file)
-          File.open(config_file, 'r:UTF-8') {|f| JSON.parse(f.read) }
+        if File.exist?(Ruhoh.paths.theme_config)
+          theme_config = File.open(Ruhoh.paths.theme_config, 'r:UTF-8') {|f| JSON.parse(f.read) }
         else
-          { "stylesheets" => [], "scripts" => [] }
+          theme_config = nil
         end
+        {
+          Ruhoh.names.stylesheets.to_s => self.stylesheets(theme_config),
+          Ruhoh.names.scripts.to_s => self.scripts(theme_config)
+        }
       end
       
       # Collect all the stylesheets.
@@ -32,7 +23,8 @@ class Ruhoh
       #
       # Returns Array of URLs to stylesheets to be included globally.
       def self.stylesheets(theme_config)
-        stylesheets = theme_config['stylesheets'].dup
+        return [] if theme_config.nil?
+        stylesheets = theme_config[Ruhoh.names.stylesheets.to_s].dup
         if stylesheets.is_a? Hash
           stylesheets.each do |key, value|
             next if key == Ruhoh.names.widgets
@@ -40,13 +32,13 @@ class Ruhoh
           end
         end
 
-        stylesheets['widgets'] = []
+        stylesheets[Ruhoh.names.widgets.to_s] = []
         Ruhoh::DB.widgets.each_key do |name|
-          stylesheet = theme_config['stylesheets']['widgets'][name] rescue "#{name}.css"
+          stylesheet = theme_config[Ruhoh.names.stylesheets.to_s][Ruhoh.names.widgets.to_s][name] rescue "#{name}.css"
           stylesheet ||=  "#{name}.css"
           file = File.join(Ruhoh.paths.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet)
           next unless File.exists?(file)
-          stylesheets['widgets'] << "#{Ruhoh.urls.theme_widgets}/#{name}/#{Ruhoh.names.stylesheets}/#{stylesheet}"
+          stylesheets[Ruhoh.names.widgets.to_s] << [Ruhoh.urls.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet].join('/')
         end
         
         stylesheets
@@ -59,11 +51,13 @@ class Ruhoh
       #
       # Returns Array of URLs to javascripts to be included globally.
       def self.scripts(theme_config)
-        scripts = theme_config['scripts'] || []
-        Ruhoh::DB.widgets.each_value do |h|
-          scripts += Array(h["scripts"]).map! {|path| 
-            "#{Ruhoh.urls.widgets}/#{h['name']}/#{Ruhoh.names.scripts}/#{path}"
-          } if h["scripts"]
+        return [] if theme_config.nil?
+        scripts = theme_config[Ruhoh.names.scripts.to_s] || []
+        Ruhoh::DB.widgets.each_value do |widget|
+          next unless widget[Ruhoh.names.scripts.to_s]
+          scripts += Array(widget[Ruhoh.names.scripts.to_s]).map! {|path| 
+            [Ruhoh.urls.widgets, widget['name'], Ruhoh.names.scripts, path].join('/')
+          }
         end
 
         scripts
