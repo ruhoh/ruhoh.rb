@@ -21,6 +21,7 @@ class Ruhoh
       
       :theme,
       :theme_config_data,
+      :theme_dashboard_file,
       :theme_layouts,
       :theme_media,
       :theme_partials,
@@ -48,6 +49,7 @@ class Ruhoh
       paths.plugins             = File.join(site_source, Ruhoh.names.plugins)
       
       paths.theme               = File.join(site_source, Ruhoh.names.themes, config.theme)
+      paths.theme_dashboard_file= File.join(paths.theme, Ruhoh.names.dashboard_file)
       paths.theme_config_data   = File.join(paths.theme, Ruhoh.names.theme_config)
       paths.theme_layouts       = File.join(paths.theme, Ruhoh.names.layouts)
       paths.theme_stylesheets   = File.join(paths.theme, Ruhoh.names.stylesheets)
