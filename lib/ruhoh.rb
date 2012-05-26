@@ -60,6 +60,7 @@ class Ruhoh
     :scripts => 'scripts',
     :site_data => 'site.yml',
     :stylesheets => 'stylesheets',
+    :themes => 'themes',
     :theme_config => 'theme.json',
     :widgets => 'widgets',
     :widget_config => 'config.yml'

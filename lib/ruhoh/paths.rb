@@ -16,6 +16,7 @@ class Ruhoh
       :posts,
       :site,
       :site_source,
+      :themes,
       :widgets,
       
       :theme_base,
@@ -43,16 +44,17 @@ class Ruhoh
       paths.compiled            = File.join(site_source, Ruhoh.names.compiled)
       paths.dashboard           = File.join(site_source, Ruhoh.names.dashboard_file)
       paths.site                = File.join(site_source, Ruhoh.names.site_data)
+      paths.themes              = File.join(site_source, Ruhoh.names.themes)
       paths.plugins             = File.join(site_source, Ruhoh.names.plugins)
       
-      paths.theme_base          = File.join(site_source, config.theme)
-      paths.theme_config        = File.join(site_source, config.theme, Ruhoh.names.theme_config)
-      paths.theme_layouts       = File.join(site_source, config.theme, Ruhoh.names.layouts)
-      paths.theme_stylesheets   = File.join(site_source, config.theme, Ruhoh.names.stylesheets)
-      paths.theme_scripts       = File.join(site_source, config.theme, Ruhoh.names.scripts)
-      paths.theme_media         = File.join(site_source, config.theme, Ruhoh.names.media)
-      paths.theme_widgets       = File.join(site_source, config.theme, Ruhoh.names.widgets)
-      paths.theme_partials      = File.join(site_source, config.theme, Ruhoh.names.partials)
+      paths.theme_base          = File.join(site_source, Ruhoh.names.themes, config.theme)
+      paths.theme_config        = File.join(paths.theme_base, Ruhoh.names.theme_config)
+      paths.theme_layouts       = File.join(paths.theme_base, Ruhoh.names.layouts)
+      paths.theme_stylesheets   = File.join(paths.theme_base, Ruhoh.names.stylesheets)
+      paths.theme_scripts       = File.join(paths.theme_base, Ruhoh.names.scripts)
+      paths.theme_media         = File.join(paths.theme_base, Ruhoh.names.media)
+      paths.theme_widgets       = File.join(paths.theme_base, Ruhoh.names.widgets)
+      paths.theme_partials      = File.join(paths.theme_base, Ruhoh.names.partials)
 
       paths.system_dashboard    = File.join(Ruhoh::Root, Ruhoh.names.dashboard_file)
       paths.system_widgets      = File.join(Ruhoh::Root, Ruhoh.names.widgets)
