@@ -49,9 +49,13 @@ class Ruhoh
             type = "Posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.themes}/#{Ruhoh.config.theme}/#{Ruhoh.names.layouts}")
+            type = "Layouts"
+            Ruhoh::DB.update(:layouts)
           elsif path =~ Regexp.new("^\/?#{Ruhoh.names.themes}/#{Ruhoh.config.theme}")
             type = "Themes"
             Ruhoh::DB.update(:assets)
+            Ruhoh::DB.update(:widgets)
             Ruhoh::DB.update(:layouts)
           elsif path =~ Regexp.new("^\/?#{Ruhoh.names.widgets}")
             type = "Widgets"
