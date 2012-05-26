@@ -38,18 +38,26 @@ class Ruhoh
           elsif path == "/#{Ruhoh.names.base_config}"
             type = "Config"
             Ruhoh::DB.update(:site)
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.pages}")
+            type = "Pages"
+            Ruhoh::DB.update(:pages)
+            Ruhoh::DB.update(:routes)
+          elsif path =~ Regexp.new("^\/?(#{Ruhoh.names.partials}|#{Ruhoh.names.themes}\/#{Ruhoh.config.theme}\/#{Ruhoh.names.partials})")
+            type = "Partials"
+            Ruhoh::DB.update(:partials)
           elsif path =~ Regexp.new("^\/?#{Ruhoh.names.posts}")
             type = "Posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.config.theme}")
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.themes}/#{Ruhoh.config.theme}")
             type = "Themes"
+            Ruhoh::DB.update(:assets)
             Ruhoh::DB.update(:layouts)
-            Ruhoh::DB.update(:partials)
+          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.widgets}")
+            type = "Widgets"
+            Ruhoh::DB.update(:widgets)
           else
-            type = "Pages"
-            Ruhoh::DB.update(:pages)
-            Ruhoh::DB.update(:routes)
+            type = 'Unrecognized'
           end
           
           Ruhoh::Friend.say {
