@@ -35,7 +35,7 @@ class Ruhoh
           if path == "/#{Ruhoh.names.site_data}"
             type = "Site"
             Ruhoh::DB.update(:site)
-          elsif path == "/#{Ruhoh.names.base_config}"
+          elsif path == "/#{Ruhoh.names.config_data}"
             type = "Config"
             Ruhoh::DB.update(:site)
           elsif path =~ Regexp.new("^\/?#{Ruhoh.names.pages}")

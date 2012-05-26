@@ -28,7 +28,7 @@ class Ruhoh
     end
 
     def admin
-      template = File.open(File.exist?(Ruhoh.paths.dashboard) ? Ruhoh.paths.dashboard : Ruhoh.paths.system_dashboard, 'r:UTF-8') {|f| f.read }
+      template = File.open(File.exist?(Ruhoh.paths.dashboard_file) ? Ruhoh.paths.dashboard_file : Ruhoh.paths.system_dashboard_file, 'r:UTF-8') {|f| f.read }
       output = Ruhoh::Templaters::Base.parse(template, nil)
       
       [200, {'Content-Type' => 'text/html'}, [output]]

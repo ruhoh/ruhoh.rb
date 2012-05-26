@@ -4,8 +4,8 @@ class Ruhoh
       AssetStructure = Struct.new(:stylesheets, :scripts)
 
       def self.generate
-        if File.exist?(Ruhoh.paths.theme_config)
-          theme_config = File.open(Ruhoh.paths.theme_config, 'r:UTF-8') {|f| JSON.parse(f.read) }
+        if File.exist?(Ruhoh.paths.theme_config_data)
+          theme_config = File.open(Ruhoh.paths.theme_config_data, 'r:UTF-8') {|f| JSON.parse(f.read) }
         else
           theme_config = nil
         end

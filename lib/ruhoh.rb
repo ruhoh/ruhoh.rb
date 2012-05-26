@@ -48,7 +48,7 @@ class Ruhoh
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   Names = {
     :assets => 'assets',
-    :base_config => 'config.yml',
+    :config_data => 'config.yml',
     :compiled => 'compiled',
     :dashboard_file => 'dash.html',
     :layouts => 'layouts',
@@ -75,7 +75,7 @@ class Ruhoh
     
     @root     = Root
     @names    = OpenStruct.new(Names)
-    @config   = Ruhoh::Config.generate(@names.base_config)
+    @config   = Ruhoh::Config.generate(@names.config_data)
     @paths    = Ruhoh::Paths.generate(@config, @site_source)
     @urls     = Ruhoh::Urls.generate(@config)
 

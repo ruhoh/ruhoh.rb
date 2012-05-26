@@ -42,8 +42,8 @@ class Ruhoh
       #
       # Returns Hash of configuration params.
       def self.process_config(widget_name)
-        system_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.base_config) || {}
-        user_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.widgets, widget_name, Ruhoh.names.base_config) || {}
+        system_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.config_data) || {}
+        user_config = Ruhoh::Utils.parse_file_as_yaml(Ruhoh.paths.widgets, widget_name, Ruhoh.names.config_data) || {}
         config = Ruhoh::Utils.deep_merge(system_config, user_config)
         config['layout'] ||= widget_name
         config['stylesheet'] ||= widget_name
