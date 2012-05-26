@@ -1,8 +1,9 @@
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
+    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :assets]
+
     class << self
-      WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :assets]
       self.__send__ :attr_reader, *WhiteList
 
       def update(name)
@@ -36,7 +37,7 @@ class Ruhoh
       
       def update_all
         WhiteList.each do |var|
-          self.__send__ :update, var
+          self.__send__(:update, var)
         end
       end
       
