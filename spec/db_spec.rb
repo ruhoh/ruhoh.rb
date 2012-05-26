@@ -3,9 +3,7 @@ require 'spec_helper'
 module DB
   
   describe Ruhoh::DB do
-    let(:whitelist){
-      [:site, :routes, :posts, :pages, :layouts, :partials]
-    }
+    let(:whitelist){ Ruhoh::DB::WhiteList }
     
     before(:each) do
       Ruhoh::Utils.stub(:parse_file_as_yaml).and_return({'theme' => "twitter"})
@@ -15,7 +13,7 @@ module DB
     context "database has not been updated" do
       it "should return nil for all whitelisted variables" do
         whitelist.each do |var|
-          result = Ruhoh::DB.__send__ var
+          result = Ruhoh::DB.__send__(var)
           result.should be_nil
         end
       end
@@ -62,16 +60,25 @@ module DB
         Ruhoh::DB.update(:partials)
         Ruhoh::DB.partials.should == {'test' => 'hi'}
       end
+      
+      it "should run the widgets parser when updating :widgets" do
+        Ruhoh::Parsers::Widgets.should_receive(:generate).and_return({'test' => 'hi'})
+        Ruhoh::DB.update(:widgets)
+        Ruhoh::DB.widgets.should == {'test' => 'hi'}
+      end
+      
+      it "should run the assets parser when updating :assets" do
+        Ruhoh::Parsers::Assets.should_receive(:generate).and_return({'test' => 'hi'})
+        Ruhoh::DB.update(:assets)
+        Ruhoh::DB.assets.should == {'test' => 'hi'}
+      end
     end
     
     describe "#update_all" do
       it "should call update for all WhiteListed variables." do
-        Ruhoh::DB.should_receive(:update).with(:site).ordered
-        Ruhoh::DB.should_receive(:update).with(:posts).ordered
-        Ruhoh::DB.should_receive(:update).with(:pages).ordered
-        Ruhoh::DB.should_receive(:update).with(:routes).ordered
-        Ruhoh::DB.should_receive(:update).with(:layouts).ordered
-        Ruhoh::DB.should_receive(:update).with(:partials).ordered
+        whitelist.each do |name|
+          Ruhoh::DB.should_receive(:update).with(name).ordered
+        end
         Ruhoh::DB.update_all
       end
     end

@@ -23,7 +23,7 @@ module Page
       let(:posts) {
         {
           "dictionary" => {
-            "_posts/sample-id.md" => {"title" => "a cool title"}
+            "#{Ruhoh.names.posts}/sample-id.md" => {"title" => "a cool title"}
           } 
         }
       }
@@ -44,13 +44,13 @@ module Page
           before(:all) do
             Ruhoh::Parsers::Posts.stub(:generate).and_return(posts)
             Ruhoh::DB.update(:posts)
-            page.change("_posts/sample-id.md")
+            page.change("#{Ruhoh.names.posts}/sample-id.md")
           end
           it "should query the posts dictionary and set @data to result" do
             page.data.should == {"title" => "a cool title"}
           end
           it "should set @id to the valid id" do
-            page.id.should == "_posts/sample-id.md"
+            page.id.should == "#{Ruhoh.names.posts}/sample-id.md"
           end
         end
         
@@ -137,7 +137,7 @@ module Page
       it "should be a hash with content value set" do
         Ruhoh::DB.stub(:pages).and_return({"blah.md" => {}})
         page.change('blah.md')
-        
+
         page.attributes.should be_a_kind_of Hash
         page.attributes.should have_key("content")
       end

@@ -1,7 +1,5 @@
 require 'spec_helper'
-
 module Layouts
-  
   describe Ruhoh::Parsers::Layouts do
     
     before(:each) do
@@ -10,8 +8,8 @@ module Layouts
       Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => expected_theme})
       Ruhoh.setup(:source => SampleSitePath)
 
-      the_layouts_dir = File.join SampleSitePath, expected_theme, Ruhoh.folders.layouts
-
+      the_layouts_dir = Ruhoh.paths.theme_layouts
+      
       FileUtils.remove_dir(the_layouts_dir, 1) if Dir.exists? the_layouts_dir
       FileUtils.makedirs the_layouts_dir
 
@@ -45,9 +43,6 @@ title: #{layout_name} (test)
           value.should have_key("content")
         }
       end
-
     end
-    
   end
-  
 end

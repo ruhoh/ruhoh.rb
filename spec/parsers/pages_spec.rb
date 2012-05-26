@@ -10,8 +10,8 @@ module Pages
         Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
         Ruhoh.setup(:source => SampleSitePath)
         
-        the_pages_dir = File.join SampleSitePath, "_pages"
-
+        the_pages_dir = Ruhoh.paths.pages
+        
         FileUtils.remove_dir(the_pages_dir, 1) if Dir.exists? the_pages_dir
         Dir.mkdir the_pages_dir
 
@@ -28,7 +28,7 @@ title: #{page_name} (test)
       end
       
       let(:expected_pages) {
-        %w{about.md archive.html categories.html index.html pages.html sitemap.txt tags.html}
+        %w{about.md archive.html categories.html index.html pages.html sitemap.txt tags.html}.sort
       }
 
       let(:pages){
@@ -36,7 +36,7 @@ title: #{page_name} (test)
       }
       
       it 'should extract valid pages from source directory.' do
-        pages.keys.sort.should == ['about.md', 'archive.html', 'categories.html', 'index.html', 'pages.html', 'sitemap.txt', 'tags.html']
+        pages.keys.sort.should == expected_pages
       end
       
       it 'should return a properly formatted hash for each page' do

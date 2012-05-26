@@ -77,19 +77,6 @@ module Posts
           dictionary.should_not include(post_path)
         end
       end
-      
-      context "A post with no YAML Front Matter" do
-        it "should omit the post file and record it as invalid post" do
-          post_path = 'test/2012-01-01-hello-world.md'
-          Ruhoh::Parsers::Posts.should_receive(:files).and_return([post_path])
-          Ruhoh::Utils.stub(:parse_file).and_return({})
-          
-          dictionary = Ruhoh::Parsers::Posts.process
-          
-          dictionary.should_not include(post_path)
-        end
-      end
-      
     end
     
     describe "#parse_filename" do
