@@ -71,12 +71,12 @@ class Ruhoh
   def self.setup(opts={})
     self.reset
     @log.log_file = opts[:log_file] if opts[:log_file]
-    @site_source = opts[:source] if opts[:source]
+    @base = opts[:source] if opts[:source]
     
     @root     = Root
     @names    = OpenStruct.new(Names)
     @config   = Ruhoh::Config.generate(@names.config_data)
-    @paths    = Ruhoh::Paths.generate(@config, @site_source)
+    @paths    = Ruhoh::Paths.generate(@config, @base)
     @urls     = Ruhoh::Urls.generate(@config)
 
     return false unless(@config && @paths && @urls)
@@ -86,7 +86,7 @@ class Ruhoh
   end
   
   def self.reset
-    @site_source = Dir.getwd
+    @base = Dir.getwd
   end
   
   def self.setup_plugins

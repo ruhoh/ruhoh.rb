@@ -9,7 +9,7 @@ class Ruhoh
     class AmazonS3 < AWS::S3::S3Object
   
       def initialize
-        credentials = Ruhoh::Utils.parse_yaml_file(Ruhoh.paths.site_source, "_deploy.yml")['s3']
+        credentials = Ruhoh::Utils.parse_yaml_file(Ruhoh.paths.base, "_deploy.yml")['s3']
         self.connect(credentials)
         self.ensure_bucket(credentials["bucket"])
         #set_current_bucket_to(credentials["bucket"])

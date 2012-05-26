@@ -47,7 +47,7 @@ class Ruhoh
     end
 
     def self.relative_path(filename)
-      filename.gsub(Regexp.new("^#{Ruhoh.paths.site_source}/"), '')
+      filename.gsub(Regexp.new("^#{Ruhoh.paths.base}/"), '')
     end
         
     def self.report(name, collection, invalid)

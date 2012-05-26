@@ -48,7 +48,7 @@ class Ruhoh
     # Converters (markdown) always choke on the templating language.
     def process_content
       self.ensure_id
-      data = Ruhoh::Utils.parse_file(Ruhoh.paths.site_source, @path)
+      data = Ruhoh::Utils.parse_file(Ruhoh.paths.base, @path)
       @content = @templater.parse(data['content'], self)
       @content = @converter.convert(self)
     end

@@ -11,26 +11,26 @@ class Ruhoh
     def self.start
       Ruhoh.ensure_setup
       Ruhoh::Friend.say {
-        plain "=> Start watching: #{Ruhoh.paths.site_source}"
+        plain "=> Start watching: #{Ruhoh.paths.base}"
       }
       glob = ''
     
       # Watch all files + all sub directories except for special folders e.g '_database'
-      Dir.chdir(Ruhoh.paths.site_source) {
+      Dir.chdir(Ruhoh.paths.base) {
         dirs = Dir['*'].select { |x| File.directory?(x) }
         dirs = dirs.map { |x| "#{x}/**/*" }
         dirs += ['*']
         glob = dirs
       }
 
-      dw = DirectoryWatcher.new(Ruhoh.paths.site_source, {
+      dw = DirectoryWatcher.new(Ruhoh.paths.base, {
         :glob => glob, 
         :pre_load => true
       })
       dw.interval = 1
       dw.add_observer {|*args| 
         args.each {|event|
-          path = event['path'].gsub(Ruhoh.paths.site_source, '')
+          path = event['path'].gsub(Ruhoh.paths.base, '')
 
           if path == "/#{Ruhoh.names.site_data}"
             type = "Site"

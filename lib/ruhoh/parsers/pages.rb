@@ -13,7 +13,7 @@ class Ruhoh
         pages.each do |filename|
           id = self.make_id(filename)
           parsed_page = ''
-          FileUtils.cd(Ruhoh.paths.site_source) { parsed_page = Ruhoh::Utils.parse_file(filename) }
+          FileUtils.cd(Ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_file(filename) }
           
           parsed_page['data']['id']     = id
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
@@ -30,7 +30,7 @@ class Ruhoh
       end
 
       def self.files
-        FileUtils.cd(Ruhoh.paths.site_source) {
+        FileUtils.cd(Ruhoh.paths.base) {
           return Dir["#{Ruhoh.names.pages}/**/*.*"].select { |filename|
             next unless self.is_valid_page?(filename)
             true
