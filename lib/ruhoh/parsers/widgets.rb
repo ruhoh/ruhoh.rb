@@ -1,7 +1,13 @@
 class Ruhoh
   module Parsers
     module Widgets
-    
+      WidgetStructure = Struct.new(
+        :name,
+        :config,
+        :scripts,
+        :layout
+      )
+
       # Process available widgets into widget dictionary.
       #
       # Returns Dictionary of widget data.
@@ -9,12 +15,12 @@ class Ruhoh
         widgets = {}
         self.widgets.each do |name|
           config = self.process_config(name)
-          widgets[name] = {
-            'name' => name,
-            'config' => config,
-            'scripts' => self.process_scripts(config, name),
-            'layout' => self.process_layout(config, name)
-          }
+          widgets[name] = WidgetStructure.new(
+            name,
+            config,
+            self.process_scripts(config, name),
+            self.process_layout(config, name)
+          )
         end
         Ruhoh::Utils.report('Widgets', widgets, [])
 

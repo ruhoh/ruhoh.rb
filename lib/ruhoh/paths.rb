@@ -33,7 +33,7 @@ class Ruhoh
     )
     
     def self.generate(config, site_source)
-      paths                     = OpenStruct.new
+      paths                     = Paths.new
       paths.site_source         = site_source
       paths.config              = File.join(site_source, Ruhoh.names.base_config)
       paths.pages               = File.join(site_source, Ruhoh.names.pages)
