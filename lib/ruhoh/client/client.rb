@@ -41,7 +41,7 @@ class Ruhoh
     # Internal: Show Client Utility help documentation.
     def help
       file = File.join(Ruhoh::Root, 'lib', 'ruhoh', 'client', 'help.yml')
-      content = Ruhoh::Utils.parse_file_as_yaml(file)
+      content = Ruhoh::Utils.parse_yaml_file(file)
       options = @opt_parser.help
       Ruhoh::Friend.say { 
         plain content['description']

@@ -5,7 +5,7 @@ module Config
     describe "#setup_config" do
       context "Invalid _config.yml file" do
         it 'should log error and return false if theme is not specified.' do
-          Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({})
+          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({})
           
           Ruhoh.log.should_receive(:error)
           Ruhoh::Config.generate('config.yml').should be_false
@@ -16,7 +16,7 @@ module Config
           custom_permalink = '/my/custom/link'
           custom_theme = 'table'
           custom_exclude = ['.secret']
-          Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({
+          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
             "permalink" => custom_permalink, 
             "theme" => custom_theme,
             'exclude' => custom_exclude
@@ -32,7 +32,7 @@ module Config
     describe "#setup_filters" do
       it 'should add custom exclude filters to the filters variable' do
         custom_exclude = ['.secret', '^test']
-        Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({
+        Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
           'theme' => "twitter",
           'exclude' => custom_exclude
         })

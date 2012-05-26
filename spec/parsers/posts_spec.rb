@@ -5,7 +5,7 @@ module Posts
   describe Ruhoh::Parsers::Posts do
     
     before(:each) do
-      Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
+      Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
       Ruhoh.setup(:source => SampleSitePath)
     end
     

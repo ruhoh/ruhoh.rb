@@ -5,7 +5,7 @@ class Ruhoh
     FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
     ContentRegex = /\{\{\s*content\s*\}\}/i
     
-    def self.parse_file_as_yaml(*args)
+    def self.parse_yaml_file(*args)
       filepath = File.__send__ :join, args
       return nil unless File.exist? filepath
 

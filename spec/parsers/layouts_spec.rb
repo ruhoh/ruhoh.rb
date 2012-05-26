@@ -5,7 +5,7 @@ module Layouts
     before(:each) do
       expected_theme = "twitter"
       
-      Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => expected_theme})
+      Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => expected_theme})
       Ruhoh.setup(:source => SampleSitePath)
 
       the_layouts_dir = Ruhoh.paths.theme_layouts

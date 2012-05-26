@@ -7,7 +7,7 @@ module Pages
     describe "#generate" do
       
       before(:each) do
-        Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
+        Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
         Ruhoh.setup(:source => SampleSitePath)
         
         the_pages_dir = Ruhoh.paths.pages
@@ -54,7 +54,7 @@ title: #{page_name} (test)
       context "No user specified exclusions in config." do
         
         before(:each) do
-          Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({'theme' => "twitter"})
+          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
           Ruhoh.setup(:source => SampleSitePath)
         end
         
@@ -74,7 +74,7 @@ title: #{page_name} (test)
         
         it "should return false for a page whose filepath matches a page exclude regular expression." do
           filepath = 'about.md'
-          Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({
+          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
             'theme' => "twitter",
             'pages' => {'exclude' => "#{filepath}$"}
           })
@@ -86,7 +86,7 @@ title: #{page_name} (test)
           filepath1 = 'test/about.md'
           filepath2 = 'test/yay.md'
           filepath3 = 'vest/yay.md'
-          Ruhoh::Utils.should_receive(:parse_file_as_yaml).and_return({
+          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
             'theme' => "twitter",
             'pages' => {'exclude' => ['^test', 'blah'] }
           })

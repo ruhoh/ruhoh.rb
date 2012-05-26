@@ -6,7 +6,7 @@ module DB
     let(:whitelist){ Ruhoh::DB::WhiteList }
     
     before(:each) do
-      Ruhoh::Utils.stub(:parse_file_as_yaml).and_return({'theme' => "twitter"})
+      Ruhoh::Utils.stub(:parse_yaml_file).and_return({'theme' => "twitter"})
       Ruhoh.setup(:source => SampleSitePath)
     end
     
