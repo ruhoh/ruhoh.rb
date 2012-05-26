@@ -54,7 +54,7 @@ class Ruhoh
         scripts = theme_config[Ruhoh.names.scripts.to_s] || []
         Ruhoh::DB.widgets.each_value do |widget|
           next unless widget[Ruhoh.names.scripts.to_s]
-          scripts += Array(widget[Ruhoh.names.scripts.to_s]).map! {|path| 
+          scripts += Array(widget[Ruhoh.names.scripts.to_s]).map {|path| 
             [Ruhoh.urls.widgets, widget['name'], Ruhoh.names.scripts, path].join('/')
           }
         end
