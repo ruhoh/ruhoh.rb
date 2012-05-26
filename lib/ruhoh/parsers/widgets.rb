@@ -68,16 +68,23 @@ class Ruhoh
       end
       
       # Determine and process the correct widget layout.
-      # The layout may be configured by the user or system.
+      # The layout may be manually configured by the user,
+      # else system defaults will be used.
+      # Layouts cascade from: theme -> blog -> system
       #
       # Returns String of rendered layout content.
       def self.process_layout(config, widget_name)
-        layout = File.join(Ruhoh.paths.widgets, widget_name, 'layouts', "#{config['layout']}.html")
-        unless File.exist?(layout)
-          layout = File.join(Ruhoh.paths.system_widgets, widget_name, 'layouts', "#{config['layout']}.html")
+        layout = nil
+        layout_path = File.join(widget_name, 'layouts', "#{config['layout']}.html")
+        [
+          File.join(Ruhoh.paths.theme_widgets, layout_path),
+          File.join(Ruhoh.paths.widgets, layout_path),
+          File.join(Ruhoh.paths.system_widgets, layout_path)
+        ].each do |path|
+          layout = path and break if File.exist?(path)
         end
-        return '' unless File.exist?(layout)
 
+        return '' unless layout
         content = File.open(layout, 'r:UTF-8') { |f| f.read }
         Mustache.render(content, {'config' => config})
       end
