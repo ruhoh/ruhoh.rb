@@ -1,6 +1,7 @@
 class Ruhoh
   module Parsers
     module Assets
+      AssetStructure = Struct.new(:stylesheets, :scripts)
 
       def self.generate
         if File.exist?(Ruhoh.paths.theme_config)
@@ -8,10 +9,8 @@ class Ruhoh
         else
           theme_config = nil
         end
-        {
-          Ruhoh.names.stylesheets.to_s => self.stylesheets(theme_config),
-          Ruhoh.names.scripts.to_s => self.scripts(theme_config)
-        }
+        
+        AssetStructure.new(self.stylesheets(theme_config), self.scripts(theme_config))
       end
       
       # Collect all the stylesheets.

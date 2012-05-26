@@ -10,6 +10,24 @@ class Ruhoh
         p
       end
       
+      def assets
+        buffer = ''
+        master_layout = self.context['page']['master_layout']
+        sub_layout = self.context['page']['sub_layout']
+        stylesheets = Ruhoh::DB.assets.stylesheets[master_layout] || []
+        stylesheets += Ruhoh::DB.assets.stylesheets[sub_layout] || []
+        stylesheets += Ruhoh::DB.assets.stylesheets[Ruhoh.names.widgets] || []
+        stylesheets.each do |url|
+          buffer += "<link href=\"#{url}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
+        end
+        buffer += "\n"
+        Ruhoh::DB.assets.scripts.each do |s|
+          buffer += "<script src=\"#{s}\"></script>\n"
+        end
+        
+        buffer
+      end
+      
       def pages
         pages = []
         self.context['db']['pages'].each_value {|page| pages << page }
