@@ -14,15 +14,18 @@ class Ruhoh
         buffer = ''
         master_layout = self.context['page']['master_layout']
         sub_layout = self.context['page']['sub_layout']
-        stylesheets = Ruhoh::DB.assets.stylesheets[master_layout] || []
-        stylesheets += Ruhoh::DB.assets.stylesheets[sub_layout] || []
-        stylesheets += Ruhoh::DB.assets.stylesheets[Ruhoh.names.widgets] || []
-        stylesheets.each do |url|
-          buffer += "<link href=\"#{url}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
+        stylesheets = Ruhoh::DB.stylesheets[master_layout] || []
+        stylesheets += Ruhoh::DB.stylesheets[sub_layout] || []
+        stylesheets += Ruhoh::DB.stylesheets[Ruhoh.names.widgets] || []
+        stylesheets.each do |style|
+          buffer += "<link href=\"#{style['url']}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
         end
         buffer += "\n"
-        Ruhoh::DB.assets.scripts.each do |s|
-          buffer += "<script src=\"#{s}\"></script>\n"
+        scripts = Ruhoh::DB.scripts[master_layout] || []
+        scripts += Ruhoh::DB.scripts[sub_layout] || []
+        scripts += Ruhoh::DB.scripts[Ruhoh.names.widgets] || []
+        scripts.each do |script|
+          buffer += "<script src=\"#{script['url']}\"></script>\n"
         end
         
         buffer

@@ -67,11 +67,18 @@ module DB
         Ruhoh::DB.widgets.should == {'test' => 'hi'}
       end
       
-      it "should run the assets parser when updating :assets" do
-        Ruhoh::Parsers::Assets.should_receive(:generate).and_return({'test' => 'hi'})
-        Ruhoh::DB.update(:assets)
-        Ruhoh::DB.assets.should == {'test' => 'hi'}
+      it "should run the stylesheets parser when updating :stylesheets" do
+        Ruhoh::Parsers::Stylesheets.should_receive(:generate).and_return({'test' => 'hi'})
+        Ruhoh::DB.update(:stylesheets)
+        Ruhoh::DB.stylesheets.should == {'test' => 'hi'}
       end
+
+      it "should run the scripts parser when updating :scripts" do
+        Ruhoh::Parsers::Scripts.should_receive(:generate).and_return({'test' => 'hi'})
+        Ruhoh::DB.update(:scripts)
+        Ruhoh::DB.scripts.should == {'test' => 'hi'}
+      end
+      
     end
     
     describe "#update_all" do

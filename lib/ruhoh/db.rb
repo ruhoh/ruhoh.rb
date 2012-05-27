@@ -1,7 +1,7 @@
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
-    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :assets]
+    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :stylesheets, :scripts]
 
     class << self
       self.__send__ :attr_reader, *WhiteList
@@ -23,8 +23,10 @@ class Ruhoh
             Ruhoh::Parsers::Partials.generate
           when :widgets
             Ruhoh::Parsers::Widgets.generate
-          when :assets
-            Ruhoh::Parsers::Assets.generate
+          when :stylesheets
+            Ruhoh::Parsers::Stylesheets.generate
+          when :scripts
+            Ruhoh::Parsers::Scripts.generate
           else
             raise "Data type: '#{name}' is not a valid data type."
           end
