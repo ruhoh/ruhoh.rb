@@ -30,34 +30,35 @@ class Ruhoh
       dw.interval = 1
       dw.add_observer {|*args| 
         args.each {|event|
-          path = event['path'].gsub(Ruhoh.paths.base, '')
+          path = event['path'].gsub(Ruhoh.paths.base + '/', '')
 
-          if path == "/#{Ruhoh.names.site_data}"
+          if path == Ruhoh.names.site_data
             type = "Site"
             Ruhoh::DB.update(:site)
-          elsif path == "/#{Ruhoh.names.config_data}"
+          elsif path == Ruhoh.names.config_data
             type = "Config"
             Ruhoh::DB.update(:site)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.pages}")
+          elsif path =~ Regexp.new("^#{Ruhoh.names.pages}")
             type = "Pages"
             Ruhoh::DB.update(:pages)
             Ruhoh::DB.update(:routes)
-          elsif path =~ Regexp.new("^\/?(#{Ruhoh.names.partials}|#{Ruhoh.names.themes}\/#{Ruhoh.config.theme}\/#{Ruhoh.names.partials})")
+          elsif path =~ Regexp.new("^(#{Ruhoh.names.partials}|#{Ruhoh.names.themes}\/#{Ruhoh.config.theme}\/#{Ruhoh.names.partials})")
             type = "Partials"
             Ruhoh::DB.update(:partials)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.posts}")
+          elsif path =~ Regexp.new("^#{Ruhoh.names.posts}")
             type = "Posts"
             Ruhoh::DB.update(:posts)
             Ruhoh::DB.update(:routes)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.themes}/#{Ruhoh.config.theme}/#{Ruhoh.names.layouts}")
+          elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{Ruhoh.config.theme}\/#{Ruhoh.names.layouts}")
             type = "Layouts"
             Ruhoh::DB.update(:layouts)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.themes}/#{Ruhoh.config.theme}")
-            type = "Themes"
-            Ruhoh::DB.update(:assets)
+          elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{Ruhoh.config.theme}")
+            type = "Theme"
+            Ruhoh::DB.update(:stylesheets)
+            Ruhoh::DB.update(:scripts)
             Ruhoh::DB.update(:widgets)
             Ruhoh::DB.update(:layouts)
-          elsif path =~ Regexp.new("^\/?#{Ruhoh.names.widgets}")
+          elsif path =~ Regexp.new("^#{Ruhoh.names.widgets}")
             type = "Widgets"
             Ruhoh::DB.update(:widgets)
           else
