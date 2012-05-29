@@ -37,7 +37,7 @@ class Ruhoh
         template = path and break if File.exist?(path)
       end
       template = File.open(template, 'r:UTF-8') {|f| f.read }
-      output = Ruhoh::Templaters::Base.parse(template, nil)
+      output = @page.templater.render(template, Ruhoh::DB.payload)
       
       [200, {'Content-Type' => 'text/html'}, [output]]
     end

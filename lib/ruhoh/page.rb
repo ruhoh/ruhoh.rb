@@ -1,11 +1,10 @@
 class Ruhoh
   class Page
-    attr_reader :id, :data, :content, :sub_layout, :master_layout
-    attr_accessor :templater, :converter
+    attr_reader :id, :data, :sub_layout, :master_layout
+    attr_accessor :templater
 
     def initialize
-      @templater = Ruhoh::Templaters::Base
-      @converter = Ruhoh::Converter
+      @templater = Ruhoh::Templaters::RMustache
     end
     
     # Public: Change this page using an id.
@@ -26,8 +25,7 @@ class Ruhoh
     def render
       self.ensure_id
       self.process_layouts
-      self.process_content
-      @templater.render(self)
+      @templater.render(self.expand_layouts, self.payload)
     end
     
     def process_layouts
@@ -41,26 +39,44 @@ class Ruhoh
         @master_layout = Ruhoh::DB.layouts[@sub_layout['data']['layout']]
         raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
       end
-    end
-    
-    # We need to pre-process the content data
-    # in order to invoke converters on the result.
-    # Converters (markdown) always choke on the templating language.
-    def process_content
-      self.ensure_id
-      data = Ruhoh::Utils.parse_file(Ruhoh.paths.base, @path)
-      @content = @templater.parse(data['content'], self)
-      @content = @converter.convert(self)
-    end
-    
-    # Public: Return page attributes suitable for inclusion in the
-    # 'payload' of the given templater.
-    def attributes
-      self.ensure_id
-      @data['content'] = @content
+      
       @data['sub_layout'] = @sub_layout['id'] rescue nil
       @data['master_layout'] = @master_layout['id'] rescue nil
       @data
+    end
+    
+    # Expand the layout(s).
+    # Pages may have a single master_layout, a master_layout + sub_layout, or no layout.
+    def expand_layouts
+      if @sub_layout
+        layout = @sub_layout['content']
+
+        # If a master_layout is found we need to process the sub_layout
+        # into the master_layout using mustache.
+        if @master_layout && @master_layout['content']
+          payload = self.payload
+          payload['content'] = layout
+          layout = @templater.render(@master_layout['content'], payload)
+        end
+      else
+        # Minimum layout if no layout defined.
+        layout = '{{{content}}}' 
+      end
+      
+      layout
+    end
+    
+    def payload
+      self.ensure_id
+      payload = Ruhoh::DB.payload.dup
+      payload['page'] = @data
+      payload
+    end
+    
+    # Provide access to the page content.
+    def content
+      self.ensure_id
+      Ruhoh::Utils.parse_file(Ruhoh.paths.base, @path)['content']
     end
     
     # Public: Formats the path to the compiled file based on the URL.

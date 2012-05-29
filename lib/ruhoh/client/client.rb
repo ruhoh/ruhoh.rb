@@ -238,7 +238,7 @@ class Ruhoh
       require 'pp'
       Ruhoh::DB.update_all
       Ruhoh::Friend.say {
-        plain Ruhoh::Templaters::Base.build_payload.pretty_inspect
+        plain Ruhoh::DB.payload.pretty_inspect
       }
     end
     
