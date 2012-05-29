@@ -32,8 +32,12 @@ class Ruhoh
       # Returns Array of widget names.
       def self.widgets
         names = []
-        FileUtils.cd(Ruhoh.paths.widgets) { names += Dir["*"] }
-        FileUtils.cd(Ruhoh.paths.system_widgets) { names += Dir["*"] }
+        if FileTest.directory?(Ruhoh.paths.widgets)
+          FileUtils.cd(Ruhoh.paths.widgets) { names += Dir["*"] }
+        end
+        if FileTest.directory?(Ruhoh.paths.system_widgets)
+          FileUtils.cd(Ruhoh.paths.system_widgets) { names += Dir["*"] }
+        end
         names.uniq!
         names
       end
