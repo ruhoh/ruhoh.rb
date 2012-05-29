@@ -17,6 +17,7 @@ class Ruhoh
       end
 
       def self.files
+        return [] unless FileTest.directory?(Ruhoh.paths.theme_layouts)
         FileUtils.cd(Ruhoh.paths.theme_layouts) {
           return Dir["**/*.*"].select { |filename|
             next if FileTest.directory?(filename)

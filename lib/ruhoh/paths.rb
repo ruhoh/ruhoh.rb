@@ -48,6 +48,11 @@ class Ruhoh
       paths.plugins             = File.join(base, Ruhoh.names.plugins)
       
       paths.theme               = File.join(base, Ruhoh.names.themes, config.theme)
+      unless FileTest.directory?(paths.theme)
+        Ruhoh.log.error("Theme directory does not exist: #{paths.theme}")
+        return false
+      end
+      
       paths.theme_dashboard_file= File.join(paths.theme, Ruhoh.names.dashboard_file)
       paths.theme_config_data   = File.join(paths.theme, Ruhoh.names.theme_config)
       paths.theme_layouts       = File.join(paths.theme, Ruhoh.names.layouts)

@@ -15,13 +15,13 @@ class Ruhoh
     def self.generate(path_to_config)
       site_config = Ruhoh::Utils.parse_yaml_file(path_to_config)
       unless site_config
-        Ruhoh.log.error("Empty site_config.\nEnsure ./#{path_to_config} exists and contains valid YAML")
+        Ruhoh.log.error("Empty site_config.\nEnsure ./#{Ruhoh.names.config_data} exists and contains valid YAML")
         return false
       end
 
       theme = site_config['theme'] ? site_config['theme'].to_s.gsub(/\s/, '') : ''
       if theme.empty?
-        Ruhoh.log.error("Theme not specified in _config.yml")
+        Ruhoh.log.error("Theme not specified in #{Ruhoh.names.config_data}")
         return false
       end
       
