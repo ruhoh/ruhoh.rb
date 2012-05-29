@@ -35,7 +35,7 @@ class Ruhoh
           id = "#{Ruhoh.names.pages}/#{id}"
         end
 
-        data = Ruhoh::Utils.parse_file(Ruhoh.paths.base, id)
+        data = Ruhoh::Utils.parse_page_file(Ruhoh.paths.base, id)
         content = self.render(data['content'])
         Ruhoh::Converter.convert(content, id)
       end

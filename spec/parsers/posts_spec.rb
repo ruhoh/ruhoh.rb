@@ -46,7 +46,7 @@ module Posts
         it "should omit the post file and record it as invalid post" do
           post_path = 'test/hello-world.md'
           Ruhoh::Parsers::Posts.should_receive(:files).and_return([post_path])
-          Ruhoh::Utils.stub(:parse_file).and_return({"data" => {"date" => "2012-01-01"}})
+          Ruhoh::Utils.stub(:parse_page_file).and_return({"data" => {"date" => "2012-01-01"}})
           
           dictionary = Ruhoh::Parsers::Posts.process
           
@@ -58,7 +58,7 @@ module Posts
         it "should omit the post file and record it as invalid post" do
           post_path = 'test/2012-51-01-hello-world.md'
           Ruhoh::Parsers::Posts.should_receive(:files).and_return([post_path])
-          Ruhoh::Utils.stub(:parse_file).and_return({"data" => {"title" => "meep"}})
+          Ruhoh::Utils.stub(:parse_page_file).and_return({"data" => {"title" => "meep"}})
           
           dictionary = Ruhoh::Parsers::Posts.process
           
@@ -70,7 +70,7 @@ module Posts
         it "should omit the post file and record it as invalid post" do
           post_path = 'test/2012-01-01-hello-world.md'
           Ruhoh::Parsers::Posts.should_receive(:files).and_return([post_path])
-          Ruhoh::Utils.stub(:parse_file).and_return({"data" => {"date" => "2012-51-01"}})
+          Ruhoh::Utils.stub(:parse_page_file).and_return({"data" => {"date" => "2012-51-01"}})
           
           dictionary = Ruhoh::Parsers::Posts.process
           
@@ -79,10 +79,10 @@ module Posts
       end
     end
     
-    describe "#parse_filename" do
+    describe "#parse_page_filename" do
       it "should parse a post filename with DATE into corresponding metadata" do
         filename = '_posts/2011-10-10-my-post-title.md'
-        data = Ruhoh::Parsers::Posts.parse_filename(filename)
+        data = Ruhoh::Parsers::Posts.parse_page_filename(filename)
 
         data['path'].should == "_posts/"
         data['date'].should == "2011-10-10"
@@ -92,7 +92,7 @@ module Posts
       
       it "should parse a post filename without DATE into corresponding metadata" do
         filename = '_posts/my-post-title.md'
-        data = Ruhoh::Parsers::Posts.parse_filename(filename)
+        data = Ruhoh::Parsers::Posts.parse_page_filename(filename)
         data['path'].should == "_posts/"
         data['date'].should == nil
         data['slug'].should == "my-post-title"
@@ -101,7 +101,7 @@ module Posts
       
       it "should return a blank hash if the filename has no extension and therefore invalid" do
         filename = '_posts/my-post-title'
-        data = Ruhoh::Parsers::Posts.parse_filename(filename)
+        data = Ruhoh::Parsers::Posts.parse_page_filename(filename)
         data.should == {}
       end
     end

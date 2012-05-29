@@ -119,7 +119,7 @@ class Ruhoh
     def titleize
        Ruhoh::Parsers::Posts.files.each do |file|
           next unless File.basename(file) =~ /^untitled/
-          parsed_page = Ruhoh::Utils.parse_file(file)
+          parsed_page = Ruhoh::Utils.parse_page_file(file)
           next unless parsed_page['data']['title']
           new_name = Ruhoh::Parsers::Posts.to_slug(parsed_page['data']['title'])
           new_file = File.join(File.dirname(file), "#{new_name}#{File.extname(file)}")

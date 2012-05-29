@@ -13,8 +13,7 @@ module Page
       it "should setup default templater and converter" do
         page = Ruhoh::Page.new
         
-        page.templater.should == Ruhoh::Templaters::Base
-        page.converter.should == Ruhoh::Converter
+        page.templater.should == Ruhoh::Templaters::RMustache
       end
     end
 
@@ -78,24 +77,30 @@ module Page
         lambda{ page.render }.should raise_error
       end
       
-      it "should process layouts, content, then render using the @templater" do
+      it "should process layouts, then render using the @templater" do
         Ruhoh::DB.stub(:pages).and_return({"blah.md" => {}})
         page.change('blah.md')
-        
+        layout = "{{{content}}}"
+        payload = {}
         page.should_receive(:process_layouts)
-        page.should_receive(:process_content)
-        page.templater.should_receive(:render).with(page)
+        page.should_receive(:expand_layouts).and_return(layout)
+        page.should_receive(:payload).and_return(payload)
+        page.templater.should_receive(:render).with(layout, payload)
         page.render
       end
     end
     
     pending "#process_layouts"
+
+    pending "#expand_layouts"
+
+    pending "#payload"
     
-    describe "#process_content" do
+    pending "#content" do
       let(:page){ Ruhoh::Page.new }
 
       it "should raise error if id not set" do
-        lambda{ page.process_content }.should raise_error
+        lambda{ page.content }.should raise_error
       end
       
       context "Id has been set" do
@@ -106,42 +111,25 @@ module Page
         end
 
         it "should raise an error if the page file is malformed" do
-          Ruhoh::Utils.should_receive(:parse_file).and_return({})
-          lambda { page.process_content }.should raise_error
+          Ruhoh::Utils.should_receive(:parse_page_file).and_return({})
+          lambda { page.content }.should raise_error
         end
       
         it "should send the files content to the templater" do
-          Ruhoh::Utils.should_receive(:parse_file).and_return({"content" => "meep"})
+          Ruhoh::Utils.should_receive(:parse_page_file).and_return({"content" => "meep"})
           page.templater.should_receive(:parse).with("meep", page)
           page.converter.stub(:convert)
-          page.process_content
+          page.content
         end
       
         it "should send the page to the converter, then set the result as @content" do
-          Ruhoh::Utils.should_receive(:parse_file).and_return({"content" => "meep"})
+          Ruhoh::Utils.should_receive(:parse_page_file).and_return({"content" => "meep"})
           page.templater.stub(:parse)
           page.converter.should_receive(:convert).with(page).and_return("yay")
-          page.process_content
+          page.content
           page.content.should == "yay"
         end
       end
-    end
-  
-    describe "#attributes" do
-      let(:page){ Ruhoh::Page.new }
-      
-      it "should raise error if id not set" do
-        lambda{ page.attributes }.should raise_error
-      end
-      
-      it "should be a hash with content value set" do
-        Ruhoh::DB.stub(:pages).and_return({"blah.md" => {}})
-        page.change('blah.md')
-
-        page.attributes.should be_a_kind_of Hash
-        page.attributes.should have_key("content")
-      end
-      
     end
   
     describe "#compiled_path" do

@@ -1,9 +1,7 @@
 class Ruhoh
-  
   module Utils
     
     FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
-    ContentRegex = /\{\{\s*content\s*\}\}/i
     
     def self.parse_yaml_file(*args)
       filepath = File.__send__ :join, args
@@ -17,7 +15,7 @@ class Ruhoh
       nil
     end
     
-    def self.parse_file(*args)
+    def self.parse_page_file(*args)
       path = File.__send__(:join, args)
       raise "File not found: #{path}" unless File.exist?(path)
 
@@ -26,7 +24,8 @@ class Ruhoh
       front_matter = page.match(FMregex)
       if front_matter
         data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
-        data = self.format_meta(data)
+        data['categories'] = Array(data['categories'])
+        data['tags'] = Array(data['tags'])
       else
         data = {}
       end
@@ -40,12 +39,26 @@ class Ruhoh
       nil
     end
     
-    def self.format_meta(data)
-      data['categories'] = Array(data['categories'])
-      data['tags'] = Array(data['tags'])
-      data
-    end
+    def self.parse_layout_file(*args)
+      path = File.__send__(:join, args)
+      raise "Layout file not found: #{path}" unless File.exist?(path)
+      data = {}
+      page = File.open(path, 'r:UTF-8') {|f| f.read }
 
+      front_matter = page.match(FMregex)
+      if front_matter
+        data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
+      end
+      
+      { 
+        "data" => data,
+        "content" => page.gsub(FMregex, '')
+      }
+    rescue Psych::SyntaxError => e
+      Ruhoh.log.error("ERROR in #{path}: #{e.message}")
+      nil
+    end
+    
     def self.relative_path(filename)
       filename.gsub(Regexp.new("^#{Ruhoh.paths.base}/"), '')
     end
@@ -84,5 +97,4 @@ class Ruhoh
     end
     
   end
-  
 end #Ruhoh

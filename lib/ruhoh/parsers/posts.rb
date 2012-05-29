@@ -30,10 +30,10 @@ class Ruhoh
 
         self.files.each do |filename|
           parsed_page = ''
-          FileUtils.cd(Ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_file(filename) }
+          FileUtils.cd(Ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_page_file(filename) }
           data = parsed_page['data']
           
-          filename_data = self.parse_filename(filename)
+          filename_data = self.parse_page_filename(filename)
           if filename_data.empty?
             error = "Invalid Filename Format. Format should be: my-post-title.ext"
             invalid << [filename, error] ; next
@@ -99,7 +99,7 @@ class Ruhoh
         ordered_posts
       end
       
-      def self.parse_filename(filename)
+      def self.parse_page_filename(filename)
         data = *filename.match(DateMatcher)
         data = *filename.match(Matcher) if data.empty?
         return {} if data.empty?

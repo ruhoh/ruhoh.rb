@@ -76,7 +76,7 @@ class Ruhoh
     # Provide access to the page content.
     def content
       self.ensure_id
-      Ruhoh::Utils.parse_file(Ruhoh.paths.base, @path)['content']
+      Ruhoh::Utils.parse_page_file(Ruhoh.paths.base, @path)['content']
     end
     
     # Public: Formats the path to the compiled file based on the URL.

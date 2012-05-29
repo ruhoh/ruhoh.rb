@@ -13,7 +13,7 @@ class Ruhoh
         pages.each do |filename|
           id = self.make_id(filename)
           parsed_page = ''
-          FileUtils.cd(Ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_file(filename) }
+          FileUtils.cd(Ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_page_file(filename) }
           
           parsed_page['data']['id']     = id
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
