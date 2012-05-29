@@ -1,18 +1,18 @@
 class Ruhoh
   module Converter
     
-    def self.convert(page)
-      extension = File.extname(page.data['id']).downcase
+    def self.convert(content, id)
+      extension = File.extname(id).downcase
       
       Ruhoh::Converter.constants.each {|c|
         converter = Ruhoh::Converter.const_get(c)
         next unless converter.respond_to?(:convert)
         next unless converter.respond_to?(:extensions)
         next unless Array(converter.extensions).include?(extension) 
-        return converter.convert(page)
+        return converter.convert(content)
       }
 
-      page.content
+      content
     end
     
     # Return an Array of all regestered extensions
