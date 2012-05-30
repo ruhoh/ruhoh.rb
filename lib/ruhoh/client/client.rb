@@ -199,7 +199,7 @@ class Ruhoh
         exit
       } if name.nil?
       
-      filename = File.join(Ruhoh.paths.layouts, name.gsub(/\s/, '-').downcase) + ".html"
+      filename = File.join(Ruhoh.paths.theme_layouts, name.gsub(/\s/, '-').downcase) + ".html"
       if File.exist?(filename)
         abort("Create new layout: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
       end
