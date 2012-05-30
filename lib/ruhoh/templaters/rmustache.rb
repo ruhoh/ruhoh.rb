@@ -1,7 +1,10 @@
+require 'ruhoh/templaters/asset_helpers'
+
 class Ruhoh
   module Templaters  
     class RMustache < Mustache
       include Ruhoh::Templaters::Helpers
+      include Ruhoh::Templaters::AssetHelpers
       
       class RContext < Context
     
