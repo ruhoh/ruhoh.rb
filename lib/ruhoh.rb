@@ -66,6 +66,8 @@ class Ruhoh
     :widgets => 'widgets',
     :widget_config => 'config.yml'
   }
+  @names = OpenStruct.new(Names)
+  @root = Root
   
   # Public: Setup Ruhoh utilities relative to the current application directory.
   # Returns boolean on success/failure
@@ -74,8 +76,6 @@ class Ruhoh
     @log.log_file = opts[:log_file] if opts[:log_file]
     @base = opts[:source] if opts[:source]
     
-    @root     = Root
-    @names    = OpenStruct.new(Names)
     @config   = Ruhoh::Config.generate(@names.config_data)
     @paths    = Ruhoh::Paths.generate(@config, @base)
     @urls     = Ruhoh::Urls.generate(@config)

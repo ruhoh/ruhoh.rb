@@ -48,11 +48,6 @@ class Ruhoh
       paths.plugins             = File.join(base, Ruhoh.names.plugins)
       
       paths.theme               = File.join(base, Ruhoh.names.themes, config.theme)
-      unless FileTest.directory?(paths.theme)
-        Ruhoh.log.error("Theme directory does not exist: #{paths.theme}")
-        return false
-      end
-      
       paths.theme_dashboard_file= File.join(paths.theme, Ruhoh.names.dashboard_file)
       paths.theme_config_data   = File.join(paths.theme, Ruhoh.names.theme_config)
       paths.theme_layouts       = File.join(paths.theme, Ruhoh.names.layouts)
@@ -61,11 +56,20 @@ class Ruhoh
       paths.theme_media         = File.join(paths.theme, Ruhoh.names.media)
       paths.theme_widgets       = File.join(paths.theme, Ruhoh.names.widgets)
       paths.theme_partials      = File.join(paths.theme, Ruhoh.names.partials)
-
+      
+      return false unless self.theme_is_valid?(paths)
+      
       paths.system_dashboard_file = File.join(Ruhoh::Root, Ruhoh.names.dashboard_file)
       paths.system_widgets      = File.join(Ruhoh::Root, Ruhoh.names.widgets)
 
       paths
     end
+    
+    def self.theme_is_valid?(paths)
+      return true if FileTest.directory?(paths.theme)
+      Ruhoh.log.error("Theme directory does not exist: #{paths.theme}")
+      return false
+    end
+    
   end #Paths
 end #Ruhoh
