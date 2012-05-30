@@ -12,10 +12,14 @@ class Ruhoh
     #   run Ruhoh::Program.preview
     #
     # Returns: A new Rack builder object which should work inside config.ru
-    def self.preview(watch=true)
+    def self.preview(opts={})
+      opts[:watch] ||= true
+      opts[:env] ||= 'development'
+      
       Ruhoh.setup
+      Ruhoh.config.env = opts[:env]
       Ruhoh::DB.update_all
-      Ruhoh::Watch.start if watch
+      Ruhoh::Watch.start if opts[:watch]
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions
