@@ -26,14 +26,8 @@ class Ruhoh
         end
         
         # Serve theme assets
-        map Ruhoh.urls.theme_stylesheets do
-          run Rack::File.new(Ruhoh.paths.theme_stylesheets)
-        end
-        map Ruhoh.urls.theme_scripts do
-          run Rack::File.new(Ruhoh.paths.theme_scripts)
-        end
-        map Ruhoh.urls.theme_widgets do
-          run Rack::File.new(Ruhoh.paths.theme_widgets)
+        map Ruhoh.urls.theme do
+          run Rack::File.new(Ruhoh.paths.theme)
         end
         
         # Serve widget javascripts
