@@ -29,10 +29,11 @@ class Ruhoh
       config.theme = theme
       config.env = site_config['env'] || nil
       
-      config.posts_permalink = site_config['permalink']
+      config.posts_permalink = site_config['posts']['permalink'] rescue nil
       config.posts_layout = site_config['posts']['layout'] rescue nil
       config.posts_layout = 'post' if config.posts_layout.nil?
-      config.posts_exclude = Array(site_config['exclude'] || nil)
+      excluded_posts = site_config['posts']['exclude'] rescue nil
+      config.posts_exclude = Array(excluded_posts)
       config.posts_exclude = config.posts_exclude.map {|node| Regexp.new(node) }
       
       config.pages_permalink = site_config['pages']['permalink'] rescue nil
