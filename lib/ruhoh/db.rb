@@ -35,6 +35,13 @@ class Ruhoh
         )
       end
       
+      # Always regenerate a fresh payload since it
+      # references other generated data.
+      def payload
+        self.update(:payload)
+        @payload
+      end
+      
       def all_pages
         self.posts['dictionary'].merge(self.pages)
       end
