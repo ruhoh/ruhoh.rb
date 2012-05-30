@@ -3,7 +3,6 @@ class Ruhoh
 
     # TODO: seems rather dangerous to delete the incoming target directory?
     def self.compile(target_directory = nil, page = nil)
-      Ruhoh.config.env ||= 'production'
       Ruhoh::Friend.say { plain "Compiling for environment: '#{Ruhoh.config.env}'" }
       target = target_directory || "./#{Ruhoh.names.compiled}"
       page = page || Ruhoh::Page.new

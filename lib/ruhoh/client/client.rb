@@ -17,7 +17,7 @@ class Ruhoh
         exit 
       } unless self.respond_to?(cmd)
 
-      Ruhoh.setup unless ['help','blog'].include?(cmd)
+      Ruhoh.setup unless ['help','blog','compile'].include?(cmd)
 
       self.__send__(cmd)
     end  
@@ -130,8 +130,7 @@ class Ruhoh
     
     # Public: Compile to static website.
     def compile
-      Ruhoh::DB.update_all
-      Ruhoh::Compiler.compile(@args[1])
+      Ruhoh::Program.compile(@args[1])
     end
     
     # Public: Create a new blog at the directory provided.

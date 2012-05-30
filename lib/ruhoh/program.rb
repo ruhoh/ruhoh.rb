@@ -41,5 +41,15 @@ class Ruhoh
       }
     end
     
+    # Public: A program for compiling to a static website.
+    # The compile environment should always be 'production' in order
+    # to properly omit drafts and other development-only settings.
+    def self.compile(target)
+      Ruhoh.setup
+      Ruhoh.config.env = 'production'
+      Ruhoh::DB.update_all
+      Ruhoh::Compiler.compile(target)
+    end
+    
   end #Program
 end #Ruhoh
