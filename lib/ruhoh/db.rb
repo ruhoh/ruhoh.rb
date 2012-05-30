@@ -1,3 +1,14 @@
+require 'ruhoh/parsers/posts'
+require 'ruhoh/parsers/pages'
+require 'ruhoh/parsers/routes'
+require 'ruhoh/parsers/layouts'
+require 'ruhoh/parsers/partials'
+require 'ruhoh/parsers/widgets'
+require 'ruhoh/parsers/stylesheets'
+require 'ruhoh/parsers/javascripts'
+require 'ruhoh/parsers/payload'
+require 'ruhoh/parsers/site'
+
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB

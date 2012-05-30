@@ -1,3 +1,5 @@
+require 'ruhoh/converters/markdown'
+
 class Ruhoh
   module Converter
     
