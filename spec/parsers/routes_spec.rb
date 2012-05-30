@@ -8,6 +8,7 @@ module Routes
 
       before(:each) do
         Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
+        Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
         Ruhoh.setup(:source => SampleSitePath)
       end
       

@@ -8,13 +8,9 @@ module Pages
       
       before(:each) do
         Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
-        Ruhoh.setup(:source => SampleSitePath)
-        
-        the_pages_dir = Ruhoh.paths.pages
-        
+        the_pages_dir = File.join(SampleSitePath, Ruhoh.names.pages)
         FileUtils.remove_dir(the_pages_dir, 1) if Dir.exists? the_pages_dir
         Dir.mkdir the_pages_dir
-
         expected_pages.each do |page_name| 
           full_file_name = File.join(the_pages_dir, page_name)
           File.open full_file_name, "w+" do |file|
@@ -25,6 +21,9 @@ title: #{page_name} (test)
             TEXT
           end
         end
+        
+        Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
+        Ruhoh.setup(:source => SampleSitePath)
       end
       
       let(:expected_pages) {
@@ -55,6 +54,7 @@ title: #{page_name} (test)
         
         before(:each) do
           Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
+          Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
           Ruhoh.setup(:source => SampleSitePath)
         end
         
@@ -78,6 +78,7 @@ title: #{page_name} (test)
             'theme' => "twitter",
             'pages' => {'exclude' => "#{filepath}$"}
           })
+          Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
           Ruhoh.setup(:source => SampleSitePath)
           Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
         end
@@ -90,6 +91,7 @@ title: #{page_name} (test)
             'theme' => "twitter",
             'pages' => {'exclude' => ['^test', 'blah'] }
           })
+          Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
           Ruhoh.setup(:source => SampleSitePath)
           
           Ruhoh::Parsers::Pages.is_valid_page?(filepath1).should == false

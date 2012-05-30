@@ -17,9 +17,11 @@ module Config
           custom_theme = 'table'
           custom_exclude = ['.secret']
           Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
-            "permalink" => custom_permalink, 
             "theme" => custom_theme,
-            'exclude' => custom_exclude
+            "posts" => {
+              "permalink" => custom_permalink, 
+              'exclude' => custom_exclude
+            }
           })
 
           config = Ruhoh::Config.generate('config.yml')
@@ -34,7 +36,9 @@ module Config
         custom_exclude = ['.secret', '^test']
         Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
           'theme' => "twitter",
-          'exclude' => custom_exclude
+          "posts" => {
+            'exclude' => custom_exclude
+          },
         })
         
         config = Ruhoh::Config.generate('config.yml')

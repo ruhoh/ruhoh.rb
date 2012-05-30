@@ -6,6 +6,7 @@ module Page
     
     before(:each) do
       Ruhoh::Utils.stub(:parse_yaml_file).and_return({'theme' => "twitter"})
+      Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
       Ruhoh.setup(:source => SampleSitePath)
     end
     
