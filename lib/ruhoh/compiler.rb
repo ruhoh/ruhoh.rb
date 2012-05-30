@@ -31,7 +31,7 @@ class Ruhoh
         Ruhoh::DB.stylesheets.each do |type, assets|
           assets.each do |asset|
             next unless File.exist?(asset['id'])
-            file_path = self.url_to_path(File.dirname(asset['url']), target)
+            file_path = Ruhoh::Utils.url_to_path(File.dirname(asset['url']), target)
             FileUtils.mkdir_p file_path
             FileUtils.cp(asset['id'], file_path)
           end
@@ -42,7 +42,7 @@ class Ruhoh
         Ruhoh::DB.scripts.each do |type, assets|
           assets.each do |asset|
             next unless File.exist?(asset['id'])
-            file_path = self.url_to_path(File.dirname(asset['url']), target)
+            file_path = Ruhoh::Utils.url_to_path(File.dirname(asset['url']), target)
             FileUtils.mkdir_p file_path
             FileUtils.cp(asset['id'], file_path)
           end
@@ -51,13 +51,9 @@ class Ruhoh
       
       def self.media(target, page)
         return unless FileTest.directory? Ruhoh.paths.theme_media
-        theme_media = self.url_to_path(Ruhoh.urls.theme_media, target)
+        theme_media = Ruhoh::Utils.url_to_path(Ruhoh.urls.theme_media, target)
         FileUtils.mkdir_p theme_media
         FileUtils.cp_r File.join(Ruhoh.paths.theme_media, '.'), theme_media
-      end
-      
-      def self.url_to_path(url, target)
-        File.__send__(:join, url.split('/').unshift(target))
       end
       
     end
@@ -84,8 +80,9 @@ class Ruhoh
 
       def self.media(target, page)
         return unless FileTest.directory? Ruhoh.paths.media
-        FileUtils.mkdir_p File.join(target, Ruhoh.names.media)
-        FileUtils.cp_r Ruhoh.paths.media, target
+        media = Ruhoh::Utils.url_to_path(Ruhoh.urls.media, target)
+        FileUtils.mkdir_p media
+        FileUtils.cp_r File.join(Ruhoh.paths.media, '.'), media
       end
       
     end #Defaults
