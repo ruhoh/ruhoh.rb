@@ -1,11 +1,14 @@
+require 'ruhoh/templaters/base_helpers'
 require 'ruhoh/templaters/asset_helpers'
+require 'ruhoh/templaters/helpers'
 
 class Ruhoh
   module Templaters  
     class RMustache < Mustache
-      include Ruhoh::Templaters::Helpers
+      include Ruhoh::Templaters::BaseHelpers
       include Ruhoh::Templaters::AssetHelpers
-      
+      include Ruhoh::Templaters::Helpers
+
       class RContext < Context
     
         # Overload find method to catch helper expressions
@@ -28,7 +31,7 @@ class Ruhoh
       # May also be called in sub-contexts such as looping through posts.
       #
       #  {{# posts }}
-      #    {{ content }}
+      #    {{{ content }}}
       #  {{/ posts }}
       def content
         id = self.context['id']
