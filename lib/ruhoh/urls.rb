@@ -16,7 +16,7 @@ class Ruhoh
 
     def self.generate(config)
       urls                      = Urls.new
-      urls.media                = self.to_url(Ruhoh.names.media)
+      urls.media                = self.to_url(Ruhoh.names.assets, Ruhoh.names.media)
       urls.widgets              = self.to_url(Ruhoh.names.assets, Ruhoh.names.widgets)
       urls.dashboard            = self.to_url(Ruhoh.names.dashboard_file.split('.')[0])
 

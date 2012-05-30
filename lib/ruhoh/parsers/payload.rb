@@ -10,9 +10,9 @@ class Ruhoh
           },
           "site" => Ruhoh::DB.site,
           'page' => {},
-          "paths" => {
-            "stylesheets" => Ruhoh.urls.theme_stylesheets,
-            "scripts" => Ruhoh.urls.theme_scripts,
+          "urls" => {
+            "theme_stylesheets" => Ruhoh.urls.theme_stylesheets,
+            "theme_scripts" => Ruhoh.urls.theme_scripts,
             "theme_media" => Ruhoh.urls.theme_media,
             "media" => Ruhoh.urls.media,
           }

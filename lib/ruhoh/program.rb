@@ -19,7 +19,11 @@ class Ruhoh
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions
-        use Rack::Static, {:urls => [Ruhoh.urls.media] }
+
+        # Serve base media
+        map Ruhoh.urls.media do
+          run Rack::File.new(Ruhoh.paths.media)
+        end
         
         # Serve theme assets
         map Ruhoh.urls.theme_stylesheets do
