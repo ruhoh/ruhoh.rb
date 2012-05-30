@@ -41,7 +41,7 @@ class Ruhoh
       end
       
       # NOTICE: This is unfinished and not-implemented!
-      def assets_production
+      def assets_production_not_implemented
         buffer = ''
         master_layout = self.context['page']['master_layout']
         sub_layout = self.context['page']['sub_layout']
