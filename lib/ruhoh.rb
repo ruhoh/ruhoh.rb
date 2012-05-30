@@ -25,7 +25,7 @@ require 'ruhoh/parsers/layouts'
 require 'ruhoh/parsers/partials'
 require 'ruhoh/parsers/widgets'
 require 'ruhoh/parsers/stylesheets'
-require 'ruhoh/parsers/scripts'
+require 'ruhoh/parsers/javascripts'
 require 'ruhoh/parsers/payload'
 require 'ruhoh/parsers/site'
 require 'ruhoh/db'
@@ -58,7 +58,7 @@ class Ruhoh
     :partials => 'partials',
     :plugins => 'plugins',
     :posts => 'posts',
-    :scripts => 'scripts',
+    :javascripts => 'javascripts',
     :site_data => 'site.yml',
     :stylesheets => 'stylesheets',
     :themes => 'themes',

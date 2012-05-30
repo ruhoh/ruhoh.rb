@@ -4,7 +4,7 @@ class Ruhoh
       WidgetStructure = Struct.new(
         :name,
         :config,
-        :scripts,
+        :javascripts,
         :layout
       )
 
@@ -18,7 +18,7 @@ class Ruhoh
           widgets[name] = WidgetStructure.new(
             name,
             config,
-            self.process_scripts(config, name),
+            self.process_javascripts(config, name),
             self.process_layout(config, name)
           )
         end
@@ -57,19 +57,19 @@ class Ruhoh
       # Process widget script dependencies.
       # Script dependencies may be set in the config.
       # Look for default script at: scripts/{widget_name}.js if no config.
-      # If found, we include it, else no scripts will load.
+      # If found, we include it, else no javascripts will load.
       #
       # Returns Array of script filenames to load.
-      def self.process_scripts(config, widget_name)
-        scripts = config['scripts'] ? Array(config['scripts']) : []
+      def self.process_javascripts(config, widget_name)
+        scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts]) : []
         
         # Try for the default script if no config.
         if scripts.empty?
-          script_file = File.join(Ruhoh.paths.widgets, widget_name, 'scripts', "#{widget_name}.js")
+          script_file = File.join(Ruhoh.paths.widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
           if File.exist?(script_file)
             scripts << "#{widget_name}.js"
           else
-            script_file = File.join(Ruhoh.paths.system_widgets, widget_name, 'scripts', "#{widget_name}.js")
+            script_file = File.join(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
             scripts << "#{widget_name}.js" if File.exist?(script_file)
           end
         end

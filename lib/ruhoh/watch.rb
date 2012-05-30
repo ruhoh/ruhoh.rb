@@ -55,7 +55,7 @@ class Ruhoh
           elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{Ruhoh.config.theme}")
             type = "Theme"
             Ruhoh::DB.update(:stylesheets)
-            Ruhoh::DB.update(:scripts)
+            Ruhoh::DB.update(:javascripts)
             Ruhoh::DB.update(:widgets)
             Ruhoh::DB.update(:layouts)
           elsif path =~ Regexp.new("^#{Ruhoh.names.widgets}")

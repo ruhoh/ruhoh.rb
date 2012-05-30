@@ -9,7 +9,7 @@ class Ruhoh
       :dashboard,
       :theme,
       :theme_media,
-      :theme_scripts,
+      :theme_javascripts,
       :theme_stylesheets,
       :theme_widgets
     )
@@ -22,7 +22,7 @@ class Ruhoh
 
       urls.theme                = self.to_url(Ruhoh.names.assets, config.theme)
       urls.theme_media          = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.media)
-      urls.theme_scripts        = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.scripts)
+      urls.theme_javascripts    = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.javascripts)
       urls.theme_stylesheets    = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.stylesheets)
       urls.theme_widgets        = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.widgets)
       urls

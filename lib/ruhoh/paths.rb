@@ -24,7 +24,7 @@ class Ruhoh
       :theme_layouts,
       :theme_media,
       :theme_partials,
-      :theme_scripts,
+      :theme_javascripts,
       :theme_stylesheets,
       :theme_widgets,
     
@@ -52,7 +52,7 @@ class Ruhoh
       paths.theme_config_data   = File.join(paths.theme, Ruhoh.names.theme_config)
       paths.theme_layouts       = File.join(paths.theme, Ruhoh.names.layouts)
       paths.theme_stylesheets   = File.join(paths.theme, Ruhoh.names.stylesheets)
-      paths.theme_scripts       = File.join(paths.theme, Ruhoh.names.scripts)
+      paths.theme_javascripts       = File.join(paths.theme, Ruhoh.names.javascripts)
       paths.theme_media         = File.join(paths.theme, Ruhoh.names.media)
       paths.theme_widgets       = File.join(paths.theme, Ruhoh.names.widgets)
       paths.theme_partials      = File.join(paths.theme, Ruhoh.names.partials)

@@ -73,10 +73,10 @@ module DB
         Ruhoh::DB.stylesheets.should == {'test' => 'hi'}
       end
 
-      it "should run the scripts parser when updating :scripts" do
-        Ruhoh::Parsers::Scripts.should_receive(:generate).and_return({'test' => 'hi'})
-        Ruhoh::DB.update(:scripts)
-        Ruhoh::DB.scripts.should == {'test' => 'hi'}
+      it "should run the scripts parser when updating :javascripts" do
+        Ruhoh::Parsers::Javascripts.should_receive(:generate).and_return({'test' => 'hi'})
+        Ruhoh::DB.update(:javascripts)
+        Ruhoh::DB.javascripts.should == {'test' => 'hi'}
       end
       
     end

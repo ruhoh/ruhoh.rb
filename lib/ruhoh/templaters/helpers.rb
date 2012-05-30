@@ -25,9 +25,9 @@ class Ruhoh
           buffer += "<link href=\"#{style['url']}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
         end
         buffer += "\n"
-        scripts = Ruhoh::DB.scripts[master_layout] || []
-        scripts += Ruhoh::DB.scripts[sub_layout] || []
-        scripts += Ruhoh::DB.scripts[Ruhoh.names.widgets] || []
+        scripts = Ruhoh::DB.javascripts[master_layout] || []
+        scripts += Ruhoh::DB.javascripts[sub_layout] || []
+        scripts += Ruhoh::DB.javascripts[Ruhoh.names.widgets] || []
         scripts.each do |script|
           buffer += "<script src=\"#{script['url']}\"></script>\n"
         end
@@ -56,11 +56,11 @@ class Ruhoh
         buffer += "\n"
         
         scripts = []
-        scripts << master_layout if Ruhoh::DB.scripts[master_layout]
-        scripts << sub_layout if Ruhoh::DB.scripts[sub_layout]
+        scripts << master_layout if Ruhoh::DB.javascripts[master_layout]
+        scripts << sub_layout if Ruhoh::DB.javascripts[sub_layout]
         # Missing widgets
         scripts.each do |name|
-          url = [Ruhoh.urls.theme_scripts, "#{name}.js"].join('/')
+          url = [Ruhoh.urls.theme_javascripts, "#{name}.js"].join('/')
           buffer += "<script src=\"#{url}\"></script>\n"
         end
         

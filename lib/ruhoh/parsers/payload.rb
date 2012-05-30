@@ -12,7 +12,7 @@ class Ruhoh
           'page' => {},
           "urls" => {
             "theme_stylesheets" => Ruhoh.urls.theme_stylesheets,
-            "theme_scripts" => Ruhoh.urls.theme_scripts,
+            "theme_javascripts" => Ruhoh.urls.theme_javascripts,
             "theme_media" => Ruhoh.urls.theme_media,
             "media" => Ruhoh.urls.media,
           }

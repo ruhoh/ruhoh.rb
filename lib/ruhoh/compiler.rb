@@ -22,7 +22,7 @@ class Ruhoh
       
       def self.run(target, page)
         self.stylesheets(target, page)
-        self.scripts(target, page)
+        self.javascripts(target, page)
         self.media(target, page)
       end
       
@@ -37,8 +37,8 @@ class Ruhoh
         end
       end
 
-      def self.scripts(target, page)
-        Ruhoh::DB.scripts.each do |type, assets|
+      def self.javascripts(target, page)
+        Ruhoh::DB.javascripts.each do |type, assets|
           assets.each do |asset|
             next unless File.exist?(asset['id'])
             file_path = Ruhoh::Utils.url_to_path(File.dirname(asset['url']), target)
