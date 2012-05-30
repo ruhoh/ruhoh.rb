@@ -51,8 +51,14 @@ class Ruhoh
       end
       
       def self.theme_config
-        return {} unless File.exist?(Ruhoh.paths.theme_config_data)
-        theme_config = File.open(Ruhoh.paths.theme_config_data, 'r:UTF-8') {|f| JSON.parse(f.read) }
+        theme_config = Ruhoh::Utils.parse_yaml_file(Ruhoh.paths.theme_config_data)
+        if theme_config.nil?
+          Ruhoh::Friend.say{ 
+            yellow "WARNING: theme.yml config file not found:"
+            yellow "  #{Ruhoh.paths.theme_config_data}"
+          }
+          return {}
+        end
         return {} unless theme_config.is_a? Hash
         theme_config
       end
