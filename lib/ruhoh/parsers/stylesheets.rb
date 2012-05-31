@@ -1,10 +1,10 @@
 class Ruhoh
   module Parsers
     # Collect all registered stylesheets.
-    # Themes explicitly define which stylesheets to load via theme.json.
+    # Themes explicitly define which stylesheets to load via theme.yml.
     # All styling is managed by the theme, including widget styles.
     # If the theme provides widget stylesheets they will load automatically.
-    # theme.json may also specify an explicit widget stylesheet to load.
+    # theme.yml may also specify an explicit widget stylesheet to load.
     module Stylesheets
 
       # Generates mappings to all registered stylesheets.

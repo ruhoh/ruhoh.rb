@@ -1,7 +1,7 @@
 class Ruhoh
   module Parsers
     # Collect all the javascripts.
-    # Themes explicitly define which javascripts to load via theme.json.
+    # Themes explicitly define which javascripts to load via theme.yml.
     # Additionally, widgets may register javascript dependencies, which are resolved here.
     module Javascripts
 
