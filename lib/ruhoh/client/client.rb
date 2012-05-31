@@ -69,7 +69,7 @@ class Ruhoh
       begin
         name = @args[1] || "untitled-#{type}"
         name = "#{name}-#{@iterator}" unless @iterator.zero?
-        name = Ruhoh::Parsers::Posts.to_slug(name)
+        name = Ruhoh::Urls.to_slug(name)
         filename = File.join(Ruhoh.paths.posts, "#{name}.#{@options.ext}")
         @iterator += 1
       end while File.exist?(filename)
@@ -121,7 +121,7 @@ class Ruhoh
           next unless File.basename(file) =~ /^untitled/
           parsed_page = Ruhoh::Utils.parse_page_file(file)
           next unless parsed_page['data']['title']
-          new_name = Ruhoh::Parsers::Posts.to_slug(parsed_page['data']['title'])
+          new_name = Ruhoh::Urls.to_slug(parsed_page['data']['title'])
           new_file = File.join(File.dirname(file), "#{new_name}#{File.extname(file)}")
           FileUtils.mv(file, new_file)
           Ruhoh::Friend.say { green "Renamed #{file} to: #{new_file}" }

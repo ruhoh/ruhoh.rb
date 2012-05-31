@@ -127,23 +127,16 @@ class Ruhoh
         file_slug.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
       end
     
-      # My Post Title ===> my-post-title
-      def self.to_slug(title)
-        title = title.to_s.downcase.strip.gsub(/[^\p{Word}+]/u, '-')
-        title = title.gsub(/^\-+/, '').gsub(/\-+$/, '').gsub(/\-+/, '-')
-        CGI::escape(title)
-      end
-        
       # Used in the client implementation to turn a draft into a post.  
       def self.to_filename(data)
-        File.join(Ruhoh.paths.posts, "#{self.to_slug(data['title'])}.#{data['ext']}")
+        File.join(Ruhoh.paths.posts, "#{Ruhoh::Urls.to_slug(data['title'])}.#{data['ext']}")
       end
       
       # Another blatently stolen method from Jekyll
       # The category is only the first one if multiple categories exist.
       def self.permalink(post)
         date = Date.parse(post['date'])
-        title = self.to_slug(post['title'])
+        title = Ruhoh::Urls.to_url_slug(post['title'])
         format = post['permalink'] || Ruhoh.config.posts_permalink  || "/:categories/:year/:month/:day/:title.html"
         
         # Use the literal permalink if it is a non-tokenized string.
@@ -153,7 +146,7 @@ class Ruhoh
         end  
 
         category = Array(post['categories'])[0]
-        category = category.split('/').map {|c| self.to_slug(c) }.join('/') if category
+        category = category.split('/').map {|c| Ruhoh::Urls.to_url_slug(c) }.join('/') if category
         
         url = {
           "year"       => date.strftime("%Y"),

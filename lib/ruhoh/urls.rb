@@ -31,5 +31,16 @@ class Ruhoh
     def self.to_url(*args)
       args.unshift(nil).join('/')
     end
+    
+    def self.to_url_slug(title)
+      CGI::escape self.to_slug(title)
+    end
+    
+    # My Post Title ===> my-post-title
+    def self.to_slug(title)
+      title = title.to_s.downcase.strip.gsub(/[^\p{Word}+]/u, '-')
+      title.gsub(/^\-+/, '').gsub(/\-+$/, '').gsub(/\-+/, '-')
+    end
+    
   end #Urls
 end #Ruhoh
