@@ -145,6 +145,7 @@ class Ruhoh
           return "/#{url}"
         end  
 
+        filename = File.basename(post['id'], File.extname(post['id']))
         category = Array(post['categories'])[0]
         category = category.split('/').map {|c| Ruhoh::Urls.to_url_slug(c) }.join('/') if category
         
@@ -153,6 +154,7 @@ class Ruhoh
           "month"      => date.strftime("%m"),
           "day"        => date.strftime("%d"),
           "title"      => title,
+          "filename"   => filename,
           "i_day"      => date.strftime("%d").to_i.to_s,
           "i_month"    => date.strftime("%m").to_i.to_s,
           "categories" => category || '',
