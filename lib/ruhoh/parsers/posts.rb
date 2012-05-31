@@ -129,7 +129,9 @@ class Ruhoh
     
       # My Post Title ===> my-post-title
       def self.to_slug(title)
-        title.downcase.strip.gsub(/\s/, '-').gsub(/[^\w-]/, '')
+        title = title.to_s.downcase.strip.gsub(/[^\p{Word}+]/u, '-')
+        title = title.gsub(/^\-+/, '').gsub(/\-+$/, '').gsub(/\-+/, '-')
+        CGI::escape(title)
       end
         
       # Used in the client implementation to turn a draft into a post.  
@@ -138,27 +140,33 @@ class Ruhoh
       end
       
       # Another blatently stolen method from Jekyll
+      # The category is only the first one if multiple categories exist.
       def self.permalink(post)
         date = Date.parse(post['date'])
-        title = post['title'].downcase.gsub(' ', '-').gsub('.','')
+        title = self.to_slug(post['title'])
         format = post['permalink'] || Ruhoh.config.posts_permalink  || "/:categories/:year/:month/:day/:title.html"
+        
+        # Use the literal permalink if it is a non-tokenized string.
+        unless format.include?(':')
+          url = format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
+          return "/#{url}"
+        end  
+
+        category = Array(post['categories'])[0]
+        category = category.split('/').map {|c| self.to_slug(c) }.join('/') if category
         
         url = {
           "year"       => date.strftime("%Y"),
           "month"      => date.strftime("%m"),
           "day"        => date.strftime("%d"),
-          "title"      => CGI::escape(title),
+          "title"      => title,
           "i_day"      => date.strftime("%d").to_i.to_s,
           "i_month"    => date.strftime("%m").to_i.to_s,
-          "categories" => Array(post['categories'])[0] || '',
-          "output_ext" => 'html' # what's this for?
+          "categories" => category || '',
         }.inject(format) { |result, token|
           result.gsub(/:#{Regexp.escape token.first}/, token.last)
-        }.gsub(/\/\//, "/")
+        }.gsub(/\/+/, "/")
 
-        # sanitize url
-        url = url.split('/').reject{ |part| part =~ /^\.+$/ }.join('/')
-        url += "/" if url =~ /\/$/
         url
       end
     
