@@ -52,7 +52,7 @@ class Ruhoh
       def self.to_title(filename)
         name = File.basename( filename, File.extname(filename) )
         name = filename.split('/')[-2] if name == 'index' && !filename.index('/').nil?
-        name.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
+        name.gsub(/[^\p{Word}+]/u, ' ').gsub(/\b\w/){$&.upcase}
       end
     
       # Build the permalink for the given page.

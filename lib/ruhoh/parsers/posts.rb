@@ -124,7 +124,7 @@ class Ruhoh
       
       # my-post-title ===> My Post Title
       def self.to_title(file_slug)
-        file_slug.gsub(/[\W\_]/, ' ').gsub(/\b\w/){$&.upcase}
+        file_slug.gsub(/[^\p{Word}+]/u, ' ').gsub(/\b\w/){$&.upcase}
       end
     
       # Used in the client implementation to turn a draft into a post.  
