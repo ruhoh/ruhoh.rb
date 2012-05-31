@@ -61,20 +61,15 @@ class Ruhoh
       #
       # Returns [String] the permalink for this page.
       def self.permalink(page)
-        url = '/'
         ext = File.extname(page['id'])
-        url += if Ruhoh::Converter.extensions.include?(ext)
-          page['id'].gsub(Regexp.new("#{ext}$"), '.html')
-        else
-          page['id']
-        end
-        
-        url = url.split('/').reject{ |part| part[0] == '.' }.join('/')
-        url = url.gsub(/\/index.html$/, '')
+        name = page['id'].gsub(Regexp.new("#{ext}$"), '')
+        ext = '.html' if Ruhoh::Converter.extensions.include?(ext)
+        url = name.split('/').map {|p| Ruhoh::Urls.to_url_slug(p) }.join('/')
+        url = "/#{url}#{ext}".gsub(/\/index.html$/, '')
         if page['permalink'] == 'pretty' || Ruhoh.config.pages_permalink == 'pretty'
           url = url.gsub(/\.html$/, '') 
         end
-        url = "/" if url.empty?
+        url = '/' if url.empty?
 
         url
       end
