@@ -47,6 +47,12 @@ class Ruhoh
         self.to_posts(self.context['db']['posts']['chronological'])
       end
       
+      def posts_latest
+        latest = self.context['site']['config']['posts']['latest'].to_i rescue nil
+        latest ||= 10
+        (latest.to_i > 0) ? self.posts[0, latest.to_i] : self.posts
+      end
+      
       def categories
         cats = []
         self.context['db']['posts']['categories'].each_value { |cat| cats << cat }
