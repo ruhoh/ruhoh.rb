@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 
 module Posts
@@ -109,21 +110,20 @@ module Posts
     
     describe "#permalink" do
       it "should return the default permalink style (/:categories/:year/:month/:day/:title.html)" do
-        post = {"date" => "2012-01-02", "title" => "My Blog Post"}
-        #post = {"date" => "2012-01-02", "title" => "My Blog Post", 'permalink' => :date }
+        post = {"date" => "2012-01-02", "title" => "My Blog Post", "id" => "my-blog-post.md"}
         permalink = Ruhoh::Parsers::Posts.permalink(post)
         permalink.should == '/2012/01/02/my-blog-post.html'
       end
       
       it "should return the post specific permalink style" do
-        post = {"date" => "2012-01-02", "title" => "My Blog Post", 'permalink' => '/:categories/:title' }
+        post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "My Blog Post", 'permalink' => '/:categories/:title' }
         permalink = Ruhoh::Parsers::Posts.permalink(post)
         permalink.should == '/my-blog-post'
       end
       
       context "A post with one category" do
         it "should include the category path in the permalink." do
-          post = {"date" => "2012-01-02", "title" => "My Blog Post", 'categories'=> 'ruby/lessons/beginner', 'permalink' => '/:categories/:title' }
+          post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "My Blog Post", 'categories'=> 'ruby/lessons/beginner', 'permalink' => '/:categories/:title' }
           permalink = Ruhoh::Parsers::Posts.permalink(post)
           permalink.should == '/ruby/lessons/beginner/my-blog-post'
         end
@@ -131,18 +131,35 @@ module Posts
       
       context "A post belonging in two separate categories" do  
         it "should include the first category path in the permalink." do
-          post = {"date" => "2012-01-02", "title" => "My Blog Post", 'categories'=> ['web', 'ruby/lessons/beginner'], 'permalink' => '/:categories/:title' }
+          post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "My Blog Post", 'categories'=> ['web', 'ruby/lessons/beginner'], 'permalink' => '/:categories/:title' }
           permalink = Ruhoh::Parsers::Posts.permalink(post)
           permalink.should == '/web/my-blog-post'
         end
       end
       
+      context "A post with a literal permalink" do  
+        it "should use the literal permalink" do
+          post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "=) My Blog Post!", 'permalink' => '/dogs/and/cats/summer-pictures' }
+          permalink = Ruhoh::Parsers::Posts.permalink(post)
+          permalink.should == '/dogs/and/cats/summer-pictures'
+        end
+      end
+      
       context "A post having special characters in the title" do  
-        it "should escape those characters." do
-          post = {"date" => "2012-01-02", "title" => "=) My Blog Post!", 'permalink' => '/:title' }
+        it "should omit those characters." do
+          post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "=) My Blog Post!", 'permalink' => '/:title' }
           permalink = Ruhoh::Parsers::Posts.permalink(post)
           permalink.should_not == '/=)-my-blog-post-!'
-          permalink.should == '/%3D%29-my-blog-post%21'
+          permalink.should == '/my-blog-post'
+        end
+      end
+      
+      context "A post having international characters in the title" do
+        it "should omit those characters." do
+          post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "=) My Blog Post!", 'permalink' => '/:title' }
+          post = {"id" => '안녕하세요-sérieux-è_é-三只熊.md', "date" => "2012-01-02", "title" => '안녕하세요-sérieux è_é-三只熊', 'permalink' => '/:title' }
+          permalink = Ruhoh::Parsers::Posts.permalink(post)
+          permalink.should == ('/'+CGI::escape('안녕하세요-sérieux-è_é-三只熊'))
         end
       end
     end

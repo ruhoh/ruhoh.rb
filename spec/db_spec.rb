@@ -1,4 +1,3 @@
-
 module DB
   
   describe Ruhoh::DB do
@@ -11,9 +10,10 @@ module DB
     end
     
     context "database has not been updated" do
-      it "should return nil for all whitelisted variables" do
+      it "should return nil for all whitelisted variables except payload" do
         whitelist.each do |var|
           result = Ruhoh::DB.__send__(var)
+          next if var == :payload
           result.should be_nil
         end
       end
