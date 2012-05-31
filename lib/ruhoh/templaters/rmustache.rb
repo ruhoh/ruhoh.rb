@@ -34,16 +34,20 @@ class Ruhoh
       #    {{{ content }}}
       #  {{/ posts }}
       def content
+        content, id = self.get_page_content
+        content = self.render(content)
+        Ruhoh::Converter.convert(content, id)
+      end
+      
+      def get_page_content
         id = self.context['id']
         id ||= self.context['page']['id']
         return '' unless id
         unless id =~ Regexp.new("^#{Ruhoh.names.posts}")
           id = "#{Ruhoh.names.pages}/#{id}"
         end
-
-        data = Ruhoh::Utils.parse_page_file(Ruhoh.paths.base, id)
-        content = self.render(data['content'])
-        Ruhoh::Converter.convert(content, id)
+        
+        [Ruhoh::Utils.parse_page_file(Ruhoh.paths.base, id)['content'], id]
       end
       
       def widget(name)
