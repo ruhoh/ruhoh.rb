@@ -16,14 +16,14 @@ class Ruhoh
         stylesheets += Ruhoh::DB.stylesheets[sub_layout] || []
         stylesheets += Ruhoh::DB.stylesheets[Ruhoh.names.widgets] || []
         stylesheets.each do |style|
-          buffer += "<link href=\"#{style['url']}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
+          buffer += "<link href=\"#{style['url']}?#{rand()}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
         end
         buffer += "\n"
         scripts = Ruhoh::DB.javascripts[master_layout] || []
         scripts += Ruhoh::DB.javascripts[sub_layout] || []
         scripts += Ruhoh::DB.javascripts[Ruhoh.names.widgets] || []
         scripts.each do |script|
-          buffer += "<script src=\"#{script['url']}\"></script>\n"
+          buffer += "<script src=\"#{script['url']}?#{rand()}\"></script>\n"
         end
         
         buffer
