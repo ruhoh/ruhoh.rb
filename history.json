@@ -1,5 +1,34 @@
 [
   {
+    "version" : "1.0.0.alpha",
+    "date" : "05.06.2012",
+    "changes" : [
+      "Converters now take in (content, id), rather than page object: (page).",
+      "Client now has both post and draft generation. Optionally can pass in a title.",
+      "Change config format for pages and posts; now must be namespaced respectively.",
+      "Major changes to theme directory API",
+      "Re-implement how internal config, path, and url parameters are generated and accessed.",
+      "Payload object 'paths' is now 'urls' and namespaced with theme_* for consistency",
+      "Master and sub layout templating is now handled entirely by mustache.",
+      "Add nokogiri as dependency"
+    ],
+    "features" : [
+      "YAML meta-data is now optional",
+      "Provide default, global layout attribute for post/page",
+      "Add summary and posts_latest helper methods",
+      "Add widget system",
+      "Add stylesheets asset manager",
+      "Add javascripts asset manager",
+      "Add RSS compiler",
+      "Add ability to run previewer in production mode",
+      "Make post filename available to permalink"
+    ],
+    "bugs" : [
+      "Fix permalinks and titlelize methods to support international characters",
+      "Transform all extensions registered in a convertable module to .html"
+    ]
+  },
+  {
     "version" : "0.3.0",
     "date" : "13.5.2012",
     "changes" : [

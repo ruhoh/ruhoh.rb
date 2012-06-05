@@ -33,6 +33,9 @@ Gem::Specification.new do |s|
     lib/ruhoh/client/client.rb
     lib/ruhoh/client/help.yml
     lib/ruhoh/compiler.rb
+    lib/ruhoh/compilers/rss.rb
+    lib/ruhoh/compilers/theme.rb
+    lib/ruhoh/config.rb
     lib/ruhoh/converters/converter.rb
     lib/ruhoh/converters/markdown.rb
     lib/ruhoh/db.rb
@@ -40,30 +43,42 @@ Gem::Specification.new do |s|
     lib/ruhoh/friend.rb
     lib/ruhoh/logger.rb
     lib/ruhoh/page.rb
+    lib/ruhoh/parsers/javascripts.rb
     lib/ruhoh/parsers/layouts.rb
     lib/ruhoh/parsers/pages.rb
     lib/ruhoh/parsers/partials.rb
+    lib/ruhoh/parsers/payload.rb
     lib/ruhoh/parsers/posts.rb
     lib/ruhoh/parsers/routes.rb
     lib/ruhoh/parsers/site.rb
+    lib/ruhoh/parsers/stylesheets.rb
+    lib/ruhoh/parsers/widgets.rb
+    lib/ruhoh/paths.rb
     lib/ruhoh/previewer.rb
     lib/ruhoh/program.rb
-    lib/ruhoh/templaters/base.rb
+    lib/ruhoh/templaters/asset_helpers.rb
+    lib/ruhoh/templaters/base_helpers.rb
     lib/ruhoh/templaters/helpers.rb
     lib/ruhoh/templaters/rmustache.rb
+    lib/ruhoh/urls.rb
     lib/ruhoh/utils.rb
     lib/ruhoh/version.rb
     lib/ruhoh/watch.rb
     ruhoh.gemspec
+    scaffolds/draft.html
     scaffolds/layout.html
     scaffolds/page.html
     scaffolds/post.html
-    scaffolds/theme/css/style.css
-    scaffolds/theme/images/.gitkeep
+    scaffolds/theme/javascripts/.gitkeep
     scaffolds/theme/layouts/default.html
     scaffolds/theme/layouts/page.html
     scaffolds/theme/layouts/post.html
+    scaffolds/theme/media/.gitkeep
     scaffolds/theme/partials/.gitkeep
+    scaffolds/theme/stylesheets/style.css
+    scaffolds/theme/theme.yml
+    scaffolds/theme/widgets/.gitkeep
+    spec/config_spec.rb
     spec/db_spec.rb
     spec/page_spec.rb
     spec/parsers/layouts_spec.rb
@@ -73,13 +88,16 @@ Gem::Specification.new do |s|
     spec/parsers/site_spec.rb
     spec/setup_spec.rb
     spec/spec_helper.rb
-    system_partials/analytics/getclicky
-    system_partials/analytics/google
-    system_partials/comments/disqus
-    system_partials/comments/facebook
-    system_partials/comments/intensedebate
-    system_partials/comments/livefyre
-    system_partials/syntax/google_prettify
+    widgets/analytics/config.yml
+    widgets/analytics/layouts/getclicky.html
+    widgets/analytics/layouts/google.html
+    widgets/comments/config.yml
+    widgets/comments/layouts/disqus.html
+    widgets/comments/layouts/facebook.html
+    widgets/comments/layouts/intensedebate.html
+    widgets/comments/layouts/livefyre.html
+    widgets/google_prettify/config.yml
+    widgets/google_prettify/layouts/google_prettify.html
   ]
   # = MANIFEST =
 end

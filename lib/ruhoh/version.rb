@@ -1,4 +1,4 @@
 class Ruhoh
-  Version = VERSION = '0.3.0'
-  RuhohSpec = '0.2'
+  Version = VERSION = '1.0.0.alpha'
+  RuhohSpec = '1.0'
 end
