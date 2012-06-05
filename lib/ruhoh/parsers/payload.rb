@@ -6,7 +6,7 @@ class Ruhoh
         {
           "db" => {
             "pages" =>  Ruhoh::DB.pages,
-            "posts" => Ruhoh::DB.posts,
+            "posts" => self.determine_category_and_tag_urls,
           },
           "site" => Ruhoh::DB.site,
           'page' => {},
@@ -18,6 +18,30 @@ class Ruhoh
           }
         }
       end
+      
+      # This is an ugly hack to determine the proper category and tag urls.
+      # TODO: Refactor this out.
+      def self.determine_category_and_tag_urls
+        return nil unless Ruhoh::DB.routes && Ruhoh::DB.posts
+        categories_url = nil
+        ['/categories', '/categories.html'].each { |url|
+          categories_url = url and break if Ruhoh::DB.routes.key?(url)
+        }
+        Ruhoh::DB.posts['categories'].each do |key, value|
+          Ruhoh::DB.posts['categories'][key]['url'] = "#{categories_url}##{value['name']}-ref"
+        end
+        
+        tags_url = nil
+        ['/tags', '/tags.html'].each { |url|
+          tags_url = url and break if Ruhoh::DB.routes.key?(url)
+        }
+        Ruhoh::DB.posts['tags'].each do |key, value|
+          Ruhoh::DB.posts['tags'][key]['url'] = "#{tags_url}##{value['name']}-ref"
+        end
+        
+        Ruhoh::DB.posts
+      end
+      
     end #Payload
   end #Parsers
 end #Ruhoh

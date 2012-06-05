@@ -223,7 +223,6 @@ class Ruhoh
               tags[tag] = { 
                 'count' => 1, 
                 'name' => tag,
-                'url'  => "/tags.html##{tag}-ref",
                 'posts' => [] 
               }
             end 
@@ -236,7 +235,7 @@ class Ruhoh
 
       def self.parse_categories(ordered_posts)
         categories = {}
-
+        
         ordered_posts.each do |post|
           Array(post['categories']).each do |cat|
             cat = Array(cat).join('/')
@@ -246,7 +245,6 @@ class Ruhoh
               categories[cat] = { 
                 'count' => 1, 
                 'name' => cat, 
-                'url'  => "/categories.html##{cat}-ref",
                 'posts' => []
               }
             end 
