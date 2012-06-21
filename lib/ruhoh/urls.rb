@@ -11,25 +11,29 @@ class Ruhoh
       :theme_media,
       :theme_javascripts,
       :theme_stylesheets,
-      :theme_widgets
+      :theme_widgets,
+      :docroot  # For constructing abs url
     )
 
     def self.generate(config)
       urls                      = Urls.new
-      urls.media                = self.to_url(Ruhoh.names.assets, Ruhoh.names.media)
-      urls.widgets              = self.to_url(Ruhoh.names.assets, Ruhoh.names.widgets)
-      urls.dashboard            = self.to_url(Ruhoh.names.dashboard_file.split('.')[0])
+      urls.docroot              = config.env == 'production' ?
+              self.to_url(config.production_url) :
+              self.to_url(config.dev_url)   # not sure if it's ok
+      urls.media                = self.to_url(urls.docroot, Ruhoh.names.assets, Ruhoh.names.media)
+      urls.widgets              = self.to_url(urls.docroot, Ruhoh.names.assets, Ruhoh.names.widgets)
+      urls.dashboard            = self.to_url(urls.docroot, Ruhoh.names.dashboard_file.split('.')[0])
 
-      urls.theme                = self.to_url(Ruhoh.names.assets, config.theme)
-      urls.theme_media          = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.media)
-      urls.theme_javascripts    = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.javascripts)
-      urls.theme_stylesheets    = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.stylesheets)
-      urls.theme_widgets        = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.widgets)
+      urls.theme                = self.to_url(urls.docroot, Ruhoh.names.assets, config.theme)
+      urls.theme_media          = self.to_url(urls.docroot, Ruhoh.names.assets, config.theme, Ruhoh.names.media)
+      urls.theme_javascripts    = self.to_url(urls.docroot, Ruhoh.names.assets, config.theme, Ruhoh.names.javascripts)
+      urls.theme_stylesheets    = self.to_url(urls.docroot, Ruhoh.names.assets, config.theme, Ruhoh.names.stylesheets)
+      urls.theme_widgets        = self.to_url(urls.docroot, Ruhoh.names.assets, config.theme, Ruhoh.names.widgets)
       urls
     end
     
     def self.to_url(*args)
-      args.unshift(nil).join('/').sub(/^\//,"")
+      args.unshift(nil).join('/').sub(/^\/+/, '')
     end
     
     def self.to_url_slug(title)

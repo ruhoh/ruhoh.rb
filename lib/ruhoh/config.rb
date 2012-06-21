@@ -3,6 +3,8 @@ class Ruhoh
   module Config
     Config = Struct.new(
       :env,
+      :production_url,
+      :dev_url,
       :pages_exclude,
       :pages_permalink,
       :pages_layout,
@@ -26,6 +28,10 @@ class Ruhoh
       end
       
       config = Config.new
+      config.production_url = site_config['production_url']
+      config.dev_url = site_config['dev_url'] if config.production_url.nil? 
+      config.production_url = '/' if config.production_url.nil?
+      config.dev_url = '/' if config.dev_url.nil?
       config.theme = theme
       config.env = site_config['env'] || nil
       
