@@ -33,7 +33,11 @@ class Ruhoh
     end
     
     def self.to_url(*args)
-      args.unshift(nil).join('/').sub(/^\/+/, '')
+            if Ruhoh.config.env == 'production'
+                    args.unshift(nil).join('/').sub(/^\/+/, '')
+            else 
+                    args.unshift(nil).join('/').sub(/^\/+/, '/')
+            end
     end
     
     def self.to_url_slug(title)

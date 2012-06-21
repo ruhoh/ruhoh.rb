@@ -29,7 +29,7 @@ class Ruhoh
       
       config = Config.new
       config.production_url = site_config['production_url']
-      config.dev_url = site_config['dev_url'] if config.production_url.nil? 
+      config.dev_url = site_config['dev_url'] 
       config.production_url = '/' if config.production_url.nil?
       config.dev_url = '/' if config.dev_url.nil?
       config.theme = theme
