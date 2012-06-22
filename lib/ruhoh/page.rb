@@ -85,7 +85,7 @@ class Ruhoh
     def compiled_path
       self.ensure_id
       #path = CGI.unescape(@data['url']).gsub(Regexp.new("^#{Ruhoh.paths.base}/"), '') #strip leading slash.
-      path = CGI.unescape(@data['url']).gsub(Regexp.new("^#{Ruhoh.urls.docroot}/"), '') #strip leading slash.
+      path = CGI.unescape(@data['url']).gsub(Regexp.new("^#{Ruhoh.urls.docroot}/*"), '') #strip leading slash.
       #path = "index.html" if path.gsub(Regexp.new("^#{Ruhoh.paths.base}/"), '').empty?
       path = "index.html" if path.empty? || path == "index"
       path += '/index.html' unless path =~ /\.\w+$/

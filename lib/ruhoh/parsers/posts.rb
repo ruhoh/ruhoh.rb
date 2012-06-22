@@ -160,7 +160,7 @@ class Ruhoh
           "categories" => category || '',
         }.inject(format) { |result, token|
           result.gsub(/:#{Regexp.escape token.first}/, token.last)
-        }.gsub(/\/+/, "/").sub(/^/, "#{Ruhoh.urls.docroot}")#.gsub(/\/+/, '/')
+        }.gsub(/\/+/, "/").sub(/^/, "#{Ruhoh.urls.docroot}").sub(/^\/+/, '/')
 
         url
       end
