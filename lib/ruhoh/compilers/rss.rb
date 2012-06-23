@@ -21,7 +21,7 @@ class Ruhoh
                page.change(post_id)
                xml.item {
                  xml.title_ post['title']
-                 xml.link "#{post['url']}".sub(Regexp.new("#{Ruhoh.urls.docroot}"), '')
+                 xml.link "#{post['url']}"#.sub(Regexp.new("#{Ruhoh.urls.docroot}"), '')
                  xml.pubDate_ post['date']
                  xml.description_ (post['description'] ? post['description'] : page.render)
                }
