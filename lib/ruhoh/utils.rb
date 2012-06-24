@@ -64,7 +64,7 @@ class Ruhoh
     end
 
     def self.url_to_path(url, base=nil)
-      parts = url.split('/')
+      parts = url.sub(Regexp.new("^#{Ruhoh.urls.docroot}/"), '').split('/')
       parts = parts.unshift(base) if base
       File.__send__(:join, parts)
     end    

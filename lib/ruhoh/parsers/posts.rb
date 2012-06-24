@@ -142,7 +142,7 @@ class Ruhoh
         # Use the literal permalink if it is a non-tokenized string.
         unless format.include?(':')
           url = format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
-          return "/#{url}"
+          return "#{Ruhoh.urls.docroot}/#{url}"
         end  
 
         filename = File.basename(post['id'], File.extname(post['id']))
@@ -160,7 +160,7 @@ class Ruhoh
           "categories" => category || '',
         }.inject(format) { |result, token|
           result.gsub(/:#{Regexp.escape token.first}/, token.last)
-        }.gsub(/\/+/, "/")
+        }.gsub(/\/+/, "/").sub(/^/, "#{Ruhoh.urls.docroot}").sub(/^\/+/, '/')
 
         url
       end
