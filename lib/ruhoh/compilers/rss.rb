@@ -10,13 +10,20 @@ class Ruhoh
       # render the content to save to disk. This will be a problem when
       # posts numbers expand. Merge this in later.
       def self.run(target, page)
+        num_posts = Ruhoh::DB.site['config']['posts']['rss_limit']
+        if (num_posts == nil)
+           posts = Ruhoh::DB.posts['chronological']
+        else
+           posts = Ruhoh::DB.posts['chronological'][1,num_posts]
+        end
+
         feed = Nokogiri::XML::Builder.new do |xml|
          xml.rss(:version => '2.0') {
            xml.channel {
              xml.title_ Ruhoh::DB.site['title']
              xml.link_ Ruhoh::DB.site['config']['production_url']
-             xml.pubDate_ Time.now
-             Ruhoh::DB.posts['chronological'].each do |post_id|
+             xml.pubDate_ Time.now          
+             posts.each do |post_id|
                post = Ruhoh::DB.posts['dictionary'][post_id]
                page.change(post_id)
                xml.item {
