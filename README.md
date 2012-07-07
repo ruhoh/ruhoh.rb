@@ -1,9 +1,18 @@
+## My Ruhoh
 
-## Ruhoh is the Universal Static Blog API
+This fork of the ruhoh blogging engine is for my fiddling with various 
+features.  For more info, see:
 
 <http://ruhoh.com>
 
-### Usage
+Here are some of the features I'm working on:
 
-    $ gem install ruhoh
-    $ ruhoh help
+### RSS Limit
+
+A new config option allows you to limit the number of posts included in 
+the RSS feed.  Default behavior is to include all posts.
+
+   posts:
+     ...
+     rss_limit: 10
+
