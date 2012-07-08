@@ -12,7 +12,6 @@ Here are some of the features I'm working on:
 A new config option allows you to limit the number of posts included in 
 the RSS feed.  Default behavior is to include all posts.
 
-   posts:
-     ...
-     rss_limit: 10
+   rss:
+     limit: 10
 
