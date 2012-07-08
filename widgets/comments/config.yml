@@ -3,6 +3,7 @@ disqus :
   short_name : jekyllbootstrap # Change This!
 livefyre :
   site_id : 123
+  site_name:
 intensedebate :
   account : 123abc
 facebook :
