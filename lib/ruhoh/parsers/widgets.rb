@@ -61,7 +61,7 @@ class Ruhoh
       #
       # Returns Array of script filenames to load.
       def self.process_javascripts(config, widget_name)
-        scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts]) : []
+        scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts].split(/\s/)) : []
         
         # Try for the default script if no config.
         if scripts.empty?
