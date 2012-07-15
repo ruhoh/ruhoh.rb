@@ -11,7 +11,6 @@ class Ruhoh
       # posts numbers expand. Merge this in later.
       def self.run(target, page)
         num_posts = Ruhoh.config.rss_limit
-        Ruhoh::Friend.say { green num_posts }
         posts = Ruhoh::DB.posts['chronological'].first(num_posts)
 
         feed = Nokogiri::XML::Builder.new do |xml|
