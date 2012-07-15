@@ -61,15 +61,15 @@ class Ruhoh
       #
       # Returns Array of script filenames to load.
       def self.process_javascripts(config, widget_name)
-        scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts]) : []
-        
+        scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts].split(/\s/)) : []
+                                
         # Try for the default script if no config.
         if scripts.empty?
           script_file = File.join(Ruhoh.paths.widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
           if File.exist?(script_file)
             scripts << "#{widget_name}.js"
           else
-            script_file = File.join(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
+            script_file = File.join(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")                      
             scripts << "#{widget_name}.js" if File.exist?(script_file)
           end
         end
