@@ -28,3 +28,11 @@ folder under the widget and named with the ".rb" extension.
            javascripts
            layouts
 
+### Widget Context
+
+Widget layouts now have access to the current page context, just like other 
+layouts and partials.
+
+Note: As a side effect of this, the special "{{config}}" that widgets
+used to have passed directly is now part of the global payload under
+"{{widgets.<widgetname>.config}}"
