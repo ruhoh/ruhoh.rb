@@ -1,6 +1,6 @@
 <script>
 var clicky_site_ids = clicky_site_ids || [];
-clicky_site_ids.push({{ config.getclicky.site_id }});
+clicky_site_ids.push({{ widgets.analytics.config.getclicky.site_id }});
 (function() {
   var s = document.createElement('script');
   s.type = 'text/javascript';
@@ -9,4 +9,4 @@ clicky_site_ids.push({{ config.getclicky.site_id }});
   ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
 })();
 </script>
-<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/{{ config.getclicky.site_id }}ns.gif" /></p></noscript>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/{{ widgets.analytics.config.getclicky.site_id }}ns.gif" /></p></noscript>

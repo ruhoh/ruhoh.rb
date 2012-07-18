@@ -3,7 +3,7 @@
 <script>
   var pres = document.getElementsByTagName("pre");
   for (var i=0; i < pres.length; ++i) {
-    pres[i].className = "prettyprint {{# config.linenums }}linenums{{/config.linenums}}";
+    pres[i].className = "prettyprint {{# widgets.google_prettify.config.linenums }}linenums{{/widgets.google_prettify.config.linenums}}";
   }
   prettyPrint();
 </script>
