@@ -19,7 +19,6 @@ class Ruhoh
 
           self.mustache_in_stack.__send__ helper, context
         end  
-
       end #RContext
   
       def context
@@ -52,7 +51,8 @@ class Ruhoh
       
       def widget(name)
         return '' if self.context['page'][name.to_s].to_s == 'false'
-        Ruhoh::DB.widgets[name.to_s]['layout']
+        raw_layout = Ruhoh::DB.widgets[name.to_s]['layout']
+        self.render(raw_layout)
       end
       
       def method_missing(name, *args, &block)

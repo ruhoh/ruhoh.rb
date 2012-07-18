@@ -3,6 +3,7 @@ class Ruhoh
     module Payload
       
       def self.generate
+        payload = 
         {
           "db" => {
             "pages" =>  Ruhoh::DB.pages,
@@ -15,8 +16,21 @@ class Ruhoh
             "theme_javascripts" => Ruhoh.urls.theme_javascripts,
             "theme_media" => Ruhoh.urls.theme_media,
             "media" => Ruhoh.urls.media,
-          }
+          },
+          "widgets" => {}
         }
+        self.merge_widget_config(payload)
+        payload
+      end
+      
+      def self.merge_widget_config(payload)
+        return if Ruhoh::DB.widgets == nil
+        Ruhoh::DB.widgets.each do |widget_arr|
+          name = widget_arr[0]
+          config = widget_arr[1]['config']
+          
+          payload['widgets'][name] = { 'config' => config }
+        end
       end
       
       # This is an ugly hack to determine the proper category and tag urls.

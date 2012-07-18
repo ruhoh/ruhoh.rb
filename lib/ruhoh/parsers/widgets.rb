@@ -23,7 +23,6 @@ class Ruhoh
           )
         end
         Ruhoh::Utils.report('Widgets', widgets, [])
-
         widgets
       end
 
@@ -62,7 +61,6 @@ class Ruhoh
       # Returns Array of script filenames to load.
       def self.process_javascripts(config, widget_name)
         scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts]) : []
-        
         # Try for the default script if no config.
         if scripts.empty?
           script_file = File.join(Ruhoh.paths.widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
@@ -96,9 +94,8 @@ class Ruhoh
 
         return '' unless layout
         content = File.open(layout, 'r:UTF-8') { |f| f.read }
-        Mustache.render(content, {'config' => config})
-      end
-      
+        content
+      end  
     end #Widgets
   end #Parsers
 end #Ruhoh
