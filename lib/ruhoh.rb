@@ -71,6 +71,7 @@ class Ruhoh
     return false unless(@config && @paths && @urls)
     
     self.setup_plugins unless opts[:enable_plugins] == false
+    self.setup_widgets unless opts[:enable_plugins] == false
     true
   end
   
@@ -81,6 +82,11 @@ class Ruhoh
   def self.setup_plugins
     plugins = Dir[File.join(self.paths.plugins, "**/*.rb")]
     plugins.each {|f| require f } unless plugins.empty?
+  end
+  
+  def self.setup_widgets
+   	widgets = Dir[File.join(self.paths.widgets, "**/*.rb")]
+   	widgets.each {|f| require f } unless widgets.empty?
   end
   
   def self.ensure_setup
