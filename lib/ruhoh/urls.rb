@@ -14,20 +14,20 @@ class Ruhoh
       :theme_widgets
     )
 
-    def self.generate(config)
+    def self.generate
       urls                      = Urls.new
       urls.media                = self.to_url(Ruhoh.names.assets, Ruhoh.names.media)
       urls.widgets              = self.to_url(Ruhoh.names.assets, Ruhoh.names.widgets)
       urls.dashboard            = self.to_url(Ruhoh.names.dashboard_file.split('.')[0])
 
-      urls.theme                = self.to_url(Ruhoh.names.assets, config.theme)
-      urls.theme_media          = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.media)
-      urls.theme_javascripts    = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.javascripts)
-      urls.theme_stylesheets    = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.stylesheets)
-      urls.theme_widgets        = self.to_url(Ruhoh.names.assets, config.theme, Ruhoh.names.widgets)
+      urls.theme                = self.to_url(Ruhoh.names.assets, Ruhoh.config.theme)
+      urls.theme_media          = self.to_url(Ruhoh.names.assets, Ruhoh.config.theme, Ruhoh.names.media)
+      urls.theme_javascripts    = self.to_url(Ruhoh.names.assets, Ruhoh.config.theme, Ruhoh.names.javascripts)
+      urls.theme_stylesheets    = self.to_url(Ruhoh.names.assets, Ruhoh.config.theme, Ruhoh.names.stylesheets)
+      urls.theme_widgets        = self.to_url(Ruhoh.names.assets, Ruhoh.config.theme, Ruhoh.names.widgets)
       urls
     end
-    
+
     def self.to_url(*args)
       args.unshift(nil).join('/')
     end
