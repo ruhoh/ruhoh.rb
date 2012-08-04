@@ -43,7 +43,8 @@ class Ruhoh
       
       def self.media(target, page)
         return unless FileTest.directory? Ruhoh.paths.media
-        media = Ruhoh::Utils.url_to_path(Ruhoh.urls.media, target)
+        url = Ruhoh.urls.media.gsub(/^\//, '')
+        media = Ruhoh::Utils.url_to_path(url, target)
         FileUtils.mkdir_p media
         FileUtils.cp_r File.join(Ruhoh.paths.media, '.'), media
       end

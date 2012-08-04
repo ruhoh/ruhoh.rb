@@ -29,7 +29,7 @@ class Ruhoh
     end
 
     def self.to_url(*args)
-      args.unshift(nil).join('/')
+      Ruhoh.config.base_path + args.join('/')
     end
     
     def self.to_url_slug(title)

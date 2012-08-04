@@ -10,7 +10,8 @@ class Ruhoh
       :posts_layout,
       :posts_permalink,
       :rss_limit,
-      :theme
+      :theme,
+      :base_path
     )
 
     def self.generate(path_to_config)
@@ -28,8 +29,15 @@ class Ruhoh
       
       config = Config.new
       config.theme = theme
+      
       config.env = site_config['env'] || nil
 
+      config.base_path = '/'
+      if site_config['base_path']
+        config.base_path = site_config['base_path'].to_s
+        config.base_path += "/" unless config.base_path[-1] == '/'
+      end
+      
       config.rss_limit = site_config['rss']['limit'] rescue nil
       config.rss_limit = 20 if config.rss_limit.nil?
 
