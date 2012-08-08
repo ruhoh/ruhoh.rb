@@ -8,16 +8,15 @@ class Ruhoh
       # Generates mappings to all registered javascripts.
       # Returns Hash with layout names as keys and Array of asset Objects as values
       def self.generate
-        theme_config = self.theme_config
-        assets = self.theme_javascripts(theme_config)
-        assets[Ruhoh.names.widgets] = self.widget_javascripts(theme_config)
+        assets = self.theme_javascripts
+        assets[Ruhoh.names.widgets] = self.widget_javascripts
         assets
       end
 
-      def self.theme_javascripts(theme_config)
-        return {} unless theme_config[Ruhoh.names.javascripts].is_a? Hash
+      def self.theme_javascripts
+        return {} unless Ruhoh::DB.theme_config[Ruhoh.names.javascripts].is_a? Hash
         assets = {}
-        theme_config[Ruhoh.names.javascripts].each do |key, value|
+        Ruhoh::DB.theme_config[Ruhoh.names.javascripts].each do |key, value|
           next if key == Ruhoh.names.widgets # Widgets are handled separately.
           assets[key] = Array(value).map { |v|
             {
@@ -35,7 +34,7 @@ class Ruhoh
       #   This differs from the auto-stylesheet inclusion relative to themes, 
       #   which is handled in the stylesheet parser.
       #   Make sure there are some standards with this.
-      def self.widget_javascripts(theme_config)
+      def self.widget_javascripts
         assets = []
         Ruhoh::DB.widgets.each_value do |widget|
           next unless widget[Ruhoh.names.javascripts]
@@ -50,18 +49,6 @@ class Ruhoh
         assets
       end
       
-      def self.theme_config
-        theme_config = Ruhoh::Utils.parse_yaml_file(Ruhoh.paths.theme_config_data)
-        if theme_config.nil?
-          Ruhoh::Friend.say{ 
-            yellow "WARNING: theme.yml config file not found:"
-            yellow "  #{Ruhoh.paths.theme_config_data}"
-          }
-          return {}
-        end
-        return {} unless theme_config.is_a? Hash
-        theme_config
-      end
     end #Javascripts
   end #Parsers
 end #Ruhoh
