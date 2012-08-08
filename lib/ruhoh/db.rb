@@ -4,6 +4,7 @@ require 'ruhoh/parsers/routes'
 require 'ruhoh/parsers/layouts'
 require 'ruhoh/parsers/partials'
 require 'ruhoh/parsers/widgets'
+require 'ruhoh/parsers/theme_config'
 require 'ruhoh/parsers/stylesheets'
 require 'ruhoh/parsers/javascripts'
 require 'ruhoh/parsers/payload'
@@ -12,7 +13,7 @@ require 'ruhoh/parsers/site'
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
-    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :stylesheets, :javascripts, :payload]
+    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :theme_config, :stylesheets, :javascripts, :payload]
 
     class << self
       self.__send__ :attr_reader, *WhiteList
@@ -34,6 +35,8 @@ class Ruhoh
             Ruhoh::Parsers::Partials.generate
           when :widgets
             Ruhoh::Parsers::Widgets.generate
+          when :theme_config
+            Ruhoh::Parsers::ThemeConfig.generate
           when :stylesheets
             Ruhoh::Parsers::Stylesheets.generate
           when :javascripts
