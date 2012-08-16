@@ -11,6 +11,7 @@ class Ruhoh
           "site" => Ruhoh::DB.site,
           'page' => {},
           "urls" => {
+            "theme" => Ruhoh.urls.theme,
             "theme_stylesheets" => Ruhoh.urls.theme_stylesheets,
             "theme_javascripts" => Ruhoh.urls.theme_javascripts,
             "theme_media" => Ruhoh.urls.theme_media,
