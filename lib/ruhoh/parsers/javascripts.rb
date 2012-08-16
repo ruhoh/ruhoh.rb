@@ -19,8 +19,9 @@ class Ruhoh
         Ruhoh::DB.theme_config[Ruhoh.names.javascripts].each do |key, value|
           next if key == Ruhoh.names.widgets # Widgets are handled separately.
           assets[key] = Array(value).map { |v|
+            url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{Ruhoh.urls.theme_javascripts}/#{v}"
             {
-              "url" => "#{Ruhoh.urls.theme_javascripts}/#{v}",
+              "url" => url,
               "id" => File.join(Ruhoh.paths.theme_javascripts, v)
             }
           }
