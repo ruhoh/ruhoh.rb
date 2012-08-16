@@ -138,11 +138,11 @@ class Ruhoh
         date = Date.parse(post['date'])
         title = Ruhoh::Urls.to_url_slug(post['title'])
         format = post['permalink'] || Ruhoh.config.posts_permalink  || "/:categories/:year/:month/:day/:title.html"
-        
+
         # Use the literal permalink if it is a non-tokenized string.
         unless format.include?(':')
           url = format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
-          return "/#{url}"
+          return "#{Ruhoh.config.base_path}#{url}"
         end  
 
         filename = File.basename(post['id'], File.extname(post['id']))
@@ -162,6 +162,8 @@ class Ruhoh
           result.gsub(/:#{Regexp.escape token.first}/, token.last)
         }.gsub(/\/+/, "/")
 
+        url = url.gsub(/^\//, '') #prep for prepending the base_path
+        url = "#{Ruhoh.config.base_path}#{url}"
         url
       end
     

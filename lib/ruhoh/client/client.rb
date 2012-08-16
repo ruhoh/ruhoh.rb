@@ -17,7 +17,11 @@ class Ruhoh
         exit 
       } unless self.respond_to?(cmd)
 
-      Ruhoh.setup unless ['help','blog','compile'].include?(cmd)
+      unless ['help','blog','compile'].include?(cmd)
+        Ruhoh.setup
+        Ruhoh.setup_paths
+        Ruhoh.setup_urls
+      end  
 
       self.__send__(cmd)
     end  

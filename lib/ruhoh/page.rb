@@ -86,7 +86,7 @@ class Ruhoh
       self.ensure_id
       path = CGI.unescape(@data['url']).gsub(/^\//, '') #strip leading slash.
       path = "index.html" if path.empty?
-      path += '/index.html' unless path =~ /\.\w+$/
+      path += 'index.html' unless path =~ /\.\w+$/
       path
     end
     
