@@ -52,6 +52,7 @@ Gem::Specification.new do |s|
     lib/ruhoh/parsers/routes.rb
     lib/ruhoh/parsers/site.rb
     lib/ruhoh/parsers/stylesheets.rb
+    lib/ruhoh/parsers/theme_config.rb
     lib/ruhoh/parsers/widgets.rb
     lib/ruhoh/paths.rb
     lib/ruhoh/previewer.rb

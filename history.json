@@ -1,5 +1,22 @@
 [
   {
+    "version" : "1.0",
+    "date" : "22.08.2012",
+    "changes" : [
+      "Ruhoh.setup is now broken out into modular setup routines.",
+      "Themes now port over ALL static assets to production when compiling. Change from whitelist to blacklist."
+    ],
+    "features" : [
+      "Add support for base_path which allows all urls to be prepended with a base_path if set.",
+      "Support for absolute links to third party domains for javascript and stylesheets within theme.yml",
+      "Add urls.theme variable to the payload",
+      "Add ?to_json contextual helper"
+    ],
+    "bugs" : [
+      "Themes now correctly port over assets to production when compiling"
+    ]
+  },
+  {
     "version" : "1.0.0.alpha",
     "date" : "05.06.2012",
     "changes" : [
