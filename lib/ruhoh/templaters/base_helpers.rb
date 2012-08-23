@@ -126,6 +126,10 @@ class Ruhoh
         return unless prev_id
         self.to_posts(prev_id)
       end
+      
+      def to_json(sub_context)
+        sub_context.to_json
+      end
             
       # Marks the active page if exists in the given pages Array
       def mark_active_page(pages)
