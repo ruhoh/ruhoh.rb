@@ -63,7 +63,7 @@ class Ruhoh
     self.reset
     @log.log_file = opts[:log_file] if opts[:log_file]
     @base = opts[:source] if opts[:source]
-    @config = Ruhoh::Config.generate(@names.config_data)
+    @config = Ruhoh::Config.generate
     !!@config
   end
   
