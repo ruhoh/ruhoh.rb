@@ -8,6 +8,6 @@ gem 'redcarpet', "~> 2.1"
 gem 'nokogiri', "~> 1.5"
 
 group :development do
-  gem 'rspec'
+  gem 'rspec', "~> 2.11"
   gem 'rake'
 end
