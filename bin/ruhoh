@@ -8,7 +8,7 @@ require 'ruhoh/client/client'
 
 require 'optparse'
 
-Options = Struct.new(:title, :date, :ext, :verbose)
+Options = Struct.new(:title, :date, :ext, :hg, :verbose)
 options = Options.new
 
 opt_parser = OptionParser.new do |opts|
