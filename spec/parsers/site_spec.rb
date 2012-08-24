@@ -3,15 +3,10 @@ require 'spec_helper'
 module Site
   
   describe Ruhoh::Parsers::Site do
+    include_context "write_default_theme"
+    include_context "default_setup"
     
     describe "#generate" do
-
-      before(:each) do
-        Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
-        Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
-        Ruhoh.setup(:source => SampleSitePath)
-      end
-      
       it 'should parse the config and site yaml files' do
         Ruhoh::Utils.should_receive(:parse_yaml_file).with(Ruhoh.paths.site_data).and_return({})
         Ruhoh::Utils.should_receive(:parse_yaml_file).with(Ruhoh.paths.config_data).and_return({})

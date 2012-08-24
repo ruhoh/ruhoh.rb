@@ -2,14 +2,9 @@
 require 'spec_helper'
 
 module Posts
-  
   describe Ruhoh::Parsers::Posts do
-    
-    before(:each) do
-      Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
-      Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
-      Ruhoh.setup(:source => SampleSitePath)
-    end
+    include_context "write_default_theme"
+    include_context "default_setup"
     
     pending "#generate" do
       

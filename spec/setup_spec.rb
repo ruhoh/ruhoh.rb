@@ -5,9 +5,6 @@ module Setup
     describe "#setup" do
       it 'should setup config, paths, and filters' do
         Ruhoh::Config.should_receive(:generate).and_return(true)
-        Ruhoh::Paths.should_receive(:generate).and_return(true)
-        Ruhoh::Urls.should_receive(:generate).and_return(true)
-        Ruhoh.should_receive(:setup_plugins).and_return(true)
         Ruhoh.setup
       end
     end

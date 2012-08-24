@@ -1,15 +1,13 @@
 require 'spec_helper'
 
 module Pages
-  
   describe Ruhoh::Parsers::Pages do
-    
     describe "#generate" do
+      include_context "write_default_theme"
+      include_context "default_setup"
       
       before(:each) do
-        Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
         the_pages_dir = File.join(SampleSitePath, Ruhoh.names.pages)
-        FileUtils.remove_dir(the_pages_dir, 1) if Dir.exists? the_pages_dir
         Dir.mkdir the_pages_dir
         expected_pages.each do |page_name| 
           full_file_name = File.join(the_pages_dir, page_name)
@@ -21,9 +19,6 @@ title: #{page_name} (test)
             TEXT
           end
         end
-        
-        Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
-        Ruhoh.setup(:source => SampleSitePath)
       end
       
       let(:expected_pages) {
@@ -49,15 +44,7 @@ title: #{page_name} (test)
     end
     
     describe "#is_valid_page?" do
-      
       context "No user specified exclusions in config." do
-        
-        before(:each) do
-          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => "twitter"})
-          Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
-          Ruhoh.setup(:source => SampleSitePath)
-        end
-        
         it "should return true for a valid page filepath" do
           filepath = 'about.md'
           Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == true
@@ -71,39 +58,60 @@ title: #{page_name} (test)
       end
       
       context "Exclude array is passed into config." do
-        
-        it "should return false for a page whose filepath matches a page exclude regular expression." do
-          filepath = 'about.md'
-          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
-            'theme' => "twitter",
-            'pages' => {'exclude' => "#{filepath}$"}
-          })
-          Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
-          Ruhoh.setup(:source => SampleSitePath)
-          Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
-        end
+        before(:each){
+          Dir.mkdir SampleSitePath
+          theme = "twitter"
+          # Create base config.yml + base theme
+          File.open(File.join(SampleSitePath, Ruhoh.names.config_data), "w+") { |file|
+            file.puts <<-TEXT
+---
+theme: '#{theme}'
+pages:
+  exclude: ['^test', 'blah']
+---  
+  TEXT
+          }
+          theme_dir = File.join(SampleSitePath, Ruhoh.names.themes, theme)
+          FileUtils.makedirs theme_dir
+        }
+        include_context "default_setup"
         
         it "should return false for a page filepath matching a regular expression in pages exclude array" do
           filepath1 = 'test/about.md'
           filepath2 = 'test/yay.md'
           filepath3 = 'vest/yay.md'
-          Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({
-            'theme' => "twitter",
-            'pages' => {'exclude' => ['^test', 'blah'] }
-          })
-          Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
-          Ruhoh.setup(:source => SampleSitePath)
-          
           Ruhoh::Parsers::Pages.is_valid_page?(filepath1).should == false
           Ruhoh::Parsers::Pages.is_valid_page?(filepath2).should == false
           Ruhoh::Parsers::Pages.is_valid_page?(filepath3).should == true
         end
-        
       end
       
+      context "Exclude string is passed into config." do
+        let(:filepath){'about.md'}
+        before(:each){
+          Dir.mkdir SampleSitePath
+          theme = "twitter"
+          # Create base config.yml + base theme
+          File.open(File.join(SampleSitePath, Ruhoh.names.config_data), "w+") { |file|
+            file.puts <<-TEXT
+---
+theme: '#{theme}'
+pages:
+  exclude: '#{filepath}$'
+---  
+  TEXT
+          }
+          theme_dir = File.join(SampleSitePath, Ruhoh.names.themes, theme)
+          FileUtils.makedirs theme_dir
+        }
+        include_context "default_setup"
+        
+        it "should return false for a page whose filepath matches a page exclude regular expression." do
+          Ruhoh::Parsers::Pages.is_valid_page?(filepath).should == false
+        end
+      end
     end
-    
-    
+
     describe "#to_title"
     describe "#permalink"
     

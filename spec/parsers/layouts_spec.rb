@@ -5,7 +5,6 @@ module Layouts
     before(:each) do
       expected_theme = "twitter"
       the_layouts_dir = File.join(SampleSitePath, Ruhoh.names.themes, expected_theme, Ruhoh.names.layouts)
-      FileUtils.remove_dir(the_layouts_dir, 1) if Dir.exists? the_layouts_dir
       FileUtils.makedirs the_layouts_dir
       expected_layouts.each do |layout_name| 
         full_file_name = File.join(the_layouts_dir, layout_name)
@@ -18,9 +17,6 @@ title: #{layout_name} (test)
           TEXT
         end
       end
-      
-      Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({'theme' => expected_theme})
-      Ruhoh.setup(:source => SampleSitePath)
     end
 
     let(:expected_layouts) { %w{default.html page.html post.html} }

@@ -1,14 +1,11 @@
+require 'spec_helper'
+
 module DB
-  
   describe Ruhoh::DB do
+    include_context "write_default_theme"
+    include_context "default_setup"
+    
     let(:whitelist){ Ruhoh::DB::WhiteList }
-    
-    before(:each) do
-      Ruhoh::Utils.stub(:parse_yaml_file).and_return({'theme' => "twitter"})
-      Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
-      Ruhoh.setup(:source => SampleSitePath)
-    end
-    
     context "database has not been updated" do
       it "should return nil for all whitelisted variables except payload" do
         whitelist.each do |var|
@@ -20,7 +17,6 @@ module DB
     end
     
     describe "#update" do
-      
       it "should raise an exception when updating a variable not whitelisted" do
         lambda { Ruhoh::DB.update(:table) }.should raise_error
       end

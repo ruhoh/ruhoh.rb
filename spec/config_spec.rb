@@ -8,7 +8,7 @@ module Config
           Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({})
           
           Ruhoh.log.should_receive(:error)
-          Ruhoh::Config.generate('config.yml').should be_false
+          Ruhoh::Config.generate.should be_false
         end
       end
       context "Valid _config.yml file" do
@@ -24,7 +24,7 @@ module Config
             }
           })
 
-          config = Ruhoh::Config.generate('config.yml')
+          config = Ruhoh::Config.generate
           config.theme.should == custom_theme
           config.posts_exclude.should == [/.secret/]
         end
@@ -41,7 +41,7 @@ module Config
           },
         })
         
-        config = Ruhoh::Config.generate('config.yml')
+        config = Ruhoh::Config.generate
         config.posts_exclude.should include(/.secret/)
         config.posts_exclude.should include(/^test/)
       end
