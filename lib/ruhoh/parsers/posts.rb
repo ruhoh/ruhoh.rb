@@ -137,7 +137,7 @@ class Ruhoh
       def self.permalink(post)
         date = Date.parse(post['date'])
         title = Ruhoh::Urls.to_url_slug(post['title'])
-        format = post['permalink'] || Ruhoh.config.posts_permalink  || "/:categories/:year/:month/:day/:title.html"
+        format = post['permalink'] || Ruhoh.config.posts_permalink
 
         # Use the literal permalink if it is a non-tokenized string.
         unless format.include?(':')

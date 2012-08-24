@@ -42,6 +42,11 @@ class Ruhoh
       config.rss_limit = 20 if config.rss_limit.nil?
 
       config.posts_permalink = site_config['posts']['permalink'] rescue nil
+      config.posts_permalink ||= "/:categories/:year/:month/:day/:title.html"
+      # Make sure to add a trailing slash unless exists or ends in extension.
+      unless config.posts_permalink[-1] == '/' || config.posts_permalink =~ /\.\w+$/
+        config.posts_permalink += '/'
+      end
       config.posts_layout = site_config['posts']['layout'] rescue nil
       config.posts_layout = 'post' if config.posts_layout.nil?
       excluded_posts = site_config['posts']['exclude'] rescue nil
