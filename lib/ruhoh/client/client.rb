@@ -4,7 +4,7 @@ class Ruhoh
   class Client
     
     Paths = Struct.new(:page_template, :draft_template, :post_template, :layout_template, :theme_template)
-    BlogScaffold = 'git://github.com/ruhoh/blog.git'
+    DefaultBlogScaffold = 'git://github.com/ruhoh/blog.git'
     
     def initialize(data)
       @iterator = 0
@@ -140,6 +140,8 @@ class Ruhoh
     # Public: Create a new blog at the directory provided.
     def blog
       name = @args[1]
+      scaffold = @args.length > 2 ? @args[2] : DefaultBlogScaffold
+      useHg = @options.hg
       Ruhoh::Friend.say { 
         red "Please specify a directory path." 
         plain "  ex: ruhoh new the-blogist"
@@ -156,9 +158,16 @@ class Ruhoh
       
       Ruhoh::Friend.say { 
         plain "Trying this command:"
-        cyan "  git clone #{BlogScaffold} #{target_directory}"
 
-        if system('git', 'clone', BlogScaffold, target_directory)
+        if useHg
+          cyan "  hg clone #{scaffold} #{target_directory}"
+          success = system('hg', 'clone', scaffold, target_directory)
+        else
+          cyan "  git clone #{scaffold} #{target_directory}"
+          success = system('git', 'clone', scaffold, target_directory)
+        end
+
+        if success
           green "Success! Now do..."
           cyan "  cd #{target_directory}"
           cyan "  rackup -p9292"
