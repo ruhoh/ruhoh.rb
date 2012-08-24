@@ -18,6 +18,10 @@ opt_parser = OptionParser.new do |opts|
     options.ext = ext
   end
   
+  opts.on("--hg", "Use mercurial (hg) instead of git for source control.") do
+    options.hg = true
+  end
+
   opts.on("-v", "--[no-]verbose", "Run verbosely. For pages, shows extra title, url meta-data.") do |v|
     options.verbose = v
   end

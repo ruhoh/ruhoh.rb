@@ -140,6 +140,8 @@ class Ruhoh
     # Public: Create a new blog at the directory provided.
     def blog
       name = @args[1]
+      scaffold = @args.length > 2 ? @args[2] : BlogScaffold
+      useHg = @options.hg
       Ruhoh::Friend.say { 
         red "Please specify a directory path." 
         plain "  ex: ruhoh new the-blogist"
@@ -156,9 +158,16 @@ class Ruhoh
       
       Ruhoh::Friend.say { 
         plain "Trying this command:"
-        cyan "  git clone #{BlogScaffold} #{target_directory}"
 
-        if system('git', 'clone', BlogScaffold, target_directory)
+        if useHg
+          cyan "  hg clone #{scaffold} #{target_directory}"
+          success = system('hg', 'clone', scaffold, target_directory)
+        else
+          cyan "  git clone #{BlogScaffold} #{target_directory}"
+          success = system('git', 'clone', BlogScaffold, target_directory)
+        end
+
+        if success
           green "Success! Now do..."
           cyan "  cd #{target_directory}"
           cyan "  rackup -p9292"
