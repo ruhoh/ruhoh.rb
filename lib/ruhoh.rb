@@ -49,6 +49,7 @@ class Ruhoh
     :javascripts => 'javascripts',
     :site_data => 'site.yml',
     :stylesheets => 'stylesheets',
+    :system => 'system',
     :themes => 'themes',
     :theme_config => 'theme.yml',
     :widgets => 'widgets',

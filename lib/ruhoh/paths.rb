@@ -27,7 +27,8 @@ class Ruhoh
       :theme_javascripts,
       :theme_stylesheets,
       :theme_widgets,
-    
+      
+      :system,
       :system_dashboard_file,
       :system_partials,
       :system_widgets
@@ -60,9 +61,10 @@ class Ruhoh
       
       return false unless self.theme_is_valid?(paths)
       
-      paths.system_dashboard_file = File.join(Ruhoh::Root, Ruhoh.names.dashboard_file)
-      paths.system_partials     = File.join(Ruhoh::Root, Ruhoh.names.partials)
-      paths.system_widgets      = File.join(Ruhoh::Root, Ruhoh.names.widgets)
+      paths.system                    = File.join(Ruhoh::Root, Ruhoh.names.system)
+      paths.system_dashboard_file     = File.join(paths.system, Ruhoh.names.dashboard_file)
+      paths.system_partials           = File.join(paths.system, Ruhoh.names.partials)
+      paths.system_widgets            = File.join(paths.system, Ruhoh.names.widgets)
 
       paths
     end
