@@ -22,7 +22,6 @@ class Ruhoh
         self.process(Ruhoh.paths.system_partials)
       end
       
-      
       def self.process(path)
         return {} unless File.exist?(path)
       
@@ -31,7 +30,8 @@ class Ruhoh
           Dir.glob("**/*").each { |filename|
             next if FileTest.directory?(filename)
             next if ['.'].include? filename[0]
-            File.open(filename, 'r:UTF-8') { |f| partials[filename] = f.read }
+            name = filename.chomp(File.extname(filename))
+            File.open(filename, 'r:UTF-8') { |f| partials[name] = f.read }
           }
         }
         partials
