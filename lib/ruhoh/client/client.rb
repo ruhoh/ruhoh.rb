@@ -1,6 +1,9 @@
 require 'ruhoh/compiler'
+require 'ruhoh/client/console_methods'
+require 'irb'
 
 class Ruhoh
+  
   class Client
     
     Paths = Struct.new(:page_template, :draft_template, :post_template, :layout_template, :theme_template)
@@ -24,6 +27,14 @@ class Ruhoh
 
       self.__send__(cmd)
     end  
+    
+    # Thanks rails! https://github.com/rails/rails/blob/master/railties/lib/rails/commands/console.rb
+    def console
+      ARGV.clear # IRB throws an error otherwise.
+      require 'pp'
+      IRB::ExtendCommandBundle.send :include, Ruhoh::ConsoleMethods
+      IRB.start
+    end
     
     def setup_options(data)
       @args = data[:args]
