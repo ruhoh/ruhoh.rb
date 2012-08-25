@@ -9,11 +9,12 @@ require 'ruhoh/parsers/stylesheets'
 require 'ruhoh/parsers/javascripts'
 require 'ruhoh/parsers/payload'
 require 'ruhoh/parsers/site'
+require 'ruhoh/parsers/scaffolds'
 
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
-    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :theme_config, :stylesheets, :javascripts, :payload]
+    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :theme_config, :stylesheets, :javascripts, :payload, :scaffolds]
 
     class << self
       self.__send__ :attr_reader, *WhiteList
@@ -43,6 +44,8 @@ class Ruhoh
             Ruhoh::Parsers::Javascripts.generate
           when :payload
             Ruhoh::Parsers::Payload.generate
+          when :scaffolds
+            Ruhoh::Parsers::Scaffolds.generate
           else
             raise "Data type: '#{name}' is not a valid data type."
           end

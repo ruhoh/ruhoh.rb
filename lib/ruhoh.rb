@@ -47,6 +47,7 @@ class Ruhoh
     :plugins => 'plugins',
     :posts => 'posts',
     :javascripts => 'javascripts',
+    :scaffolds => 'scaffolds',
     :site_data => 'site.yml',
     :stylesheets => 'stylesheets',
     :system => 'system',
