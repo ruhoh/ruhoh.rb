@@ -170,30 +170,6 @@ class Ruhoh
       }
     end
     
-    # Public: Create a new theme scaffold with the given name.
-    def theme
-      name = @args[1]
-      Ruhoh::Friend.say { 
-        red "Please specify a theme name." 
-        cyan "ex: ruhoh new theme the-rain"
-        exit
-      } if name.nil?
-
-      target_directory = File.expand_path(File.join(Ruhoh.paths.theme, '..', name.gsub(/\s/, '-').downcase))
-      
-      if File.exist?(target_directory)
-        abort("Create new theme: \e[31mAborted!\e[0m") if ask("#{target_directory} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
-      end
-
-      FileUtils.mkdir target_directory unless File.exist?(target_directory)
-      FileUtils.cp_r "#{@paths.theme_template}/.", target_directory
-      
-      Ruhoh::Friend.say { 
-        green "New theme scaffold:"
-        green target_directory
-      }
-    end
-
     # Public: Create a new layout file for the active theme.
     def layout
       name = @args[1]

@@ -51,10 +51,6 @@ commands:
     "desc" : |
       Create a new layout for the currently active theme.
   -
-    "command" : "theme <name>"
-    "desc" : |
-      Create a new theme scaffold.
-  -
     "command" : "help"
     "desc" : |
       Show this menu.
