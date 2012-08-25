@@ -1,0 +1,30 @@
+<br/><br/>
+<div class="page-header">
+  <h1>{{ title }} {{# tagline }} <small>{{ . }}</small>{{/ tagline }}</h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    {{{ content }}}  
+
+ <hr>
+  
+{{{comments_count}}}
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>{{ date }}</span></div>
+    <br>
+    
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    {{# tags?to_tags }}
+      {{> tags_list }}
+    {{/ tags?to_tags }}
+    </ul>
+    
+     {{{share_this}}}
+  </div>  
+</div>

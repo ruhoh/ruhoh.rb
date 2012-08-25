@@ -3,7 +3,11 @@ class Ruhoh
     module Partials
     
       def self.generate
-        self.global_partials.merge(self.theme_partials)
+        self.system_partials.merge(
+          self.global_partials
+        ).merge(
+          self.theme_partials
+        )
       end
       
       def self.theme_partials
@@ -13,6 +17,11 @@ class Ruhoh
       def self.global_partials
         self.process(Ruhoh.paths.partials)
       end
+
+      def self.system_partials
+        self.process(Ruhoh.paths.system_partials)
+      end
+      
       
       def self.process(path)
         return {} unless File.exist?(path)
