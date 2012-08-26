@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'mustache', "~> 0.99"
   s.add_dependency 'directory_watcher', "~> 1.4"
   s.add_dependency 'redcarpet', "~> 2.1"
-  s.add_dependency 'psych', "~> 1.3"
   s.add_dependency 'nokogiri', "~> 1.5"
   
   # = MANIFEST =
@@ -52,6 +51,7 @@ Gem::Specification.new do |s|
     lib/ruhoh/parsers/routes.rb
     lib/ruhoh/parsers/site.rb
     lib/ruhoh/parsers/stylesheets.rb
+    lib/ruhoh/parsers/theme_config.rb
     lib/ruhoh/parsers/widgets.rb
     lib/ruhoh/paths.rb
     lib/ruhoh/previewer.rb
