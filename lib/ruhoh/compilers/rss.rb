@@ -26,7 +26,7 @@ class Ruhoh
                  xml.title_ post['title']
                  xml.link "#{Ruhoh::DB.site['config']['production_url']}#{post['url']}"
                  xml.pubDate_ post['date']
-                 xml.description_ (post['description'] ? post['description'] : page.render)
+                 xml.description_ (post['description'] ? post['description'] : page.render_rss)
                }
              end
            }

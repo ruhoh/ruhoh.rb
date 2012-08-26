@@ -28,6 +28,11 @@ class Ruhoh
       @templater.render(self.expand_layouts, self.payload)
     end
     
+    def render_rss
+      self.ensure_id
+      @templater.render(self.expand_layouts, self.payload)
+    end
+    
     def process_layouts
       self.ensure_id
       if @data['layout']
