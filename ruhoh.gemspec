@@ -26,10 +26,10 @@ Gem::Specification.new do |s|
     README.md
     Rakefile
     bin/ruhoh
-    dash.html
     history.json
     lib/ruhoh.rb
     lib/ruhoh/client/client.rb
+    lib/ruhoh/client/console_methods.rb
     lib/ruhoh/client/help.yml
     lib/ruhoh/compiler.rb
     lib/ruhoh/compilers/rss.rb
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
     lib/ruhoh/parsers/payload.rb
     lib/ruhoh/parsers/posts.rb
     lib/ruhoh/parsers/routes.rb
+    lib/ruhoh/parsers/scaffolds.rb
     lib/ruhoh/parsers/site.rb
     lib/ruhoh/parsers/stylesheets.rb
     lib/ruhoh/parsers/theme_config.rb
@@ -65,19 +66,6 @@ Gem::Specification.new do |s|
     lib/ruhoh/version.rb
     lib/ruhoh/watch.rb
     ruhoh.gemspec
-    scaffolds/draft.html
-    scaffolds/layout.html
-    scaffolds/page.html
-    scaffolds/post.html
-    scaffolds/theme/javascripts/.gitkeep
-    scaffolds/theme/layouts/default.html
-    scaffolds/theme/layouts/page.html
-    scaffolds/theme/layouts/post.html
-    scaffolds/theme/media/.gitkeep
-    scaffolds/theme/partials/.gitkeep
-    scaffolds/theme/stylesheets/style.css
-    scaffolds/theme/theme.yml
-    scaffolds/theme/widgets/.gitkeep
     spec/config_spec.rb
     spec/db_spec.rb
     spec/page_spec.rb
@@ -88,16 +76,28 @@ Gem::Specification.new do |s|
     spec/parsers/site_spec.rb
     spec/setup_spec.rb
     spec/spec_helper.rb
-    widgets/analytics/config.yml
-    widgets/analytics/layouts/getclicky.html
-    widgets/analytics/layouts/google.html
-    widgets/comments/config.yml
-    widgets/comments/layouts/disqus.html
-    widgets/comments/layouts/facebook.html
-    widgets/comments/layouts/intensedebate.html
-    widgets/comments/layouts/livefyre.html
-    widgets/google_prettify/config.yml
-    widgets/google_prettify/layouts/google_prettify.html
+    spec/support/shared_contexts.rb
+    system/dash.html
+    system/partials/categories_list.html
+    system/partials/pages_list.html
+    system/partials/posts_collate.html
+    system/partials/posts_list.html
+    system/partials/posts_summary.html
+    system/partials/tags_list.html
+    system/scaffolds/draft.html
+    system/scaffolds/layout.html
+    system/scaffolds/page.html
+    system/scaffolds/post.html
+    system/widgets/analytics/config.yml
+    system/widgets/analytics/layouts/getclicky.html
+    system/widgets/analytics/layouts/google.html
+    system/widgets/comments/config.yml
+    system/widgets/comments/layouts/disqus.html
+    system/widgets/comments/layouts/facebook.html
+    system/widgets/comments/layouts/intensedebate.html
+    system/widgets/comments/layouts/livefyre.html
+    system/widgets/google_prettify/config.yml
+    system/widgets/google_prettify/layouts/google_prettify.html
   ]
   # = MANIFEST =
 end
