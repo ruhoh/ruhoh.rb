@@ -28,9 +28,9 @@ class Ruhoh
       @templater.render(self.expand_layouts, self.payload)
     end
     
-    def render_rss
+    def render_content
       self.ensure_id
-      @templater.render(self.expand_layouts, self.payload)
+      @templater.render('{{{content}}}', self.payload)
     end
     
     def process_layouts
