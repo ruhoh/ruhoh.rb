@@ -7,11 +7,6 @@ class Ruhoh
   #
   class Previewer
     
-    def initialize(page)
-      Ruhoh.config.env ||= 'development'
-      @page = page
-    end
-
     def call(env)
       return favicon if env['PATH_INFO'] == '/favicon.ico'
       # Always remove trailing slash if sent unless it's the root page.
@@ -20,8 +15,8 @@ class Ruhoh
       
       id = Ruhoh::DB.routes[env['PATH_INFO']]
       raise "Page id not found for url: #{env['PATH_INFO']}" unless id
-      @page.change(id)
 
+      @page = Ruhoh::Page.new(id)
       [200, {'Content-Type' => 'text/html'}, [@page.render]]
     end
     
@@ -39,7 +34,7 @@ class Ruhoh
         template = path and break if File.exist?(path)
       end
       template = File.open(template, 'r:UTF-8') {|f| f.read }
-      output = @page.templater.render(template, Ruhoh::DB.payload)
+      output = Ruhoh::Templaters::RMustache.render(template, Ruhoh::DB.payload)
       
       [200, {'Content-Type' => 'text/html'}, [output]]
     end

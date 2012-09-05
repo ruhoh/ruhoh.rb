@@ -45,7 +45,7 @@ class Ruhoh
         end
 
         map '/' do
-          run Ruhoh::Previewer.new(Ruhoh::Page.new)
+          run Ruhoh::Previewer.new
         end
       }
     end
