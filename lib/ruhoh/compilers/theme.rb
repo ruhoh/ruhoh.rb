@@ -2,16 +2,16 @@ class Ruhoh
   module Compiler
     module Theme
       
-      def self.run(target, page)
-        self.copy(target, page)
+      def self.run(opts)
+        self.copy(opts)
       end
 
       # Copies all theme assets over to the compiled site.
       # Note the compiled assets are namespaced at /assets/<theme-name>/
       # theme.yml may specify exclusion rules for excluding assets.
-      def self.copy(target, page)
+      def self.copy(opts)
         url = Ruhoh.urls.theme.gsub(/^\//, '')
-        theme = Ruhoh::Utils.url_to_path(url, target)
+        theme = Ruhoh::Utils.url_to_path(url, opts[:target])
         FileUtils.mkdir_p theme
 
         self.files.each do |file|

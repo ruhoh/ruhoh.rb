@@ -5,10 +5,9 @@ class Ruhoh
   module Compiler
 
     # TODO: seems rather dangerous to delete the incoming target directory?
-    def self.compile(target_directory = nil, page = nil)
+    def self.compile(target_directory = nil)
       Ruhoh::Friend.say { plain "Compiling for environment: '#{Ruhoh.config.env}'" }
       target = target_directory || "./#{Ruhoh.names.compiled}"
-      page = page || Ruhoh::Page.new
       
       FileUtils.rm_r target if File.exist?(target)
       FileUtils.mkdir_p target
@@ -16,23 +15,23 @@ class Ruhoh
       self.constants.each {|c|
         task = self.const_get(c)
         next unless task.respond_to?(:run)
-        task.run(target, page)
+        task.run({:target => target})
       }  
       true
     end
     
     module Defaults
 
-      def self.run(target, page)
-        self.pages(target, page)
-        self.media(target, page)
-        self.javascripts(target, page)
+      def self.run(opts)
+        self.pages(opts)
+        self.media(opts)
+        self.javascripts(opts)
       end
       
-      def self.pages(target, page)
-        FileUtils.cd(target) {
+      def self.pages(opts)
+        FileUtils.cd(opts[:target]) {
           Ruhoh::DB.all_pages.each_value do |p|
-            page.change(p['id'])
+            page = Ruhoh::Page.new(p['id'])
 
             FileUtils.mkdir_p File.dirname(page.compiled_path)
             File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render }
@@ -42,10 +41,10 @@ class Ruhoh
         }
       end
       
-      def self.media(target, page)
+      def self.media(opts)
         return unless FileTest.directory? Ruhoh.paths.media
         url = Ruhoh.urls.media.gsub(/^\//, '')
-        media = Ruhoh::Utils.url_to_path(url, target)
+        media = Ruhoh::Utils.url_to_path(url, opts[:target])
         FileUtils.mkdir_p media
         FileUtils.cp_r File.join(Ruhoh.paths.media, '.'), media
       end
@@ -54,12 +53,12 @@ class Ruhoh
       # Javascripts may be registered from either a theme or a widget.
       # Technically the theme compiler may create javascripts relative to the theme.
       # This ensures the widget javascripts are created as well.
-      def self.javascripts(target, page)
+      def self.javascripts(opts)
         Ruhoh::DB.javascripts.each do |type, assets|
           assets.each do |asset|
             url = asset['url'].gsub(/^\//, '')
             next unless File.exist?(asset['id'])
-            file_path = Ruhoh::Utils.url_to_path(File.dirname(url), target)
+            file_path = Ruhoh::Utils.url_to_path(File.dirname(url), opts[:target])
             FileUtils.mkdir_p file_path
             FileUtils.cp(asset['id'], file_path)
           end

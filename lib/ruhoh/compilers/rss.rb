@@ -9,7 +9,7 @@ class Ruhoh
       # TODO: This renders the page content even though we already need to
       # render the content to save to disk. This will be a problem when
       # posts numbers expand. Merge this in later.
-      def self.run(target, page)
+      def self.run(opts)
         num_posts = Ruhoh.config.rss_limit
         posts = Ruhoh::DB.posts['chronological'].first(num_posts)
 
@@ -21,7 +21,7 @@ class Ruhoh
              xml.pubDate_ Time.now          
              posts.each do |post_id|
                post = Ruhoh::DB.posts['dictionary'][post_id]
-               page.change(post_id)
+               page = Ruhoh::Page.new(post_id)
                xml.item {
                  xml.title_ post['title']
                  xml.link "#{Ruhoh::DB.site['config']['production_url']}#{post['url']}"
@@ -32,7 +32,7 @@ class Ruhoh
            }
          }
         end
-        File.open(File.join(target, 'rss.xml'), 'w'){ |p| p.puts feed.to_xml }
+        File.open(File.join(opts[:target], 'rss.xml'), 'w'){ |p| p.puts feed.to_xml }
       end
     end #Rss
   end #Compiler
