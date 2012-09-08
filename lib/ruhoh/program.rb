@@ -55,14 +55,15 @@ class Ruhoh
     # The compile environment should always be 'production' in order
     # to properly omit drafts and other development-only settings.
     def self.compile(target)
-      Ruhoh.setup
-      Ruhoh.config.env = 'production'
-      Ruhoh.setup_paths
-      Ruhoh.setup_urls
-      Ruhoh.setup_plugins
-      
-      Ruhoh::DB.update_all
-      Ruhoh::Compiler.compile(target)
+      ruhoh = Ruhoh.new
+      ruhoh.setup
+      ruhoh.config.env = 'production'
+      #ruhoh.config.target = target
+      ruhoh.setup_paths
+      ruhoh.setup_urls
+      ruhoh.setup_plugins
+      ruhoh.db.update_all
+      Ruhoh::Compiler.compile(ruhoh)
     end
     
   end #Program
