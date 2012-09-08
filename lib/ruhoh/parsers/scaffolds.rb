@@ -1,19 +1,20 @@
 class Ruhoh
   module Parsers
     module Scaffolds
-    
-      def self.generate
+      @ruhoh = nil
+      def self.generate(ruhoh)
+        @ruhoh = ruhoh
         self.system_scaffolds.merge(
           self.scaffolds
         )
       end
       
       def self.scaffolds
-        self.process(Ruhoh.paths.scaffolds)
+        self.process(@ruhoh.paths.scaffolds)
       end
 
       def self.system_scaffolds
-        self.process(Ruhoh.paths.system_scaffolds)
+        self.process(@ruhoh.paths.system_scaffolds)
       end
       
       def self.process(path)

@@ -6,10 +6,11 @@ class Ruhoh
     # If the theme provides widget stylesheets they will load automatically.
     # theme.yml may also specify an explicit widget stylesheet to load.
     module Stylesheets
-
+      @ruhoh = nil
       # Generates mappings to all registered stylesheets.
       # Returns Hash with layout names as keys and Array of asset Objects as values
-      def self.generate
+      def self.generate(ruhoh)
+        @ruhoh = ruhoh
         assets = self.theme_stylesheets
         assets[Ruhoh.names.widgets] = self.widget_stylesheets
         assets
@@ -19,15 +20,15 @@ class Ruhoh
       # Themes register stylesheets relative to their layouts.
       # Returns Hash with layout names as keys and Array of asset Objects as values.
       def self.theme_stylesheets
-        return {} unless Ruhoh::DB.theme_config[Ruhoh.names.stylesheets].is_a? Hash
+        return {} unless @ruhoh.db.theme_config[Ruhoh.names.stylesheets].is_a? Hash
         assets = {}
-        Ruhoh::DB.theme_config[Ruhoh.names.stylesheets].each do |key, value|
+        @ruhoh.db.theme_config[Ruhoh.names.stylesheets].each do |key, value|
           next if key == Ruhoh.names.widgets # Widgets are handled separately.
           assets[key] = Array(value).map { |v|
-            url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{Ruhoh.urls.theme_stylesheets}/#{v}"
+            url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{@ruhoh.urls.theme_stylesheets}/#{v}"
             {
               "url" => url,
-              "id" => File.join(Ruhoh.paths.theme_stylesheets, v)
+              "id" => File.join(@ruhoh.paths.theme_stylesheets, v)
             }
           }
         end
@@ -43,14 +44,14 @@ class Ruhoh
       # Returns Array of asset objects.
       def self.widget_stylesheets
         assets = []
-        Ruhoh::DB.widgets.each_key do |name|
+        @ruhoh.db.widgets.each_key do |name|
           default_name = "#{name}.css"
-          stylesheet = Ruhoh::DB.theme_config[Ruhoh.names.stylesheets][Ruhoh.names.widgets][name] rescue default_name
+          stylesheet = @ruhoh.db.theme_config[Ruhoh.names.stylesheets][Ruhoh.names.widgets][name] rescue default_name
           stylesheet ||=  default_name
-          file = File.join(Ruhoh.paths.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet)
+          file = File.join(@ruhoh.paths.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet)
           next unless File.exists?(file)
           assets << {
-            "url" => [Ruhoh.urls.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet].join('/'),
+            "url" => [@ruhoh.urls.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet].join('/'),
             "id" => file
           }
         end

@@ -1,14 +1,15 @@
 class Ruhoh
   module Parsers
     module Posts
-    
+      @ruhoh = nil
       DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
       Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
       # Public: Generate the Posts dictionary.
       #
-      def self.generate
-        Ruhoh.ensure_setup
+      def self.generate(ruhoh)
+        @ruhoh = ruhoh
+        @ruhoh.ensure_setup
         
         results = self.process
         ordered_posts = self.ordered_posts(results['posts'])
@@ -30,7 +31,7 @@ class Ruhoh
 
         self.files.each do |filename|
           parsed_page = ''
-          FileUtils.cd(Ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_page_file(filename) }
+          FileUtils.cd(@ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_page_file(filename) }
           data = parsed_page['data']
           
           filename_data = self.parse_page_filename(filename)
@@ -47,7 +48,7 @@ class Ruhoh
           end
 
           if data['type'] == 'draft'
-            next if Ruhoh.config.env == 'production'
+            next if @ruhoh.config.env == 'production'
             drafts << filename 
           end  
           
@@ -55,7 +56,7 @@ class Ruhoh
           data['id']            = filename
           data['title']         = data['title'] || filename_data['title']
           data['url']           = self.permalink(data)
-          data['layout']        = Ruhoh.config.posts_layout if data['layout'].nil?
+          data['layout']        = @ruhoh.config.posts_layout if data['layout'].nil?
           dictionary[filename]  = data
         end
         
@@ -74,7 +75,7 @@ class Ruhoh
       end
       
       def self.files
-        FileUtils.cd(Ruhoh.paths.base) {
+        FileUtils.cd(@ruhoh.paths.base) {
           return Dir["#{Ruhoh.names.posts}/**/*.*"].select { |filename|
             next unless self.is_valid_page?(filename)
             true
@@ -85,7 +86,7 @@ class Ruhoh
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
-        Ruhoh.config.posts_exclude.each {|regex| return false if filepath =~ regex }
+        @ruhoh.config.posts_exclude.each {|regex| return false if filepath =~ regex }
         true
       end
       
@@ -129,7 +130,7 @@ class Ruhoh
     
       # Used in the client implementation to turn a draft into a post.  
       def self.to_filename(data)
-        File.join(Ruhoh.paths.posts, "#{Ruhoh::Urls.to_slug(data['title'])}.#{data['ext']}")
+        File.join(@ruhoh.paths.posts, "#{Ruhoh::Urls.to_slug(data['title'])}.#{data['ext']}")
       end
       
       # Another blatently stolen method from Jekyll
@@ -137,7 +138,7 @@ class Ruhoh
       def self.permalink(post)
         date = Date.parse(post['date'])
         title = Ruhoh::Urls.to_url_slug(post['title'])
-        format = post['permalink'] || Ruhoh.config.posts_permalink
+        format = post['permalink'] || @ruhoh.config.posts_permalink
 
         if format.include?(':')
           filename = File.basename(post['id'], File.extname(post['id']))
@@ -161,7 +162,7 @@ class Ruhoh
           url = format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
         end  
 
-        Ruhoh::Urls.to_url(url)
+        @ruhoh.to_url(url)
       end
     
       def self.build_chronology(ordered_posts)

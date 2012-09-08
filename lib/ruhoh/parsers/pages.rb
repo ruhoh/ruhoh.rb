@@ -1,11 +1,12 @@
 class Ruhoh
   module Parsers
     module Pages
-    
+      @ruhoh = nil
       # Public: Generate the Pages dictionary.
       #
-      def self.generate
-        Ruhoh.ensure_setup
+      def self.generate(ruhoh)
+        @ruhoh = ruhoh
+        @ruhoh.ensure_setup
 
         pages = self.files
         dictionary = {}
@@ -13,13 +14,13 @@ class Ruhoh
         pages.each do |filename|
           id = self.make_id(filename)
           parsed_page = ''
-          FileUtils.cd(Ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_page_file(filename) }
+          FileUtils.cd(@ruhoh.paths.base) { parsed_page = Ruhoh::Utils.parse_page_file(filename) }
           
           parsed_page['data']['id']     = id
           parsed_page['data']['url']    = self.permalink(parsed_page['data'])
           parsed_page['data']['title']  = parsed_page['data']['title'] || self.to_title(filename)
           if parsed_page['data']['layout'].nil?
-            parsed_page['data']['layout'] = Ruhoh.config.pages_layout
+            parsed_page['data']['layout'] = @ruhoh.config.pages_layout
           end
           
           dictionary[id] = parsed_page['data']
@@ -30,7 +31,7 @@ class Ruhoh
       end
 
       def self.files
-        FileUtils.cd(Ruhoh.paths.base) {
+        FileUtils.cd(@ruhoh.paths.base) {
           return Dir["#{Ruhoh.names.pages}/**/*.*"].select { |filename|
             next unless self.is_valid_page?(filename)
             true
@@ -41,7 +42,7 @@ class Ruhoh
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
-        Ruhoh.config.pages_exclude.each {|regex| return false if filepath =~ regex }
+        @ruhoh.config.pages_exclude.each {|regex| return false if filepath =~ regex }
         true
       end
     
@@ -66,12 +67,12 @@ class Ruhoh
         ext = '.html' if Ruhoh::Converter.extensions.include?(ext)
         url = name.split('/').map {|p| Ruhoh::Urls.to_url_slug(p) }.join('/')
         url = "#{url}#{ext}".gsub(/index.html$/, '')
-        if page['permalink'] == 'pretty' || Ruhoh.config.pages_permalink == 'pretty'
+        if page['permalink'] == 'pretty' || @ruhoh.config.pages_permalink == 'pretty'
           url = url.gsub(/\.html$/, '')
         end
         
         url = '/' if url.empty?
-        Ruhoh::Urls.to_url(url)
+        @ruhoh.to_url(url)
       end
     
     end # Pages

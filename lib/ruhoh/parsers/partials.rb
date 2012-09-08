@@ -1,8 +1,9 @@
 class Ruhoh
   module Parsers
     module Partials
-    
-      def self.generate
+      @ruhoh = nil
+      def self.generate(ruhoh)
+        @ruhoh = ruhoh
         self.system_partials.merge(
           self.global_partials
         ).merge(
@@ -11,15 +12,15 @@ class Ruhoh
       end
       
       def self.theme_partials
-        self.process(Ruhoh.paths.theme_partials)
+        self.process(@ruhoh.paths.theme_partials)
       end
       
       def self.global_partials
-        self.process(Ruhoh.paths.partials)
+        self.process(@ruhoh.paths.partials)
       end
 
       def self.system_partials
-        self.process(Ruhoh.paths.system_partials)
+        self.process(@ruhoh.paths.system_partials)
       end
       
       def self.process(path)

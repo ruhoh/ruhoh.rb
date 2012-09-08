@@ -1,6 +1,7 @@
 class Ruhoh
   module Parsers
     module Widgets
+      @ruhoh = nil
       WidgetStructure = Struct.new(
         :name,
         :config,
@@ -11,7 +12,8 @@ class Ruhoh
       # Process available widgets into widget dictionary.
       #
       # Returns Dictionary of widget data.
-      def self.generate
+      def self.generate(ruhoh)
+        @ruhoh = ruhoh
         widgets = {}
         self.widgets.each do |name|
           config = self.process_config(name)
@@ -32,11 +34,11 @@ class Ruhoh
       # Returns Array of widget names.
       def self.widgets
         names = []
-        if FileTest.directory?(Ruhoh.paths.widgets)
-          FileUtils.cd(Ruhoh.paths.widgets) { names += Dir["*"] }
+        if FileTest.directory?(@ruhoh.paths.widgets)
+          FileUtils.cd(@ruhoh.paths.widgets) { names += Dir["*"] }
         end
-        if FileTest.directory?(Ruhoh.paths.system_widgets)
-          FileUtils.cd(Ruhoh.paths.system_widgets) { names += Dir["*"] }
+        if FileTest.directory?(@ruhoh.paths.system_widgets)
+          FileUtils.cd(@ruhoh.paths.system_widgets) { names += Dir["*"] }
         end
         names.uniq!
         names
@@ -46,8 +48,8 @@ class Ruhoh
       #
       # Returns Hash of configuration params.
       def self.process_config(widget_name)
-        system_config = Ruhoh::Utils.parse_yaml_file(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.config_data) || {}
-        user_config = Ruhoh::Utils.parse_yaml_file(Ruhoh.paths.widgets, widget_name, Ruhoh.names.config_data) || {}
+        system_config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.system_widgets, widget_name, Ruhoh.names.config_data) || {}
+        user_config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.widgets, widget_name, Ruhoh.names.config_data) || {}
         config = Ruhoh::Utils.deep_merge(system_config, user_config)
         config['layout'] ||= widget_name
         config['stylesheet'] ||= widget_name
@@ -65,11 +67,11 @@ class Ruhoh
         
         # Try for the default script if no config.
         if scripts.empty?
-          script_file = File.join(Ruhoh.paths.widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
+          script_file = File.join(@ruhoh.paths.widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
           if File.exist?(script_file)
             scripts << "#{widget_name}.js"
           else
-            script_file = File.join(Ruhoh.paths.system_widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
+            script_file = File.join(@ruhoh.paths.system_widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
             scripts << "#{widget_name}.js" if File.exist?(script_file)
           end
         end
@@ -87,9 +89,9 @@ class Ruhoh
         layout = nil
         layout_path = File.join(widget_name, 'layouts', "#{config['layout']}.html")
         [
-          File.join(Ruhoh.paths.theme_widgets, layout_path),
-          File.join(Ruhoh.paths.widgets, layout_path),
-          File.join(Ruhoh.paths.system_widgets, layout_path)
+          File.join(@ruhoh.paths.theme_widgets, layout_path),
+          File.join(@ruhoh.paths.widgets, layout_path),
+          File.join(@ruhoh.paths.system_widgets, layout_path)
         ].each do |path|
           layout = path and break if File.exist?(path)
         end
