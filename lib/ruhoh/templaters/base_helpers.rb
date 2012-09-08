@@ -3,7 +3,7 @@ class Ruhoh
     module BaseHelpers
       
       def partial(name)
-        p = Ruhoh::DB.partials[name.to_s]
+        p = @ruhoh.db.partials[name.to_s]
         Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
         p
       end
@@ -76,7 +76,7 @@ class Ruhoh
       end
       
       def raw_code(sub_context)
-        code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;')
+        code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('_', "&#95;")
         "<pre><code>#{code}</code></pre>"
       end
       

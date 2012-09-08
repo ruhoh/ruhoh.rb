@@ -3,17 +3,18 @@ class Ruhoh
     attr_reader :id, :data, :sub_layout, :master_layout
     attr_accessor :templater
 
-    def initialize(id)
+    def initialize(ruhoh, id)
+      @ruhoh = ruhoh
       @id = id
       @path = id
       @data = if id =~ Regexp.new("^#{Ruhoh.names.posts}")
-        Ruhoh::DB.posts['dictionary'][id] 
+        @ruhoh.db.posts['dictionary'][id] 
       else
         @path = "#{Ruhoh.names.pages}/#{id}"
-        Ruhoh::DB.pages[id]
+        @ruhoh.db.pages[id]
       end
       raise "Page #{id} not found in database" unless @data
-      @templater = Ruhoh::Templaters::RMustache
+      @templater = Ruhoh::Templaters::RMustache.new(@ruhoh)
     end
     
     def render
@@ -28,12 +29,12 @@ class Ruhoh
     
     def process_layouts
       if @data['layout']
-        @sub_layout = Ruhoh::DB.layouts[@data['layout']]
+        @sub_layout = @ruhoh.db.layouts[@data['layout']]
         raise "Layout does not exist: #{@data['layout']}" unless @sub_layout
       end
     
       if @sub_layout && @sub_layout['data']['layout']
-        @master_layout = Ruhoh::DB.layouts[@sub_layout['data']['layout']]
+        @master_layout = @ruhoh.db.layouts[@sub_layout['data']['layout']]
         raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
       end
       
@@ -64,14 +65,14 @@ class Ruhoh
     end
     
     def payload
-      payload = Ruhoh::DB.payload.dup
+      payload = @ruhoh.db.payload.dup
       payload['page'] = @data
       payload
     end
     
     # Provide access to the page content.
     def content
-      Ruhoh::Utils.parse_page_file(Ruhoh.paths.base, @path)['content']
+      Ruhoh::Utils.parse_page_file(@ruhoh.paths.base, @path)['content']
     end
     
     # Public: Formats the path to the compiled file based on the URL.

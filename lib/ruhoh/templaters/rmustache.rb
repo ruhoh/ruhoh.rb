@@ -8,7 +8,10 @@ class Ruhoh
       include Ruhoh::Templaters::BaseHelpers
       include Ruhoh::Templaters::AssetHelpers
       include Ruhoh::Templaters::Helpers
-
+      
+      def initialize(ruhoh)
+        @ruhoh = ruhoh
+      end
       class RContext < Context
     
         # Overload find method to catch helper expressions
@@ -47,21 +50,21 @@ class Ruhoh
           id = "#{Ruhoh.names.pages}/#{id}"
         end
         
-        [Ruhoh::Utils.parse_page_file(Ruhoh.paths.base, id)['content'], id]
+        [Ruhoh::Utils.parse_page_file(@ruhoh.paths.base, id)['content'], id]
       end
       
       def widget(name)
         return '' if self.context['page'][name.to_s].to_s == 'false'
-        Ruhoh::DB.widgets[name.to_s]['layout']
+        @ruhoh.db.widgets[name.to_s]['layout']
       end
       
       def method_missing(name, *args, &block)
-        return self.widget(name.to_s) if Ruhoh::DB.widgets.has_key?(name.to_s)
+        return self.widget(name.to_s) if @ruhoh.db.widgets.has_key?(name.to_s)
         super
       end
 
       def respond_to?(method)
-        return true if Ruhoh::DB.widgets.has_key?(method.to_s)
+        return true if @ruhoh.db.widgets.has_key?(method.to_s)
         super
       end
       
