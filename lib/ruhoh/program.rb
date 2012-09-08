@@ -16,36 +16,37 @@ class Ruhoh
       opts[:watch] ||= true
       opts[:env] ||= 'development'
       
-      Ruhoh.setup
-      Ruhoh.config.env = opts[:env]
-      Ruhoh.setup_paths
-      Ruhoh.setup_urls
-      Ruhoh.setup_plugins unless opts[:enable_plugins] == false
+      ruhoh = Ruhoh.new
+      ruhoh.setup
+      ruhoh.config.env = opts[:env]
+      ruhoh.setup_paths
+      ruhoh.setup_urls
+      ruhoh.setup_plugins unless opts[:enable_plugins] == false
       
-      Ruhoh::DB.update_all
+      ruhoh.db.update_all
       
-      Ruhoh::Watch.start if opts[:watch]
+      Ruhoh::Watch.start(ruhoh) if opts[:watch]
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions
 
         # Serve base media
-        map Ruhoh.urls.media do
-          run Rack::File.new(Ruhoh.paths.media)
+        map ruhoh.urls.media do
+          run Rack::File.new(ruhoh.paths.media)
         end
         
         # Serve theme assets
-        map Ruhoh.urls.theme do
-          run Rack::File.new(Ruhoh.paths.theme)
+        map ruhoh.urls.theme do
+          run Rack::File.new(ruhoh.paths.theme)
         end
         
         # Serve widget javascripts
-        map Ruhoh.urls.widgets do
-          run Rack::File.new(Ruhoh.paths.widgets)
+        map ruhoh.urls.widgets do
+          run Rack::File.new(ruhoh.paths.widgets)
         end
 
         map '/' do
-          run Ruhoh::Previewer.new
+          run Ruhoh::Previewer.new(ruhoh)
         end
       }
     end
