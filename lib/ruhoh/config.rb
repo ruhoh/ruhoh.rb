@@ -14,8 +14,8 @@ class Ruhoh
       :base_path
     )
 
-    def self.generate
-      site_config = Ruhoh::Utils.parse_yaml_file(Ruhoh.base, Ruhoh.names.config_data)
+    def self.generate(ruhoh)
+      site_config = Ruhoh::Utils.parse_yaml_file(ruhoh.base, Ruhoh.names.config_data)
       unless site_config
         Ruhoh.log.error("Empty site_config.\nEnsure ./#{Ruhoh.names.config_data} exists and contains valid YAML")
         return false

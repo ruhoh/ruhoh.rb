@@ -36,23 +36,23 @@ class Ruhoh
       :system_widgets
     )
     
-    def self.generate
+    def self.generate(ruhoh)
       paths                     = Paths.new
-      paths.base                = Ruhoh.base
-      paths.config_data         = File.join(Ruhoh.base, Ruhoh.names.config_data)
-      paths.pages               = File.join(Ruhoh.base, Ruhoh.names.pages)
-      paths.posts               = File.join(Ruhoh.base, Ruhoh.names.posts)
-      paths.partials            = File.join(Ruhoh.base, Ruhoh.names.partials)
-      paths.media               = File.join(Ruhoh.base, Ruhoh.names.media)
-      paths.widgets             = File.join(Ruhoh.base, Ruhoh.names.widgets)
-      paths.compiled            = File.join(Ruhoh.base, Ruhoh.names.compiled)
-      paths.dashboard_file      = File.join(Ruhoh.base, Ruhoh.names.dashboard_file)
-      paths.site_data           = File.join(Ruhoh.base, Ruhoh.names.site_data)
-      paths.themes              = File.join(Ruhoh.base, Ruhoh.names.themes)
-      paths.plugins             = File.join(Ruhoh.base, Ruhoh.names.plugins)
-      paths.scaffolds           = File.join(Ruhoh.base, Ruhoh.names.scaffolds)
+      paths.base                = ruhoh.base
+      paths.config_data         = File.join(ruhoh.base, Ruhoh.names.config_data)
+      paths.pages               = File.join(ruhoh.base, Ruhoh.names.pages)
+      paths.posts               = File.join(ruhoh.base, Ruhoh.names.posts)
+      paths.partials            = File.join(ruhoh.base, Ruhoh.names.partials)
+      paths.media               = File.join(ruhoh.base, Ruhoh.names.media)
+      paths.widgets             = File.join(ruhoh.base, Ruhoh.names.widgets)
+      paths.compiled            = File.join(ruhoh.base, Ruhoh.names.compiled)
+      paths.dashboard_file      = File.join(ruhoh.base, Ruhoh.names.dashboard_file)
+      paths.site_data           = File.join(ruhoh.base, Ruhoh.names.site_data)
+      paths.themes              = File.join(ruhoh.base, Ruhoh.names.themes)
+      paths.plugins             = File.join(ruhoh.base, Ruhoh.names.plugins)
+      paths.scaffolds           = File.join(ruhoh.base, Ruhoh.names.scaffolds)
       
-      paths.theme               = File.join(Ruhoh.base, Ruhoh.names.themes, Ruhoh.config.theme)
+      paths.theme               = File.join(ruhoh.base, Ruhoh.names.themes, ruhoh.config.theme)
       paths.theme_dashboard_file= File.join(paths.theme, Ruhoh.names.dashboard_file)
       paths.theme_config_data   = File.join(paths.theme, Ruhoh.names.theme_config)
       paths.theme_layouts       = File.join(paths.theme, Ruhoh.names.layouts)
