@@ -44,9 +44,13 @@ class Ruhoh
         map ruhoh.urls.widgets do
           run Rack::File.new(ruhoh.paths.widgets)
         end
-
+        
+        map ruhoh.urls.dashboard do
+          run Ruhoh::Previewer::Dashboard.new(ruhoh)
+        end
+        
         map '/' do
-          run Ruhoh::Previewer.new(ruhoh)
+          run Ruhoh::Previewer::Page.new(ruhoh)
         end
       }
     end
