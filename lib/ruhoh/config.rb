@@ -11,7 +11,8 @@ class Ruhoh
       :posts_permalink,
       :rss_limit,
       :theme,
-      :base_path
+      :base_path,
+      :compiled
     )
 
     def self.generate(ruhoh)
@@ -56,6 +57,8 @@ class Ruhoh
       config.pages_exclude = Array(excluded_pages)
       config.pages_exclude = config.pages_exclude.map {|node| Regexp.new(node) }
       
+      config.compiled = site_config['compiled'] ? File.expand_path(site_config['compiled']) : nil
+
       config
     end
   end #Config

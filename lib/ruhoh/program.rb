@@ -62,11 +62,17 @@ class Ruhoh
       ruhoh = Ruhoh.new
       ruhoh.setup
       ruhoh.config.env = 'production'
-      #ruhoh.config.target = target
       ruhoh.setup_paths
       ruhoh.setup_urls
       ruhoh.setup_plugins
       ruhoh.db.update_all
+      
+      if target
+        ruhoh.paths.compiled = File.expand_path(target)
+      elsif ruhoh.config.compiled
+        ruhoh.paths.compiled = ruhoh.config.compiled
+      end
+      
       Ruhoh::Compiler.compile(ruhoh)
     end
     
