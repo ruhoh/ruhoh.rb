@@ -1,7 +1,7 @@
-require 'ruhoh/compilers/pages'
-require 'ruhoh/compilers/rss'
-require 'ruhoh/compilers/static_assets'
-require 'ruhoh/compilers/theme'
+# Require all the compilers
+Dir[File.join(File.dirname(__FILE__), 'compilers','*.rb')].each { |f|
+  require f
+}
 
 class Ruhoh
   

@@ -1,15 +1,7 @@
-require 'ruhoh/parsers/posts'
-require 'ruhoh/parsers/pages'
-require 'ruhoh/parsers/routes'
-require 'ruhoh/parsers/layouts'
-require 'ruhoh/parsers/partials'
-require 'ruhoh/parsers/widgets'
-require 'ruhoh/parsers/theme_config'
-require 'ruhoh/parsers/stylesheets'
-require 'ruhoh/parsers/javascripts'
-require 'ruhoh/parsers/payload'
-require 'ruhoh/parsers/site'
-require 'ruhoh/parsers/scaffolds'
+# Require all the parsers
+Dir[File.join(File.dirname(__FILE__), 'parsers','*.rb')].each { |f|
+  require f
+}
 
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.

@@ -1,4 +1,7 @@
-require 'ruhoh/converters/markdown'
+# Require all the converters
+Dir[File.join(File.dirname(__FILE__), 'converters', '*.rb')].each { |f|
+  require f
+}
 
 class Ruhoh
   module Converter
