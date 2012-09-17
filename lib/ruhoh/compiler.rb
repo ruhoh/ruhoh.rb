@@ -1,7 +1,30 @@
-require 'ruhoh/compilers/theme'
+require 'ruhoh/compilers/pages'
 require 'ruhoh/compilers/rss'
+require 'ruhoh/compilers/static_assets'
+require 'ruhoh/compilers/theme'
 
 class Ruhoh
+  
+  # The Compiler module is a namespace for all compile "tasks".
+  # A "task" is a ruby Class that accepts @ruhoh instance via initialize.
+  # At compile time all classes in the Ruhoh::Compiler namespace
+  # are initialized and run.
+  # To add your own compile task simply namespace it under Ruhoh::Compiler
+  # and provide initialize and run methods:
+  #
+  #  class Ruhoh
+  #    module Compiler
+  #      class CustomTask
+  #        def initialize(ruhoh)
+  #          @ruhoh = ruhoh
+  #        end
+  #       
+  #        def run
+  #          # do something here
+  #        end
+  #      end
+  #    end
+  #  end
   module Compiler
 
     # TODO: seems rather dangerous to delete the incoming target directory?
@@ -10,60 +33,15 @@ class Ruhoh
       FileUtils.rm_r ruhoh.paths.compiled if File.exist?(ruhoh.paths.compiled)
       FileUtils.mkdir_p ruhoh.paths.compiled
       
-      self.constants.each {|c|
-        task = self.const_get(c)
+      Ruhoh::Compiler.constants.each {|c|
+        compiler = Ruhoh::Compiler.const_get(c)
+        next unless compiler.respond_to?(:new)
+        task = compiler.new(ruhoh)
         next unless task.respond_to?(:run)
-        task.run(ruhoh)
-      }  
+        task.run
+      }
       true
     end
     
-    module Defaults
-
-      def self.run(ruhoh)
-        self.pages(ruhoh)
-        self.media(ruhoh)
-        self.javascripts(ruhoh)
-      end
-      
-      def self.pages(ruhoh)
-        FileUtils.cd(ruhoh.paths.compiled) {
-          ruhoh.db.all_pages.each_value do |p|
-            page = ruhoh.page(p['id'])
-
-            FileUtils.mkdir_p File.dirname(page.compiled_path)
-            File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render }
-
-            Ruhoh::Friend.say { green "processed: #{p['id']}" }
-          end
-        }
-      end
-      
-      def self.media(ruhoh)
-        return unless FileTest.directory? ruhoh.paths.media
-        url = ruhoh.urls.media.gsub(/^\//, '')
-        media = Ruhoh::Utils.url_to_path(url, ruhoh.paths.compiled)
-        FileUtils.mkdir_p media
-        FileUtils.cp_r File.join(ruhoh.paths.media, '.'), media
-      end
-      
-      # Create all the javascripts.
-      # Javascripts may be registered from either a theme or a widget.
-      # Technically the theme compiler may create javascripts relative to the theme.
-      # This ensures the widget javascripts are created as well.
-      def self.javascripts(ruhoh)
-        ruhoh.db.javascripts.each do |type, assets|
-          assets.each do |asset|
-            url = asset['url'].gsub(/^\//, '')
-            next unless File.exist?(asset['id'])
-            file_path = Ruhoh::Utils.url_to_path(File.dirname(url), ruhoh.paths.compiled)
-            FileUtils.mkdir_p file_path
-            FileUtils.cp(asset['id'], file_path)
-          end
-        end
-      end
-      
-    end #Defaults
-
-  end #Compiler
-end #Ruhoh
+  end
+end

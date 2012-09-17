@@ -27,8 +27,6 @@ class Ruhoh
       self.instance_variable_set("@#{name}",
         Ruhoh::Parsers.const_get(camelized_name).generate(@ruhoh)
       )
-    #rescue NameError
-    #  raise NameError, "Data type: '#{name}' is not a valid data type."
     end
     
     # Always regenerate a fresh payload since it
