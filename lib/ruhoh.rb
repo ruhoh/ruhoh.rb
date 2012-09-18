@@ -108,6 +108,10 @@ class Ruhoh
     url = self.config.base_path + url
   end
   
+  def relative_path(filename)
+    filename.gsub(Regexp.new("^#{self.paths.base}/"), '')
+  end
+  
   def ensure_setup
     return if @config && @paths && @urls
     raise 'Ruhoh has not been fully setup. Please call: Ruhoh.setup'

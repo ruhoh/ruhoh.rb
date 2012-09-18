@@ -59,10 +59,6 @@ class Ruhoh
       nil
     end
     
-    def self.relative_path(filename)
-      filename.gsub(Regexp.new("^#{Ruhoh.paths.base}/"), '')
-    end
-
     def self.url_to_path(url, base=nil)
       parts = url.split('/')
       parts = parts.unshift(base) if base

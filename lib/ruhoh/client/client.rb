@@ -20,9 +20,10 @@ class Ruhoh
       } unless self.respond_to?(cmd)
 
       unless ['help','blog','compile'].include?(cmd)
-        Ruhoh.setup
-        Ruhoh.setup_paths
-        Ruhoh.setup_urls
+        @ruhoh = Ruhoh.new
+        @ruhoh.setup
+        @ruhoh.setup_paths
+        @ruhoh.setup_urls
       end  
 
       self.__send__(cmd)
@@ -71,30 +72,32 @@ class Ruhoh
     end
     
     def draft_or_post(type)
+      ruhoh = @ruhoh
       begin
         name = @args[1] || "untitled-#{type}"
         name = "#{name}-#{@iterator}" unless @iterator.zero?
         name = Ruhoh::Urls.to_slug(name)
-        filename = File.join(Ruhoh.paths.posts, "#{name}.#{@options.ext}")
+        filename = File.join(@ruhoh.paths.posts, "#{name}.#{@options.ext}")
         @iterator += 1
       end while File.exist?(filename)
       
-      Ruhoh::DB.update(:scaffolds)
+      @ruhoh.db.update(:scaffolds)
 
       FileUtils.mkdir_p File.dirname(filename)
-      output = Ruhoh::DB.scaffolds["#{type}.html"].to_s
+      output = @ruhoh.db.scaffolds["#{type}.html"].to_s
       output = output.gsub('{{DATE}}', Ruhoh::Parsers::Posts.formatted_date(Time.now))
       File.open(filename, 'w:UTF-8') {|f| f.puts output }
       
       Ruhoh::Friend.say { 
         green "New #{type}:" 
-        green Ruhoh::Utils.relative_path(filename)
+        green ruhoh.relative_path(filename)
         green 'View drafts at the URL: /dash'
       }
     end
     
     # Public: Create a new page file.
     def page
+      ruhoh = @ruhoh
       name = @args[1]
       Ruhoh::Friend.say { 
         red "Please specify a path"
@@ -102,36 +105,37 @@ class Ruhoh
         exit
       } if (name.nil? || name.gsub(/\s/, '').empty?)
 
-      filename = File.join(Ruhoh.paths.pages, name.gsub(/\s/, '-'))
+      filename = File.join(@ruhoh.paths.pages, name.gsub(/\s/, '-'))
       filename = File.join(filename, "index.#{@options.ext}") if File.extname(filename) == ""
       if File.exist?(filename)
         abort("Create new page: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
       end
       
-      Ruhoh::DB.update(:scaffolds)
+      @ruhoh.db.update(:scaffolds)
       
       FileUtils.mkdir_p File.dirname(filename)
       File.open(filename, 'w:UTF-8') do |page|
-        page.puts Ruhoh::DB.scaffolds['page.html'].to_s
+        page.puts @ruhoh.db.scaffolds['page.html'].to_s
       end
       
       Ruhoh::Friend.say { 
         green "New page:"
-        plain Ruhoh::Utils.relative_path(filename)
+        plain ruhoh.relative_path(filename)
       }
     end
 
     # Public: Update draft filenames to their corresponding titles.
     def titleize
-       Ruhoh::Parsers::Posts.files.each do |file|
-          next unless File.basename(file) =~ /^untitled/
-          parsed_page = Ruhoh::Utils.parse_page_file(file)
-          next unless parsed_page['data']['title']
-          new_name = Ruhoh::Urls.to_slug(parsed_page['data']['title'])
-          new_file = File.join(File.dirname(file), "#{new_name}#{File.extname(file)}")
-          FileUtils.mv(file, new_file)
-          Ruhoh::Friend.say { green "Renamed #{file} to: #{new_file}" }
-       end
+      @ruhoh.db.update(:posts)
+      @ruhoh.db.posts['drafts'].each do |file|
+        next unless File.basename(file) =~ /^untitled/
+        parsed_page = Ruhoh::Utils.parse_page_file(file)
+        next unless parsed_page['data']['title']
+        new_name = Ruhoh::Urls.to_slug(parsed_page['data']['title'])
+        new_file = File.join(File.dirname(file), "#{new_name}#{File.extname(file)}")
+        FileUtils.mv(file, new_file)
+        Ruhoh::Friend.say { green "Renamed #{file} to: #{new_file}" }
+      end
     end
     
     # Public: Compile to static website.
@@ -183,6 +187,7 @@ class Ruhoh
     
     # Public: Create a new layout file for the active theme.
     def layout
+      ruhoh = @ruhoh
       name = @args[1]
       Ruhoh::Friend.say { 
         red "Please specify a layout name." 
@@ -190,21 +195,21 @@ class Ruhoh
         exit
       } if name.nil?
       
-      filename = File.join(Ruhoh.paths.theme_layouts, name.gsub(/\s/, '-').downcase) + ".html"
+      filename = File.join(@ruhoh.paths.theme_layouts, name.gsub(/\s/, '-').downcase) + ".html"
       if File.exist?(filename)
         abort("Create new layout: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
       end
       
-      Ruhoh::DB.update(:scaffolds)
+      @ruhoh.db.update(:scaffolds)
       
       FileUtils.mkdir_p File.dirname(filename)
       File.open(filename, 'w:UTF-8') do |page|
-        page.puts Ruhoh::DB.scaffolds['layout.html'].to_s
+        page.puts @ruhoh.db.scaffolds['layout.html'].to_s
       end
       
       Ruhoh::Friend.say {
         green "New layout:"
-        plain Ruhoh::Utils.relative_path(filename)
+        plain ruhoh.relative_path(filename)
       }
     end
 
@@ -225,10 +230,11 @@ class Ruhoh
  
     # Return the payload hash for inspection/study.
     def payload
+      ruhoh = @ruhoh
       require 'pp'
-      Ruhoh::DB.update_all
+      @ruhoh.db.update_all
       Ruhoh::Friend.say {
-        plain Ruhoh::DB.payload.pretty_inspect
+        plain ruhoh.db.payload.pretty_inspect
       }
     end
     
@@ -236,17 +242,17 @@ class Ruhoh
     def list(type)
       data = case type
       when :posts
-        Ruhoh::DB.update(:posts)
-        Ruhoh::DB.posts['dictionary']
+        @ruhoh.db.update(:posts)
+        @ruhoh.db.posts['dictionary']
       when :drafts
-        Ruhoh::DB.update(:posts)
-        drafts = Ruhoh::DB.posts['drafts']
+        @ruhoh.db.update(:posts)
+        drafts = @ruhoh.db.posts['drafts']
         h = {}
-        drafts.each {|id| h[id] = Ruhoh::DB.posts['dictionary'][id]}
+        drafts.each {|id| h[id] = @ruhoh.db.posts['dictionary'][id]}
         h
       when :pages
-        Ruhoh::DB.update(:pages)
-        Ruhoh::DB.pages
+        @ruhoh.db.update(:pages)
+        @ruhoh.db.pages
       end  
 
       if @options.verbose
