@@ -19,7 +19,7 @@ class Ruhoh
         exit 
       } unless self.respond_to?(cmd)
 
-      unless ['help','blog','compile'].include?(cmd)
+      unless ['help','console','blog','compile'].include?(cmd)
         @ruhoh = Ruhoh.new
         @ruhoh.setup
         @ruhoh.setup_paths
