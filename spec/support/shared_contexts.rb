@@ -17,8 +17,9 @@ end
 
 shared_context 'default_setup' do
   before(:each) do
-    Ruhoh.setup(:source => SampleSitePath)
-    Ruhoh.setup_paths
-    Ruhoh.setup_urls
+    @ruhoh = Ruhoh.new
+    @ruhoh.setup(:source => SampleSitePath)
+    @ruhoh.setup_paths
+    @ruhoh.setup_urls
   end
 end

@@ -3,7 +3,12 @@ require 'spec_helper'
 module Routes
   
   describe Ruhoh::Parsers::Routes do
-    
+    let(:ruhoh){
+      Ruhoh::Utils.stub(:parse_yaml_file).and_return({'theme' => "twitter"})
+      Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
+      ruhoh = Ruhoh.new
+      ruhoh
+    }
     describe "#generate" do
       let(:pages){
         {
@@ -23,10 +28,10 @@ module Routes
       }
       
       it 'should return a dictionary/hash with urls as keys that map to post/draft/page ids as values' do
-        Ruhoh::DB.should_receive(:pages).and_return(pages)
-        Ruhoh::DB.should_receive(:posts).and_return(posts)
+        ruhoh.db.should_receive(:pages).and_return(pages)
+        ruhoh.db.should_receive(:posts).and_return(posts)
         
-        routes = Ruhoh::Parsers::Routes.generate
+        routes = Ruhoh::Parsers::Routes.generate(ruhoh)
         
         routes.should be_a_kind_of(Hash)
         routes.keys.sort.should == ['/blah.html', '/no.html', '/post1.html', '/post2.html', '/post3.html', '/yes.html']

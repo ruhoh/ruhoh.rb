@@ -1,7 +1,6 @@
 require 'spec_helper'
 module Layouts
   describe Ruhoh::Parsers::Layouts do
-    
     before(:each) do
       expected_theme = "twitter"
       the_layouts_dir = File.join(SampleSitePath, Ruhoh.names.themes, expected_theme, Ruhoh.names.layouts)
@@ -17,13 +16,19 @@ title: #{layout_name} (test)
           TEXT
         end
       end
+      
+      Ruhoh::Utils.stub(:parse_yaml_file).and_return({"theme" => expected_theme})
+      @ruhoh = Ruhoh.new
+      @ruhoh.setup(:source => SampleSitePath)
+      @ruhoh.setup_paths
+      @ruhoh.setup_urls
     end
 
     let(:expected_layouts) { %w{default.html page.html post.html} }
     
     describe "#generate" do
       let(:layouts){
-        Ruhoh::Parsers::Layouts.generate
+        Ruhoh::Parsers::Layouts.generate(@ruhoh)
       }
       
       it 'should extract the correct layouts from a theme.' do

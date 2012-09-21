@@ -26,7 +26,7 @@ title: #{page_name} (test)
       }
 
       let(:pages){
-        Ruhoh::Parsers::Pages.generate
+        Ruhoh::Parsers::Pages.generate(@pages)
       }
       
       it 'should extract valid pages from source directory.' do
@@ -103,6 +103,8 @@ pages:
           }
           theme_dir = File.join(SampleSitePath, Ruhoh.names.themes, theme)
           FileUtils.makedirs theme_dir
+          
+          @ruhoh.setup
         }
         include_context "default_setup"
         

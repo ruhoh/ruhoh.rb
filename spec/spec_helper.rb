@@ -23,7 +23,7 @@ RSpec.configure do |config|
   }
   config.after(:each) do 
     # Reset all configuration variables after each test.
-    Ruhoh.reset
+    #Ruhoh.reset
     FileUtils.remove_dir(SampleSitePath,1) if Dir.exists? SampleSitePath
   end
 end

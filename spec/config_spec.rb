@@ -2,13 +2,15 @@ require 'spec_helper'
 
 module Config
   describe "Config" do
+    let(:ruhoh){Ruhoh.new}
+    
     describe "#setup_config" do
       context "Invalid _config.yml file" do
         it 'should log error and return false if theme is not specified.' do
           Ruhoh::Utils.should_receive(:parse_yaml_file).and_return({})
           
           Ruhoh.log.should_receive(:error)
-          Ruhoh::Config.generate.should be_false
+          Ruhoh::Config.generate(ruhoh).should be_false
         end
       end
       context "Valid _config.yml file" do
@@ -24,7 +26,7 @@ module Config
             }
           })
 
-          config = Ruhoh::Config.generate
+          config = Ruhoh::Config.generate(ruhoh)
           config.theme.should == custom_theme
           config.posts_exclude.should == [/.secret/]
         end
@@ -41,7 +43,7 @@ module Config
           },
         })
         
-        config = Ruhoh::Config.generate
+        config = Ruhoh::Config.generate(ruhoh)
         config.posts_exclude.should include(/.secret/)
         config.posts_exclude.should include(/^test/)
       end
