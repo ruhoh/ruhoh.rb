@@ -35,33 +35,33 @@ class Ruhoh
 
           if path == Ruhoh.names.site_data
             type = "Site"
-            ruhoh.db.update(:site)
+            ruhoh.db.clear(:site)
           elsif path == Ruhoh.names.config_data
             type = "Config"
-            ruhoh.db.update(:site)
+            ruhoh.db.clear(:site)
           elsif path =~ Regexp.new("^#{Ruhoh.names.pages}")
             type = "Pages"
-            ruhoh.db.update(:pages)
-            ruhoh.db.update(:routes)
+            ruhoh.db.clear(:pages)
+            ruhoh.db.clear(:routes)
           elsif path =~ Regexp.new("^(#{Ruhoh.names.partials}|#{Ruhoh.names.themes}\/#{ruhoh.config.theme}\/#{Ruhoh.names.partials})")
             type = "Partials"
-            ruhoh.db.update(:partials)
+            ruhoh.db.clear(:partials)
           elsif path =~ Regexp.new("^#{Ruhoh.names.posts}")
             type = "Posts"
-            ruhoh.db.update(:posts)
-            ruhoh.db.update(:routes)
+            ruhoh.db.clear(:posts)
+            ruhoh.db.clear(:routes)
           elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{ruhoh.config.theme}\/#{Ruhoh.names.layouts}")
             type = "Layouts"
-            ruhoh.db.update(:layouts)
+            ruhoh.db.clear(:layouts)
           elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{ruhoh.config.theme}")
             type = "Theme"
-            ruhoh.db.update(:stylesheets)
-            ruhoh.db.update(:javascripts)
-            ruhoh.db.update(:widgets)
-            ruhoh.db.update(:layouts)
+            ruhoh.db.clear(:stylesheets)
+            ruhoh.db.clear(:javascripts)
+            ruhoh.db.clear(:widgets)
+            ruhoh.db.clear(:layouts)
           elsif path =~ Regexp.new("^#{Ruhoh.names.widgets}")
             type = "Widgets"
-            ruhoh.db.update(:widgets)
+            ruhoh.db.clear(:widgets)
           else
             type = 'Unrecognized'
           end

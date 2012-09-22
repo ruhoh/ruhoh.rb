@@ -22,9 +22,7 @@ class Ruhoh
       ruhoh.setup_paths
       ruhoh.setup_urls
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
-      
-      ruhoh.db.update_all
-      
+
       Ruhoh::Watch.start(ruhoh) if opts[:watch]
       Rack::Builder.new {
         use Rack::Lint
