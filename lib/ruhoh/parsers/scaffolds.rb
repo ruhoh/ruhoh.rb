@@ -1,36 +1,32 @@
 class Ruhoh
   module Parsers
-    module Scaffolds
-      @ruhoh = nil
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
-        self.system_scaffolds.merge(
-          self.scaffolds
-        )
-      end
-      
-      def self.scaffolds
-        self.process(@ruhoh.paths.scaffolds)
-      end
+    class Scaffolds < Base
 
-      def self.system_scaffolds
-        self.process(@ruhoh.paths.system_scaffolds)
+      def paths
+        [@ruhoh.paths.system_scaffolds, @ruhoh.paths.scaffolds]
       end
       
-      def self.process(path)
-        return {} unless File.exist?(path)
+      def glob
+        "**/*"
+      end
       
-        scaffolds = {}
-        FileUtils.cd(path) {
-          Dir.glob("**/*").each { |filename|
-            next if FileTest.directory?(filename)
-            next if ['.'].include? filename[0]
-            File.open(filename, 'r:UTF-8') { |f| scaffolds[filename] = f.read }
+      def is_valid_page?(filepath)
+        return false if FileTest.directory?(filepath)
+        return false if ['.'].include? filepath[0]
+        true
+      end
+      
+      class Modeler < BaseModeler
+        
+        def generate
+          dict = {}
+          FileUtils.cd(@base) {
+            File.open(@id, 'r:UTF-8') { |f| dict[@id] = f.read }
           }
-        }
-        scaffolds
+          dict
+        end
       end
-    
-    end #Scaffolds
-  end #Parsers
-end #Ruhoh
+      
+    end
+  end
+end

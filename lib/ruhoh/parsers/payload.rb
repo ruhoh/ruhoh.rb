@@ -1,9 +1,8 @@
 class Ruhoh
   module Parsers
-    module Payload
-      @ruhoh = nil
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
+    class Payload < Base
+
+      def generate
         {
           "db" => {
             "pages" =>  @ruhoh.db.pages,
@@ -24,7 +23,7 @@ class Ruhoh
       
       # This is an ugly hack to determine the proper category and tag urls.
       # TODO: Refactor this out.
-      def self.determine_category_and_tag_urls
+      def determine_category_and_tag_urls
         return nil unless @ruhoh.db.routes && @ruhoh.db.posts
         categories_url = nil
         [@ruhoh.to_url("categories"), @ruhoh.to_url("categories.html")].each { |url|

@@ -1,9 +1,8 @@
 class Ruhoh
   module Parsers
-    module Routes
-      @ruhoh = nil
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
+    class Routes < Base
+
+      def generate
         routes = {}
         @ruhoh.db.pages.each_value { |page|
           routes[page['url']] = page['id'] 
@@ -15,7 +14,7 @@ class Ruhoh
         
         routes
       end
-    
-    end #Routes
-  end #Parsers
-end #Ruhoh
+
+    end
+  end
+end

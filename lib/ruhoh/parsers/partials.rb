@@ -1,43 +1,32 @@
 class Ruhoh
   module Parsers
-    module Partials
-      @ruhoh = nil
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
-        self.system_partials.merge(
-          self.global_partials
-        ).merge(
-          self.theme_partials
-        )
-      end
-      
-      def self.theme_partials
-        self.process(@ruhoh.paths.theme_partials)
-      end
-      
-      def self.global_partials
-        self.process(@ruhoh.paths.partials)
+    class Partials < Base
+
+      def paths
+        [@ruhoh.paths.system_partials, @ruhoh.paths.partials, @ruhoh.paths.theme_partials]
       end
 
-      def self.system_partials
-        self.process(@ruhoh.paths.system_partials)
+      def glob
+        "**/*"
       end
       
-      def self.process(path)
-        return {} unless File.exist?(path)
-      
-        partials = {}
-        FileUtils.cd(path) {
-          Dir.glob("**/*").each { |filename|
-            next if FileTest.directory?(filename)
-            next if ['.'].include? filename[0]
-            name = filename.chomp(File.extname(filename))
-            File.open(filename, 'r:UTF-8') { |f| partials[name] = f.read }
-          }
-        }
-        partials
+      def is_valid_page?(filepath)
+        return false if FileTest.directory?(filepath)
+        return false if ['.'].include? filepath[0]
+        true
       end
     
-    end #Partials
-  end #Parsers
-end #Ruhoh
+      class Modeler < BaseModeler
+        def generate
+          dict = {}
+          name = @id.chomp(File.extname(@id))
+          FileUtils.cd(@base) {
+            File.open(@id, 'r:UTF-8') { |f| dict[name] = f.read }
+          }
+          dict
+        end
+      end
+      
+    end
+  end
+end

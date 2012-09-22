@@ -1,7 +1,7 @@
 class Ruhoh
   module Parsers
-    module Widgets
-      @ruhoh = nil
+    class Widgets < Base
+
       WidgetStructure = Struct.new(
         :name,
         :config,
@@ -12,8 +12,7 @@ class Ruhoh
       # Process available widgets into widget dictionary.
       #
       # Returns Dictionary of widget data.
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
+      def generate
         widgets = {}
         self.widgets.each do |name|
           config = self.process_config(name)
@@ -32,7 +31,7 @@ class Ruhoh
       # Find the widgets.
       #
       # Returns Array of widget names.
-      def self.widgets
+      def widgets
         names = []
         if FileTest.directory?(@ruhoh.paths.widgets)
           FileUtils.cd(@ruhoh.paths.widgets) { names += Dir["*"] }
@@ -47,7 +46,7 @@ class Ruhoh
       # Process the widget configuration params.
       #
       # Returns Hash of configuration params.
-      def self.process_config(widget_name)
+      def process_config(widget_name)
         system_config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.system_widgets, widget_name, Ruhoh.names.config_data) || {}
         user_config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.widgets, widget_name, Ruhoh.names.config_data) || {}
         config = Ruhoh::Utils.deep_merge(system_config, user_config)
@@ -62,7 +61,7 @@ class Ruhoh
       # If found, we include it, else no javascripts will load.
       #
       # Returns Array of script filenames to load.
-      def self.process_javascripts(config, widget_name)
+      def process_javascripts(config, widget_name)
         scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts]) : []
         
         # Try for the default script if no config.
@@ -85,7 +84,7 @@ class Ruhoh
       # Layouts cascade from: theme -> blog -> system
       #
       # Returns String of rendered layout content.
-      def self.process_layout(config, widget_name)
+      def process_layout(config, widget_name)
         layout = nil
         layout_path = File.join(widget_name, 'layouts', "#{config['layout']}.html")
         [
@@ -100,7 +99,7 @@ class Ruhoh
         content = File.open(layout, 'r:UTF-8') { |f| f.read }
         Mustache.render(content, {'config' => config})
       end
-      
-    end #Widgets
-  end #Parsers
-end #Ruhoh
+
+    end
+  end
+end

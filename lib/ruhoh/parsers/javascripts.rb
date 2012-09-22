@@ -3,18 +3,17 @@ class Ruhoh
     # Collect all the javascripts.
     # Themes explicitly define which javascripts to load via theme.yml.
     # Additionally, widgets may register javascript dependencies, which are resolved here.
-    module Javascripts
-      @ruhoh = nil
+    class Javascripts < Base
+
       # Generates mappings to all registered javascripts.
       # Returns Hash with layout names as keys and Array of asset Objects as values
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
+      def generate
         assets = self.theme_javascripts
         assets[Ruhoh.names.widgets] = self.widget_javascripts
         assets
       end
 
-      def self.theme_javascripts
+      def theme_javascripts
         return {} unless @ruhoh.db.theme_config[Ruhoh.names.javascripts].is_a? Hash
         assets = {}
         @ruhoh.db.theme_config[Ruhoh.names.javascripts].each do |key, value|
@@ -36,7 +35,7 @@ class Ruhoh
       #   This differs from the auto-stylesheet inclusion relative to themes, 
       #   which is handled in the stylesheet parser.
       #   Make sure there are some standards with this.
-      def self.widget_javascripts
+      def widget_javascripts
         assets = []
         @ruhoh.db.widgets.each_value do |widget|
           next unless widget[Ruhoh.names.javascripts]

@@ -1,9 +1,8 @@
 class Ruhoh
   module Parsers
-    module ThemeConfig
-      @ruhoh = nil
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
+    class ThemeConfig < Base
+
+      def generate
         config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.theme_config_data)
         if config.nil?
           Ruhoh::Friend.say{ 
@@ -25,7 +24,7 @@ class Ruhoh
         
         config
       end
-      
-    end #ThemeConfig
-  end #Parsers
-end #Ruhoh
+
+    end
+  end
+end

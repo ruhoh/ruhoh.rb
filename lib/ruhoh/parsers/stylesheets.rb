@@ -5,12 +5,11 @@ class Ruhoh
     # All styling is managed by the theme, including widget styles.
     # If the theme provides widget stylesheets they will load automatically.
     # theme.yml may also specify an explicit widget stylesheet to load.
-    module Stylesheets
-      @ruhoh = nil
+    class Stylesheets < Base
+
       # Generates mappings to all registered stylesheets.
       # Returns Hash with layout names as keys and Array of asset Objects as values
-      def self.generate(ruhoh)
-        @ruhoh = ruhoh
+      def generate
         assets = self.theme_stylesheets
         assets[Ruhoh.names.widgets] = self.widget_stylesheets
         assets
@@ -19,7 +18,7 @@ class Ruhoh
       # Create mappings for stylesheets registered to the theme layouts.
       # Themes register stylesheets relative to their layouts.
       # Returns Hash with layout names as keys and Array of asset Objects as values.
-      def self.theme_stylesheets
+      def theme_stylesheets
         return {} unless @ruhoh.db.theme_config[Ruhoh.names.stylesheets].is_a? Hash
         assets = {}
         @ruhoh.db.theme_config[Ruhoh.names.stylesheets].each do |key, value|
@@ -42,7 +41,7 @@ class Ruhoh
       # Themes may also specify an explicit widget stylesheet to load.
       # 
       # Returns Array of asset objects.
-      def self.widget_stylesheets
+      def widget_stylesheets
         assets = []
         @ruhoh.db.widgets.each_key do |name|
           default_name = "#{name}.css"
@@ -58,7 +57,7 @@ class Ruhoh
 
         assets
       end
-      
-    end #Stylesheets
-  end #Parsers
-end #Ruhoh
+
+    end
+  end
+end

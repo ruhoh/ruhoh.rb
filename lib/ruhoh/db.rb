@@ -16,9 +16,8 @@ class Ruhoh
     
     def update(name)
       camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
-      self.instance_variable_set("@#{name}",
-        Ruhoh::Parsers.const_get(camelized_name).generate(@ruhoh)
-      )
+      space = Ruhoh::Parsers.const_get(camelized_name).new(@ruhoh)
+      self.instance_variable_set("@#{name}", space.generate)
     end
     
     # Always regenerate a fresh payload since it
