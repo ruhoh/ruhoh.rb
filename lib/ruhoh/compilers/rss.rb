@@ -17,7 +17,11 @@ class Ruhoh
       # posts numbers expand. Merge this in later.
       def run
         num_posts = @ruhoh.config.rss_limit
-        posts = @ruhoh.db.posts['chronological'].first(num_posts)
+        posts = @ruhoh.db.posts['dictionary'].each_value.map { |val| val }
+        posts.sort! {
+          |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
+        }
+        posts = posts.first(num_posts)
 
         feed = Nokogiri::XML::Builder.new do |xml|
          xml.rss(:version => '2.0') {

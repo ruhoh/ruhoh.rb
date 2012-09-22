@@ -1,4 +1,5 @@
 require 'ruhoh/templaters/base_helpers'
+require 'ruhoh/templaters/posts_helpers'
 require 'ruhoh/templaters/asset_helpers'
 require 'ruhoh/templaters/helpers'
 
@@ -6,6 +7,7 @@ class Ruhoh
   module Templaters  
     class RMustache < Mustache
       include Ruhoh::Templaters::BaseHelpers
+      include Ruhoh::Templaters::PostsHelpers
       include Ruhoh::Templaters::AssetHelpers
       include Ruhoh::Templaters::Helpers
       

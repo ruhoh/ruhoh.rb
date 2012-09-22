@@ -17,134 +17,18 @@ class Ruhoh
         true
       end
 
-
       # Public: Generate the Posts dictionary.
       def generate
-        dict = super
-        dictionary = {}
+        dictionary = super
         drafts = []
         invalid = []
         
-        Ruhoh::Utils.report('Posts', dictionary, invalid)
-        
-        results = { 
-          "posts" => dictionary,
-          "drafts" => drafts
-        }
-        
-        ordered_posts = self.ordered_posts(results['posts'])
-
         {
-          'dictionary'      => results['posts'],
-          'drafts'          => results['drafts'],
-          'chronological'   => self.build_chronology(ordered_posts),
-          'collated'        => self.collate(ordered_posts),
-          'tags'            => self.parse_tags(ordered_posts),
-          'categories'      => self.parse_categories(ordered_posts)
+          'dictionary'      => dictionary,
+          'drafts'          => drafts
         }
       end
       
-      def ordered_posts(dictionary)
-        ordered_posts = []
-        dictionary.each_value { |val| ordered_posts << val }
-        ordered_posts.sort! {
-          |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
-        }
-
-        ordered_posts
-      end
-      
-      def build_chronology(ordered_posts)
-        ordered_posts.map { |post| post['id'] }
-      end
-
-      # Internal: Create a collated posts data structure.
-      #
-      # posts - Required [Array] 
-      #  Must be sorted chronologically beforehand.
-      #
-      # [{ 'year': year, 
-      #   'months' : [{ 'month' : month, 
-      #     'posts': [{}, {}, ..] }, ..] }, ..]
-      # 
-      def collate(ordered_posts)
-        collated = []
-        ordered_posts.each_with_index do |post, i|
-          thisYear = Time.parse(post['date']).strftime('%Y')
-          thisMonth = Time.parse(post['date']).strftime('%B')
-          if (i-1 >= 0)
-            prevYear = Time.parse(ordered_posts[i-1]['date']).strftime('%Y')
-            prevMonth = Time.parse(ordered_posts[i-1]['date']).strftime('%B')
-          end
-
-          if(prevYear == thisYear) 
-            if(prevMonth == thisMonth)
-              collated.last['months'].last['posts'] << post['id'] # append to last year & month
-            else
-              collated.last['months'] << {
-                  'month' => thisMonth,
-                  'posts' => [post['id']]
-                } # create new month
-            end
-          else
-            collated << { 
-              'year' => thisYear,
-              'months' => [{ 
-                'month' => thisMonth,
-                'posts' => [post['id']]
-              }]
-            } # create new year & month
-          end
-
-        end
-
-        collated
-      end
-
-      def parse_tags(ordered_posts)
-        tags = {}
-
-        ordered_posts.each do |post|
-          Array(post['tags']).each do |tag|
-            if tags[tag]
-              tags[tag]['count'] += 1
-            else
-              tags[tag] = { 
-                'count' => 1, 
-                'name' => tag,
-                'posts' => [] 
-              }
-            end 
-
-            tags[tag]['posts'] << post['id']
-          end
-        end  
-        tags
-      end
-
-      def parse_categories(ordered_posts)
-        categories = {}
-      
-        ordered_posts.each do |post|
-          Array(post['categories']).each do |cat|
-            cat = Array(cat).join('/')
-            if categories[cat]
-              categories[cat]['count'] += 1
-            else
-              categories[cat] = { 
-                'count' => 1, 
-                'name' => cat, 
-                'posts' => []
-              }
-            end 
-
-            categories[cat]['posts'] << post['id']
-          end
-        end  
-        categories
-      end
-    
-    
       class Modeler < BaseModeler
         include Page
         
