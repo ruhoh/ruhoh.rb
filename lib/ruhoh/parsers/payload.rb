@@ -4,10 +4,6 @@ class Ruhoh
 
       def generate
         {
-          "db" => {
-            "pages" =>  @ruhoh.db.pages,
-            "posts" => @ruhoh.db.posts,
-          },
           "site" => @ruhoh.db.site,
           'page' => {},
           "urls" => {
