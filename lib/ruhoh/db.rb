@@ -29,10 +29,32 @@ class Ruhoh
       RUBY
     end
     
-    def update(name)
+    def constantize(name)
       camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
-      space = Ruhoh::Parsers.const_get(camelized_name).new(@ruhoh)
-      self.instance_variable_set("@#{name}", space.generate)
+      Ruhoh::Parsers.const_get(camelized_name)
+    end
+    
+    # Update a data endpoint
+    #
+    # name - String or Symbol representing the data enpoint.
+    # id - (Optional) String filename(id) to a singular resource
+    # from the named data endpoint.
+    #
+    # If id is passed, will update the singular resource only.
+    # Useful for updating only the resource that has changed.
+    # Returns the data that was updated.
+    def update(name, id = nil)
+      model = constantize(name).new(@ruhoh)
+      if id
+        data = model.generate_by_id(id).values.first
+        endpoint = self.instance_variable_get("@#{name}")
+        endpoint[id] = data
+        data
+      else
+        data = model.generate
+        self.instance_variable_set("@#{name}", data)
+        data
+      end
     end
     
     def clear(name)
