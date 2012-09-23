@@ -8,10 +8,10 @@ class Ruhoh
       @id = id
       @path = id
       @data = if id =~ Regexp.new("^#{Ruhoh.names.posts}")
-        @ruhoh.db.posts['dictionary'][id] 
+        @ruhoh.db.update(:posts, id)
       else
         @path = "#{Ruhoh.names.pages}/#{id}"
-        @ruhoh.db.pages[id]
+        @ruhoh.db.update(:pages, @path)
       end
       raise "Page #{id} not found in database" unless @data
       @templater = Ruhoh::Templaters::RMustache.new(@ruhoh)
