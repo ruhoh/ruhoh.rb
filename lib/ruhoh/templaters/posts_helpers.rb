@@ -3,7 +3,7 @@ class Ruhoh
     module PostsHelpers
 
       def posts
-        posts = @ruhoh.db.posts['dictionary'].each_value.map { |val| val }
+        posts = @ruhoh.db.posts.each_value.map { |val| val }
         posts.sort! {
           |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
         }
@@ -11,7 +11,7 @@ class Ruhoh
 
       def to_posts(sub_context)
         Array(sub_context).map { |id|
-          @ruhoh.db.posts['dictionary'][id]
+          @ruhoh.db.posts[id]
         }.compact
       end
       
@@ -89,7 +89,7 @@ class Ruhoh
           categories_url = url and break if @ruhoh.db.routes.key?(url)
         }
         categories = {}
-        @ruhoh.db.posts['dictionary'].each_value do |post|
+        @ruhoh.db.posts.each_value do |post|
           Array(post['categories']).each do |cat|
             cat = Array(cat).join('/')
             if categories[cat]
@@ -133,7 +133,7 @@ class Ruhoh
           tags_url = url and break if @ruhoh.db.routes.key?(url)
         }
         tags = {}
-        @ruhoh.db.posts['dictionary'].each_value do |post|
+        @ruhoh.db.posts.each_value do |post|
           Array(post['tags']).each do |tag|
             if tags[tag]
               tags[tag]['count'] += 1

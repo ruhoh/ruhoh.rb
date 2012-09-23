@@ -15,7 +15,7 @@ class Ruhoh
     end
     
     def all_pages
-      self.posts['dictionary'].merge(self.pages)
+      self.posts.merge(self.pages)
     end
     
     # Lazy-load all data endpoints but cache the result for this cycle.

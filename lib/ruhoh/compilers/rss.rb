@@ -17,7 +17,7 @@ class Ruhoh
       # posts numbers expand. Merge this in later.
       def run
         num_posts = @ruhoh.config.rss_limit
-        posts = @ruhoh.db.posts['dictionary'].each_value.map { |val| val }
+        posts = @ruhoh.db.posts.each_value.map { |val| val }
         posts.sort! {
           |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
         }
@@ -30,7 +30,7 @@ class Ruhoh
              xml.link_ @ruhoh.db.site['config']['production_url']
              xml.pubDate_ Time.now          
              posts.each do |post_id|
-               post = @ruhoh.db.posts['dictionary'][post_id]
+               post = @ruhoh.db.posts[post_id]
                page = @ruhoh.page(post_id)
                xml.item {
                  xml.title_ post['title']

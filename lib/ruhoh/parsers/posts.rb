@@ -17,18 +17,6 @@ class Ruhoh
         true
       end
 
-      # Public: Generate the Posts dictionary.
-      def generate
-        dictionary = super
-        drafts = []
-        invalid = []
-        
-        {
-          'dictionary'      => dictionary,
-          'drafts'          => drafts
-        }
-      end
-      
       class Modeler < BaseModeler
         include Page
         

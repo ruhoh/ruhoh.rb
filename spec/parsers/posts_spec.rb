@@ -11,7 +11,7 @@ module Posts
       it 'should return a valid data structures for core API' do
         posts = Ruhoh::Parsers::Posts.generate
         
-        posts['dictionary'].should be_a_kind_of(Hash)
+        posts.should be_a_kind_of(Hash)
         posts['chronological'].should be_a_kind_of(Array)
         posts['collated'].should be_a_kind_of(Array)
         posts['tags'].should be_a_kind_of(Hash)

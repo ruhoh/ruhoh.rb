@@ -243,12 +243,12 @@ class Ruhoh
       data = case type
       when :posts
         @ruhoh.db.update(:posts)
-        @ruhoh.db.posts['dictionary']
+        @ruhoh.db.posts
       when :drafts
         @ruhoh.db.update(:posts)
         drafts = @ruhoh.db.posts['drafts']
         h = {}
-        drafts.each {|id| h[id] = @ruhoh.db.posts['dictionary'][id]}
+        drafts.each {|id| h[id] = @ruhoh.db.posts[id]}
         h
       when :pages
         @ruhoh.db.update(:pages)
