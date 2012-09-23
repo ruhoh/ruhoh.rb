@@ -16,9 +16,8 @@ class Ruhoh
         self.class.name.split("::").last
       end
       
-      # Generate each data 
-      # Each data can have 3 references, one per each cascade level.
-      # They will overwrite eachother successviely if found.
+      # Generate all data resources for this data endpoint.
+      # Returns dictionary of all data resources.
       def generate
         dict = {}
         self.files.each { |obj|
@@ -29,7 +28,8 @@ class Ruhoh
         dict
       end
 
-      # Generate a single instance given the filename (id)
+      # Generate a single data resource as identified by `id`
+      # Returns dictionary containing the singular data resource.
       def generate_by_id(id)
         dict = {}
         self.files_by_id(id).each { |file_hash|
@@ -39,8 +39,11 @@ class Ruhoh
         dict
       end
       
-      # Find all valid files for this data in the system.
-      # Returns array of file data hashes
+      # Collect all files (as mapped by data resources) for this data endpoint.
+      # Each resource can have 3 file references, one per each cascade level.
+      # The file hashes are collected in order 
+      # so they will overwrite eachother if found.
+      # Returns Array of file data hashes.
       def files
         a = []
         Array(self.paths).each do |path|
@@ -60,9 +63,9 @@ class Ruhoh
         a
       end
       
-      # Find all valid file objects based on a file "id"
-      # Returns array of file objects. can be many
-      # due to the cascade.
+      # Collect all files for a single data resource.
+      # Can be many files due to the cascade.
+      # Returns Array of file hashes.
       def files_by_id(id)
         a = []
         Array(self.paths).each do |path|
