@@ -53,7 +53,10 @@ class Ruhoh
           data['categories']    = Array(data['categories'])
           data['tags']          = Array(data['tags'])
           data['_type']         = type
-          
+
+          # Register this route for the previewer
+          @ruhoh.db.routes[data['url']] = data['id']
+
           dict = {}
           dict[@id] = data
           dict

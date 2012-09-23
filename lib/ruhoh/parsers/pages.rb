@@ -30,7 +30,10 @@ class Ruhoh
           data['url']     = self.permalink(data)
           data['title']   = data['title'] || self.to_title
           data['layout']  = @ruhoh.config.pages_layout unless data['layout']
-          
+
+          # Register this route for the previewer
+          @ruhoh.db.routes[data['url']] = data['id']
+
           dict = {}
           dict[data['id']] = data
           dict

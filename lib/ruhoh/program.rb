@@ -23,6 +23,10 @@ class Ruhoh
       ruhoh.setup_urls
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
 
+      # initialize the routes dictionary
+      ruhoh.db.pages
+      ruhoh.db.posts
+      
       Ruhoh::Watch.start(ruhoh) if opts[:watch]
       Rack::Builder.new {
         use Rack::Lint
