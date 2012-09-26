@@ -6,20 +6,23 @@ Dir[File.join(File.dirname(__FILE__), 'parsers','*.rb')].each { |f|
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
-    WhiteList = [:site, :posts, :pages, :routes, :layouts, :partials, :widgets, :theme_config, :stylesheets, :javascripts, :payload, :scaffolds]
-
-    self.__send__ :attr_reader, *WhiteList
     
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
-    end
-    
-    def all_pages
-      self.posts.merge(self.pages)
+    def self.registered_parsers
+      return @registered_parsers if @registered_parsers
+      @registered_parsers = Ruhoh::Parsers.constants.map{|c|
+        c.
+        to_s.
+        gsub(/::/, '/').
+        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+        gsub(/([a-z\d])([A-Z])/,'\1_\2').
+        tr("-", "_").
+        downcase
+      }
+      @registered_parsers
     end
     
     # Lazy-load all data endpoints but cache the result for this cycle.
-    WhiteList.each do |name|
+    self.registered_parsers.each do |name|
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}
@@ -27,6 +30,14 @@ class Ruhoh
           @#{name}
         end
       RUBY
+    end
+    
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
+    end
+    
+    def all_pages
+      self.posts.merge(self.pages)
     end
     
     def constantize(name)
