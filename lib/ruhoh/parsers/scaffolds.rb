@@ -1,10 +1,6 @@
 class Ruhoh
   module Parsers
     class Scaffolds < Base
-
-      def paths
-        [@ruhoh.paths.system_scaffolds, @ruhoh.paths.scaffolds]
-      end
       
       def glob
         "**/*"
@@ -20,9 +16,7 @@ class Ruhoh
         
         def generate
           dict = {}
-          FileUtils.cd(@base) {
-            File.open(@id, 'r:UTF-8') { |f| dict[@id] = f.read }
-          }
+          File.open(@realpath, 'r:UTF-8') { |f| dict[@id] = f.read }
           dict
         end
       end

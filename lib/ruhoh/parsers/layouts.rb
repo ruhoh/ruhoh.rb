@@ -1,10 +1,6 @@
 class Ruhoh
   module Parsers
     class Layouts < Base
-
-      def paths
-        @ruhoh.paths.theme_layouts
-      end
       
       def glob
         "**/*.*"
@@ -20,7 +16,7 @@ class Ruhoh
         def generate
           dict = {}
           id = File.basename(@id, File.extname(@id))
-          data = Ruhoh::Utils.parse_layout_file(@base, @id)
+          data = Ruhoh::Utils.parse_layout_file(@realpath)
           data['id'] = id
           dict[id] = data
           dict

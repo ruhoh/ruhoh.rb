@@ -2,10 +2,6 @@ class Ruhoh
   module Parsers
     class Partials < Base
 
-      def paths
-        [@ruhoh.paths.system_partials, @ruhoh.paths.partials, @ruhoh.paths.theme_partials]
-      end
-
       def glob
         "**/*"
       end
@@ -20,9 +16,7 @@ class Ruhoh
         def generate
           dict = {}
           name = @id.chomp(File.extname(@id))
-          FileUtils.cd(@base) {
-            File.open(@id, 'r:UTF-8') { |f| dict[name] = f.read }
-          }
+          File.open(@realpath, 'r:UTF-8') { |f| dict[name] = f.read }
           dict
         end
       end

@@ -7,15 +7,28 @@ class Ruhoh
         @ruhoh = ruhoh
       end
       
-      # Default paths to the 3 levels of the cascade.
-      def paths
-        [@ruhoh.paths.system, @ruhoh.paths.base, @ruhoh.paths.theme]
-      end
-      
       def registered_name
         self.class.name.split("::").last
       end
       
+      def namespace
+        if self.class.class_variable_defined?(:@@namespace)
+          self.class.class_variable_get(:@@namespace)
+        else
+          registered_name.
+          gsub(/::/, '/').
+          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+          gsub(/([a-z\d])([A-Z])/,'\1_\2').
+          tr("-", "_").
+          downcase
+        end
+      end
+      
+      # Default paths to the 3 levels of the cascade.
+      def paths
+        [@ruhoh.paths.system, @ruhoh.paths.base, @ruhoh.paths.theme]
+      end
+
       # Generate all data resources for this data endpoint.
       # Returns dictionary of all data resources.
       def generate
@@ -47,8 +60,9 @@ class Ruhoh
       def files
         a = []
         Array(self.paths).each do |path|
-          next unless File.directory?(path)
-          FileUtils.cd(path) {
+          namespaced_path = File.join(path, namespace)
+          next unless File.directory?(namespaced_path)
+          FileUtils.cd(namespaced_path) {
             Dir[self.glob].each { |filename|
               if self.respond_to? :is_valid_page?
                 next unless self.is_valid_page?(filename)
@@ -69,8 +83,9 @@ class Ruhoh
       def files_by_id(id)
         a = []
         Array(self.paths).each do |path|
-          next unless File.directory?(path)
-          FileUtils.cd(path) {
+          namespaced_path = File.join(path, namespace)
+          next unless File.directory?(namespaced_path)
+          FileUtils.cd(namespaced_path) {
             next unless File.exist? id
             next unless self.is_valid_page?(id)
             a << {
@@ -79,6 +94,7 @@ class Ruhoh
             }
           }
         end
+
         a
       end
       

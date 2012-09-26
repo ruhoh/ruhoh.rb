@@ -1,13 +1,9 @@
 class Ruhoh
   module Parsers
     class Posts < Base
-      
-      def paths
-        [@ruhoh.paths.base]
-      end
-      
+
       def glob
-        "#{Ruhoh.names.posts}/**/*.*"
+        "**/*.*"
       end
       
       def is_valid_page?(filepath)
@@ -46,7 +42,7 @@ class Ruhoh
           end  
   
           data['date']          = data['date'].to_s
-          data['id']            = @id
+          data['id']            = self.make_id
           data['title']         = data['title'] || filename_data['title']
           data['url']           = self.permalink(data)
           data['layout']        = @ruhoh.config.posts_layout if data['layout'].nil?
@@ -58,10 +54,14 @@ class Ruhoh
           @ruhoh.db.routes[data['url']] = data['id']
 
           dict = {}
-          dict[@id] = data
+          dict[data['id']] = data
           dict
         end
 
+        def make_id
+          @id.gsub(Regexp.new("^#{Ruhoh.names.posts}/"), '')
+        end
+        
         def formatted_date(date)
           Time.parse(date.to_s).strftime('%Y-%m-%d')
         rescue

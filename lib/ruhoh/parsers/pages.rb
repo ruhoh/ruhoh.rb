@@ -1,9 +1,9 @@
 class Ruhoh
   module Parsers
     class Pages < Base
-
+      
       def glob
-        "#{Ruhoh.names.pages}/**/*.*"
+        "**/*.*"
       end
       
       def paths
