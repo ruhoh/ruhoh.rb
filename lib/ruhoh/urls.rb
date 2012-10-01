@@ -29,11 +29,18 @@ class Ruhoh
     end
 
     # Ruhoh.config.base_path is assumed to be well-formed.
-    # Always remove trailing slash.
+    # Always remove trailing slash if urls_trailing_slashes == false.
     # Returns String - normalized url with prepended base_path
     def self.to_url(*args)
-      url = args.join('/').chomp('/').reverse.chomp('/').reverse
-      url = Ruhoh.config.base_path + url
+      url= args.join('/')
+      url.slice!(0) if url.start_with?('/')
+      if Ruhoh.config.urls_trailing_slashes == true
+        url += '/' unless url.end_with?('/') or url.end_with?('.html')
+      else
+        url.chomp!('/')
+      end
+      url= (Ruhoh.config.base_path + url).gsub('//', '/')
+
     end
     
     def self.to_url_slug(title)
