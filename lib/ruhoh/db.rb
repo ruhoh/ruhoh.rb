@@ -27,6 +27,7 @@ class Ruhoh
     
     def initialize(ruhoh)
       @ruhoh = ruhoh
+      @content = {}
     end
     
     def all_pages
@@ -65,7 +66,16 @@ class Ruhoh
         data
       end
     end
-    
+
+    # return a given resource's file content
+    # TODO: Cache this in compile mode but not development mode.
+    def content(pointer)
+      name = pointer['type'].downcase # name is a stringified constant.
+      modeler = constantize(name).const_get(:Modeler)
+      
+      @content[pointer['id']] = modeler.new(@ruhoh, pointer).content
+    end
+
     def clear(name)
       self.instance_variable_set("@#{name}", nil)
     end

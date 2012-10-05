@@ -45,14 +45,10 @@ class Ruhoh
       end
       
       def get_page_content
-        id = self.context['id']
-        id ||= self.context['page']['id']
-        return '' unless id
-        unless id =~ Regexp.new("^#{Ruhoh.names.posts}")
-          id = "#{Ruhoh.names.pages}/#{id}"
-        end
-        
-        [Ruhoh::Utils.parse_page_file(@ruhoh.paths.base, id)['content'], id]
+        data = self.context['id'] ? self.context : self.context['page']
+        return '' unless data['id']
+        page = @ruhoh.page(data['pointer'])
+        [page.content, data['id']]
       end
       
       def widget(name)
