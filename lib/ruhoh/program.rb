@@ -67,7 +67,6 @@ class Ruhoh
       ruhoh.setup_paths
       ruhoh.setup_urls
       ruhoh.setup_plugins
-      ruhoh.db.update_all
       
       if target
         ruhoh.paths.compiled = File.expand_path(target)

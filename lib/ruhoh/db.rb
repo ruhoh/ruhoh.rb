@@ -30,10 +30,6 @@ class Ruhoh
       @content = {}
     end
     
-    def all_pages
-      self.posts.merge(self.pages)
-    end
-    
     def constantize(name)
       camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
       Ruhoh::Parsers.const_get(camelized_name)
@@ -78,21 +74,6 @@ class Ruhoh
 
     def clear(name)
       self.instance_variable_set("@#{name}", nil)
-    end
-    
-    def update_all
-      WhiteList.each do |var|
-        self.__send__(:update, var)
-      end
-    end
-    
-    # Refresh the database by clearing all cached values
-    # This is used to start a fresh cycle.
-    # It ensures updates to the data are reflected.
-    def clear_all
-      WhiteList.each do |var|
-        self.instance_variable_set("@#{var}", nil)
-      end
     end
     
   end #DB
