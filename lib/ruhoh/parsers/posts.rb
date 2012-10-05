@@ -20,48 +20,43 @@ class Ruhoh
         Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
         def generate
-          type = "post"
           parsed_page = self.parse_page_file
           data = parsed_page['data']
   
-          filename_data = self.parse_page_filename(@id)
+          filename_data = self.parse_page_filename(@pointer['id'])
           if filename_data.empty?
             #error = "Invalid Filename Format. Format should be: my-post-title.ext"
-            #invalid << [@id, error] ; next
+            #invalid << [@pointer['id'], error] ; next
           end
   
           data['date'] ||= filename_data['date']
 
           unless self.formatted_date(data['date'])
             #error = "Invalid Date Format. Date should be: YYYY-MM-DD"
-            #invalid << [@id, error] ; next
+            #invalid << [@pointer['id'], error] ; next
           end
 
           if data['type'] == 'draft'
-            return {"_type" => "draft"} if @ruhoh.config.env == 'production'
+            return {"type" => "draft"} if @ruhoh.config.env == 'production'
           end  
-  
+
+          data['pointer']       = @pointer
+          data['id']            = @pointer['id']
           data['date']          = data['date'].to_s
-          data['id']            = self.make_id
           data['title']         = data['title'] || filename_data['title']
           data['url']           = self.permalink(data)
           data['layout']        = @ruhoh.config.posts_layout if data['layout'].nil?
           data['categories']    = Array(data['categories'])
           data['tags']          = Array(data['tags'])
-          data['_type']         = type
-
+          
           # Register this route for the previewer
-          @ruhoh.db.routes[data['url']] = data['id']
+          @ruhoh.db.routes[data['url']] = @pointer
 
-          dict = {}
-          dict[data['id']] = data
-          dict
+          {
+            "#{@pointer['id']}" => data
+          }
         end
 
-        def make_id
-          @id.gsub(Regexp.new("^#{Ruhoh.names.posts}/"), '')
-        end
-        
         def formatted_date(date)
           Time.parse(date.to_s).strftime('%Y-%m-%d')
         rescue

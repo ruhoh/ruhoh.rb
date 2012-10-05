@@ -16,7 +16,7 @@ class Ruhoh
         
         def generate
           dict = {}
-          File.open(@realpath, 'r:UTF-8') { |f| dict[@id] = f.read }
+          File.open(@pointer['realpath'], 'r:UTF-8') { |f| dict[@pointer['id']] = f.read }
           dict
         end
       end

@@ -66,8 +66,8 @@ class Ruhoh
     @db = Ruhoh::DB.new(self)
   end
   
-  def page(id)
-    Page.new(self, id)
+  def page(route)
+    Page.new(self, route)
   end
   
   # Public: Setup Ruhoh utilities relative to the current application directory.

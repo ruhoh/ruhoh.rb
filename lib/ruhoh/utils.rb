@@ -98,5 +98,24 @@ class Ruhoh
       target
     end
     
+    def self.constantize(class_name)
+      unless /\A(?:::)?([A-Z]\w*(?:::[A-Z]\w*)*)\z/ =~ class_name
+        raise NameError, "#{class_name.inspect} is not a valid constant name!"
+      end
+
+      Object.module_eval("::#{$1}", __FILE__, __LINE__)
+    end
+    
+    # Thanks ActiveSupport: http://stackoverflow.com/a/1509939/101940
+    def self.underscore(string)
+      string.
+      to_s.
+      gsub(/::/, '/').
+      gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+      gsub(/([a-z\d])([A-Z])/,'\1_\2').
+      tr("-", "_").
+      downcase
+    end
+    
   end
 end #Ruhoh

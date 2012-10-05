@@ -13,11 +13,10 @@ class Ruhoh
 
         # Always remove trailing slash if sent unless it's the root page.
         env['PATH_INFO'].gsub!(/\/$/, '') unless env['PATH_INFO'] == "/"
-      
-        id = @ruhoh.db.routes[env['PATH_INFO']]
-        raise "Page id not found for url: #{env['PATH_INFO']}" unless id
-      
-        page = @ruhoh.page(id)
+        
+        pointer =  @ruhoh.db.routes[env['PATH_INFO']]
+        raise "Page id not found for url: #{env['PATH_INFO']}" unless pointer
+        page = @ruhoh.page(pointer)
         [200, {'Content-Type' => 'text/html'}, [page.render]]
       end
     

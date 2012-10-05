@@ -6,19 +6,12 @@ Dir[File.join(File.dirname(__FILE__), 'parsers','*.rb')].each { |f|
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
-    
+
     def self.registered_parsers
       return @registered_parsers if @registered_parsers
       @registered_parsers = Ruhoh::Parsers.constants.map{|c|
-        c.
-        to_s.
-        gsub(/::/, '/').
-        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').
-        tr("-", "_").
-        downcase
+        Ruhoh::Utils.underscore(c)
       }
-      @registered_parsers
     end
     
     # Lazy-load all data endpoints but cache the result for this cycle.
@@ -47,17 +40,22 @@ class Ruhoh
     
     # Update a data endpoint
     #
-    # name - String or Symbol representing the data enpoint.
-    # id - (Optional) String filename(id) to a singular resource
-    # from the named data endpoint.
+    # name_or_pointer - String, Symbol or pointer(Hash)
     #
-    # If id is passed, will update the singular resource only.
-    # Useful for updating only the resource that has changed.
+    # If pointer is passed, will update the singular resource only.
+    # Useful for updating only the resource that have changed.
     # Returns the data that was updated.
-    def update(name, id = nil)
+    def update(name_or_pointer)
+      if name_or_pointer.is_a?(Hash)
+        name = name_or_pointer['type'].downcase
+        id = name_or_pointer['id']
+      else
+        name = name_or_pointer.downcase # name is a stringified constant.
+      end
       model = constantize(name).new(@ruhoh)
+
       if id
-        data = model.generate_by_id(id).values.first
+        data = model.generate(id).values.first
         endpoint = self.instance_variable_get("@#{name}")
         endpoint[id] = data
         data

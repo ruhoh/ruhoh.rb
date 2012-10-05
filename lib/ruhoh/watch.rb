@@ -41,15 +41,17 @@ class Ruhoh
             ruhoh.db.clear(:site)
           elsif path =~ Regexp.new("^#{Ruhoh.names.pages}")
             type = "Pages"
-            ruhoh.db.clear(:pages)
-            ruhoh.db.clear(:routes)
+            key = ruhoh.db.routes.key(path)
+            ruhoh.db.routes.delete(key)
+            ruhoh.db.update("type" => type, "id" => path)
           elsif path =~ Regexp.new("^(#{Ruhoh.names.partials}|#{Ruhoh.names.themes}\/#{ruhoh.config.theme}\/#{Ruhoh.names.partials})")
             type = "Partials"
             ruhoh.db.clear(:partials)
           elsif path =~ Regexp.new("^#{Ruhoh.names.posts}")
             type = "Posts"
-            ruhoh.db.clear(:posts)
-            ruhoh.db.clear(:routes)
+            key = ruhoh.db.routes.key(path)
+            ruhoh.db.routes.delete(key)
+            ruhoh.db.update("type" => type, "id" => path)
           elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{ruhoh.config.theme}\/#{Ruhoh.names.layouts}")
             type = "Layouts"
             ruhoh.db.clear(:layouts)

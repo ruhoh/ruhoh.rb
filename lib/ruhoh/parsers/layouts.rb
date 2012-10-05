@@ -15,8 +15,8 @@ class Ruhoh
       class Modeler < BaseModeler
         def generate
           dict = {}
-          id = File.basename(@id, File.extname(@id))
-          data = Ruhoh::Utils.parse_layout_file(@realpath)
+          id = File.basename(@pointer['id'], File.extname(@pointer['id']))
+          data = Ruhoh::Utils.parse_layout_file(@pointer['realpath'])
           data['id'] = id
           dict[id] = data
           dict

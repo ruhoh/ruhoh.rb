@@ -15,8 +15,8 @@ class Ruhoh
       class Modeler < BaseModeler
         def generate
           dict = {}
-          name = @id.chomp(File.extname(@id))
-          File.open(@realpath, 'r:UTF-8') { |f| dict[name] = f.read }
+          name = @pointer['id'].chomp(File.extname(@pointer['id']))
+          File.open(@pointer['realpath'], 'r:UTF-8') { |f| dict[name] = f.read }
           dict
         end
       end

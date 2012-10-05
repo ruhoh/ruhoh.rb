@@ -5,11 +5,7 @@ class Ruhoh
       def glob
         "**/*.*"
       end
-      
-      def paths
-        [@ruhoh.paths.base]
-      end
-      
+
       def is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
@@ -26,26 +22,23 @@ class Ruhoh
         def generate
           parsed_page     = self.parse_page_file
           data            = parsed_page['data']
-          data['id']      = self.make_id
+          data['pointer'] = @pointer
+          data['id']      = @pointer['id']
           data['url']     = self.permalink(data)
           data['title']   = data['title'] || self.to_title
           data['layout']  = @ruhoh.config.pages_layout unless data['layout']
 
           # Register this route for the previewer
-          @ruhoh.db.routes[data['url']] = data['id']
+          @ruhoh.db.routes[data['url']] = @pointer
 
-          dict = {}
-          dict[data['id']] = data
-          dict
-        end
-      
-        def make_id
-          @id.gsub(Regexp.new("^#{Ruhoh.names.pages}/"), '')
+          {
+            "#{@pointer['id']}" => data
+          }
         end
       
         def to_title
-          name = File.basename( @id, File.extname(@id) )
-          name = @id.split('/')[-2] if name == 'index' && !@id.index('/').nil?
+          name = File.basename( @pointer['id'], File.extname(@pointer['id']) )
+          name = @pointer['id'].split('/')[-2] if name == 'index' && !@pointer['id'].index('/').nil?
           name.gsub(/[^\p{Word}+]/u, ' ').gsub(/\b\w/){$&.upcase}
         end
     

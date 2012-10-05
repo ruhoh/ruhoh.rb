@@ -8,19 +8,14 @@ class Ruhoh
       end
       
       def registered_name
-        self.class.name.split("::").last
+        self.class.registered_name
       end
       
       def namespace
         if self.class.class_variable_defined?(:@@namespace)
           self.class.class_variable_get(:@@namespace)
         else
-          registered_name.
-          gsub(/::/, '/').
-          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-          gsub(/([a-z\d])([A-Z])/,'\1_\2').
-          tr("-", "_").
-          downcase
+          Ruhoh::Utils.underscore(registered_name)
         end
       end
       
@@ -31,71 +26,58 @@ class Ruhoh
 
       # Generate all data resources for this data endpoint.
       # Returns dictionary of all data resources.
-      def generate
+      #
+      # Generate a single data resource as identified by `id`
+      # Returns dictionary containing the singular data resource.
+      def generate(id=nil)
         dict = {}
-        self.files.each { |obj|
-          modeler = self.class.const_get(:Modeler).new(@ruhoh, obj)
-          dict.merge!(modeler.generate)
+        self.files(id).each { |pointer|
+          dict.merge!(modeler.new(@ruhoh, pointer).generate)
         }
         Ruhoh::Utils.report(self.registered_name, dict, [])
         dict
       end
 
-      # Generate a single data resource as identified by `id`
-      # Returns dictionary containing the singular data resource.
-      def generate_by_id(id)
-        dict = {}
-        self.files_by_id(id).each { |file_hash|
-          modeler = self.class.const_get(:Modeler).new(@ruhoh, file_hash)
-          dict.merge!(modeler.generate)
-        }
-        dict
-      end
-      
       # Collect all files (as mapped by data resources) for this data endpoint.
       # Each resource can have 3 file references, one per each cascade level.
       # The file hashes are collected in order 
       # so they will overwrite eachother if found.
       # Returns Array of file data hashes.
-      def files
+      # 
+      # id - (Optional) String or Array.
+      # Collect all files for a single data resource.
+      # Can be many files due to the cascade.
+      # Returns Array of file hashes.
+      def files(id=nil)
         a = []
         Array(self.paths).each do |path|
           namespaced_path = File.join(path, namespace)
           next unless File.directory?(namespaced_path)
           FileUtils.cd(namespaced_path) {
-            Dir[self.glob].each { |filename|
+            file_array = (id ? Array(id) : Dir[self.glob])
+            file_array.each { |id|
+              next unless File.exist? id
               if self.respond_to? :is_valid_page?
-                next unless self.is_valid_page?(filename)
+                next unless self.is_valid_page?(id)
               end
               a << {
-                realpath: File.realpath(filename),
-                id: filename
+                "id" => id,
+                "realpath" => File.realpath(id),
+                "parser" => registered_name,
               }
             }
           }
         end
         a
       end
-      
-      # Collect all files for a single data resource.
-      # Can be many files due to the cascade.
-      # Returns Array of file hashes.
-      def files_by_id(id)
-        a = []
-        Array(self.paths).each do |path|
-          namespaced_path = File.join(path, namespace)
-          next unless File.directory?(namespaced_path)
-          FileUtils.cd(namespaced_path) {
-            next unless File.exist? id
-            next unless self.is_valid_page?(id)
-            a << {
-              realpath: File.realpath(id),
-              id: id
-            }
-          }
-        end
 
-        a
+      # Proxy to the single modeler class for this parser.
+      def modeler
+        self.class.const_get(:Modeler)
+      end
+
+      def self.registered_name
+        self.name.split("::").last
       end
       
     end
@@ -104,10 +86,14 @@ class Ruhoh
       
       FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
       
-      def parse_page_file
-        raise "File not found: #{@realpath}" unless File.exist?(@realpath)
+      def content
+        self.parse_page_file['content']
+      end
 
-        page = File.open(@realpath, 'r:UTF-8') {|f| f.read }
+      def parse_page_file
+        raise "File not found: #{@pointer['realpath']}" unless File.exist?(@pointer['realpath'])
+
+        page = File.open(@pointer['realpath'], 'r:UTF-8') {|f| f.read }
 
         front_matter = page.match(FMregex)
         if front_matter
@@ -128,11 +114,13 @@ class Ruhoh
     end
     
     class BaseModeler
-      def initialize(ruhoh, file_hash)
+
+      def initialize(ruhoh, pointer)
         @ruhoh = ruhoh
-        @realpath = file_hash[:realpath]
-        @base = file_hash[:realpath]
-        @id = file_hash[:id]
+        # Automatically set which parser type is being used.
+        b = Ruhoh::Utils.constantize(self.class.name.chomp("::Modeler"))
+        pointer["type"] = b.registered_name
+        @pointer = pointer
       end
     end
 
