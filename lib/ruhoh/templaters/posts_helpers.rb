@@ -16,7 +16,7 @@ class Ruhoh
       end
       
       def posts_latest
-        latest = self.context['site']['config']['posts']['latest'].to_i rescue nil
+        latest = @ruhoh.db.config("posts")['latest']
         latest ||= 10
         (latest.to_i > 0) ? self.posts[0, latest.to_i] : self.posts
       end

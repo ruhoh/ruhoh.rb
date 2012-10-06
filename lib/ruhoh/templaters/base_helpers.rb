@@ -16,7 +16,7 @@ class Ruhoh
       # Always break the content on a blank line only so result stays formatted nicely.
       def summary
         content, id = self.get_page_content
-        line_limit = @ruhoh.db.config('posts')['summary_lines'].to_i
+        line_limit = @ruhoh.db.config('posts')['summary_lines']
         line_count = 0
         line_breakpoint = content.lines.count
 
