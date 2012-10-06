@@ -18,6 +18,12 @@ class Ruhoh
           Ruhoh::Utils.underscore(registered_name)
         end
       end
+
+      # The default glob for finding files.
+      # Every file in all child directories.
+      def glob
+        "**/*"
+      end
       
       # Default paths to the 3 levels of the cascade.
       def paths

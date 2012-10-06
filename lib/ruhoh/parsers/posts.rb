@@ -2,10 +2,6 @@ class Ruhoh
   module Parsers
     class Posts < Base
       
-      def glob
-        "**/*.*"
-      end
-      
       def config
         hash = super
         hash['permalink'] ||= "/:categories/:year/:month/:day/:title.html"

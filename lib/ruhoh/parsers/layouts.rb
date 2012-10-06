@@ -2,10 +2,6 @@ class Ruhoh
   module Parsers
     class Layouts < Base
       
-      def glob
-        "**/*.*"
-      end
-      
       def is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['_','.'].include? filepath[0]

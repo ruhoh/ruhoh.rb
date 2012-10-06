@@ -2,10 +2,6 @@ class Ruhoh
   module Parsers
     class Pages < Base
       
-      def glob
-        "**/*.*"
-      end
-      
       def config
         hash = super
         hash['layout'] ||= 'page'
