@@ -3,7 +3,7 @@ class Ruhoh
     module AssetHelpers
 
       def assets
-        method = "assets_#{@ruhoh.config.env}"
+        method = "assets_#{@ruhoh.config['env']}"
         return '' unless self.respond_to?(method)
         self.__send__(method)
       end

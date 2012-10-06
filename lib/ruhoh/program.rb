@@ -18,7 +18,7 @@ class Ruhoh
       
       ruhoh = Ruhoh.new
       ruhoh.setup
-      ruhoh.config.env = opts[:env]
+      ruhoh.config['env'] = opts[:env]
       ruhoh.setup_paths
       ruhoh.setup_urls
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
@@ -63,7 +63,7 @@ class Ruhoh
     def self.compile(target)
       ruhoh = Ruhoh.new
       ruhoh.setup
-      ruhoh.config.env = 'production'
+      ruhoh.config['env'] = 'production'
       ruhoh.setup_paths
       ruhoh.setup_urls
       ruhoh.setup_plugins

@@ -5,11 +5,18 @@ class Ruhoh
       def glob
         "**/*.*"
       end
-
+      
+      def config
+        hash = super
+        hash['layout'] ||= 'page'
+        hash['exclude'] = Array(hash['exclude']).map {|node| Regexp.new(node) }
+        hash
+      end
+      
       def is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
-        @ruhoh.config.pages_exclude.each {|regex| return false if filepath =~ regex }
+        config['exclude'].each {|regex| return false if filepath =~ regex }
         true
       end
 
@@ -26,7 +33,7 @@ class Ruhoh
           data['id']      = @pointer['id']
           data['url']     = self.permalink(data)
           data['title']   = data['title'] || self.to_title
-          data['layout']  = @ruhoh.config.pages_layout unless data['layout']
+          data['layout']  = config['layout'] unless data['layout']
 
           # Register this route for the previewer
           @ruhoh.db.routes[data['url']] = @pointer
@@ -53,7 +60,7 @@ class Ruhoh
           ext = '.html' if Ruhoh::Converter.extensions.include?(ext)
           url = name.split('/').map {|p| Ruhoh::Urls.to_url_slug(p) }.join('/')
           url = "#{url}#{ext}".gsub(/index.html$/, '')
-          if page['permalink'] == 'pretty' || @ruhoh.config.pages_permalink == 'pretty'
+          if page['permalink'] == 'pretty' || config['permalink'] == 'pretty'
             url = url.gsub(/\.html$/, '')
           end
         

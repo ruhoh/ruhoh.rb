@@ -23,7 +23,11 @@ class Ruhoh
       def paths
         [@ruhoh.paths.system, @ruhoh.paths.base, @ruhoh.paths.theme]
       end
-
+      
+      def config
+        @ruhoh.config[self.registered_name]
+      end
+      
       # Generate all data resources for this data endpoint.
       # Returns dictionary of all data resources.
       #
@@ -77,7 +81,7 @@ class Ruhoh
       end
 
       def self.registered_name
-        self.name.split("::").last
+        Ruhoh::Utils.underscore(self.name.split("::").last)
       end
       
     end
@@ -122,6 +126,11 @@ class Ruhoh
         pointer["type"] = b.registered_name
         @pointer = pointer
       end
+      
+      def config
+        @ruhoh.db.config(@pointer['type'])
+      end
+      
     end
 
   end

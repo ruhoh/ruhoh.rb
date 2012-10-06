@@ -12,7 +12,7 @@ class Ruhoh
             "theme_javascripts" => @ruhoh.urls.theme_javascripts,
             "theme_media" => @ruhoh.urls.theme_media,
             "media" => @ruhoh.urls.media,
-            "base_path" => @ruhoh.config.base_path,
+            "base_path" => @ruhoh.config['base_path'],
           }
         }
       end

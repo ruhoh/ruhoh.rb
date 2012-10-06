@@ -52,7 +52,7 @@ class Ruhoh
       paths.plugins             = File.join(ruhoh.base, Ruhoh.names.plugins)
       paths.scaffolds           = File.join(ruhoh.base, Ruhoh.names.scaffolds)
       
-      paths.theme               = File.join(ruhoh.base, Ruhoh.names.themes, ruhoh.config.theme)
+      paths.theme               = File.join(ruhoh.base, Ruhoh.names.themes, ruhoh.config['theme'])
       paths.theme_dashboard_file= File.join(paths.theme, Ruhoh.names.dashboard_file)
       paths.theme_config_data   = File.join(paths.theme, Ruhoh.names.theme_config)
       paths.theme_layouts       = File.join(paths.theme, Ruhoh.names.layouts)

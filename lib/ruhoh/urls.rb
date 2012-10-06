@@ -20,11 +20,11 @@ class Ruhoh
       urls.widgets              = ruhoh.to_url(Ruhoh.names.assets, Ruhoh.names.widgets)
       urls.dashboard            = ruhoh.to_url(Ruhoh.names.dashboard_file.split('.')[0])
 
-      urls.theme                = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config.theme)
-      urls.theme_media          = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config.theme, Ruhoh.names.media)
-      urls.theme_javascripts    = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config.theme, Ruhoh.names.javascripts)
-      urls.theme_stylesheets    = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config.theme, Ruhoh.names.stylesheets)
-      urls.theme_widgets        = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config.theme, Ruhoh.names.widgets)
+      urls.theme                = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config['theme'])
+      urls.theme_media          = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config['theme'], Ruhoh.names.media)
+      urls.theme_javascripts    = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config['theme'], Ruhoh.names.javascripts)
+      urls.theme_stylesheets    = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config['theme'], Ruhoh.names.stylesheets)
+      urls.theme_widgets        = ruhoh.to_url(Ruhoh.names.assets, ruhoh.config['theme'], Ruhoh.names.widgets)
       urls
     end
 

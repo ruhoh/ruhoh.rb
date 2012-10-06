@@ -29,7 +29,7 @@ class Ruhoh
 
     # TODO: seems rather dangerous to delete the incoming target directory?
     def self.compile(ruhoh)
-      Ruhoh::Friend.say { plain "Compiling for environment: '#{ruhoh.config.env}'" }
+      Ruhoh::Friend.say { plain "Compiling for environment: '#{ruhoh.config['env']}'" }
       FileUtils.rm_r ruhoh.paths.compiled if File.exist?(ruhoh.paths.compiled)
       FileUtils.mkdir_p ruhoh.paths.compiled
       

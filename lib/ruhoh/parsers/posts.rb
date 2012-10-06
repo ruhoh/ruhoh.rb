@@ -1,15 +1,25 @@
 class Ruhoh
   module Parsers
     class Posts < Base
-
+      
       def glob
         "**/*.*"
+      end
+      
+      def config
+        hash = super
+        hash['permalink'] ||= "/:categories/:year/:month/:day/:title.html"
+        hash['layout'] ||= 'post'
+        hash['summary_lines'] ||= 20
+        hash['latest'] ||= 2
+        hash['exclude'] = Array(hash['exclude']).map {|node| Regexp.new(node) }
+        hash
       end
       
       def is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
-        @ruhoh.config.posts_exclude.each {|regex| return false if filepath =~ regex }
+        config['exclude'].each {|regex| return false if filepath =~ regex }
         true
       end
 
@@ -37,7 +47,7 @@ class Ruhoh
           end
 
           if data['type'] == 'draft'
-            return {"type" => "draft"} if @ruhoh.config.env == 'production'
+            return {"type" => "draft"} if @ruhoh.config['env'] == 'production'
           end  
 
           data['pointer']       = @pointer
@@ -45,7 +55,7 @@ class Ruhoh
           data['date']          = data['date'].to_s
           data['title']         = data['title'] || filename_data['title']
           data['url']           = self.permalink(data)
-          data['layout']        = @ruhoh.config.posts_layout if data['layout'].nil?
+          data['layout']        = config['layout'] if data['layout'].nil?
           data['categories']    = Array(data['categories'])
           data['tags']          = Array(data['tags'])
           
@@ -101,7 +111,7 @@ class Ruhoh
         def permalink(post)
           date = Date.parse(post['date'])
           title = Ruhoh::Urls.to_url_slug(post['title'])
-          format = post['permalink'] || @ruhoh.config.posts_permalink
+          format = post['permalink'] || config['permalink']
 
           if format.include?(':')
             filename = File.basename(post['id'], File.extname(post['id']))
@@ -129,7 +139,6 @@ class Ruhoh
         end
 
       end
-
     end
   end
 end

@@ -28,6 +28,7 @@ class Ruhoh
     def initialize(ruhoh)
       @ruhoh = ruhoh
       @content = {}
+      @config = {}
     end
     
     def constantize(name)
@@ -69,9 +70,19 @@ class Ruhoh
       name = pointer['type'].downcase # name is a stringified constant.
       modeler = constantize(name).const_get(:Modeler)
       
+      # TODO:
+      # possible collisions here: ids are only unique relative to their parser.
+      # that's the whole point of the pointer... =/
       @content[pointer['id']] = modeler.new(@ruhoh, pointer).content
     end
 
+    # Get the config for a given parser.
+    def config(name)
+      name = name.downcase
+      return @config[name] if @config[name]
+      @config[name] = constantize(name).new(@ruhoh).config
+    end
+    
     def clear(name)
       self.instance_variable_set("@#{name}", nil)
     end

@@ -15,7 +15,6 @@ require 'mustache'
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
-require 'ruhoh/config'
 require 'ruhoh/paths'
 require 'ruhoh/urls'
 require 'ruhoh/db'
@@ -76,12 +75,40 @@ class Ruhoh
     self.reset
     @log.log_file = opts[:log_file] if opts[:log_file] #todo
     @base = opts[:source] if opts[:source]
-    @config = Ruhoh::Config.generate(self)
-    !!@config
+    !!self.config
   end
   
   def reset
     @base = Dir.getwd
+  end
+  
+  def config
+    return @config if @config
+    config = Ruhoh::Utils.parse_yaml_file(@base, Ruhoh.names.config_data)
+    unless config
+      Ruhoh.log.error("Empty config.\nEnsure ./#{Ruhoh.names.config_data} exists and contains valid YAML")
+      return false
+    end
+
+    config['theme'].strip!
+    if config['theme'].empty?
+      Ruhoh.log.error("Theme not specified in #{Ruhoh.names.config_data}")
+      return false
+    end
+    
+    config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : nil
+
+    config['base_path'] = config['base_path'].to_s.strip
+    if config['base_path'].empty?
+      config['base_path'] += "/" unless config['base_path'][-1] == '/'
+    else
+      config['base_path'] = '/'
+    end
+    
+    config['rss_limit'] = config['rss']['limit'] rescue nil
+    config['rss_limit'] = 20 if config['rss_limit'].nil?
+    
+    @config = config
   end
   
   def setup_paths
@@ -100,16 +127,16 @@ class Ruhoh
     plugins.each {|f| require f } unless plugins.empty?
   end
   
-  # ruhoh.config.base_path is assumed to be well-formed.
+  # @config['base_path'] is assumed to be well-formed.
   # Always remove trailing slash.
   # Returns String - normalized url with prepended base_path
   def to_url(*args)
     url = args.join('/').chomp('/').reverse.chomp('/').reverse
-    url = self.config.base_path + url
+    url = @config['base_path'] + url
   end
   
   def relative_path(filename)
-    filename.gsub(Regexp.new("^#{self.paths.base}/"), '')
+    filename.gsub(Regexp.new("^#{@base}/"), '')
   end
   
   def ensure_setup
