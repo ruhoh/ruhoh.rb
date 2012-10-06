@@ -41,6 +41,7 @@ class Ruhoh
             ruhoh.db.clear(:site)
           elsif path =~ Regexp.new("^#{Ruhoh.names.pages}")
             type = "Pages"
+            path = path.gsub(/^.+\//, '')
             key = ruhoh.db.routes.key(path)
             ruhoh.db.routes.delete(key)
             ruhoh.db.update("type" => type, "id" => path)
@@ -49,6 +50,7 @@ class Ruhoh
             ruhoh.db.clear(:partials)
           elsif path =~ Regexp.new("^#{Ruhoh.names.posts}")
             type = "Posts"
+            path = path.gsub(/^.+\//, '')
             key = ruhoh.db.routes.key(path)
             ruhoh.db.routes.delete(key)
             ruhoh.db.update("type" => type, "id" => path)

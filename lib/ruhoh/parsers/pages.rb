@@ -9,14 +9,6 @@ class Ruhoh
         hash
       end
       
-      def is_valid_page?(filepath)
-        return false if FileTest.directory?(filepath)
-        return false if ['.'].include? filepath[0]
-        config['exclude'].each {|regex| return false if filepath =~ regex }
-        true
-      end
-
-
       class Modeler < BaseModeler
         include Page
         

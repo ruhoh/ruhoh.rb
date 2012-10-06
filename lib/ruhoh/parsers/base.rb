@@ -31,7 +31,7 @@ class Ruhoh
       end
       
       def config
-        @ruhoh.config[self.registered_name]
+        @ruhoh.config[self.registered_name] || {}
       end
       
       # Generate all data resources for this data endpoint.
@@ -66,10 +66,7 @@ class Ruhoh
           FileUtils.cd(namespaced_path) {
             file_array = (id ? Array(id) : Dir[self.glob])
             file_array.each { |id|
-              next unless File.exist? id
-              if self.respond_to? :is_valid_page?
-                next unless self.is_valid_page?(id)
-              end
+              next unless self.valid_file?(id)
               a << {
                 "id" => id,
                 "realpath" => File.realpath(id),
@@ -80,7 +77,15 @@ class Ruhoh
         end
         a
       end
-
+      
+      def valid_file?(filepath)
+        return false unless File.exist? filepath
+        return false if FileTest.directory?(filepath)
+        return false if filepath.start_with?('.')
+        Array(config['exclude']).each {|regex| return false if filepath =~ regex }
+        true
+      end
+      
       # Proxy to the single modeler class for this parser.
       def modeler
         self.class.const_get(:Modeler)
