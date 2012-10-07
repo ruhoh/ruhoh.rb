@@ -105,9 +105,6 @@ class Ruhoh
       config['base_path'] = '/'
     end
     
-    config['rss_limit'] = config['rss']['limit'] rescue nil
-    config['rss_limit'] = 20 if config['rss_limit'].nil?
-    
     @config = config
   end
   
