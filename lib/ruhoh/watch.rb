@@ -45,7 +45,7 @@ class Ruhoh
             key = ruhoh.db.routes.key(path)
             ruhoh.db.routes.delete(key)
             ruhoh.db.update("type" => type, "id" => path)
-          elsif path =~ Regexp.new("^(#{Ruhoh.names.partials}|#{Ruhoh.names.themes}\/#{ruhoh.config['theme']}\/#{Ruhoh.names.partials})")
+          elsif path =~ Regexp.new("^(#{Ruhoh.names.partials}|#{Ruhoh.names.themes}\/#{ruhoh.config['theme']['name']}\/#{Ruhoh.names.partials})")
             type = "Partials"
             ruhoh.db.clear(:partials)
           elsif path =~ Regexp.new("^#{Ruhoh.names.posts}")
@@ -54,10 +54,10 @@ class Ruhoh
             key = ruhoh.db.routes.key(path)
             ruhoh.db.routes.delete(key)
             ruhoh.db.update("type" => type, "id" => path)
-          elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{ruhoh.config['theme']}\/#{Ruhoh.names.layouts}")
+          elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{ruhoh.config['theme']['name']}\/#{Ruhoh.names.layouts}")
             type = "Layouts"
             ruhoh.db.clear(:layouts)
-          elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{ruhoh.config['theme']}")
+          elsif path =~ Regexp.new("^#{Ruhoh.names.themes}\/#{ruhoh.config['theme']['name']}")
             type = "Theme"
             ruhoh.db.clear(:stylesheets)
             ruhoh.db.clear(:javascripts)

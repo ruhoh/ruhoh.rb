@@ -90,12 +90,6 @@ class Ruhoh
       return false
     end
 
-    config['theme'].strip!
-    if config['theme'].empty?
-      Ruhoh.log.error("Theme not specified in #{Ruhoh.names.config_data}")
-      return false
-    end
-    
     config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : nil
 
     config['base_path'] = config['base_path'].to_s.strip

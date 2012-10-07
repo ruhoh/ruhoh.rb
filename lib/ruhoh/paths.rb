@@ -20,14 +20,6 @@ class Ruhoh
       :widgets,
       
       :theme,
-      :theme_config_data,
-      :theme_dashboard_file,
-      :theme_layouts,
-      :theme_media,
-      :theme_partials,
-      :theme_javascripts,
-      :theme_stylesheets,
-      :theme_widgets,
       
       :system,
       :system_dashboard_file,
@@ -48,15 +40,7 @@ class Ruhoh
       paths.themes              = File.join(ruhoh.base, Ruhoh.names.themes)
       paths.plugins             = File.join(ruhoh.base, Ruhoh.names.plugins)
       
-      paths.theme               = File.join(ruhoh.base, Ruhoh.names.themes, ruhoh.config['theme'])
-      paths.theme_dashboard_file= File.join(paths.theme, Ruhoh.names.dashboard_file)
-      paths.theme_config_data   = File.join(paths.theme, Ruhoh.names.theme_config)
-      paths.theme_layouts       = File.join(paths.theme, Ruhoh.names.layouts)
-      paths.theme_stylesheets   = File.join(paths.theme, Ruhoh.names.stylesheets)
-      paths.theme_javascripts       = File.join(paths.theme, Ruhoh.names.javascripts)
-      paths.theme_media         = File.join(paths.theme, Ruhoh.names.media)
-      paths.theme_widgets       = File.join(paths.theme, Ruhoh.names.widgets)
-      paths.theme_partials      = File.join(paths.theme, Ruhoh.names.partials)
+      paths.theme               = File.join(ruhoh.base, Ruhoh.names.themes, ruhoh.db.config('theme')['name'])
       
       return false unless self.theme_is_valid?(paths)
       

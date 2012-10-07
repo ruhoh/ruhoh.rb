@@ -9,7 +9,7 @@ class Ruhoh
       def call(env)
         template = nil
         [
-          @ruhoh.paths.theme_dashboard_file,
+          @ruhoh.db.config("theme")["path_dashboard_file"],
           @ruhoh.paths.dashboard_file,
           @ruhoh.paths.system_dashboard_file
         ].each do |path|

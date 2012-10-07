@@ -22,7 +22,7 @@ class Ruhoh
             url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{@ruhoh.urls.theme_javascripts}/#{v}"
             {
               "url" => url,
-              "id" => File.join(@ruhoh.paths.theme_javascripts, v)
+              "id" => File.join(@ruhoh.db.config('theme')['path_javascripts'], v)
             }
           }
         end

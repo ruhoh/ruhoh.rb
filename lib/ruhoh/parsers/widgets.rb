@@ -88,7 +88,7 @@ class Ruhoh
         layout = nil
         layout_path = File.join(widget_name, 'layouts', "#{config['layout']}.html")
         [
-          File.join(@ruhoh.paths.theme_widgets, layout_path),
+          File.join(@ruhoh.db.config("theme")['path_widgets'], layout_path),
           File.join(@ruhoh.paths.widgets, layout_path),
           File.join(@ruhoh.paths.system_widgets, layout_path)
         ].each do |path|

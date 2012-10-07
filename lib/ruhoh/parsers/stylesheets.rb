@@ -27,7 +27,7 @@ class Ruhoh
             url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{@ruhoh.urls.theme_stylesheets}/#{v}"
             {
               "url" => url,
-              "id" => File.join(@ruhoh.paths.theme_stylesheets, v)
+              "id" => File.join(@ruhoh.db.config("theme")['path_stylesheets'], v)
             }
           }
         end
@@ -47,7 +47,7 @@ class Ruhoh
           default_name = "#{name}.css"
           stylesheet = @ruhoh.db.config("theme")[Ruhoh.names.stylesheets][Ruhoh.names.widgets][name] rescue default_name
           stylesheet ||=  default_name
-          file = File.join(@ruhoh.paths.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet)
+          file = File.join(@ruhoh.db.config("theme")['path_widgets'], name, Ruhoh.names.stylesheets, stylesheet)
           next unless File.exists?(file)
           assets << {
             "url" => [@ruhoh.urls.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet].join('/'),

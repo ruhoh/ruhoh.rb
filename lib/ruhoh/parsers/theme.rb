@@ -15,21 +15,30 @@ class Ruhoh
       ]
       
       def config
-        # gets the name
-        #hash = super
-        #hash['name']
-        hash = {}
-        # now we can get the theme specific config.
-        config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.theme_config_data)
+        hash = super
+        hash['name'] = hash['name'].to_s.strip
+        if hash['name'].empty?
+          Ruhoh.log.error("Theme not specified in #{Ruhoh.names.config_data}")
+          return false
+        end
+        hash['path'] = File.join(@ruhoh.base, "themes", hash['name'])
+        hash['path_dashboard_file'] =  File.join(hash['path'], Ruhoh.names.dashboard_file)
+        hash['path_stylesheets'] =  File.join(hash['path'], Ruhoh.names.stylesheets)
+        hash['path_javascripts'] =  File.join(hash['path'], Ruhoh.names.javascripts)
+        hash['path_media'] =  File.join(hash['path'], Ruhoh.names.media)
+        hash['path_widgets'] =  File.join(hash['path'], Ruhoh.names.widgets)
+        hash['path_partials'] =  File.join(hash['path'], Ruhoh.names.partials)
+        
+        config_path = File.join(hash['path'], "theme.yml")
+        config = Ruhoh::Utils.parse_yaml_file(config_path)
         if config.nil?
           Ruhoh::Friend.say{ 
             yellow "WARNING: theme.yml config file not found:"
-            yellow "  #{@ruhoh.paths.theme_config_data}"
+            yellow "  #{config_path}"
           }
-          return {}
+          return hash
         end
-        return {} unless config.is_a? Hash
-        
+        return hash unless config.is_a? Hash
         config["exclude"] = Array(config['exclude']).compact.map do |node| 
           is_last = node[0] == "*"
           node = node.chomp("*").reverse.chomp("*").reverse
@@ -39,7 +48,7 @@ class Ruhoh
           Regexp.new(node, true)
         end
         
-        config
+        hash.merge(config)
       end
       
       # noop
@@ -47,9 +56,6 @@ class Ruhoh
         {}
       end
 
-      class Modeler < BaseModeler
-        
-      end
    end
   end
 end
