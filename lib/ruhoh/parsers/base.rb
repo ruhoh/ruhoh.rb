@@ -88,13 +88,17 @@ class Ruhoh
       
       # Proxy to the single modeler class for this parser.
       def modeler
-        self.class.const_get(:Modeler)
+        self.class.modeler
       end
 
       def self.registered_name
         Ruhoh::Utils.underscore(self.name.split("::").last)
       end
       
+      def self.modeler
+        self.const_get(:Modeler)
+      end
+
     end
     
     module Page

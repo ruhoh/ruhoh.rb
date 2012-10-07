@@ -54,7 +54,7 @@ class Ruhoh
 
       if id
         data = model.generate(id).values.first
-        endpoint = self.instance_variable_get("@#{name}")
+        endpoint = self.instance_variable_get("@#{name}") || {}
         endpoint[id] = data
         data
       else
@@ -68,8 +68,7 @@ class Ruhoh
     # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
       name = pointer['type'].downcase # name is a stringified constant.
-      modeler = constantize(name).const_get(:Modeler)
-      
+      modeler = constantize(name).modeler
       # TODO:
       # possible collisions here: ids are only unique relative to their parser.
       # that's the whole point of the pointer... =/
