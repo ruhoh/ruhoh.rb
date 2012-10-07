@@ -8,7 +8,6 @@ class Ruhoh
       :base,
       :compiled,
       :config_data,
-      :dashboard_file,
       :media,
       :pages,
       :partials,
@@ -22,7 +21,6 @@ class Ruhoh
       :theme,
       
       :system,
-      :system_dashboard_file,
       :system_scaffolds,
       :system_partials,
       :system_widgets
@@ -35,7 +33,6 @@ class Ruhoh
       paths.media               = File.join(ruhoh.base, Ruhoh.names.media)
       paths.widgets             = File.join(ruhoh.base, Ruhoh.names.widgets)
       paths.compiled            = File.join(ruhoh.base, Ruhoh.names.compiled)
-      paths.dashboard_file      = File.join(ruhoh.base, Ruhoh.names.dashboard_file)
       paths.site_data           = File.join(ruhoh.base, Ruhoh.names.site_data)
       paths.themes              = File.join(ruhoh.base, Ruhoh.names.themes)
       paths.plugins             = File.join(ruhoh.base, Ruhoh.names.plugins)
@@ -45,7 +42,6 @@ class Ruhoh
       return false unless self.theme_is_valid?(paths)
       
       paths.system                    = File.join(Ruhoh::Root, Ruhoh.names.system)
-      paths.system_dashboard_file     = File.join(paths.system, Ruhoh.names.dashboard_file)
       paths.system_widgets            = File.join(paths.system, Ruhoh.names.widgets)
 
       paths

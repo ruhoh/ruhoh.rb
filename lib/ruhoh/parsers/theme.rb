@@ -22,7 +22,6 @@ class Ruhoh
           return false
         end
         hash['path'] = File.join(@ruhoh.base, "themes", hash['name'])
-        hash['path_dashboard_file'] =  File.join(hash['path'], Ruhoh.names.dashboard_file)
         hash['path_stylesheets'] =  File.join(hash['path'], Ruhoh.names.stylesheets)
         hash['path_javascripts'] =  File.join(hash['path'], Ruhoh.names.javascripts)
         hash['path_media'] =  File.join(hash['path'], Ruhoh.names.media)

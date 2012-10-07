@@ -47,8 +47,8 @@ class Ruhoh
           run Rack::File.new(ruhoh.paths.widgets)
         end
         
-        map ruhoh.urls.dashboard do
-          run Ruhoh::Previewer::Dashboard.new(ruhoh)
+        map ruhoh.to_url("dash") do
+          run Ruhoh::Parsers::Dash::Previewer.new(ruhoh)
         end
         
         map '/' do

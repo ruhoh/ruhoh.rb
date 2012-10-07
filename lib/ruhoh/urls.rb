@@ -6,7 +6,6 @@ class Ruhoh
     Urls = Struct.new(
       :media,
       :widgets,
-      :dashboard,
       :theme,
       :theme_media,
       :theme_javascripts,
@@ -18,7 +17,6 @@ class Ruhoh
       urls                      = Urls.new
       urls.media                = ruhoh.to_url(Ruhoh.names.assets, Ruhoh.names.media)
       urls.widgets              = ruhoh.to_url(Ruhoh.names.assets, Ruhoh.names.widgets)
-      urls.dashboard            = ruhoh.to_url(Ruhoh.names.dashboard_file.split('.')[0])
 
       urls.theme                = ruhoh.to_url(Ruhoh.names.assets, ruhoh.db.config('theme')['name'])
       urls.theme_media          = ruhoh.to_url(Ruhoh.names.assets, ruhoh.db.config('theme')['name'], Ruhoh.names.media)

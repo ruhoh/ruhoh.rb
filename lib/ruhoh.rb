@@ -39,7 +39,6 @@ class Ruhoh
     :assets => 'assets',
     :config_data => 'config.yml',
     :compiled => 'compiled',
-    :dashboard_file => 'dash.html',
     :layouts => 'layouts',
     :media => 'media',
     :pages => 'pages',
