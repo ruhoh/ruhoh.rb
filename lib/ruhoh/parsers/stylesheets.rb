@@ -19,9 +19,9 @@ class Ruhoh
       # Themes register stylesheets relative to their layouts.
       # Returns Hash with layout names as keys and Array of asset Objects as values.
       def theme_stylesheets
-        return {} unless @ruhoh.db.theme_config[Ruhoh.names.stylesheets].is_a? Hash
+        return {} unless @ruhoh.db.config("theme")[Ruhoh.names.stylesheets].is_a? Hash
         assets = {}
-        @ruhoh.db.theme_config[Ruhoh.names.stylesheets].each do |key, value|
+        @ruhoh.db.config("theme")[Ruhoh.names.stylesheets].each do |key, value|
           next if key == Ruhoh.names.widgets # Widgets are handled separately.
           assets[key] = Array(value).map { |v|
             url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{@ruhoh.urls.theme_stylesheets}/#{v}"
@@ -45,7 +45,7 @@ class Ruhoh
         assets = []
         @ruhoh.db.widgets.each_key do |name|
           default_name = "#{name}.css"
-          stylesheet = @ruhoh.db.theme_config[Ruhoh.names.stylesheets][Ruhoh.names.widgets][name] rescue default_name
+          stylesheet = @ruhoh.db.config("theme")[Ruhoh.names.stylesheets][Ruhoh.names.widgets][name] rescue default_name
           stylesheet ||=  default_name
           file = File.join(@ruhoh.paths.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet)
           next unless File.exists?(file)

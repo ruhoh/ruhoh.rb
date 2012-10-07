@@ -41,7 +41,7 @@ class Ruhoh
       # Checks a given asset filepath against any user-defined exclusion rules in theme.yml
       def is_valid_asset?(filepath)
         return false if FileTest.directory?(filepath)
-        @ruhoh.db.theme_config["exclude"].each {|regex| return false if filepath =~ regex }
+        @ruhoh.db.config("theme")["exclude"].each {|regex| return false if filepath =~ regex }
         true
       end
       

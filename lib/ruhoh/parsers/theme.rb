@@ -1,8 +1,25 @@
 class Ruhoh
   module Parsers
-    class ThemeConfig < Base
-
-      def generate
+    class Theme < Base
+      
+      # Need to have ability to set a specific theme and work
+      # in the context of that theme implicitly
+      Namespaces = [
+        "javascripts",
+        "layouts",
+        "partials",
+        "media",
+        "stylesheets",
+        "widgets",
+        "theme.yml"
+      ]
+      
+      def config
+        # gets the name
+        #hash = super
+        #hash['name']
+        hash = {}
+        # now we can get the theme specific config.
         config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.theme_config_data)
         if config.nil?
           Ruhoh::Friend.say{ 
@@ -24,7 +41,15 @@ class Ruhoh
         
         config
       end
+      
+      # noop
+      def generate
+        {}
+      end
 
-    end
+      class Modeler < BaseModeler
+        
+      end
+   end
   end
 end

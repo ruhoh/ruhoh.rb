@@ -14,9 +14,9 @@ class Ruhoh
       end
 
       def theme_javascripts
-        return {} unless @ruhoh.db.theme_config[Ruhoh.names.javascripts].is_a? Hash
+        return {} unless @ruhoh.db.config("theme")[Ruhoh.names.javascripts].is_a? Hash
         assets = {}
-        @ruhoh.db.theme_config[Ruhoh.names.javascripts].each do |key, value|
+        @ruhoh.db.config("theme")[Ruhoh.names.javascripts].each do |key, value|
           next if key == Ruhoh.names.widgets # Widgets are handled separately.
           assets[key] = Array(value).map { |v|
             url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{@ruhoh.urls.theme_javascripts}/#{v}"
