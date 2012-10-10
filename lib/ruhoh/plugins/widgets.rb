@@ -1,5 +1,5 @@
 class Ruhoh
-  module Parsers
+  module Plugins
     class Widgets < Base
 
       WidgetStructure = Struct.new(

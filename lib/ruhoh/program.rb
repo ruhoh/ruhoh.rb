@@ -48,7 +48,7 @@ class Ruhoh
         end
         
         map ruhoh.to_url("dash") do
-          run Ruhoh::Parsers::Dash::Previewer.new(ruhoh)
+          run Ruhoh::Plugins::Dash::Previewer.new(ruhoh)
         end
         
         map '/' do

@@ -1,5 +1,5 @@
 class Ruhoh
-  module Parsers
+  module Plugins
     class Dash < Base
       
       class Modeler < BaseModeler

@@ -1,5 +1,5 @@
 class Ruhoh
-  module Parsers
+  module Plugins
     class Theme < Base
       
       # Need to have ability to set a specific theme and work

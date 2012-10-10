@@ -2,14 +2,14 @@
 require 'spec_helper'
 
 module Posts
-  describe Ruhoh::Parsers::Posts do
+  describe Ruhoh::Plugins::Posts do
     include_context "write_default_theme"
     include_context "default_setup"
     
     pending "#generate" do
       
       it 'should return a valid data structures for core API' do
-        posts = Ruhoh::Parsers::Posts.generate
+        posts = Ruhoh::Plugins::Posts.generate
         
         posts.should be_a_kind_of(Hash)
         posts['chronological'].should be_a_kind_of(Array)
@@ -24,12 +24,12 @@ module Posts
       
       context "A valid post" do
         pending 'should extract valid posts from source directory.' do
-          Ruhoh::Parsers::Posts.process
+          Ruhoh::Plugins::Posts.process
           dictionary.keys.sort.should ==  ['_posts/2012-01-01-hello-world.md']
         end
         
         pending 'should return a properly formatted hash for each post' do
-          dictionary = Ruhoh::Parsers::Posts.process
+          dictionary = Ruhoh::Plugins::Posts.process
 
           dictionary.each_value { |value|
             value.should have_key("id")
@@ -42,10 +42,10 @@ module Posts
       context "A post with an invalid filename format" do
         it "should omit the post file and record it as invalid post" do
           post_path = 'test/hello-world.md'
-          Ruhoh::Parsers::Posts.should_receive(:files).and_return([post_path])
+          Ruhoh::Plugins::Posts.should_receive(:files).and_return([post_path])
           Ruhoh::Utils.stub(:parse_page_file).and_return({"data" => {"date" => "2012-01-01"}})
           
-          dictionary = Ruhoh::Parsers::Posts.process
+          dictionary = Ruhoh::Plugins::Posts.process
           
           dictionary.should_not include(post_path)
         end
@@ -54,10 +54,10 @@ module Posts
       context "A post with an invalid date in the filename" do
         it "should omit the post file and record it as invalid post" do
           post_path = 'test/2012-51-01-hello-world.md'
-          Ruhoh::Parsers::Posts.should_receive(:files).and_return([post_path])
+          Ruhoh::Plugins::Posts.should_receive(:files).and_return([post_path])
           Ruhoh::Utils.stub(:parse_page_file).and_return({"data" => {"title" => "meep"}})
           
-          dictionary = Ruhoh::Parsers::Posts.process
+          dictionary = Ruhoh::Plugins::Posts.process
           
           dictionary.should_not include(post_path)
         end
@@ -66,10 +66,10 @@ module Posts
       context "A post with an invalid date in the YAML Front Matter" do
         it "should omit the post file and record it as invalid post" do
           post_path = 'test/2012-01-01-hello-world.md'
-          Ruhoh::Parsers::Posts.should_receive(:files).and_return([post_path])
+          Ruhoh::Plugins::Posts.should_receive(:files).and_return([post_path])
           Ruhoh::Utils.stub(:parse_page_file).and_return({"data" => {"date" => "2012-51-01"}})
           
-          dictionary = Ruhoh::Parsers::Posts.process
+          dictionary = Ruhoh::Plugins::Posts.process
           
           dictionary.should_not include(post_path)
         end
@@ -79,7 +79,7 @@ module Posts
     describe "#parse_page_filename" do
       it "should parse a post filename with DATE into corresponding metadata" do
         filename = '_posts/2011-10-10-my-post-title.md'
-        data = Ruhoh::Parsers::Posts.parse_page_filename(filename)
+        data = Ruhoh::Plugins::Posts.parse_page_filename(filename)
 
         data['path'].should == "_posts/"
         data['date'].should == "2011-10-10"
@@ -89,7 +89,7 @@ module Posts
       
       it "should parse a post filename without DATE into corresponding metadata" do
         filename = '_posts/my-post-title.md'
-        data = Ruhoh::Parsers::Posts.parse_page_filename(filename)
+        data = Ruhoh::Plugins::Posts.parse_page_filename(filename)
         data['path'].should == "_posts/"
         data['date'].should == nil
         data['slug'].should == "my-post-title"
@@ -98,7 +98,7 @@ module Posts
       
       it "should return a blank hash if the filename has no extension and therefore invalid" do
         filename = '_posts/my-post-title'
-        data = Ruhoh::Parsers::Posts.parse_page_filename(filename)
+        data = Ruhoh::Plugins::Posts.parse_page_filename(filename)
         data.should == {}
       end
     end
@@ -106,20 +106,20 @@ module Posts
     describe "#permalink" do
       it "should return the default permalink style (/:categories/:year/:month/:day/:title.html)" do
         post = {"date" => "2012-01-02", "title" => "My Blog Post", "id" => "my-blog-post.md"}
-        permalink = Ruhoh::Parsers::Posts.permalink(post)
+        permalink = Ruhoh::Plugins::Posts.permalink(post)
         permalink.should == '/2012/01/02/my-blog-post.html'
       end
       
       it "should return the post specific permalink style" do
         post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "My Blog Post", 'permalink' => '/:categories/:title' }
-        permalink = Ruhoh::Parsers::Posts.permalink(post)
+        permalink = Ruhoh::Plugins::Posts.permalink(post)
         permalink.should == '/my-blog-post'
       end
       
       context "A post with one category" do
         it "should include the category path in the permalink." do
           post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "My Blog Post", 'categories'=> 'ruby/lessons/beginner', 'permalink' => '/:categories/:title' }
-          permalink = Ruhoh::Parsers::Posts.permalink(post)
+          permalink = Ruhoh::Plugins::Posts.permalink(post)
           permalink.should == '/ruby/lessons/beginner/my-blog-post'
         end
       end
@@ -127,7 +127,7 @@ module Posts
       context "A post belonging in two separate categories" do  
         it "should include the first category path in the permalink." do
           post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "My Blog Post", 'categories'=> ['web', 'ruby/lessons/beginner'], 'permalink' => '/:categories/:title' }
-          permalink = Ruhoh::Parsers::Posts.permalink(post)
+          permalink = Ruhoh::Plugins::Posts.permalink(post)
           permalink.should == '/web/my-blog-post'
         end
       end
@@ -135,7 +135,7 @@ module Posts
       context "A post with a literal permalink" do  
         it "should use the literal permalink" do
           post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "=) My Blog Post!", 'permalink' => '/dogs/and/cats/summer-pictures' }
-          permalink = Ruhoh::Parsers::Posts.permalink(post)
+          permalink = Ruhoh::Plugins::Posts.permalink(post)
           permalink.should == '/dogs/and/cats/summer-pictures'
         end
       end
@@ -143,7 +143,7 @@ module Posts
       context "A post having special characters in the title" do  
         it "should omit those characters." do
           post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "=) My Blog Post!", 'permalink' => '/:title' }
-          permalink = Ruhoh::Parsers::Posts.permalink(post)
+          permalink = Ruhoh::Plugins::Posts.permalink(post)
           permalink.should_not == '/=)-my-blog-post-!'
           permalink.should == '/my-blog-post'
         end
@@ -153,7 +153,7 @@ module Posts
         it "should omit those characters." do
           post = {"id" => "my-blog-post.md", "date" => "2012-01-02", "title" => "=) My Blog Post!", 'permalink' => '/:title' }
           post = {"id" => '안녕하세요-sérieux-è_é-三只熊.md', "date" => "2012-01-02", "title" => '안녕하세요-sérieux è_é-三只熊', 'permalink' => '/:title' }
-          permalink = Ruhoh::Parsers::Posts.permalink(post)
+          permalink = Ruhoh::Plugins::Posts.permalink(post)
           permalink.should == ('/'+CGI::escape('안녕하세요-sérieux-è_é-三只熊'))
         end
       end
@@ -162,7 +162,7 @@ module Posts
     describe "#to_title" do
       it "should prettify a filename slug for use as a title/header" do
         file_slug = 'my-post-title'
-        title = Ruhoh::Parsers::Posts.to_title(file_slug)
+        title = Ruhoh::Plugins::Posts.to_title(file_slug)
         title.should == "My Post Title"
       end
     end
@@ -194,7 +194,7 @@ module Posts
       
       describe "#ordered_posts" do
         it "should order a dictionary hash by date descending and return an Array" do
-          ordered_posts = Ruhoh::Parsers::Posts.ordered_posts(dictionary_stub)
+          ordered_posts = Ruhoh::Plugins::Posts.ordered_posts(dictionary_stub)
 
           ordered_posts.should be_a_kind_of(Array)
           ordered_posts.should == ordered_posts_stub
@@ -203,14 +203,14 @@ module Posts
 
       describe "#build_chronology" do
         it 'should return an array of ids ordered by date descending' do
-          chrono = Ruhoh::Parsers::Posts.build_chronology(ordered_posts_stub)
+          chrono = Ruhoh::Plugins::Posts.build_chronology(ordered_posts_stub)
           chrono.should == ['c', 'b', 'a', 'd']
         end
       end
       
       describe "#collate" do
         it 'should return an array of years with nested months and nested, ordered post ids for each month.' do
-          collated = Ruhoh::Parsers::Posts.collate(ordered_posts_stub)
+          collated = Ruhoh::Plugins::Posts.collate(ordered_posts_stub)
           collated.should == collated_stub
         end
       end
@@ -227,7 +227,7 @@ module Posts
         ]
       }
       let(:tags){
-        Ruhoh::Parsers::Posts.parse_tags(ordered_posts_stub)
+        Ruhoh::Plugins::Posts.parse_tags(ordered_posts_stub)
       }
       
       it 'should return a dictionary of all tags on posts' do
@@ -271,7 +271,7 @@ module Posts
       }
 
       let(:categories) {
-        categories = Ruhoh::Parsers::Posts.parse_categories(ordered_posts_stub)
+        categories = Ruhoh::Plugins::Posts.parse_categories(ordered_posts_stub)
       }
 
       it 'should return a dictionary of all post categories' do

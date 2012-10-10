@@ -1,5 +1,5 @@
-# Require all the parsers
-Dir[File.join(File.dirname(__FILE__), 'parsers','*.rb')].each { |f|
+# Require all the plugins
+Dir[File.join(File.dirname(__FILE__), 'plugins','*.rb')].each { |f|
   require f
 }
 
@@ -7,15 +7,15 @@ class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
 
-    def self.registered_parsers
-      return @registered_parsers if @registered_parsers
-      @registered_parsers = Ruhoh::Parsers.constants.map{|c|
+    def self.registered_plugins
+      return @registered_plugins if @registered_plugins
+      @registered_plugins = Ruhoh::Plugins.constants.map{|c|
         Ruhoh::Utils.underscore(c)
       }
     end
     
     # Lazy-load all data endpoints but cache the result for this cycle.
-    self.registered_parsers.each do |name|
+    self.registered_plugins.each do |name|
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}
@@ -33,7 +33,7 @@ class Ruhoh
     
     def constantize(name)
       camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
-      Ruhoh::Parsers.const_get(camelized_name)
+      Ruhoh::Plugins.const_get(camelized_name)
     end
     
     # Update a data endpoint

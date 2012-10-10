@@ -1,5 +1,5 @@
 class Ruhoh
-  module Parsers
+  module Plugins
     # Collect all the javascripts.
     # Themes explicitly define which javascripts to load via theme.yml.
     # Additionally, widgets may register javascript dependencies, which are resolved here.
@@ -51,5 +51,5 @@ class Ruhoh
       end
       
     end #Javascripts
-  end #Parsers
+  end #Plugins
 end #Ruhoh

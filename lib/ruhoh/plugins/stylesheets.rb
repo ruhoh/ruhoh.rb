@@ -1,5 +1,5 @@
 class Ruhoh
-  module Parsers
+  module Plugins
     # Collect all registered stylesheets.
     # Themes explicitly define which stylesheets to load via theme.yml.
     # All styling is managed by the theme, including widget styles.

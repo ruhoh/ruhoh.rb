@@ -1,5 +1,5 @@
 class Ruhoh
-  module Parsers
+  module Plugins
     class Payload < Base
 
       def generate
@@ -18,5 +18,5 @@ class Ruhoh
       end
 
     end #Payload
-  end #Parsers
+  end #Plugins
 end #Ruhoh

@@ -1,5 +1,5 @@
 class Ruhoh
-  module Parsers
+  module Plugins
     class Scaffolds < Base
       
       class Modeler < BaseModeler

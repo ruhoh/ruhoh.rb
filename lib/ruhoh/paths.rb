@@ -17,7 +17,7 @@ class Ruhoh
       :widgets,
       
       :theme,
-      
+      :system_widgets,
       :system,
       :system_widgets
     )

@@ -85,7 +85,7 @@ class Ruhoh
 
       FileUtils.mkdir_p File.dirname(filename)
       output = @ruhoh.db.scaffolds["#{type}.html"].to_s
-      output = output.gsub('{{DATE}}', Ruhoh::Parsers::Posts.formatted_date(Time.now))
+      output = output.gsub('{{DATE}}', Ruhoh::Plugins::Posts.formatted_date(Time.now))
       File.open(filename, 'w:UTF-8') {|f| f.puts output }
       
       Ruhoh::Friend.say { 
@@ -284,9 +284,9 @@ class Ruhoh
     def get_files(type)
       case type
       when 'post'
-        Ruhoh::Parsers::Posts.files
+        Ruhoh::Plugins::Posts.files
       when 'page'
-        Ruhoh::Parsers::Pages.files
+        Ruhoh::Plugins::Pages.files
       else
         Ruhoh::Friend.say { red  "Type: '#{type}' not supported." }
         exit
