@@ -24,9 +24,7 @@ class Ruhoh
         hash['path'] = File.join(@ruhoh.base, "themes", hash['name'])
         hash['path_stylesheets'] =  File.join(hash['path'], Ruhoh.names.stylesheets)
         hash['path_javascripts'] =  File.join(hash['path'], Ruhoh.names.javascripts)
-        hash['path_media'] =  File.join(hash['path'], Ruhoh.names.media)
         hash['path_widgets'] =  File.join(hash['path'], Ruhoh.names.widgets)
-        hash['path_partials'] =  File.join(hash['path'], Ruhoh.names.partials)
         
         config_path = File.join(hash['path'], "theme.yml")
         config = Ruhoh::Utils.parse_yaml_file(config_path)

@@ -10,10 +10,8 @@ class Ruhoh
       :config_data,
       :media,
       :pages,
-      :partials,
       :plugins,
       :posts,
-      :scaffolds,
       :site_data,
       :themes,
       :widgets,
@@ -21,8 +19,6 @@ class Ruhoh
       :theme,
       
       :system,
-      :system_scaffolds,
-      :system_partials,
       :system_widgets
     )
     
