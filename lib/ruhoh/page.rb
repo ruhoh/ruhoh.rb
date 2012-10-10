@@ -59,9 +59,18 @@ class Ruhoh
     end
     
     def payload
-      payload = @ruhoh.db.payload.dup
-      payload['page'] = @data
-      payload
+      {
+        "site" => @ruhoh.db.site,
+        'page' => @data,
+        "urls" => {
+          "theme" => @ruhoh.urls.theme,
+          "theme_stylesheets" => @ruhoh.urls.theme_stylesheets,
+          "theme_javascripts" => @ruhoh.urls.theme_javascripts,
+          "theme_media" => @ruhoh.urls.theme_media,
+          "media" => @ruhoh.urls.media,
+          "base_path" => @ruhoh.config['base_path'],
+        }
+      }
     end
     
     # Provide access to the page content.
