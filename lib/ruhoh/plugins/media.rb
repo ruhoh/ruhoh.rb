@@ -1,10 +1,8 @@
-class Ruhoh
-  module Plugins
-    class Media < Base
+module Ruhoh::Plugins
+  class Media < Base
+    
+    class Modeler < BaseModeler
       
-      class Modeler < BaseModeler
-        
-      end
-   end
-  end
+    end
+ end
 end

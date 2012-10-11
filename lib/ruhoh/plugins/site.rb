@@ -1,12 +1,9 @@
-class Ruhoh
-  module Plugins
+module Ruhoh::Plugins
+  class Site < Base
 
-    class Site < Base
-
-      def generate
-        Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.site_data) || {}
-      end
-
+    def generate
+      Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.site_data) || {}
     end
+
   end
 end

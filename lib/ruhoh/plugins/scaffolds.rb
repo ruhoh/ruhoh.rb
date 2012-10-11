@@ -1,16 +1,14 @@
-class Ruhoh
-  module Plugins
-    class Scaffolds < Base
+module Ruhoh::Plugins
+  class Scaffolds < Base
+    
+    class Modeler < BaseModeler
       
-      class Modeler < BaseModeler
-        
-        def generate
-          dict = {}
-          File.open(@pointer['realpath'], 'r:UTF-8') { |f| dict[@pointer['id']] = f.read }
-          dict
-        end
+      def generate
+        dict = {}
+        File.open(@pointer['realpath'], 'r:UTF-8') { |f| dict[@pointer['id']] = f.read }
+        dict
       end
-      
     end
+    
   end
 end
