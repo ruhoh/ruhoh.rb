@@ -7,15 +7,8 @@ class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
 
-    def self.registered_plugins
-      return @registered_plugins if @registered_plugins
-      @registered_plugins = Ruhoh::Plugins.constants.map{|c|
-        Ruhoh::Utils.underscore(c)
-      }
-    end
-    
     # Lazy-load all data endpoints but cache the result for this cycle.
-    self.registered_plugins.each do |name|
+    Ruhoh::Plugins::Base.plugins.keys.each do |name|
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}

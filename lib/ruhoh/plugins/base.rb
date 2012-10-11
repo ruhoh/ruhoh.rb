@@ -1,8 +1,19 @@
 class Ruhoh
   module Plugins
-
     class Base
-      
+
+      # Register all available plugins.
+      # @plugins is a key value hash, e.g:
+      #   "posts" => Ruhoh::Plugins::Posts
+      @plugins = {}
+      class << self
+        attr_accessor :plugins
+        def inherited(plugin)
+          name = Ruhoh::Utils.underscore(plugin.name.split("::").pop)
+          @plugins[name] = plugin
+        end
+      end
+        
       def initialize(ruhoh)
         @ruhoh = ruhoh
       end
@@ -147,6 +158,5 @@ class Ruhoh
       end
       
     end
-
   end
 end
