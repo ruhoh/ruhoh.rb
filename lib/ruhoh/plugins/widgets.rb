@@ -8,6 +8,12 @@ module Ruhoh::Plugins
       :layout
     )
 
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
+      @path = File.join(@ruhoh.paths.base, "widgets")
+      @system_path = File.join(@ruhoh.paths.system, "widgets")
+    end
+
     # Process available widgets into widget dictionary.
     #
     # Returns Dictionary of widget data.
@@ -32,11 +38,11 @@ module Ruhoh::Plugins
     # Returns Array of widget names.
     def widgets
       names = []
-      if FileTest.directory?(@ruhoh.paths.widgets)
-        FileUtils.cd(@ruhoh.paths.widgets) { names += Dir["*"] }
+      if FileTest.directory?(@path)
+        FileUtils.cd(@path) { names += Dir["*"] }
       end
-      if FileTest.directory?(@ruhoh.paths.system_widgets)
-        FileUtils.cd(@ruhoh.paths.system_widgets) { names += Dir["*"] }
+      if FileTest.directory?(@system_path)
+        FileUtils.cd(@system_path) { names += Dir["*"] }
       end
       names.uniq!
       names
@@ -46,8 +52,8 @@ module Ruhoh::Plugins
     #
     # Returns Hash of configuration params.
     def process_config(widget_name)
-      system_config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.system_widgets, widget_name, Ruhoh.names.config_data) || {}
-      user_config = Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.widgets, widget_name, Ruhoh.names.config_data) || {}
+      system_config = Ruhoh::Utils.parse_yaml_file(@system_path, widget_name, Ruhoh.names.config_data) || {}
+      user_config = Ruhoh::Utils.parse_yaml_file(@path, widget_name, Ruhoh.names.config_data) || {}
       config = Ruhoh::Utils.deep_merge(system_config, user_config)
       config['layout'] ||= widget_name
       config['stylesheet'] ||= widget_name
@@ -65,11 +71,11 @@ module Ruhoh::Plugins
       
       # Try for the default script if no config.
       if scripts.empty?
-        script_file = File.join(@ruhoh.paths.widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
+        script_file = File.join(@path, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
         if File.exist?(script_file)
           scripts << "#{widget_name}.js"
         else
-          script_file = File.join(@ruhoh.paths.system_widgets, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
+          script_file = File.join(@system_path, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
           scripts << "#{widget_name}.js" if File.exist?(script_file)
         end
       end
@@ -88,8 +94,8 @@ module Ruhoh::Plugins
       layout_path = File.join(widget_name, 'layouts', "#{config['layout']}.html")
       [
         File.join(@ruhoh.db.config("theme")['path_widgets'], layout_path),
-        File.join(@ruhoh.paths.widgets, layout_path),
-        File.join(@ruhoh.paths.system_widgets, layout_path)
+        File.join(@path, layout_path),
+        File.join(@system_path, layout_path)
       ].each do |path|
         layout = path and break if File.exist?(path)
       end

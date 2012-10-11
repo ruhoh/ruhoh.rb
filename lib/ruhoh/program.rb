@@ -34,7 +34,7 @@ class Ruhoh
 
         # Serve base media
         map ruhoh.urls.media do
-          run Rack::File.new(ruhoh.paths.media)
+          run Rack::File.new(File.join(ruhoh.paths.base, "media"))
         end
         
         # Serve theme assets
@@ -44,7 +44,7 @@ class Ruhoh
         
         # Serve widget javascripts
         map ruhoh.urls.widgets do
-          run Rack::File.new(ruhoh.paths.widgets)
+          run Rack::File.new(File.join(ruhoh.paths.base, "widgets"))
         end
         
         map ruhoh.to_url("dash") do

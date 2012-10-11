@@ -15,7 +15,6 @@ require 'mustache'
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
-require 'ruhoh/paths'
 require 'ruhoh/urls'
 require 'ruhoh/db'
 require 'ruhoh/templaters/rmustache'
@@ -53,7 +52,7 @@ class Ruhoh
     :widgets => 'widgets',
     :widget_config => 'config.yml'
   }
-
+  
   @log = Ruhoh::Logger.new
   @names = OpenStruct.new(Names)
   @root = Root
@@ -99,9 +98,14 @@ class Ruhoh
     @config = config
   end
   
+  Paths = Struct.new(:base, :theme, :system)
   def setup_paths
     self.ensure_config
-    @paths = Ruhoh::Paths.generate(self)
+    @paths = Paths.new
+    @paths.base = @base
+    @paths.theme = File.join(@base, Ruhoh.names.themes, self.db.config('theme')['name'])
+    @paths.system = File.join(Ruhoh::Root, Ruhoh.names.system)
+    @paths
   end
 
   def setup_urls
@@ -111,7 +115,7 @@ class Ruhoh
   
   def setup_plugins
     self.ensure_paths
-    plugins = Dir[File.join(@paths.plugins, "**/*.rb")]
+    plugins = Dir[File.join(@base, "plugins", "**/*.rb")]
     plugins.each {|f| require f } unless plugins.empty?
   end
   
