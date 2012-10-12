@@ -64,7 +64,18 @@ class Ruhoh
       parts = parts.unshift(base) if base
       File.__send__(:join, parts)
     end    
-
+    
+    def self.to_url_slug(title)
+      CGI::escape self.to_slug(title)
+    end
+    
+    # My Post Title ===> my-post-title
+    def self.to_slug(title)
+      title = title.to_s.downcase.strip.gsub(/[^\p{Word}+]/u, '-')
+      title.gsub(/^\-+/, '').gsub(/\-+$/, '').gsub(/\-+/, '-')
+    end
+    
+    
     def self.report(name, collection, invalid)
       output = "#{collection.count}/#{collection.count + invalid.count} #{name} processed."
       if collection.empty? && invalid.empty?

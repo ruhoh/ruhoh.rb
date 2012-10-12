@@ -15,7 +15,6 @@ require 'mustache'
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
-require 'ruhoh/urls'
 require 'ruhoh/db'
 require 'ruhoh/templaters/rmustache'
 require 'ruhoh/converter'
@@ -107,10 +106,30 @@ class Ruhoh
     @paths.system = File.join(Ruhoh::Root, Ruhoh.names.system)
     @paths
   end
-
+  
+  Urls = Struct.new(
+    :media,
+    :widgets,
+    :theme,
+    :theme_media,
+    :theme_javascripts,
+    :theme_stylesheets,
+    :theme_widgets
+  )
   def setup_urls
     self.ensure_config
-    @urls = Ruhoh::Urls.generate(self)
+    urls                      = Urls.new
+    urls.media                = to_url(Ruhoh.names.assets, Ruhoh.names.media)
+    urls.widgets              = to_url(Ruhoh.names.assets, Ruhoh.names.widgets)
+
+    urls.theme                = to_url(Ruhoh.names.assets, self.db.config('theme')['name'])
+    urls.theme_media          = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.media)
+    urls.theme_javascripts    = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.javascripts)
+    urls.theme_stylesheets    = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.stylesheets)
+    urls.theme_widgets        = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.widgets)
+    urls
+    
+    @urls = urls
   end
   
   def setup_plugins

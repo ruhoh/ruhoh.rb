@@ -95,20 +95,20 @@ module Ruhoh::Plugins
 
       # Used in the client implementation to turn a draft into a post.  
       def to_filename(data)
-        File.join(@ruhoh.paths.posts, "#{Ruhoh::Urls.to_slug(data['title'])}.#{data['ext']}")
+        File.join(@ruhoh.paths.posts, "#{Ruhoh::Utils.to_slug(data['title'])}.#{data['ext']}")
       end
 
       # Another blatently stolen method from Jekyll
       # The category is only the first one if multiple categories exist.
       def permalink(post)
         date = Date.parse(post['date'])
-        title = Ruhoh::Urls.to_url_slug(post['title'])
+        title = Ruhoh::Utils.to_url_slug(post['title'])
         format = post['permalink'] || config['permalink']
 
         if format.include?(':')
           filename = File.basename(post['id'], File.extname(post['id']))
           category = Array(post['categories'])[0]
-          category = category.split('/').map {|c| Ruhoh::Urls.to_url_slug(c) }.join('/') if category
+          category = category.split('/').map {|c| Ruhoh::Utils.to_url_slug(c) }.join('/') if category
 
           url = {
             "year"       => date.strftime("%Y"),
