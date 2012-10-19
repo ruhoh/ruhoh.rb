@@ -30,7 +30,7 @@ class Ruhoh
   end
   
   attr_accessor :log
-  attr_reader :config, :paths, :root, :urls, :base, :db
+  attr_reader :config, :paths, :root, :base, :db
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   Names = {
@@ -107,31 +107,6 @@ class Ruhoh
     @paths
   end
   
-  Urls = Struct.new(
-    :media,
-    :widgets,
-    :theme,
-    :theme_media,
-    :theme_javascripts,
-    :theme_stylesheets,
-    :theme_widgets
-  )
-  def setup_urls
-    self.ensure_config
-    urls                      = Urls.new
-    urls.media                = to_url(Ruhoh.names.assets, Ruhoh.names.media)
-    urls.widgets              = to_url(Ruhoh.names.assets, Ruhoh.names.widgets)
-
-    urls.theme                = to_url(Ruhoh.names.assets, self.db.config('theme')['name'])
-    urls.theme_media          = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.media)
-    urls.theme_javascripts    = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.javascripts)
-    urls.theme_stylesheets    = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.stylesheets)
-    urls.theme_widgets        = to_url(Ruhoh.names.assets, self.db.config('theme')['name'], Ruhoh.names.widgets)
-    urls
-    
-    @urls = urls
-  end
-  
   def setup_plugins
     self.ensure_paths
     plugins = Dir[File.join(@base, "plugins", "**/*.rb")]
@@ -151,7 +126,7 @@ class Ruhoh
   end
   
   def ensure_setup
-    return if @config && @paths && @urls
+    return if @config && @paths
     raise 'Ruhoh has not been fully setup. Please call: Ruhoh.setup'
   end  
   
@@ -164,11 +139,5 @@ class Ruhoh
     return if @config && @paths
     raise 'Ruhoh has not setup paths. Please call: Ruhoh.setup'
   end  
-  
-  def ensure_urls
-    return if @config && @urls
-    raise 'Ruhoh has not setup urls. Please call: Ruhoh.setup + Ruhoh.setup_urls' 
-  end  
-  
   
 end # Ruhoh

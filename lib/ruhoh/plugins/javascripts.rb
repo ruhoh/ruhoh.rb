@@ -28,10 +28,15 @@ module Ruhoh::Plugins
       assets
     end
 
-    def url(node)
-      (node =~ /^(http:|https:)?\/\//i) ? node : "#{@ruhoh.urls.theme_javascripts}/#{node}"
+    def url_endpoint
+      ["assets", @ruhoh.db.config('theme')['name'], "javascripts"].join("/")
     end
     
+    def url(node)
+      return node if node =~ /^(http:|https:)?\/\//i
+      @ruhoh.to_url(url_endpoint, node)
+    end
+
     # Notes:
     #   The automatic script inclusion is currently handled within the widget parser.
     #   This differs from the auto-stylesheet inclusion relative to themes, 
@@ -43,7 +48,7 @@ module Ruhoh::Plugins
         next unless widget["javascripts"]
         assets += Array(widget["javascripts"]).map {|path|
           {
-            "url" => [@ruhoh.urls.widgets, widget['name'], "javascripts", path].join('/'),
+            "url" => [@ruhoh.db.urls["widgets"], widget['name'], "javascripts", path].join('/'),
             "id"  => File.join(@ruhoh.paths.widgets, widget['name'], "javascripts", path)
           }
         }

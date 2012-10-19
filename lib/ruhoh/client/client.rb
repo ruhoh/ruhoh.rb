@@ -23,7 +23,6 @@ class Ruhoh
         @ruhoh = Ruhoh.new
         @ruhoh.setup
         @ruhoh.setup_paths
-        @ruhoh.setup_urls
       end  
 
       self.__send__(cmd)

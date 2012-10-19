@@ -22,6 +22,7 @@ class Ruhoh
       @ruhoh = ruhoh
       @content = {}
       @config = {}
+      @urls = {}
     end
     
     def constantize(name)
@@ -67,7 +68,20 @@ class Ruhoh
       # that's the whole point of the pointer... =/
       @content[pointer['id']] = modeler.new(@ruhoh, pointer).content
     end
+    
+    def urls
+      @urls["base_path"] = @ruhoh.config['base_path']
+      return @urls if @urls.keys.length > 1 # consider base_url
 
+      Ruhoh::Plugins::Base.plugins.each do |name, klass|
+        plugin = klass.new(@ruhoh)
+        next unless plugin.respond_to?(:url_endpoint)
+        @urls[name] = @ruhoh.to_url(plugin.url_endpoint)
+      end
+      
+      @urls
+    end
+    
     # Get the config for a given parser.
     def config(name)
       name = name.downcase

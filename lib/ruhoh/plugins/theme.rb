@@ -46,6 +46,10 @@ module Ruhoh::Plugins
       hash.merge(config)
     end
     
+    def url_endpoint
+      "/assets/#{config['name']}"
+    end
+    
     # noop
     def generate
       {}

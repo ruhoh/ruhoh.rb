@@ -44,7 +44,7 @@ class Ruhoh
         stylesheets << sub_layout if @ruhoh.db.stylesheets[sub_layout]
         
         stylesheets.each do |name|
-          url = [@ruhoh.urls.theme_stylesheets, "#{name}.css"].join('/')
+          url = [@ruhoh.db.urls["stylesheets"], "#{name}.css"].join('/')
           buffer += "<link href=\"#{url}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
         end
         buffer += "\n"
@@ -54,7 +54,7 @@ class Ruhoh
         scripts << sub_layout if @ruhoh.db.javascripts[sub_layout]
         # Missing widgets
         scripts.each do |name|
-          url = [@ruhoh.urls.theme_javascripts, "#{name}.js"].join('/')
+          url = [@ruhoh.db.urls["javascripts"], "#{name}.js"].join('/')
           buffer += "<script src=\"#{url}\"></script>\n"
         end
         

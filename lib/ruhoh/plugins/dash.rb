@@ -1,6 +1,10 @@
 module Ruhoh::Plugins
   class Dash < Base
     
+    def url_endpoint
+      "/dash"
+    end
+    
     class Modeler < BaseModeler
       
       def generate

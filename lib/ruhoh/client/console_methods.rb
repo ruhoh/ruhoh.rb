@@ -5,7 +5,6 @@ class Ruhoh
       @ruhoh = Ruhoh.new
       @ruhoh.setup
       @ruhoh.setup_paths
-      @ruhoh.setup_urls
       #@ruhoh.db.update_all
       @ruhoh
     end

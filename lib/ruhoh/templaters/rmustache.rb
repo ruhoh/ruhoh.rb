@@ -43,6 +43,14 @@ class Ruhoh
         content = self.render(content)
         Ruhoh::Converter.convert(content, id)
       end
+
+      def site
+        @ruhoh.db.site
+      end
+      
+      def urls
+        @ruhoh.db.urls
+      end
       
       def get_page_content
         data = self.context['id'] ? self.context : self.context['page']

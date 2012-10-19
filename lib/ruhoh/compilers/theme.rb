@@ -14,7 +14,7 @@ class Ruhoh
       # Note the compiled assets are namespaced at /assets/<theme-name>/
       # theme.yml may specify exclusion rules for excluding assets.
       def copy
-        url = @ruhoh.urls.theme.gsub(/^\//, '')
+        url = @ruhoh.db.urls["theme"].gsub(/^\//, '')
         theme = Ruhoh::Utils.url_to_path(url, @ruhoh.paths.compiled)
         FileUtils.mkdir_p theme
 

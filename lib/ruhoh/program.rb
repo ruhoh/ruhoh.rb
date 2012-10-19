@@ -20,7 +20,6 @@ class Ruhoh
       ruhoh.setup
       ruhoh.config['env'] = opts[:env]
       ruhoh.setup_paths
-      ruhoh.setup_urls
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
 
       # initialize the routes dictionary
@@ -31,23 +30,23 @@ class Ruhoh
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions
-
+        
         # Serve base media
-        map ruhoh.urls.media do
+        map ruhoh.db.urls["media"] do
           run Rack::File.new(File.join(ruhoh.paths.base, "media"))
         end
         
         # Serve theme assets
-        map ruhoh.urls.theme do
+        map ruhoh.db.urls["theme"] do
           run Rack::File.new(ruhoh.paths.theme)
         end
         
         # Serve widget javascripts
-        map ruhoh.urls.widgets do
+        map ruhoh.db.urls["widgets"].to_s do
           run Rack::File.new(File.join(ruhoh.paths.base, "widgets"))
         end
         
-        map ruhoh.to_url("dash") do
+        map ruhoh.db.urls["dash"] do
           run Ruhoh::Plugins::Dash::Previewer.new(ruhoh)
         end
         
@@ -65,7 +64,6 @@ class Ruhoh
       ruhoh.setup
       ruhoh.config['env'] = 'production'
       ruhoh.setup_paths
-      ruhoh.setup_urls
       ruhoh.setup_plugins
       
       if target

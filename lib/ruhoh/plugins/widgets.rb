@@ -13,7 +13,11 @@ module Ruhoh::Plugins
       @path = File.join(@ruhoh.paths.base, "widgets")
       @system_path = File.join(@ruhoh.paths.system, "widgets")
     end
-
+    
+    def url_endpoint
+      "/assets/widgets"
+    end
+    
     # Process available widgets into widget dictionary.
     #
     # Returns Dictionary of widget data.

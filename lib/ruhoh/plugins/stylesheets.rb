@@ -33,8 +33,13 @@ module Ruhoh::Plugins
       assets
     end
     
+    def url_endpoint
+      ["assets", @ruhoh.db.config('theme')['name'], "stylesheets"].join("/")
+    end
+    
     def url(node)
-      (node =~ /^(http:|https:)?\/\//i) ? node : "#{@ruhoh.urls.theme_stylesheets}/#{node}"
+      return node if node =~ /^(http:|https:)?\/\//i
+      @ruhoh.to_url(url_endpoint, node)
     end
     
     # Create mappings for stylesheets registered to a given widget.
@@ -52,7 +57,7 @@ module Ruhoh::Plugins
         file = File.join(@ruhoh.db.config("theme")['path_widgets'], name, Ruhoh.names.stylesheets, stylesheet)
         next unless File.exists?(file)
         assets << {
-          "url" => [@ruhoh.urls.theme_widgets, name, Ruhoh.names.stylesheets, stylesheet].join('/'),
+          "url" => [@ruhoh.db.urls["theme_widgets"], name, Ruhoh.names.stylesheets, stylesheet].join('/'),
           "id" => file
         }
       end
