@@ -4,29 +4,32 @@ module Ruhoh::Plugins
   # Additionally, widgets may register javascript dependencies, which are resolved here.
   class Javascripts < Base
 
+    def config
+      hash = @ruhoh.db.config("theme")["javascripts"]
+      hash.is_a?(Hash) ? hash : {}
+    end
+    
     # Generates mappings to all registered javascripts.
     # Returns Hash with layout names as keys and Array of asset Objects as values
     def generate
-      assets = self.theme_javascripts
-      assets[Ruhoh.names.widgets] = self.widget_javascripts
-      assets
-    end
-
-    def theme_javascripts
-      return {} unless @ruhoh.db.config("theme")[Ruhoh.names.javascripts].is_a? Hash
+      return {} if config.empty?
+      theme_path = paths.select{|h| h["name"] == "theme"}.first["path"]
       assets = {}
-      @ruhoh.db.config("theme")[Ruhoh.names.javascripts].each do |key, value|
-        next if key == Ruhoh.names.widgets # Widgets are handled separately.
+      config.each do |key, value|
+        next if key == "widgets" # Widgets are handled separately.
         assets[key] = Array(value).map { |v|
-          url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{@ruhoh.urls.theme_javascripts}/#{v}"
           {
-            "url" => url,
-            "id" => File.join(@ruhoh.db.config('theme')['path_javascripts'], v)
+            "url" => url(v),
+            "id" => File.join(theme_path, "javascripts", v)
           }
         }
       end
       
       assets
+    end
+
+    def url(node)
+      (node =~ /^(http:|https:)?\/\//i) ? node : "#{@ruhoh.urls.theme_javascripts}/#{node}"
     end
     
     # Notes:
@@ -37,11 +40,11 @@ module Ruhoh::Plugins
     def widget_javascripts
       assets = []
       @ruhoh.db.widgets.each_value do |widget|
-        next unless widget[Ruhoh.names.javascripts]
-        assets += Array(widget[Ruhoh.names.javascripts]).map {|path|
+        next unless widget["javascripts"]
+        assets += Array(widget["javascripts"]).map {|path|
           {
-            "url" => [@ruhoh.urls.widgets, widget['name'], Ruhoh.names.javascripts, path].join('/'),
-            "id"  => File.join(@ruhoh.paths.widgets, widget['name'], Ruhoh.names.javascripts, path)
+            "url" => [@ruhoh.urls.widgets, widget['name'], "javascripts", path].join('/'),
+            "id"  => File.join(@ruhoh.paths.widgets, widget['name'], "javascripts", path)
           }
         }
       end

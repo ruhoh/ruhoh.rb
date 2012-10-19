@@ -5,14 +5,6 @@ module Ruhoh::Plugins
   # If the theme provides widget stylesheets they will load automatically.
   # theme.yml may also specify an explicit widget stylesheet to load.
   class Stylesheets < Base
-
-    # Generates mappings to all registered stylesheets.
-    # Returns Hash with layout names as keys and Array of asset Objects as values
-    def generate
-      assets = self.theme_stylesheets
-      assets[Ruhoh.names.widgets] = self.widget_stylesheets
-      assets
-    end
     
     # Get the config from theme.yml
     def config
@@ -20,24 +12,29 @@ module Ruhoh::Plugins
       hash.is_a?(Hash) ? hash : {}
     end
     
+    # Generates mappings to all registered stylesheets.
     # Create mappings for stylesheets registered to the theme layouts.
     # Themes register stylesheets relative to their layouts.
     # Returns Hash with layout names as keys and Array of asset Objects as values.
-    def theme_stylesheets
-      return {} unless @ruhoh.db.config("theme")[Ruhoh.names.stylesheets].is_a? Hash
+    def generate
+      return {} if config.empty?
+      theme_path = paths.select{|h| h["name"] == "theme"}.first["path"]
       assets = {}
-      config.each do |key, value|
-        next if key == Ruhoh.names.widgets # Widgets are handled separately.
-        assets[key] = Array(value).map { |v|
-          url = (v =~ /^(http:|https:)?\/\//i) ? v : "#{@ruhoh.urls.theme_stylesheets}/#{v}"
+      config.each do |page, value|
+        next if page == "widgets" # Widgets are handled separately.
+        assets[page] = Array(value).map { |v|
           {
-            "url" => url,
-            "id" => File.join(@ruhoh.db.config("theme")['path_stylesheets'], v)
+            "url" => url(v),
+            "id" => File.join(theme_path, "stylesheets", v)
           }
         }
       end
       
       assets
+    end
+    
+    def url(node)
+      (node =~ /^(http:|https:)?\/\//i) ? node : "#{@ruhoh.urls.theme_stylesheets}/#{node}"
     end
     
     # Create mappings for stylesheets registered to a given widget.

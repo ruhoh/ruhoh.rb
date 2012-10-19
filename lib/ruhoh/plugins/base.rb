@@ -37,7 +37,20 @@ module Ruhoh::Plugins
     
     # Default paths to the 3 levels of the cascade.
     def paths
-      [@ruhoh.paths.system, @ruhoh.paths.base, @ruhoh.paths.theme]
+      [
+        {
+          "name" => "system",
+          "path" => @ruhoh.paths.system
+        }, 
+        {
+          "name" => "base",
+          "path" => @ruhoh.paths.base
+        }, 
+        {
+          "name" => "theme",
+          "path" => @ruhoh.paths.theme
+        }
+      ]
     end
     
     def config
@@ -70,7 +83,7 @@ module Ruhoh::Plugins
     # Returns Array of file hashes.
     def files(id=nil)
       a = []
-      Array(self.paths).each do |path|
+      Array(self.paths.map{|h| h["path"]}).each do |path|
         namespaced_path = File.join(path, namespace)
         next unless File.directory?(namespaced_path)
         FileUtils.cd(namespaced_path) {
