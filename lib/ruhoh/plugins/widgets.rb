@@ -109,5 +109,19 @@ module Ruhoh::Plugins
       Mustache.render(content, {'config' => config})
     end
 
+    class Watch
+      def initialize(ruhoh)
+        @ruhoh = ruhoh
+      end
+      
+      def match(path)
+        path =~ /^widgets/
+      end
+      
+      def update(path)
+        ruhoh.db.clear(:widgets)
+      end
+    end
+    
   end
 end

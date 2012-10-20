@@ -44,5 +44,22 @@ module Ruhoh::Plugins
       {}
     end
 
- end
+    class Watch
+      def initialize(ruhoh)
+        @ruhoh = ruhoh
+      end
+      
+      def match(path)
+        path =~ Regexp.new("^themes\/#{@ruhoh.config['theme']['name']}")
+      end
+      
+      def update(path)
+        @ruhoh.db.clear(:stylesheets)
+        @ruhoh.db.clear(:javascripts)
+        @ruhoh.db.clear(:widgets)
+        @ruhoh.db.clear(:layouts)
+      end
+    end
+    
+  end
 end

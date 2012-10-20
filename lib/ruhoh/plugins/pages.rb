@@ -56,5 +56,22 @@ module Ruhoh::Plugins
       end
     end
 
+    class Watch
+      def initialize(ruhoh)
+        @ruhoh = ruhoh
+      end
+      
+      def match(path)
+        path =~ /^pages/
+      end
+      
+      def update(path)
+        path = path.gsub(/^.+\//, '')
+        key = @ruhoh.db.routes.key(path)
+        @ruhoh.db.routes.delete(key)
+        @ruhoh.db.update("type" => type, "id" => path)
+      end
+    end
+    
   end
 end
