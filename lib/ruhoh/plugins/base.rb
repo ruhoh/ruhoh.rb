@@ -57,6 +57,10 @@ module Ruhoh::Plugins
       @ruhoh.config[self.registered_name] || {}
     end
     
+    def path
+      namespace
+    end
+    
     # Generate all data resources for this data endpoint.
     # Returns dictionary of all data resources.
     #

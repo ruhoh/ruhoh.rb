@@ -31,23 +31,18 @@ class Ruhoh
         use Rack::Lint
         use Rack::ShowExceptions
         
-        # Serve base media
-        map ruhoh.db.urls["media"] do
-          run Rack::File.new(File.join(ruhoh.paths.base, "media"))
-        end
-        
-        # Serve theme assets
-        map ruhoh.db.urls["theme"] do
-          run Rack::File.new(ruhoh.paths.theme)
-        end
-        
-        # Serve widget javascripts
-        map ruhoh.db.urls["widgets"].to_s do
-          run Rack::File.new(File.join(ruhoh.paths.base, "widgets"))
-        end
-        
-        map ruhoh.db.urls["dash"] do
-          run Ruhoh::Plugins::Dash::Previewer.new(ruhoh)
+        ruhoh.db.urls.each do |name, url|
+          next if ["javascripts", "stylesheets", "base_path"].include?(name)
+          plugin = Ruhoh::Plugins::Base.plugins[name]
+          next unless plugin
+
+          map url do
+            if plugin.const_defined?(:Previewer)
+              run plugin.const_get(:Previewer).new(ruhoh)
+            else
+              run Rack::File.new(File.join(ruhoh.paths.base, ruhoh.db.paths[name]))
+            end
+          end
         end
         
         map '/' do

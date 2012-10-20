@@ -23,6 +23,7 @@ class Ruhoh
       @content = {}
       @config = {}
       @urls = {}
+      @paths = {}
     end
     
     def constantize(name)
@@ -80,6 +81,17 @@ class Ruhoh
       end
       
       @urls
+    end
+    
+    def paths
+      return @paths unless @paths.empty?
+      Ruhoh::Plugins::Base.plugins.each do |name, klass|
+        plugin = klass.new(@ruhoh)
+        next unless plugin.respond_to?(:path)
+        @paths[name] = plugin.path
+      end
+      
+      @paths
     end
     
     # Get the config for a given parser.

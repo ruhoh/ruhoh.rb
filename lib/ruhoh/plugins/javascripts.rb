@@ -13,14 +13,13 @@ module Ruhoh::Plugins
     # Returns Hash with layout names as keys and Array of asset Objects as values
     def generate
       return {} if config.empty?
-      theme_path = paths.select{|h| h["name"] == "theme"}.first["path"]
       assets = {}
       config.each do |key, value|
         next if key == "widgets" # Widgets are handled separately.
         assets[key] = Array(value).map { |v|
           {
             "url" => url(v),
-            "id" => File.join(theme_path, "javascripts", v)
+            "id" => File.join(@ruhoh.paths.theme, "javascripts", v)
           }
         }
       end

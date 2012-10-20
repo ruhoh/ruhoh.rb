@@ -97,7 +97,7 @@ module Ruhoh::Plugins
       layout = nil
       layout_path = File.join(widget_name, 'layouts', "#{config['layout']}.html")
       [
-        File.join(@ruhoh.db.config("theme")['path_widgets'], layout_path),
+        File.join(@ruhoh.paths.theme, "widgets", layout_path),
         File.join(@path, layout_path),
         File.join(@system_path, layout_path)
       ].each do |path|
