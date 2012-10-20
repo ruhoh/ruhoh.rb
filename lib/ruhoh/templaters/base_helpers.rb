@@ -7,6 +7,15 @@ class Ruhoh
         Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
         p
       end
+
+      # Render date in the format given in the date_format variable in config
+      def format_date(date)
+        content = self.render(date)
+        newDate = Date.parse(content)
+        strftimeString=self.context['site']['config']['date_format']
+        strftimeString ||="%F"
+        newDate.strftime(strftimeString)
+      end
       
       # Truncate the page content relative to a line_count limit.
       # This is optimized for markdown files in which content is largely
