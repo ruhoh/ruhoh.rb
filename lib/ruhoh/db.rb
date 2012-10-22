@@ -1,4 +1,5 @@
 # Require all the plugins
+require File.join(File.dirname(__FILE__), 'plugins', "plugin.rb")
 Dir[File.join(File.dirname(__FILE__), 'plugins','*.rb')].each { |f|
   require f
 }
@@ -8,7 +9,7 @@ class Ruhoh
   class DB
 
     # Lazy-load all data endpoints but cache the result for this cycle.
-    Ruhoh::Plugins::Base.plugins.keys.each do |name|
+    Ruhoh::Plugins::Plugin.plugins.keys.each do |name|
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}
@@ -45,15 +46,15 @@ class Ruhoh
       else
         name = name_or_pointer.downcase # name is a stringified constant.
       end
-      model = constantize(name).new(@ruhoh)
+      plugin = constantize(name).new(@ruhoh)
 
       if id
-        data = model.generate(id).values.first
+        data = plugin.generate(id).values.first
         endpoint = self.instance_variable_get("@#{name}") || {}
         endpoint[id] = data
         data
       else
-        data = model.generate
+        data = plugin.generate
         self.instance_variable_set("@#{name}", data)
         data
       end
@@ -63,18 +64,19 @@ class Ruhoh
     # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
       name = pointer['type'].downcase # name is a stringified constant.
-      modeler = constantize(name).modeler
+      plugin = constantize(name).new(@ruhoh)
+      modeler = plugin.modeler.new(plugin, pointer)
       # TODO:
       # possible collisions here: ids are only unique relative to their parser.
       # that's the whole point of the pointer... =/
-      @content[pointer['id']] = modeler.new(@ruhoh, pointer).content
+      @content[pointer['id']] = modeler.content
     end
     
     def urls
       @urls["base_path"] = @ruhoh.config['base_path']
       return @urls if @urls.keys.length > 1 # consider base_url
 
-      Ruhoh::Plugins::Base.plugins.each do |name, klass|
+      Ruhoh::Plugins::Plugin.plugins.each do |name, klass|
         plugin = klass.new(@ruhoh)
         next unless plugin.respond_to?(:url_endpoint)
         @urls[name] = @ruhoh.to_url(plugin.url_endpoint)
@@ -85,7 +87,7 @@ class Ruhoh
     
     def paths
       return @paths unless @paths.empty?
-      Ruhoh::Plugins::Base.plugins.each do |name, klass|
+      Ruhoh::Plugins::Plugin.plugins.each do |name, klass|
         plugin = klass.new(@ruhoh)
         next unless plugin.respond_to?(:path)
         @paths[name] = plugin.path

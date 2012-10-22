@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Widgets < Base
+  class Widgets < Plugin
 
     WidgetStructure = Struct.new(
       :name,

@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Pages < Base
+  class Pages < Plugin
     
     def config
       hash = super

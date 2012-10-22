@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Base
+  class Plugin
 
     # Register all available plugins.
     # @plugins is a key value hash, e.g:
@@ -12,7 +12,8 @@ module Ruhoh::Plugins
         @plugins[name] = plugin
       end
     end
-      
+    
+    attr_reader :ruhoh
     def initialize(ruhoh)
       @ruhoh = ruhoh
     end
@@ -69,7 +70,7 @@ module Ruhoh::Plugins
     def generate(id=nil)
       dict = {}
       self.files(id).each { |pointer|
-        dict.merge!(modeler.new(@ruhoh, pointer).generate)
+        dict.merge!(modeler.new(self, pointer).generate)
       }
       Ruhoh::Utils.report(self.registered_name, dict, [])
       dict
@@ -161,11 +162,11 @@ module Ruhoh::Plugins
   
   class BaseModeler
 
-    def initialize(ruhoh, pointer)
-      @ruhoh = ruhoh
+    def initialize(plugin, pointer)
+      @plugin = plugin
+      @ruhoh = plugin.ruhoh
       # Automatically set which parser type is being used.
-      b = Ruhoh::Utils.constantize(self.class.name.chomp("::Modeler"))
-      pointer["type"] = b.registered_name
+      pointer["type"] = plugin.registered_name
       @pointer = pointer
     end
     

@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Dash < Base
+  class Dash < Plugin
     
     def url_endpoint
       "/dash"

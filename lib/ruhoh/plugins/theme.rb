@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Theme < Base
+  class Theme < Plugin
     
     def config
       hash = super

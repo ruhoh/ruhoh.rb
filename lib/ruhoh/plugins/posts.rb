@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Posts < Base
+  class Posts < Plugin
     
     def config
       hash = super

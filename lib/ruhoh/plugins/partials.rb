@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Partials < Base
+  class Partials < Plugin
 
     class Modeler < BaseModeler
       def generate

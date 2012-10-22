@@ -4,7 +4,7 @@ module Ruhoh::Plugins
   # All styling is managed by the theme, including widget styles.
   # If the theme provides widget stylesheets they will load automatically.
   # theme.yml may also specify an explicit widget stylesheet to load.
-  class Stylesheets < Base
+  class Stylesheets < Plugin
     
     # Get the config from theme.yml
     def config

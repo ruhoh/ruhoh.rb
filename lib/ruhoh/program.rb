@@ -33,7 +33,7 @@ class Ruhoh
         
         ruhoh.db.urls.each do |name, url|
           next if ["javascripts", "stylesheets", "base_path"].include?(name)
-          plugin = Ruhoh::Plugins::Base.plugins[name]
+          plugin = Ruhoh::Plugins::Plugin.plugins[name]
           next unless plugin
 
           map url do

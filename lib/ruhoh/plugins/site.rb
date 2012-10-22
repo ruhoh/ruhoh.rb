@@ -1,5 +1,5 @@
 module Ruhoh::Plugins
-  class Site < Base
+  class Site < Plugin
 
     def generate
       Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.base, "site.yml") || {}
