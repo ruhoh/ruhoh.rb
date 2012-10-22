@@ -19,7 +19,6 @@ require 'ruhoh/db'
 require 'ruhoh/templaters/rmustache'
 require 'ruhoh/converter'
 require 'ruhoh/page'
-require 'ruhoh/previewer'
 require 'ruhoh/watch'
 require 'ruhoh/program'
 

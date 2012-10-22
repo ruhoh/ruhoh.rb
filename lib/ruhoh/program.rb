@@ -1,3 +1,5 @@
+require 'ruhoh/previewers/page'
+
 class Ruhoh
   module Program
     
