@@ -119,14 +119,25 @@ module Ruhoh::Plugins
       self.class.modeler
     end
 
-    def self.registered_name
-      Ruhoh::Utils.underscore(self.name.split("::").last)
+    # Proxy to the watcher for this plugin
+    def watcher
+      self.class.watcher
     end
     
     def self.modeler
       self.const_get(:Modeler)
     end
-
+    
+    def self.watcher
+      self.const_defined?(:Watcher) ?
+        self.const_get(:Watcher) :
+        nil
+    end
+    
+    def self.registered_name
+      Ruhoh::Utils.underscore(self.name.split("::").last)
+    end
+    
   end
   
   module Page

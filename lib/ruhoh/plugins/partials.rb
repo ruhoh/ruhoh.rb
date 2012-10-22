@@ -10,13 +10,14 @@ module Ruhoh::Plugins
       end
     end
     
-    class Watch
-      def initialize(ruhoh)
-        @ruhoh = ruhoh
+    class Watcher
+      def initialize(plugin)
+        @plugin = plugin
+        @ruhoh = plugin.ruhoh
       end
       
       def match(path)
-        path =~ Regexp.new("^(partials|themes\/#{@ruhoh.config['theme']['name']}\/partials)")
+        path =~ %r{^(#{@plugin.path}|themes\/#{@ruhoh.config['theme']['name']}\/partials)}
       end
       
       def update(path)

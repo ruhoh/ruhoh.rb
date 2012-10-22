@@ -32,11 +32,13 @@ class Ruhoh
       dw.add_observer {|*args| 
         args.each {|event|
           path = event['path'].gsub(ruhoh.paths.base + '/', '')
-          watchers = Ruhoh::Plugins::Plugin.plugins.map {|name, klass|
-            next unless klass.const_defined?(:Watch)
-            watch = klass.const_get(:Watch).new(ruhoh)
-          }.compact
 
+          watchers = Ruhoh::Plugins::Plugin.plugins.map {|name, klass|
+            next unless klass.watcher
+            plugin = klass.new(ruhoh)
+            plugin.watcher.new(plugin)
+          }.compact
+          
           watchers.each {|watcher|
             next unless watcher.match(path)
             watcher.update(path)

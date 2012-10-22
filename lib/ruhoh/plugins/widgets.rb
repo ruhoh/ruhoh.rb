@@ -109,13 +109,14 @@ module Ruhoh::Plugins
       Mustache.render(content, {'config' => config})
     end
 
-    class Watch
-      def initialize(ruhoh)
-        @ruhoh = ruhoh
+    class Watcher
+      def initialize(plugin)
+        @plugin = plugin
+        @ruhoh = plugin.ruhoh
       end
       
       def match(path)
-        path =~ /^widgets/
+        path =~ %r{^#{@plugin.path}}
       end
       
       def update(path)

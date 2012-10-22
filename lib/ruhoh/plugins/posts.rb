@@ -133,13 +133,14 @@ module Ruhoh::Plugins
     end
 
     
-    class Watch
-      def initialize(ruhoh)
-        @ruhoh = ruhoh
+    class Watcher
+      def initialize(plugin)
+        @plugin = plugin
+        @ruhoh = plugin.ruhoh
       end
       
       def match(path)
-        path =~ /^posts/
+        path =~ %r{^#{@plugin.path}}
       end
       
       def update(path)

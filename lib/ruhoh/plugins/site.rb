@@ -5,9 +5,10 @@ module Ruhoh::Plugins
       Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.base, "site.yml") || {}
     end
     
-    class Watch
-      def initialize(ruhoh)
-        @ruhoh = ruhoh
+    class Watcher
+      def initialize(plugin)
+        @plugin = plugin
+        @ruhoh = plugin.ruhoh
       end
       
       def match(path)
