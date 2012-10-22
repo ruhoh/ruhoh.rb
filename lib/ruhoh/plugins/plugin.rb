@@ -124,6 +124,11 @@ module Ruhoh::Plugins
       self.class.watcher
     end
     
+    # Proxy to the previewer for this plugin
+    def previewer
+      self.class.previewer
+    end
+    
     def self.modeler
       self.const_get(:Modeler)
     end
@@ -131,6 +136,12 @@ module Ruhoh::Plugins
     def self.watcher
       self.const_defined?(:Watcher) ?
         self.const_get(:Watcher) :
+        nil
+    end
+    
+    def self.previewer
+      self.const_defined?(:Previewer) ?
+        self.const_get(:Previewer) :
         nil
     end
     

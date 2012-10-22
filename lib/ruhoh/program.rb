@@ -33,12 +33,13 @@ class Ruhoh
         
         ruhoh.db.urls.each do |name, url|
           next if ["javascripts", "stylesheets", "base_path"].include?(name)
-          plugin = Ruhoh::Plugins::Plugin.plugins[name]
-          next unless plugin
+          klass = Ruhoh::Plugins::Plugin.plugins[name]
+          next unless klass
 
           map url do
-            if plugin.const_defined?(:Previewer)
-              run plugin.const_get(:Previewer).new(ruhoh)
+            if klass.previewer
+              plugin = klass.new(ruhoh)
+              run plugin.previewer.new(plugin)
             else
               run Rack::File.new(File.join(ruhoh.paths.base, ruhoh.db.paths[name]))
             end

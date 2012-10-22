@@ -14,8 +14,9 @@ module Ruhoh::Plugins
     end
     
     class Previewer
-      def initialize(ruhoh)
-        @ruhoh = ruhoh
+      def initialize(plugin)
+        @plugin = plugin
+        @ruhoh = plugin.ruhoh
       end
 
       def call(env)
