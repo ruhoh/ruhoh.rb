@@ -5,7 +5,7 @@ class Ruhoh
 
     def initialize(ruhoh, pointer)
       @ruhoh = ruhoh
-      @data = @ruhoh.db.update(pointer)
+      @data = @ruhoh.db.get(pointer)
       raise "Page #{pointer['id']} not found in database" unless @data
       @pointer = pointer
       @templater = Ruhoh::Templaters::RMustache.new(@ruhoh)

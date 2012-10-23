@@ -32,6 +32,17 @@ class Ruhoh
       Ruhoh::Plugins.const_get(camelized_name)
     end
     
+    # Get a data endpoint from pointer
+    # Note this differs from update in that
+    # it should retrieve the cached version.
+    def get(pointer)
+      name = pointer['type'].downcase
+      id = pointer['id']
+      raise "Invalid data type #{name}" unless self.respond_to?(name)
+      data = self.__send__(name)[id]
+      data ? data : self.update(pointer)
+    end
+    
     # Update a data endpoint
     #
     # name_or_pointer - String, Symbol or pointer(Hash)
