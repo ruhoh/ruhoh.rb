@@ -84,7 +84,7 @@ class Ruhoh
       return false
     end
 
-    config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : nil
+    config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : "compiled"
 
     config['base_path'] = config['base_path'].to_s.strip
     if config['base_path'].empty?
@@ -96,13 +96,14 @@ class Ruhoh
     @config = config
   end
   
-  Paths = Struct.new(:base, :theme, :system)
+  Paths = Struct.new(:base, :theme, :system, :compiled)
   def setup_paths
     self.ensure_config
     @paths = Paths.new
     @paths.base = @base
     @paths.theme = File.join(@base, "themes", self.db.config('theme')['name'])
     @paths.system = File.join(Ruhoh::Root, "system")
+    @paths.compiled = @config["compiled"]
     @paths
   end
   

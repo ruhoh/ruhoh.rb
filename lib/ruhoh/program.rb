@@ -66,8 +66,8 @@ class Ruhoh
       
       if target
         ruhoh.paths.compiled = File.expand_path(target)
-      elsif ruhoh.config.compiled
-        ruhoh.paths.compiled = ruhoh.config.compiled
+      elsif ruhoh.config["compiled"]
+        ruhoh.paths.compiled = ruhoh.config["compiled"]
       end
       
       Ruhoh::Compiler.compile(ruhoh)
