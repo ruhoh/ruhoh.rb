@@ -1,8 +1,3 @@
-# Require all the compilers
-Dir[File.join(File.dirname(__FILE__), 'compilers','*.rb')].each { |f|
-  require f
-}
-
 class Ruhoh
   
   # The Compiler module is a namespace for all compile "tasks".

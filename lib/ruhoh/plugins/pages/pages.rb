@@ -8,6 +8,21 @@ module Ruhoh::Plugins
       hash
     end
     
+    def compile(id=nil)
+      datas = if id
+        [ @ruhoh.db.__send__(self.namespace)[id] ].compact
+      else
+        @ruhoh.db.__send__(self.namespace).each_value
+      end
+
+      datas.each do |data|
+        modeler.new(self, data["pointer"]).compile
+      end
+
+      nil
+    end
+    
+
     class Modeler < BaseModeler
       include Page
       
@@ -53,6 +68,16 @@ module Ruhoh::Plugins
       
         url = '/' if url.empty?
         @ruhoh.to_url(url)
+      end
+      
+      def compile
+        pointer = @pointer
+        FileUtils.cd(@ruhoh.paths.compiled) {
+          page = @ruhoh.page(@pointer)
+          FileUtils.mkdir_p File.dirname(page.compiled_path)
+          File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render }
+          Ruhoh::Friend.say { green "processed: #{pointer['id']}" }
+        }
       end
     end
 

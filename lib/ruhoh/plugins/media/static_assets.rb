@@ -7,6 +7,7 @@ class Ruhoh
       end
       
       def run
+        return
         self.media
         self.javascripts
       end
