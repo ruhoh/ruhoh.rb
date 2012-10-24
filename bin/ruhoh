@@ -4,7 +4,7 @@ $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
 require 'ruhoh'
 require 'ruhoh/version'
-require 'ruhoh/client/client'
+require 'ruhoh/client'
 
 require 'optparse'
 
