@@ -1,13 +1,18 @@
 class Ruhoh
   class Page
-    attr_reader :id, :data, :sub_layout, :master_layout
-    attr_accessor :templater
+    attr_reader :sub_layout, :master_layout
+    attr_accessor :templater, :data
 
-    def initialize(ruhoh, pointer)
+    def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
-      @data = @ruhoh.db.get(pointer)
-      raise "Page #{pointer['id']} not found in database" unless @data
-      @pointer = pointer
+      if pointer_or_content.is_a?(Hash)
+        @data = @ruhoh.db.get(pointer_or_content)
+        raise "Page #{pointer['id']} not found in database" unless @data
+        @pointer = pointer_or_content
+      else
+        @content = pointer_or_content
+        @data = {}
+      end
       @templater = Ruhoh::Templaters::RMustache.new(@ruhoh)
     end
     
@@ -64,6 +69,7 @@ class Ruhoh
     
     # Provide access to the page content.
     def content
+      return @content if @content
       @ruhoh.db.content(@pointer)
     end
     
