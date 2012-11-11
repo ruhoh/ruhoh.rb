@@ -16,7 +16,7 @@ module Page
       let(:posts) {
         {
           "dictionary" => {
-            "#{Ruhoh.names.posts}/sample-id.md" => {"title" => "a cool title"}
+            "#{"posts"}/sample-id.md" => {"title" => "a cool title"}
           } 
         }
       }
@@ -38,13 +38,13 @@ module Page
             @ruhoh.db.update(:posts)
             @ruhoh.db.stub(:posts).and_return(posts)
             
-            @page = ruhoh.page("#{Ruhoh.names.posts}/sample-id.md")
+            @page = ruhoh.page("#{"posts"}/sample-id.md")
           end
           it "should query the posts dictionary and set @data to result" do
             @page.data.should == {"title" => "a cool title"}
           end
           it "should set @id to the valid id" do
-            @page.id.should == "#{Ruhoh.names.posts}/sample-id.md"
+            @page.id.should == "#{"posts"}/sample-id.md"
           end
         end
         

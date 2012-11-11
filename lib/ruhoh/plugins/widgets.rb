@@ -56,8 +56,8 @@ module Ruhoh::Plugins
     #
     # Returns Hash of configuration params.
     def process_config(widget_name)
-      system_config = Ruhoh::Utils.parse_yaml_file(@system_path, widget_name, Ruhoh.names.config_data) || {}
-      user_config = Ruhoh::Utils.parse_yaml_file(@path, widget_name, Ruhoh.names.config_data) || {}
+      system_config = Ruhoh::Utils.parse_yaml_file(@system_path, widget_name, "config.yml") || {}
+      user_config = Ruhoh::Utils.parse_yaml_file(@path, widget_name, "config.yml") || {}
       config = Ruhoh::Utils.deep_merge(system_config, user_config)
       config['layout'] ||= widget_name
       config['stylesheet'] ||= widget_name
@@ -71,15 +71,15 @@ module Ruhoh::Plugins
     #
     # Returns Array of script filenames to load.
     def process_javascripts(config, widget_name)
-      scripts = config[Ruhoh.names.javascripts] ? Array(config[Ruhoh.names.javascripts]) : []
+      scripts = config["javascripts"] ? Array(config["javascripts"]) : []
       
       # Try for the default script if no config.
       if scripts.empty?
-        script_file = File.join(@path, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
+        script_file = File.join(@path, widget_name, "javascripts", "#{widget_name}.js")
         if File.exist?(script_file)
           scripts << "#{widget_name}.js"
         else
-          script_file = File.join(@system_path, widget_name, Ruhoh.names.javascripts, "#{widget_name}.js")
+          script_file = File.join(@system_path, widget_name, "javascripts", "#{widget_name}.js")
           scripts << "#{widget_name}.js" if File.exist?(script_file)
         end
       end

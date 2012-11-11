@@ -32,27 +32,7 @@ class Ruhoh
   attr_reader :config, :paths, :root, :base, :db
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-  Names = {
-    :assets => 'assets',
-    :config_data => 'config.yml',
-    :compiled => 'compiled',
-    :layouts => 'layouts',
-    :media => 'media',
-    :pages => 'pages',
-    :plugins => 'plugins',
-    :posts => 'posts',
-    :javascripts => 'javascripts',
-    :site_data => 'site.yml',
-    :stylesheets => 'stylesheets',
-    :system => 'system',
-    :themes => 'themes',
-    :theme_config => 'theme.yml',
-    :widgets => 'widgets',
-    :widget_config => 'config.yml'
-  }
-  
   @log = Ruhoh::Logger.new
-  @names = OpenStruct.new(Names)
   @root = Root
   
   def initialize
@@ -78,9 +58,9 @@ class Ruhoh
   
   def config
     return @config if @config
-    config = Ruhoh::Utils.parse_yaml_file(@base, Ruhoh.names.config_data)
+    config = Ruhoh::Utils.parse_yaml_file(@base, "config.yml")
     unless config
-      Ruhoh.log.error("Empty config.\nEnsure ./#{Ruhoh.names.config_data} exists and contains valid YAML")
+      Ruhoh.log.error("Empty config.\nEnsure ./#{"config.yml"} exists and contains valid YAML")
       return false
     end
 

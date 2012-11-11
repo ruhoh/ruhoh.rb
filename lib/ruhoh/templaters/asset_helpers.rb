@@ -14,14 +14,14 @@ class Ruhoh
         sub_layout = self.context['page']['sub_layout']
         stylesheets = @ruhoh.db.stylesheets[master_layout] || []
         stylesheets += @ruhoh.db.stylesheets[sub_layout] || []
-        stylesheets += @ruhoh.db.stylesheets[Ruhoh.names.widgets] || []
+        stylesheets += @ruhoh.db.stylesheets["widgets"] || []
         stylesheets.each do |style|
           buffer += "<link href=\"#{style['url']}?#{rand()}\" type=\"text/css\" rel=\"stylesheet\" media=\"all\">\n"
         end
         buffer += "\n"
         scripts = @ruhoh.db.javascripts[master_layout] || []
         scripts += @ruhoh.db.javascripts[sub_layout] || []
-        scripts += @ruhoh.db.javascripts[Ruhoh.names.widgets] || []
+        scripts += @ruhoh.db.javascripts["widgets"] || []
         scripts.each do |script|
           buffer += "<script src=\"#{script['url']}?#{rand()}\"></script>\n"
         end

@@ -7,7 +7,7 @@ module Pages
       include_context "default_setup"
       
       before(:each) do
-        the_pages_dir = File.join(SampleSitePath, Ruhoh.names.pages)
+        the_pages_dir = File.join(SampleSitePath, "pages")
         Dir.mkdir the_pages_dir
         expected_pages.each do |page_name| 
           full_file_name = File.join(the_pages_dir, page_name)
@@ -62,7 +62,7 @@ title: #{page_name} (test)
           Dir.mkdir SampleSitePath
           theme = "twitter"
           # Create base config.yml + base theme
-          File.open(File.join(SampleSitePath, Ruhoh.names.config_data), "w+") { |file|
+          File.open(File.join(SampleSitePath, "config.yml"), "w+") { |file|
             file.puts <<-TEXT
 ---
 theme: '#{theme}'
@@ -71,7 +71,7 @@ pages:
 ---  
   TEXT
           }
-          theme_dir = File.join(SampleSitePath, Ruhoh.names.themes, theme)
+          theme_dir = File.join(SampleSitePath, "themes", theme)
           FileUtils.makedirs theme_dir
         }
         include_context "default_setup"
@@ -92,7 +92,7 @@ pages:
           Dir.mkdir SampleSitePath
           theme = "twitter"
           # Create base config.yml + base theme
-          File.open(File.join(SampleSitePath, Ruhoh.names.config_data), "w+") { |file|
+          File.open(File.join(SampleSitePath, "config.yml"), "w+") { |file|
             file.puts <<-TEXT
 ---
 theme: '#{theme}'
@@ -101,7 +101,7 @@ pages:
 ---  
   TEXT
           }
-          theme_dir = File.join(SampleSitePath, Ruhoh.names.themes, theme)
+          theme_dir = File.join(SampleSitePath, "themes", theme)
           FileUtils.makedirs theme_dir
           
           @ruhoh.setup

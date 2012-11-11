@@ -5,7 +5,7 @@ module Ruhoh::Plugins
       hash = super
       hash['name'] = hash['name'].to_s.strip
       if hash['name'].empty?
-        Ruhoh.log.error("Theme not specified in #{Ruhoh.names.config_data}")
+        Ruhoh.log.error("Theme not specified in #{"config.yml"}")
         return false
       end
       

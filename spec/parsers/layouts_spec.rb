@@ -3,7 +3,7 @@ module Layouts
   describe Ruhoh::Plugins::Layouts do
     before(:each) do
       expected_theme = "twitter"
-      the_layouts_dir = File.join(SampleSitePath, Ruhoh.names.themes, expected_theme, Ruhoh.names.layouts)
+      the_layouts_dir = File.join(SampleSitePath, "themes", expected_theme, "layouts")
       FileUtils.makedirs the_layouts_dir
       expected_layouts.each do |layout_name| 
         full_file_name = File.join(the_layouts_dir, layout_name)

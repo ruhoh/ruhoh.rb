@@ -51,12 +51,12 @@ module Ruhoh::Plugins
       assets = []
       @ruhoh.db.widgets.each_key do |name|
         default_name = "#{name}.css"
-        stylesheet = config[Ruhoh.names.widgets][name] rescue default_name
+        stylesheet = config["widgets"][name] rescue default_name
         stylesheet ||=  default_name
-        file = File.join(@ruhoh.db.config("theme")['path_widgets'], name, Ruhoh.names.stylesheets, stylesheet)
+        file = File.join(@ruhoh.db.config("theme")['path_widgets'], name, "stylesheets", stylesheet)
         next unless File.exists?(file)
         assets << {
-          "url" => [@ruhoh.db.urls["theme_widgets"], name, Ruhoh.names.stylesheets, stylesheet].join('/'),
+          "url" => [@ruhoh.db.urls["theme_widgets"], name, "stylesheets", stylesheet].join('/'),
           "id" => file
         }
       end

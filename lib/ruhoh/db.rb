@@ -49,6 +49,7 @@ class Ruhoh
     #
     # If pointer is passed, will update the singular resource only.
     # Useful for updating only the resource that have changed.
+    #
     # Returns the data that was updated.
     def update(name_or_pointer)
       if name_or_pointer.is_a?(Hash)
