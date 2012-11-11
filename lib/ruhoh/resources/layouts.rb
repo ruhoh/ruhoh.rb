@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Layouts < Plugin
+module Ruhoh::Resources
+  class Layouts < Resource
     
     class Modeler < BaseModeler
       def generate

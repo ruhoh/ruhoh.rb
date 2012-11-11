@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Widgets < Plugin
+module Ruhoh::Resources
+  class Widgets < Resource
 
     WidgetStructure = Struct.new(
       :name,
@@ -110,13 +110,13 @@ module Ruhoh::Plugins
     end
 
     class Watcher
-      def initialize(plugin)
-        @plugin = plugin
-        @ruhoh = plugin.ruhoh
+      def initialize(resource)
+        @resource = resource
+        @ruhoh = resource.ruhoh
       end
       
       def match(path)
-        path =~ %r{^#{@plugin.path}}
+        path =~ %r{^#{@resource.path}}
       end
       
       def update(path)

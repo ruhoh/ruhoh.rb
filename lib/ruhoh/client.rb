@@ -31,15 +31,15 @@ class Ruhoh
       return self.__send__(cmd) if self.respond_to?(cmd)
 
       Ruhoh::Friend.say { 
-        red "Plugin #{cmd} not found"
+        red "Resource #{cmd} not found"
         exit 
-      } unless Ruhoh::Plugins::Plugin.plugins.has_key?(cmd)
+      } unless Ruhoh::Resources::Resource.resources.has_key?(cmd)
       
       @ruhoh = Ruhoh.new
       @ruhoh.setup
       @ruhoh.setup_paths
       
-      klass = Ruhoh::Plugins::Plugin.plugins[cmd].const_get(:Client)
+      klass = Ruhoh::Resources::Resource.resources[cmd].const_get(:Client)
       client = klass.new(@ruhoh, data)
       
       Ruhoh::Friend.say { 
@@ -61,8 +61,8 @@ class Ruhoh
     # Show Client Utility help documentation.
     def help
       options = @opt_parser.help
-      plugins = [{"methods" => Help}]
-      plugins += Ruhoh::Plugins::Plugin.plugins.each.map {|name, klass|
+      resources = [{"methods" => Help}]
+      resources += Ruhoh::Resources::Resource.resources.each.map {|name, klass|
         next unless klass.const_defined?(:Client)
         next unless klass.const_get(:Client).const_defined?(:Help)
         {
@@ -80,10 +80,10 @@ class Ruhoh
         plain ''
         plain 'Commands:'
         plain ''
-        plugins.each do |plugin|
-          plugin["methods"].each do |method|
-            if plugin["name"]
-              green("  " + "#{plugin["name"]} #{method["command"]}")
+        resources.each do |resource|
+          resource["methods"].each do |method|
+            if resource["name"]
+              green("  " + "#{resource["name"]} #{method["command"]}")
             else
               green("  " + method["command"])
             end

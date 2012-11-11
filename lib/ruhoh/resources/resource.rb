@@ -1,15 +1,15 @@
-module Ruhoh::Plugins
-  class Plugin
+module Ruhoh::Resources
+  class Resource
 
-    # Register all available plugins.
-    # @plugins is a key value hash, e.g:
-    #   "posts" => Ruhoh::Plugins::Posts
-    @plugins = {}
+    # Register all available resources.
+    # @resources is a key value hash, e.g:
+    #   "posts" => Ruhoh::Resources::Posts
+    @resources = {}
     class << self
-      attr_accessor :plugins
-      def inherited(plugin)
-        name = Ruhoh::Utils.underscore(plugin.name.split("::").pop)
-        @plugins[name] = plugin
+      attr_accessor :resources
+      def inherited(resource)
+        name = Ruhoh::Utils.underscore(resource.name.split("::").pop)
+        @resources[name] = resource
       end
     end
     
@@ -119,12 +119,12 @@ module Ruhoh::Plugins
       self.class.modeler
     end
 
-    # Proxy to the watcher for this plugin
+    # Proxy to the watcher for this resource
     def watcher
       self.class.watcher
     end
     
-    # Proxy to the previewer for this plugin
+    # Proxy to the previewer for this resource
     def previewer
       self.class.previewer
     end
@@ -184,11 +184,11 @@ module Ruhoh::Plugins
   
   class BaseModeler
 
-    def initialize(plugin, pointer)
-      @plugin = plugin
-      @ruhoh = plugin.ruhoh
+    def initialize(resource, pointer)
+      @resource = resource
+      @ruhoh = resource.ruhoh
       # Automatically set which parser type is being used.
-      pointer["type"] = plugin.registered_name
+      pointer["type"] = resource.registered_name
       @pointer = pointer
     end
     

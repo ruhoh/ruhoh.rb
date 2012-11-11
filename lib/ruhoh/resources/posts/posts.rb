@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Posts < Plugin
+module Ruhoh::Resources
+  class Posts < Resource
     
     def config
       hash = super
@@ -134,13 +134,13 @@ module Ruhoh::Plugins
 
     
     class Watcher
-      def initialize(plugin)
-        @plugin = plugin
-        @ruhoh = plugin.ruhoh
+      def initialize(resource)
+        @resource = resource
+        @ruhoh = resource.ruhoh
       end
       
       def match(path)
-        path =~ %r{^#{@plugin.path}}
+        path =~ %r{^#{@resource.path}}
       end
       
       def update(path)
@@ -205,7 +205,7 @@ module Ruhoh::Plugins
       
         FileUtils.mkdir_p File.dirname(filename)
         output = @ruhoh.db.scaffolds["#{type}.html"].to_s
-        output = output.gsub('{{DATE}}', Ruhoh::Plugins::Posts.formatted_date(Time.now))
+        output = output.gsub('{{DATE}}', Ruhoh::Resources::Posts.formatted_date(Time.now))
         File.open(filename, 'w:UTF-8') {|f| f.puts output }
       
         Ruhoh::Friend.say { 

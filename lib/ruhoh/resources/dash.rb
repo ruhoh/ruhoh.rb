@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Dash < Plugin
+module Ruhoh::Resources
+  class Dash < Resource
     
     def url_endpoint
       "/dash"
@@ -14,9 +14,9 @@ module Ruhoh::Plugins
     end
     
     class Previewer
-      def initialize(plugin)
-        @plugin = plugin
-        @ruhoh = plugin.ruhoh
+      def initialize(resource)
+        @resource = resource
+        @ruhoh = resource.ruhoh
       end
 
       def call(env)

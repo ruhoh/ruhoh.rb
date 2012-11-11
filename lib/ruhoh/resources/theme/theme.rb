@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Theme < Plugin
+module Ruhoh::Resources
+  class Theme < Resource
     
     def config
       hash = super
@@ -45,13 +45,13 @@ module Ruhoh::Plugins
     end
 
     class Watcher
-      def initialize(plugin)
-        @plugin = plugin
-        @ruhoh = plugin.ruhoh
+      def initialize(resource)
+        @resource = resource
+        @ruhoh = resource.ruhoh
       end
       
       def match(path)
-        path =~ Regexp.new("^#{@plugin.path}")
+        path =~ Regexp.new("^#{@resource.path}")
       end
       
       def update(path)

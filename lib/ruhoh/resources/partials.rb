@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Partials < Plugin
+module Ruhoh::Resources
+  class Partials < Resource
 
     class Modeler < BaseModeler
       def generate
@@ -11,13 +11,13 @@ module Ruhoh::Plugins
     end
     
     class Watcher
-      def initialize(plugin)
-        @plugin = plugin
-        @ruhoh = plugin.ruhoh
+      def initialize(resource)
+        @resource = resource
+        @ruhoh = resource.ruhoh
       end
       
       def match(path)
-        path =~ %r{^(#{@plugin.path}|themes\/#{@ruhoh.config['theme']['name']}\/partials)}
+        path =~ %r{^(#{@resource.path}|themes\/#{@ruhoh.config['theme']['name']}\/partials)}
       end
       
       def update(path)

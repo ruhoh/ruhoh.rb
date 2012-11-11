@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Media < Plugin
+module Ruhoh::Resources
+  class Media < Resource
     
     def url_endpoint
       "/assets/media"

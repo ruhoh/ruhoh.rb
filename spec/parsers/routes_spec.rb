@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Routes
   
-  describe Ruhoh::Plugins::Routes do
+  describe Ruhoh::Resources::Routes do
     let(:ruhoh){
       Ruhoh::Utils.stub(:parse_yaml_file).and_return({'theme' => "twitter"})
       Ruhoh::Paths.stub(:theme_is_valid?).and_return(true)
@@ -31,7 +31,7 @@ module Routes
         ruhoh.db.should_receive(:pages).and_return(pages)
         ruhoh.db.should_receive(:posts).and_return(posts)
         
-        routes = Ruhoh::Plugins::Routes.generate(ruhoh)
+        routes = Ruhoh::Resources::Routes.generate(ruhoh)
         
         routes.should be_a_kind_of(Hash)
         routes.keys.sort.should == ['/blah.html', '/no.html', '/post1.html', '/post2.html', '/post3.html', '/yes.html']

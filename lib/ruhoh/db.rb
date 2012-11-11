@@ -1,6 +1,6 @@
-# Require all the plugins
-require File.join(File.dirname(__FILE__), 'plugins', "plugin.rb")
-Dir[File.join(File.dirname(__FILE__), 'plugins', '**', '*.rb')].each { |f|
+# Require all the resources
+require File.join(File.dirname(__FILE__), 'resources', "resource.rb")
+Dir[File.join(File.dirname(__FILE__), 'resources', '**', '*.rb')].each { |f|
   require f
 }
 
@@ -9,7 +9,7 @@ class Ruhoh
   class DB
 
     # Lazy-load all data endpoints but cache the result for this cycle.
-    Ruhoh::Plugins::Plugin.plugins.keys.each do |name|
+    Ruhoh::Resources::Resource.resources.keys.each do |name|
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}
@@ -29,7 +29,7 @@ class Ruhoh
     
     def constantize(name)
       camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
-      Ruhoh::Plugins.const_get(camelized_name)
+      Ruhoh::Resources.const_get(camelized_name)
     end
     
     # Get a data endpoint from pointer
@@ -58,15 +58,15 @@ class Ruhoh
       else
         name = name_or_pointer.downcase # name is a stringified constant.
       end
-      plugin = constantize(name).new(@ruhoh)
+      resource = constantize(name).new(@ruhoh)
 
       if id
-        data = plugin.generate(id).values.first
+        data = resource.generate(id).values.first
         endpoint = self.instance_variable_get("@#{name}") || {}
         endpoint[id] = data
         data
       else
-        data = plugin.generate
+        data = resource.generate
         self.instance_variable_set("@#{name}", data)
         data
       end
@@ -76,8 +76,8 @@ class Ruhoh
     # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
       name = pointer['type'].downcase # name is a stringified constant.
-      plugin = constantize(name).new(@ruhoh)
-      modeler = plugin.modeler.new(plugin, pointer)
+      resource = constantize(name).new(@ruhoh)
+      modeler = resource.modeler.new(resource, pointer)
       # TODO:
       # possible collisions here: ids are only unique relative to their parser.
       # that's the whole point of the pointer... =/
@@ -88,10 +88,10 @@ class Ruhoh
       @urls["base_path"] = @ruhoh.config['base_path']
       return @urls if @urls.keys.length > 1 # consider base_url
 
-      Ruhoh::Plugins::Plugin.plugins.each do |name, klass|
-        plugin = klass.new(@ruhoh)
-        next unless plugin.respond_to?(:url_endpoint)
-        @urls[name] = @ruhoh.to_url(plugin.url_endpoint)
+      Ruhoh::Resources::Resource.resources.each do |name, klass|
+        resource = klass.new(@ruhoh)
+        next unless resource.respond_to?(:url_endpoint)
+        @urls[name] = @ruhoh.to_url(resource.url_endpoint)
       end
       
       @urls
@@ -99,10 +99,10 @@ class Ruhoh
     
     def paths
       return @paths unless @paths.empty?
-      Ruhoh::Plugins::Plugin.plugins.each do |name, klass|
-        plugin = klass.new(@ruhoh)
-        next unless plugin.respond_to?(:path)
-        @paths[name] = plugin.path
+      Ruhoh::Resources::Resource.resources.each do |name, klass|
+        resource = klass.new(@ruhoh)
+        next unless resource.respond_to?(:path)
+        @paths[name] = resource.path
       end
       
       @paths

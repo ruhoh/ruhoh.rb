@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Scaffolds < Plugin
+module Ruhoh::Resources
+  class Scaffolds < Resource
     
     class Modeler < BaseModeler
       

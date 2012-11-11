@@ -1,5 +1,5 @@
-module Ruhoh::Plugins
-  class Paginator < Plugin
+module Ruhoh::Resources
+  class Paginator < Resource
     
     def config
       hash = super
@@ -24,9 +24,9 @@ module Ruhoh::Plugins
     end
     
     class Previewer
-      def initialize(plugin)
-        @plugin = plugin
-        @ruhoh = plugin.ruhoh
+      def initialize(resource)
+        @resource = resource
+        @ruhoh = resource.ruhoh
       end
 
       def call(env)

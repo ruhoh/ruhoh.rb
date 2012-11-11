@@ -20,7 +20,7 @@ class Ruhoh
       ruhoh.setup
       ruhoh.config['env'] = opts[:env]
       ruhoh.setup_paths
-      ruhoh.setup_plugins unless opts[:enable_plugins] == false
+      ruhoh.setup_plugins unless opts[:enable_resources] == false
 
       # initialize the routes dictionary
       ruhoh.db.pages
@@ -33,13 +33,13 @@ class Ruhoh
         
         ruhoh.db.urls.each do |name, url|
           next if ["javascripts", "stylesheets", "base_path"].include?(name)
-          klass = Ruhoh::Plugins::Plugin.plugins[name]
+          klass = Ruhoh::Resources::Resource.resources[name]
           next unless klass
 
           map url do
             if klass.previewer
-              plugin = klass.new(ruhoh)
-              run plugin.previewer.new(plugin)
+              resource = klass.new(ruhoh)
+              run resource.previewer.new(resource)
             else
               run Rack::File.new(File.join(ruhoh.paths.base, ruhoh.db.paths[name]))
             end
@@ -85,7 +85,7 @@ class Ruhoh
       ruhoh.setup
       ruhoh.config['env'] = 'production'
       ruhoh.setup_paths
-      ruhoh.setup_plugins
+      ruhoh.setup_resources
       
       if target
         ruhoh.paths.compiled = File.expand_path(target)

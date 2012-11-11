@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Pages
-  describe Ruhoh::Plugins::Pages do
+  describe Ruhoh::Resources::Pages do
     describe "#generate" do
       include_context "write_default_theme"
       include_context "default_setup"
@@ -26,7 +26,7 @@ title: #{page_name} (test)
       }
 
       let(:pages){
-        Ruhoh::Plugins::Pages.generate(@pages)
+        Ruhoh::Resources::Pages.generate(@pages)
       }
       
       it 'should extract valid pages from source directory.' do
@@ -47,12 +47,12 @@ title: #{page_name} (test)
       context "No user specified exclusions in config." do
         it "should return true for a valid page filepath" do
           filepath = 'about.md'
-          Ruhoh::Plugins::Pages.is_valid_page?(filepath).should == true
+          Ruhoh::Resources::Pages.is_valid_page?(filepath).should == true
         end
       
         it "should return false for a filepath beginning with ." do
           filepath = '.vim'
-          Ruhoh::Plugins::Pages.is_valid_page?(filepath).should == false
+          Ruhoh::Resources::Pages.is_valid_page?(filepath).should == false
         end
 
       end
@@ -80,9 +80,9 @@ pages:
           filepath1 = 'test/about.md'
           filepath2 = 'test/yay.md'
           filepath3 = 'vest/yay.md'
-          Ruhoh::Plugins::Pages.is_valid_page?(filepath1).should == false
-          Ruhoh::Plugins::Pages.is_valid_page?(filepath2).should == false
-          Ruhoh::Plugins::Pages.is_valid_page?(filepath3).should == true
+          Ruhoh::Resources::Pages.is_valid_page?(filepath1).should == false
+          Ruhoh::Resources::Pages.is_valid_page?(filepath2).should == false
+          Ruhoh::Resources::Pages.is_valid_page?(filepath3).should == true
         end
       end
       
@@ -109,7 +109,7 @@ pages:
         include_context "default_setup"
         
         it "should return false for a page whose filepath matches a page exclude regular expression." do
-          Ruhoh::Plugins::Pages.is_valid_page?(filepath).should == false
+          Ruhoh::Resources::Pages.is_valid_page?(filepath).should == false
         end
       end
     end

@@ -1,8 +1,8 @@
-module Ruhoh::Plugins
+module Ruhoh::Resources
   # Collect all the javascripts.
   # Themes explicitly define which javascripts to load via theme.yml.
   # Additionally, widgets may register javascript dependencies, which are resolved here.
-  class Javascripts < Plugin
+  class Javascripts < Resource
 
     def config
       hash = @ruhoh.db.config("theme")["javascripts"]
