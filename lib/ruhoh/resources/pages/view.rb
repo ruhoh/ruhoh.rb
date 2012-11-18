@@ -1,6 +1,6 @@
 class Ruhoh::Resources::Pages
   class View < Ruhoh::Views::RMustache
-    include Ruhoh::Views::PageHelpers
+    include Ruhoh::Views::Helpers::Page
   
     def all
       pages = @ruhoh.db.pages.each_value.map { |val| val }

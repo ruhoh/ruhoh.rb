@@ -16,8 +16,8 @@ require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
 
-require 'ruhoh/views/page_helpers'
 require 'ruhoh/views/rmustache'
+require 'ruhoh/views/helpers/page'
 require 'ruhoh/views/master'
 
 require 'ruhoh/db'
