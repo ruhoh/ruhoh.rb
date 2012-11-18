@@ -13,12 +13,13 @@ class Ruhoh
         @content = pointer_or_content
         @data = {}
       end
-      @templater = Ruhoh::Templaters::RMustache.new(@ruhoh)
+      
+      @templater = Ruhoh::Templaters::Master.new(@ruhoh)
     end
     
     def render
       self.process_layouts
-      @templater.render(self.expand_layouts, self.payload)
+      @templater.render(self.expand_layouts, @data)
     end
     
     def render_content
@@ -51,7 +52,7 @@ class Ruhoh
         # If a master_layout is found we need to process the sub_layout
         # into the master_layout using mustache.
         if @master_layout && @master_layout['content']
-          payload = self.payload
+          payload = @data.dup
           payload['content'] = layout
           layout = @templater.render(@master_layout['content'], payload)
         end
@@ -61,10 +62,6 @@ class Ruhoh
       end
       
       layout
-    end
-    
-    def payload
-      {'page' => @data}
     end
     
     # Provide access to the page content.
