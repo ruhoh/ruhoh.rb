@@ -1,6 +1,5 @@
-module Ruhoh::Templaters
-  class JavascriptsHelpers < RMustache
-    
+class Ruhoh::Resources::Javascripts
+  class View < Ruhoh::Templaters::RMustache
     def all
       buffer = ''
       master_layout = self.context['page']['master_layout']
@@ -11,9 +10,8 @@ module Ruhoh::Templaters
       scripts.each do |script|
         buffer += "<script src=\"#{script['url']}?#{rand()}\"></script>\n"
       end
-      
+    
       buffer
     end
-
   end
 end

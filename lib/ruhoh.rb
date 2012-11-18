@@ -36,10 +36,11 @@ end
 
 class Ruhoh::Templaters::Master
   Ruhoh::Resources::Resource.resources.each do |name, klass|
-    next unless Ruhoh::Templaters.const_defined?("#{name.capitalize}Helpers")
+    next unless klass.const_defined?(:View)
+    
     class_eval <<-RUBY
       def #{name}
-        Ruhoh::Templaters::#{name.capitalize}Helpers.new(@ruhoh, context)
+        #{klass.const_get(:View)}.new(@ruhoh, context)
       end
     RUBY
   end

@@ -1,14 +1,14 @@
-module Ruhoh::Templaters
-  class PostsHelpers < RMustache
-    include PageHelpers
-    
+class Ruhoh::Resources::Posts
+  class View < Ruhoh::Templaters::RMustache
+    include Ruhoh::Templaters::PageHelpers
+  
     def all
       posts = @ruhoh.db.posts.each_value.map { |val| val }
       posts.sort! {
         |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
       }
     end
-    
+  
     # current_page is set via a compiler or previewer
     # in which it can discern what current_page to serve
     def paginator
@@ -21,14 +21,14 @@ module Ruhoh::Templaters
       raise "Page does not exist" unless post_batch
       post_batch
     end
-    
+  
     def paginator_navigation
       config = @ruhoh.db.config("paginator")
       post_count = @ruhoh.db.posts.length
       total_pages = (post_count.to_f/config["per_page"]).ceil
       current_page = self.context["page"]['current_page'].to_i rescue 0
       current_page = current_page.zero? ? 1 : current_page
-      
+    
       pages = total_pages.times.map { |i| 
         {
           "url" => (i.zero? ? config["root_page"] : "#{config["namespace"]}#{i+1}"),
@@ -38,13 +38,13 @@ module Ruhoh::Templaters
       }
       pages 
     end
-      
+    
     def latest
       latest = @ruhoh.db.config("posts")['latest']
       latest ||= 10
       (latest.to_i > 0) ? self.all[0, latest.to_i] : self.all
     end
-    
+  
     # Internal: Create a collated posts data structure.
     #
     # posts - Required [Array] 
@@ -88,6 +88,5 @@ module Ruhoh::Templaters
 
       collated
     end
-    
   end
 end

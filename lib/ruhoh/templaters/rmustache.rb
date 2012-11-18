@@ -9,7 +9,7 @@ class Ruhoh
       end
       
       def self.inherited(base)
-        name = base.name.split("::").pop.gsub(/Helpers$/, '').downcase
+        name = base.name.chomp("::View").split("::").pop.downcase
         base.send(:define_method, "resource_name") do
           name
         end
@@ -68,7 +68,6 @@ class Ruhoh
         code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('_', "&#95;")
         "<pre><code>#{code}</code></pre>"
       end
-   
     end #RMustache
   end #Templaters
 end #Ruhoh
