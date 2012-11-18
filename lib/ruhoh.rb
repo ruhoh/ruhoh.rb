@@ -15,8 +15,36 @@ require 'mustache'
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
-require 'ruhoh/db'
+
+require 'ruhoh/templaters/page_helpers'
 require 'ruhoh/templaters/rmustache'
+require 'ruhoh/templaters/master'
+
+require 'ruhoh/db'
+
+class Ruhoh::Templaters::RMustache
+  Ruhoh::Resources::Resource.resources.keys.each do |name|
+    class_eval <<-RUBY
+      def to_#{name}(sub_context)
+        Array(sub_context).map { |id|
+          @ruhoh.db.#{name}[id]
+        }.compact
+      end
+    RUBY
+  end
+end
+
+class Ruhoh::Templaters::Master
+  Ruhoh::Resources::Resource.resources.each do |name, klass|
+    next unless Ruhoh::Templaters.const_defined?("#{name.capitalize}Helpers")
+    class_eval <<-RUBY
+      def #{name}
+        Ruhoh::Templaters::#{name.capitalize}Helpers.new(@ruhoh, context)
+      end
+    RUBY
+  end
+end
+
 require 'ruhoh/converter'
 require 'ruhoh/page'
 require 'ruhoh/watch'
