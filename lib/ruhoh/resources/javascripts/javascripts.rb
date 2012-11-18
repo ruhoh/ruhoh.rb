@@ -37,9 +37,9 @@ module Ruhoh::Resources
     end
 
     # Notes:
-    #   The automatic script inclusion is currently handled within the widget parser.
+    #   The automatic script inclusion is currently handled within the widget resource.
     #   This differs from the auto-stylesheet inclusion relative to themes, 
-    #   which is handled in the stylesheet parser.
+    #   which is handled in the stylesheet resource.
     #   Make sure there are some standards with this.
     def widget_javascripts
       assets = []

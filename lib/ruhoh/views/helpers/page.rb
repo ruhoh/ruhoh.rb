@@ -38,9 +38,9 @@ module Ruhoh::Views::Helpers
     # so blank lines don't count toward the limit.
     # Always break the content on a blank line only so result stays formatted nicely.
     def summary
-      parser = context["pointer"]["parser"]
+      resource = context["pointer"]["resource"]
       content, id = self.get_page_content
-      line_limit = @ruhoh.db.config(parser)['summary_lines']
+      line_limit = @ruhoh.db.config(resource)['summary_lines']
       line_count = 0
       line_breakpoint = content.lines.count
 

@@ -98,7 +98,7 @@ module Ruhoh::Resources
             a << {
               "id" => id,
               "realpath" => File.realpath(id),
-              "parser" => registered_name,
+              "resource" => registered_name,
             }
           }
         }
@@ -114,7 +114,7 @@ module Ruhoh::Resources
       true
     end
     
-    # Proxy to the single modeler class for this parser.
+    # Proxy to the single modeler class for this resource.
     def modeler
       self.class.modeler
     end
@@ -187,13 +187,13 @@ module Ruhoh::Resources
     def initialize(resource, pointer)
       @resource = resource
       @ruhoh = resource.ruhoh
-      # Automatically set which parser type is being used.
-      pointer["type"] = resource.registered_name
+      # Automatically set which resource type is being used.
+      pointer["resource"] = resource.registered_name
       @pointer = pointer
     end
     
     def config
-      @ruhoh.db.config(@pointer['type'])
+      @ruhoh.db.config(@pointer['resource'])
     end
     
   end

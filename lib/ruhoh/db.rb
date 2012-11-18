@@ -36,7 +36,7 @@ class Ruhoh
     # Note this differs from update in that
     # it should retrieve the cached version.
     def get(pointer)
-      name = pointer['type'].downcase
+      name = pointer['resource'].downcase
       id = pointer['id']
       raise "Invalid data type #{name}" unless self.respond_to?(name)
       data = self.__send__(name)[id]
@@ -53,7 +53,7 @@ class Ruhoh
     # Returns the data that was updated.
     def update(name_or_pointer)
       if name_or_pointer.is_a?(Hash)
-        name = name_or_pointer['type'].downcase
+        name = name_or_pointer['resource'].downcase
         id = name_or_pointer['id']
       else
         name = name_or_pointer.downcase # name is a stringified constant.
@@ -75,11 +75,11 @@ class Ruhoh
     # return a given resource's file content
     # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
-      name = pointer['type'].downcase # name is a stringified constant.
+      name = pointer['resource'].downcase # name is a stringified constant.
       resource = constantize(name).new(@ruhoh)
       modeler = resource.modeler.new(resource, pointer)
       # TODO:
-      # possible collisions here: ids are only unique relative to their parser.
+      # possible collisions here: ids are only unique relative to their resource dictionary.
       # that's the whole point of the pointer... =/
       @content[pointer['id']] = modeler.content
     end
@@ -108,7 +108,7 @@ class Ruhoh
       @paths
     end
     
-    # Get the config for a given parser.
+    # Get the config for a given resource.
     def config(name)
       name = name.downcase
       return @config[name] if @config[name]

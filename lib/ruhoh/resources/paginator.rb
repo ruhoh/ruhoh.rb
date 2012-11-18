@@ -38,7 +38,7 @@ module Ruhoh::Resources
           "layout" => @ruhoh.db.config("paginator")["layout"],
           "current_page" => path,
           "pointer" => {
-            "parser" => "posts"
+            "resource" => "posts"
           }
         }
         [200, {'Content-Type' => 'text/html'}, [page.render]]

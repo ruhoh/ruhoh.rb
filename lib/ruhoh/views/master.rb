@@ -6,11 +6,11 @@ module Ruhoh::Views
     # Delegate #page to the kind of resource this view is modeling.
     def page
       return @page if @page
-      parser = context["pointer"]["parser"] rescue nil
-      return "" unless parser
+      resource = context["pointer"]["resource"] rescue nil
+      return "" unless resource
       
-      @page = parser ? 
-        Ruhoh::Resources::Resource.resources[parser].const_get(:View).new(@ruhoh, context) :
+      @page = resource ? 
+        Ruhoh::Resources::Resource.resources[resource].const_get(:View).new(@ruhoh, context) :
         nil
     end
 
