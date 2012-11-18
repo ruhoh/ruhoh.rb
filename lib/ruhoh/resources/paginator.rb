@@ -34,7 +34,13 @@ module Ruhoh::Resources
         env['PATH_INFO'].gsub!(/\/$/, '') unless env['PATH_INFO'] == "/"
         path = env['PATH_INFO'].reverse.chomp("/").reverse
         page = @ruhoh.page("nothing")
-        page.data = {"layout" => @ruhoh.db.config("paginator")["layout"], "current_page" => path}
+        page.data = {
+          "layout" => @ruhoh.db.config("paginator")["layout"],
+          "current_page" => path,
+          "pointer" => {
+            "parser" => "posts"
+          }
+        }
         [200, {'Content-Type' => 'text/html'}, [page.render]]
       end
     end
