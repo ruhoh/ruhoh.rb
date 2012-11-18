@@ -1,4 +1,4 @@
-module Ruhoh::Templaters
+module Ruhoh::Views
 
   module Tags
     # Generate the tags dictionary

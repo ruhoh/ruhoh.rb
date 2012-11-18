@@ -1,7 +1,7 @@
-module Ruhoh::Templaters  
+module Ruhoh::Views
   # The master view for primary template that everything renders into.
-  class Master < Ruhoh::Templaters::RMustache
-    include Ruhoh::Templaters::PageHelpers
+  class Master < RMustache
+    include Ruhoh::Views::PageHelpers
     
     # Delegate #page to the kind of resource this view is modeling.
     def page

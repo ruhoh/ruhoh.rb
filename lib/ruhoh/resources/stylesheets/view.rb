@@ -1,5 +1,5 @@
 class Ruhoh::Resources::Stylesheets
-  class View < Ruhoh::Templaters::RMustache
+  class View < Ruhoh::Views::RMustache
     def all
       buffer = ''
       master_layout = self.context['page']['master_layout']

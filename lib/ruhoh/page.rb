@@ -14,7 +14,7 @@ class Ruhoh
         @data = {}
       end
       
-      @templater = Ruhoh::Templaters::Master.new(@ruhoh)
+      @templater = Ruhoh::Views::Master.new(@ruhoh)
     end
     
     def render

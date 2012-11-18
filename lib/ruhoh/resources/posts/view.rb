@@ -1,6 +1,6 @@
 class Ruhoh::Resources::Posts
-  class View < Ruhoh::Templaters::RMustache
-    include Ruhoh::Templaters::PageHelpers
+  class View < Ruhoh::Views::RMustache
+    include Ruhoh::Views::PageHelpers
   
     def all
       posts = @ruhoh.db.posts.each_value.map { |val| val }

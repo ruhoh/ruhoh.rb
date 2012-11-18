@@ -16,13 +16,13 @@ require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
 
-require 'ruhoh/templaters/page_helpers'
-require 'ruhoh/templaters/rmustache'
-require 'ruhoh/templaters/master'
+require 'ruhoh/views/page_helpers'
+require 'ruhoh/views/rmustache'
+require 'ruhoh/views/master'
 
 require 'ruhoh/db'
 
-class Ruhoh::Templaters::RMustache
+class Ruhoh::Views::RMustache
   Ruhoh::Resources::Resource.resources.keys.each do |name|
     class_eval <<-RUBY
       def to_#{name}(sub_context)
@@ -34,7 +34,7 @@ class Ruhoh::Templaters::RMustache
   end
 end
 
-class Ruhoh::Templaters::Master
+class Ruhoh::Views::Master
   Ruhoh::Resources::Resource.resources.each do |name, klass|
     next unless klass.const_defined?(:View)
     
