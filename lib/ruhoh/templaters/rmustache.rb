@@ -1,21 +1,22 @@
-require 'ruhoh/templaters/base_helpers'
-require 'ruhoh/templaters/posts_helpers'
-require 'ruhoh/templaters/asset_helpers'
-require 'ruhoh/templaters/helpers'
-
 class Ruhoh
   module Templaters  
     class RMustache < Mustache
-      include Ruhoh::Templaters::BaseHelpers
-      include Ruhoh::Templaters::PostsHelpers
-      include Ruhoh::Templaters::AssetHelpers
-      include Ruhoh::Templaters::Helpers
-      
-      def initialize(ruhoh)
-        @ruhoh = ruhoh
-      end
-      class RContext < Context
     
+      def initialize(ruhoh, context=nil)
+        @ruhoh = ruhoh
+        # pass the parent context into the sub-view
+        @context = context if context
+      end
+      
+      def self.inherited(base)
+        name = base.name.split("::").pop.gsub(/Helpers$/, '').downcase
+        base.send(:define_method, "resource_name") do
+          name
+        end
+      end
+      
+      class RContext < Context
+  
         # Overload find method to catch helper expressions
         def find(obj, key, default = nil)
           return super unless key.to_s.index('?')
@@ -23,57 +24,47 @@ class Ruhoh
           context = context.empty? ? obj : super(obj, context)
 
           self.mustache_in_stack.__send__ helper, context
-        end  
+        end
 
-      end #RContext
-  
+      end
+    
       def context
         @context ||= RContext.new(self)
       end
-      
-      # Lazy-load the page body.
-      # When in a global scope (layouts, pages), the content is for the current page.
-      # May also be called in sub-contexts such as looping through posts.
-      #
-      #  {{# posts }}
-      #    {{{ content }}}
-      #  {{/ posts }}
-      def content
-        content, id = self.get_page_content
-        content = self.render(content)
-        Ruhoh::Converter.convert(content, id)
+    
+      def partial(name)
+        p = @ruhoh.db.partials[name.to_s]
+        Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
+        p
       end
-
+   
       def site
         @ruhoh.db.site
       end
-      
+
       def urls
         @ruhoh.db.urls
       end
-      
-      def get_page_content
-        data = self.context['id'] ? self.context : self.context['page']
-        return '' unless data['id']
-        page = @ruhoh.page(data['pointer'])
-        [page.content, data['id']]
+    
+      def to_json(sub_context)
+        sub_context.to_json
       end
-      
-      def widget(name)
-        return '' if self.context['page'][name.to_s].to_s == 'false'
-        @ruhoh.db.widgets[name.to_s]['layout']
-      end
-      
-      def method_missing(name, *args, &block)
-        return self.widget(name.to_s) if @ruhoh.db.widgets.has_key?(name.to_s)
-        super
+    
+      def debug(sub_context)
+        Ruhoh::Friend.say { 
+          yellow "?debug:"
+          magenta sub_context.class
+          cyan sub_context.inspect
+        }
+  
+        "<pre>#{sub_context.class}\n#{sub_context.pretty_inspect}</pre>"
       end
 
-      def respond_to?(method)
-        return true if @ruhoh.db.widgets.has_key?(method.to_s)
-        super
+      def raw_code(sub_context)
+        code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('_', "&#95;")
+        "<pre><code>#{code}</code></pre>"
       end
-      
+   
     end #RMustache
   end #Templaters
 end #Ruhoh
