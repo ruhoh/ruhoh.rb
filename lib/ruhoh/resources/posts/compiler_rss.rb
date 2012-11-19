@@ -32,7 +32,7 @@ class Ruhoh
                  xml.title_ data['title']
                  xml.link "#{@ruhoh.config['production_url']}#{data['url']}"
                  xml.pubDate_ data['date']
-                 xml.description_ (data['description'] ? data['description'] : page.render_content)
+                 xml.description_ (data['description'] ? data['description'] : page.render_full)
                }
              end
            }

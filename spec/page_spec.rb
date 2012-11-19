@@ -70,7 +70,7 @@ module Page
     pending "#meep-render" do
       let(:page){ Ruhoh::Page.new }
       it "should raise error if id not set" do
-        lambda{ page.render }.should raise_error
+        lambda{ page.render_full }.should raise_error
       end
       
       it "should process layouts, then render using the @templater" do
@@ -82,7 +82,7 @@ module Page
         page.should_receive(:expand_layouts).and_return(layout)
         page.should_receive(:payload).and_return(payload)
         page.templater.should_receive(:render).with(layout, payload)
-        page.render
+        page.render_full
       end
     end
     

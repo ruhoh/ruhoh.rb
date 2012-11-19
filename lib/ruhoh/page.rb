@@ -1,7 +1,7 @@
 class Ruhoh
-  class Page
+  class Page < Ruhoh::Views::Master
     attr_reader :sub_layout, :master_layout
-    attr_accessor :templater, :data
+    attr_accessor :data
 
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
@@ -13,13 +13,11 @@ class Ruhoh
         @content = pointer_or_content
         @data = {}
       end
-      
-      @templater = Ruhoh::Views::Master.new(@ruhoh)
     end
     
-    def render
+    def render_full
       self.process_layouts
-      @templater.render(self.expand_layouts, @data)
+      render(self.expand_layouts, @data)
     end
     
     def render_content
@@ -54,7 +52,7 @@ class Ruhoh
         if @master_layout && @master_layout['content']
           payload = @data.dup
           payload['content'] = layout
-          layout = @templater.render(@master_layout['content'], payload)
+          layout = render(@master_layout['content'], payload)
         end
       else
         # Minimum layout if no layout defined.
@@ -62,12 +60,6 @@ class Ruhoh
       end
       
       layout
-    end
-    
-    # Provide access to the page content.
-    def content
-      return @content if @content
-      @ruhoh.db.content(@pointer)
     end
     
     # Public: Formats the path to the compiled file based on the URL.

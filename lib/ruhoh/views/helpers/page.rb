@@ -18,7 +18,14 @@ module Ruhoh::Views::Helpers
     #  {{# posts }}
     #    {{{ content }}}
     #  {{/ posts }}
+    #
+    # Notes:
+    # @content is not used for caching, it's used to manually
+    # define content for a given page. Useful in the case that
+    # you want to model a resource that does not actually
+    # reference a file.
     def content
+      return @content if @content
       content, id = self.get_page_content
       content = self.render(content)
       Ruhoh::Converter.convert(content, id)
@@ -27,8 +34,8 @@ module Ruhoh::Views::Helpers
     def get_page_content
       data = self.context['id'] ? self.context : self.context['page']
       return '' unless data['id']
-      page = @ruhoh.page(data['pointer'])
-      [page.content, data['id']]
+      content = @ruhoh.db.content(data['pointer'])
+      [content, data['id']]
     end
     
     # Truncate the page content relative to a line_count limit.

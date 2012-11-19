@@ -41,7 +41,7 @@ module Ruhoh::Resources
             "resource" => "posts"
           }
         }
-        [200, {'Content-Type' => 'text/html'}, [page.render]]
+        [200, {'Content-Type' => 'text/html'}, [page.render_full]]
       end
     end
     

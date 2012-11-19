@@ -68,7 +68,7 @@ class Ruhoh
         pointer =  @ruhoh.db.routes[env['PATH_INFO']]
         raise "Page id not found for url: #{env['PATH_INFO']}" unless pointer
         page = @ruhoh.page(pointer)
-        [200, {'Content-Type' => 'text/html'}, [page.render]]
+        [200, {'Content-Type' => 'text/html'}, [page.render_full]]
       end
     
       def favicon

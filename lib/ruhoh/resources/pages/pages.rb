@@ -75,7 +75,7 @@ module Ruhoh::Resources
         FileUtils.cd(@ruhoh.paths.compiled) {
           page = @ruhoh.page(@pointer)
           FileUtils.mkdir_p File.dirname(page.compiled_path)
-          File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render }
+          File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render_full }
           Ruhoh::Friend.say { green "processed: #{pointer['id']}" }
         }
       end
