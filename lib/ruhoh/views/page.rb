@@ -1,5 +1,5 @@
-class Ruhoh
-  class Page < Ruhoh::Views::Master
+module Ruhoh::Views
+  class Page < Master
     attr_reader :sub_layout, :master_layout
     attr_accessor :data
 

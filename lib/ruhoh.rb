@@ -16,9 +16,12 @@ require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
 
+require 'ruhoh/converter'
+
 require 'ruhoh/views/rmustache'
 require 'ruhoh/views/helpers/page'
 require 'ruhoh/views/master'
+require 'ruhoh/views/page'
 
 require 'ruhoh/db'
 
@@ -46,8 +49,6 @@ class Ruhoh::Views::Master
   end
 end
 
-require 'ruhoh/converter'
-require 'ruhoh/page'
 require 'ruhoh/watch'
 require 'ruhoh/program'
 
@@ -69,7 +70,7 @@ class Ruhoh
   end
   
   def page(route)
-    Page.new(self, route)
+    Ruhoh::Views::Page.new(self, route)
   end
   
   # Public: Setup Ruhoh utilities relative to the current application directory.
