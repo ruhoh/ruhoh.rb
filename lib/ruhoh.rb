@@ -18,9 +18,6 @@ require 'ruhoh/friend'
 
 require 'ruhoh/converter'
 
-require 'ruhoh/views/rmustache'
-require 'ruhoh/views/helpers/page'
-require 'ruhoh/views/master'
 require 'ruhoh/views/page'
 
 require 'ruhoh/db'
@@ -37,7 +34,7 @@ class Ruhoh::Views::RMustache
   end
 end
 
-class Ruhoh::Views::Master
+class Ruhoh::Views::Page
   Ruhoh::Resources::Resource.resources.each do |name, klass|
     next unless klass.const_defined?(:View)
     

@@ -6,11 +6,6 @@ module Ruhoh::Views::Helpers
     include Tags
     include Categories
 
-    # if loaded as a page we need to namespace and delegate to self
-    def page
-      self
-    end
-    
     # Lazy-load the page body.
     # When in a global scope (layouts, pages), the content is for the current page.
     # May also be called in sub-contexts such as looping through resources.

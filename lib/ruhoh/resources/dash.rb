@@ -22,7 +22,7 @@ module Ruhoh::Resources
       def call(env)
         path = @ruhoh.db.dash['realpath']
         template = File.open(path, 'r:UTF-8') {|f| f.read }
-        templater = Ruhoh::Views::Master.new(@ruhoh)
+        templater = Ruhoh::Views::Page.new(@ruhoh)
         output = templater.render(template, {"page" => ""})
 
         [200, {'Content-Type' => 'text/html'}, [output]]

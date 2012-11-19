@@ -1,8 +1,13 @@
+require 'ruhoh/views/rmustache'
+require 'ruhoh/views/helpers/page'
+
 module Ruhoh::Views
-  class Page < Master
+  class Page < RMustache
+    include Ruhoh::Views::Helpers::Page
+
     attr_reader :sub_layout, :master_layout
     attr_accessor :data
-
+    
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
       if pointer_or_content.is_a?(Hash)
@@ -13,6 +18,17 @@ module Ruhoh::Views
         @content = pointer_or_content
         @data = {}
       end
+    end
+    
+    # Delegate #page to the kind of resource this view is modeling.
+    def page
+      return @page if @page
+      resource = context["pointer"]["resource"] rescue nil
+      return "" unless resource
+      
+      @page = resource ? 
+        Ruhoh::Resources::Resource.resources[resource].const_get(:View).new(@ruhoh, context) :
+        nil
     end
     
     def render_full
