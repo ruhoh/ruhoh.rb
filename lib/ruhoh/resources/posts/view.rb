@@ -1,7 +1,6 @@
 class Ruhoh::Resources::Posts
-  class View < Ruhoh::Views::RMustache
-    include Ruhoh::Views::Helpers::Page
-    
+  class View < Ruhoh::Views::Helpers::Page::View
+
     def all
       posts = @ruhoh.db.posts.each_value.map { |val| val }
       posts.sort {
@@ -62,10 +61,6 @@ class Ruhoh::Resources::Posts
       end
 
       collated
-    end
-    
-    class Single < Ruhoh::Views::Helpers::Page::Single
-    
     end
     
   end

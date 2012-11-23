@@ -1,6 +1,5 @@
 class Ruhoh::Resources::Pages
-  class View < Ruhoh::Views::RMustache
-    include Ruhoh::Views::Helpers::Page
+  class View < Ruhoh::Views::Helpers::Page::View
     
     def all
       pages = @ruhoh.db.pages.each_value.map { |val| val }
@@ -11,10 +10,6 @@ class Ruhoh::Resources::Pages
         model.master = context['master']
         model
       }
-    end
-    
-    class Single < Ruhoh::Views::Helpers::Page::Single
-      
     end
     
   end
