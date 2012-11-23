@@ -8,8 +8,13 @@ module Ruhoh::Resources
     class << self
       attr_accessor :resources
       def inherited(resource)
-        name = Ruhoh::Utils.underscore(resource.name.split("::").pop)
-        @resources[name] = resource
+        parts = resource.name.split("::")
+        parts.pop
+        name = parts.pop
+        
+        namespace = Ruhoh::Resources.const_get(name)
+        name = Ruhoh::Utils.underscore(name)
+        @resources[name] = namespace
       end
     end
     
@@ -130,25 +135,30 @@ module Ruhoh::Resources
     end
     
     def self.modeler
-      self.const_get(:Modeler)
+      registered_namespace.const_get(:Modeler)
     end
     
     def self.watcher
-      self.const_defined?(:Watcher) ?
-        self.const_get(:Watcher) :
+      registered_namespace.const_defined?(:Watcher) ?
+        registered_namespace.const_get(:Watcher) :
         nil
     end
     
     def self.previewer
-      self.const_defined?(:Previewer) ?
-        self.const_get(:Previewer) :
+      registered_namespace.const_defined?(:Previewer) ?
+        registered_namespace.const_get(:Previewer) :
         nil
     end
     
     def self.registered_name
-      Ruhoh::Utils.underscore(self.name.split("::").last)
+      parts = name.split("::")
+      parts.pop
+      Ruhoh::Utils.underscore(parts.pop)
     end
 
+    def self.registered_namespace
+      Ruhoh::Resources::Resource.resources[registered_name]
+    end
     
     class View < Ruhoh::Views::RMustache
 

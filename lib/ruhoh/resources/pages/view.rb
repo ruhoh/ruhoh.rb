@@ -1,4 +1,4 @@
-class Ruhoh::Resources::Pages
+module Ruhoh::Resources::Pages
   class View < Ruhoh::Views::Helpers::Page::View
     
     def all

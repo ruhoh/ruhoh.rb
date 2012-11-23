@@ -1,4 +1,4 @@
-class Ruhoh::Resources::Stylesheets
+module Ruhoh::Resources::Stylesheets
   class View < Ruhoh::Views::RMustache
     def all
       buffer = ''

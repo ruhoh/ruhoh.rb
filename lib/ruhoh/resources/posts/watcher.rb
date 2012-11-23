@@ -1,4 +1,4 @@
-class Ruhoh::Resources::Posts
+module Ruhoh::Resources::Posts
   class Watcher
     def initialize(resource)
       @resource = resource

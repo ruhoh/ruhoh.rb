@@ -1,4 +1,4 @@
-class Ruhoh::Resources::Posts
+module Ruhoh::Resources::Posts
   class View < Ruhoh::Views::Helpers::Page::View
 
     def all

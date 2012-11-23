@@ -1,10 +1,10 @@
-module Ruhoh::Resources
+module Ruhoh::Resources::Stylesheets
   # Collect all registered stylesheets.
   # Themes explicitly define which stylesheets to load via theme.yml.
   # All styling is managed by the theme, including widget styles.
   # If the theme provides widget stylesheets they will load automatically.
   # theme.yml may also specify an explicit widget stylesheet to load.
-  class Stylesheets < Resource
+  class Parser < Ruhoh::Resources::Resource
     
     # Get the config from theme.yml
     def config

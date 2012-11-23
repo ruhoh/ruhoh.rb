@@ -1,5 +1,5 @@
-module Ruhoh::Resources
-  class Theme < Resource
+module Ruhoh::Resources::Theme
+  class Parser < Ruhoh::Resources::Resource
     
     def config
       hash = super
@@ -43,24 +43,23 @@ module Ruhoh::Resources
     def generate
       {}
     end
-
-    class Watcher
-      def initialize(resource)
-        @resource = resource
-        @ruhoh = resource.ruhoh
-      end
-      
-      def match(path)
-        path =~ Regexp.new("^#{@resource.path}")
-      end
-      
-      def update(path)
-        @ruhoh.db.clear(:stylesheets)
-        @ruhoh.db.clear(:javascripts)
-        @ruhoh.db.clear(:widgets)
-        @ruhoh.db.clear(:layouts)
-      end
+  end
+  
+  class Watcher
+    def initialize(resource)
+      @resource = resource
+      @ruhoh = resource.ruhoh
     end
     
+    def match(path)
+      path =~ Regexp.new("^#{@resource.path}")
+    end
+    
+    def update(path)
+      @ruhoh.db.clear(:stylesheets)
+      @ruhoh.db.clear(:javascripts)
+      @ruhoh.db.clear(:widgets)
+      @ruhoh.db.clear(:layouts)
+    end
   end
 end

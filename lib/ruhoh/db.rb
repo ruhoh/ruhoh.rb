@@ -32,6 +32,10 @@ class Ruhoh
       Ruhoh::Resources.const_get(camelized_name)
     end
     
+    def parser(name)
+      constantize(name).const_get(:Parser)
+    end
+    
     # Get a data endpoint from pointer
     # Note this differs from update in that
     # it should retrieve the cached version.
@@ -58,7 +62,7 @@ class Ruhoh
       else
         name = name_or_pointer.downcase # name is a stringified constant.
       end
-      resource = constantize(name).new(@ruhoh)
+      resource = parser(name).new(@ruhoh)
 
       if id
         data = resource.generate(id).values.first
@@ -76,7 +80,7 @@ class Ruhoh
     # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
       name = pointer['resource'].downcase # name is a stringified constant.
-      resource = constantize(name).new(@ruhoh)
+      resource = parser(name).new(@ruhoh)
       modeler = resource.modeler.new(resource, pointer)
       # TODO:
       # possible collisions here: ids are only unique relative to their resource dictionary.
@@ -88,10 +92,11 @@ class Ruhoh
       @urls["base_path"] = @ruhoh.config['base_path']
       return @urls if @urls.keys.length > 1 # consider base_url
 
-      Ruhoh::Resources::Resource.resources.each do |name, klass|
-        resource = klass.new(@ruhoh)
-        next unless resource.respond_to?(:url_endpoint)
-        @urls[name] = @ruhoh.to_url(resource.url_endpoint)
+      Ruhoh::Resources::Resource.resources.each do |name, namespace|
+        next unless namespace.const_defined?(:Parser)
+        parser = namespace.const_get(:Parser).new(@ruhoh)
+        next unless parser.respond_to?(:url_endpoint)
+        @urls[name] = @ruhoh.to_url(parser.url_endpoint)
       end
       
       @urls
@@ -99,10 +104,11 @@ class Ruhoh
     
     def paths
       return @paths unless @paths.empty?
-      Ruhoh::Resources::Resource.resources.each do |name, klass|
-        resource = klass.new(@ruhoh)
-        next unless resource.respond_to?(:path)
-        @paths[name] = resource.path
+      Ruhoh::Resources::Resource.resources.each do |name, namespace|
+        next unless namespace.const_defined?(:Parser)
+        parser = namespace.const_get(:Parser).new(@ruhoh)
+        next unless parser.respond_to?(:path)
+        @paths[name] = parser.path
       end
       
       @paths
@@ -112,7 +118,7 @@ class Ruhoh
     def config(name)
       name = name.downcase
       return @config[name] if @config[name]
-      @config[name] = constantize(name).new(@ruhoh).config
+      @config[name] = parser(name).new(@ruhoh).config
     end
     
     def clear(name)

@@ -1,4 +1,4 @@
-class Ruhoh::Resources::Javascripts
+module Ruhoh::Resources::Javascripts
   class View < Ruhoh::Views::RMustache
     def all
       buffer = ''

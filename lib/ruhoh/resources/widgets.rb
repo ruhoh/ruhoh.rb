@@ -1,5 +1,5 @@
-module Ruhoh::Resources
-  class Widgets < Resource
+module Ruhoh::Resources::Widgets
+  class Parser < Ruhoh::Resources::Resource
 
     WidgetStructure = Struct.new(
       :name,
@@ -108,21 +108,20 @@ module Ruhoh::Resources
       content = File.open(layout, 'r:UTF-8') { |f| f.read }
       Mustache.render(content, {'config' => config})
     end
-
-    class Watcher
-      def initialize(resource)
-        @resource = resource
-        @ruhoh = resource.ruhoh
-      end
-      
-      def match(path)
-        path =~ %r{^#{@resource.path}}
-      end
-      
-      def update(path)
-        ruhoh.db.clear(:widgets)
-      end
+  end
+  
+  class Watcher
+    def initialize(resource)
+      @resource = resource
+      @ruhoh = resource.ruhoh
     end
     
+    def match(path)
+      path =~ %r{^#{@resource.path}}
+    end
+    
+    def update(path)
+      ruhoh.db.clear(:widgets)
+    end
   end
 end
