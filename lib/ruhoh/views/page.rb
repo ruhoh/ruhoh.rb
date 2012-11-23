@@ -3,17 +3,28 @@ require 'ruhoh/views/helpers/page'
 
 module Ruhoh::Views
   class Page < RMustache
-    include Ruhoh::Views::Helpers::Page
-
     attr_reader :sub_layout, :master_layout
     attr_accessor :data
     
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
+      context.push({"master" => self})
       if pointer_or_content.is_a?(Hash)
         @data = @ruhoh.db.get(pointer_or_content)
-        raise "Page #{pointer['id']} not found in database" unless @data
+        @data = {} unless @data.is_a?(Hash)
+
+        raise "Page #{pointer_or_content['id']} not found in database" unless @data
+
+        context.push(@data)
         @pointer = pointer_or_content
+        @collection = Ruhoh::Resources::Resource.resources[@pointer["resource"]].const_get(:View).new(@ruhoh, context)
+
+        # Singleton resource w/ access to resources collection and master view.
+        if @collection.class.const_defined?(:Single)
+          @page = @collection.class.const_get(:Single).new(@ruhoh, @data)
+          @page.collection = @collection
+          @page.master = self
+        end
       else
         @content = pointer_or_content
         @data = {}
@@ -22,18 +33,16 @@ module Ruhoh::Views
     
     # Delegate #page to the kind of resource this view is modeling.
     def page
-      return @page if @page
-      resource = context["pointer"]["resource"] rescue nil
-      return "" unless resource
-      
-      @page = resource ? 
-        Ruhoh::Resources::Resource.resources[resource].const_get(:View).new(@ruhoh, context) :
-        nil
+      @page
     end
     
     def render_full
-      self.process_layouts
-      render(self.expand_layouts, @data)
+      process_layouts
+      render(expand_layouts)
+    end
+    
+    def content
+      render(@content || @ruhoh.db.content(@pointer))
     end
     
     def render_content
@@ -66,9 +75,7 @@ module Ruhoh::Views
         # If a master_layout is found we need to process the sub_layout
         # into the master_layout using mustache.
         if @master_layout && @master_layout['content']
-          payload = @data.dup
-          payload['content'] = layout
-          layout = render(@master_layout['content'], payload)
+          layout = render(@master_layout['content'], {"content" => layout})
         end
       else
         # Minimum layout if no layout defined.
