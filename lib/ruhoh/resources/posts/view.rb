@@ -1,14 +1,19 @@
 class Ruhoh::Resources::Posts
   class View < Ruhoh::Views::RMustache
     include Ruhoh::Views::Helpers::Page
-  
+    
     def all
       posts = @ruhoh.db.posts.each_value.map { |val| val }
-      posts.sort! {
+      posts.sort {
         |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
+      }.map {|data|
+        model = Single.new(@ruhoh, data)
+        model.collection = self
+        model.master = context['master']
+        model
       }
     end
-  
+    
     def latest
       latest = @ruhoh.db.config("posts")['latest']
       latest ||= 10
@@ -58,5 +63,10 @@ class Ruhoh::Resources::Posts
 
       collated
     end
+    
+    class Single < Ruhoh::Views::Helpers::Page::Single
+    
+    end
+    
   end
 end
