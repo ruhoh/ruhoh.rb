@@ -148,7 +148,12 @@ module Ruhoh::Resources
     def self.registered_name
       Ruhoh::Utils.underscore(self.name.split("::").last)
     end
+
     
+    class View < Ruhoh::Views::RMustache
+
+    end
+
   end
   
   module Page
