@@ -6,7 +6,8 @@ module Ruhoh::Resources
     end
     
     class Modeler < BaseModeler
-      
+      include Page
+
       def generate
         @pointer
       end
@@ -20,12 +21,8 @@ module Ruhoh::Resources
       end
 
       def call(env)
-        path = @ruhoh.db.dash['realpath']
-        template = File.open(path, 'r:UTF-8') {|f| f.read }
-        templater = Ruhoh::Views::Page.new(@ruhoh)
-        output = templater.render(template, {"page" => ""})
-
-        [200, {'Content-Type' => 'text/html'}, [output]]
+        page = @ruhoh.page(@ruhoh.db.dash)
+        [200, {'Content-Type' => 'text/html'}, [page.render_full]]
       end
     end
     

@@ -153,7 +153,7 @@
 
   <div id="public" class="page-pane" style="display:none">
     <ul class="page-list">
-  {{#posts}}
+  {{#posts.all}}
     {{^ type }}
       <li>
         <a href="{{url}}">
@@ -163,13 +163,13 @@
         </a>
       </li>
     {{/ type }}
-  {{/posts}}
+  {{/posts.all}}
     </ul>
   </div>
 
   <div id="pages" class="page-pane" style="display:none">
     <ul class="page-list">
-    {{#pages}}
+    {{#pages.all}}
       <li>
         <a href="{{url}}">
           <span class="title">{{title}}</span>
@@ -177,7 +177,7 @@
           <br><span class="id">{{id}}</span></small>
         </a>
       </li>
-    {{/pages}}
+    {{/pages.all}}
     </ul>
   </div>
 
