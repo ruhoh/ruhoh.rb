@@ -2,8 +2,8 @@ class Ruhoh::Resources::Javascripts
   class View < Ruhoh::Views::RMustache
     def all
       buffer = ''
-      master_layout = self.context['page']['master_layout']
-      sub_layout = self.context['page']['sub_layout']
+      master_layout = self.context['master_layout']
+      sub_layout = self.context['sub_layout']
       scripts = @ruhoh.db.javascripts[master_layout] || []
       scripts += @ruhoh.db.javascripts[sub_layout] || []
       scripts += @ruhoh.db.javascripts["widgets"] || []

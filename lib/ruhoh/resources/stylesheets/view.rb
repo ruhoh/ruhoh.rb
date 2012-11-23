@@ -2,8 +2,8 @@ class Ruhoh::Resources::Stylesheets
   class View < Ruhoh::Views::RMustache
     def all
       buffer = ''
-      master_layout = self.context['page']['master_layout']
-      sub_layout = self.context['page']['sub_layout']
+      master_layout = self.context['master_layout']
+      sub_layout = self.context['sub_layout']
       stylesheets = @ruhoh.db.stylesheets[master_layout] || []
       stylesheets += @ruhoh.db.stylesheets[sub_layout] || []
       stylesheets += @ruhoh.db.stylesheets["widgets"] || []
