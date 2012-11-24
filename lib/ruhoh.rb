@@ -35,12 +35,13 @@ class Ruhoh::Views::RMustache
 end
 
 class Ruhoh::Views::Page
-  Ruhoh::Resources::Resource.resources.each do |name, klass|
-    next unless klass.const_defined?(:View)
+  Ruhoh::Resources::Resource.resources.each do |name, namespace|
+    next unless namespace.const_defined?(:View)
     
     class_eval <<-RUBY
       def #{name}
-        #{klass.const_get(:View)}.new(@ruhoh, context)
+        return @#{name} if @#{name}
+        @#{name} = #{namespace.const_get(:View)}.new(@ruhoh, context)
       end
     RUBY
   end
