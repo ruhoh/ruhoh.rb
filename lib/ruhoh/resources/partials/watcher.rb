@@ -1,17 +1,4 @@
 module Ruhoh::Resources::Partials
-  class Parser < Ruhoh::Resources::Resource
-  
-  end
-
-  class Modeler < Ruhoh::Resources::BaseModeler
-    def generate
-      dict = {}
-      name = @pointer['id'].chomp(File.extname(@pointer['id']))
-      File.open(@pointer['realpath'], 'r:UTF-8') { |f| dict[name] = f.read }
-      dict
-    end
-  end
-  
   class Watcher
     def initialize(resource)
       @resource = resource

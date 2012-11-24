@@ -1,4 +1,5 @@
-module Ruhoh::Resources::Scaffolds
+module Ruhoh::Resources::Partials
   class Parser < Ruhoh::Resources::Resource
-  end  
+  
+  end
 end

@@ -4,8 +4,4 @@ module Ruhoh::Resources::Media
       "/assets/media"
     end
   end
-
-  class Modeler < Ruhoh::Resources::BaseModeler
-    
-  end
 end
