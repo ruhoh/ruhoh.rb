@@ -41,14 +41,6 @@ module Ruhoh::Views
       p
     end
  
-    def site
-      @ruhoh.db.site
-    end
-
-    def urls
-      @ruhoh.db.urls
-    end
-  
     def to_json(sub_context)
       sub_context.to_json
     end

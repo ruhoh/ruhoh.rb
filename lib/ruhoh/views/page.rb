@@ -36,6 +36,14 @@ module Ruhoh::Views
       @page
     end
     
+    def site
+      @ruhoh.db.site
+    end
+
+    def urls
+      @ruhoh.db.urls
+    end
+    
     def render_full
       process_layouts
       render(expand_layouts)
