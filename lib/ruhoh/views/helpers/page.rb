@@ -59,19 +59,7 @@ module Ruhoh::Views::Helpers
         single
       end
       
-      # Model a single instance of a Page object
-      class Single < OpenStruct
-        attr_accessor :collection
-        attr_accessor :master
-
-        def initialize(ruhoh, data={})
-          @ruhoh = ruhoh
-          super(data) if data.is_a?(Hash)
-        end
-
-        def [](attribute)
-          __send__(attribute)
-        end
+      class Single < BaseSingle
 
         def categories
           collection.to_categories(super)
