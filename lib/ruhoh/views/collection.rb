@@ -14,6 +14,15 @@ module Ruhoh::Views
       end
     end
     
+    # Create new singleton resource w/ access to resources collection and master view.
+    def new_single(data={})
+      return nil unless self.class.const_defined?(:Single)
+      single = self.class.const_get(:Single).new(@ruhoh, data)
+      single.collection = self
+      single.master = master
+      single
+    end
+    
     # Model a single instance of a Page object
     class BaseSingle < OpenStruct
       attr_accessor :collection, :master
