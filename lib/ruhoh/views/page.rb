@@ -8,7 +8,6 @@ module Ruhoh::Views
     
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
-      context.push({"master" => self})
       if pointer_or_content.is_a?(Hash)
         @data = @ruhoh.db.get(pointer_or_content)
         @data = {} unless @data.is_a?(Hash)
@@ -17,12 +16,13 @@ module Ruhoh::Views
 
         context.push(@data)
         @pointer = pointer_or_content
-        @collection = Ruhoh::Resources::Resource.resources[@pointer["resource"]].const_get(:View).new(@ruhoh, context)
-
+        
+        collection = __send__(@pointer["resource"])
+        
         # Singleton resource w/ access to resources collection and master view.
-        if @collection.class.const_defined?(:Single)
-          @page = @collection.class.const_get(:Single).new(@ruhoh, @data)
-          @page.collection = @collection
+        if collection.class.const_defined?(:Single)
+          @page = collection.class.const_get(:Single).new(@ruhoh, @data)
+          @page.collection = collection
           @page.master = self
         end
       else

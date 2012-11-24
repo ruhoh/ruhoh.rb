@@ -7,7 +7,7 @@ module Ruhoh::Resources::Pages
       pages.map {|data|
         model = Single.new(@ruhoh, data)
         model.collection = self
-        model.master = context['master']
+        model.master = master
         model
       }
     end

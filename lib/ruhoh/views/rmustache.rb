@@ -1,6 +1,6 @@
 module Ruhoh::Views  
   class RMustache < Mustache
-  
+    attr_accessor :master
     def initialize(ruhoh, context=nil)
       @ruhoh = ruhoh
       # pass the parent context into the sub-view

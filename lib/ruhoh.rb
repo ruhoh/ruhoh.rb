@@ -42,6 +42,8 @@ class Ruhoh::Views::Page
       def #{name}
         return @#{name} if @#{name}
         @#{name} = #{namespace.const_get(:View)}.new(@ruhoh, context)
+        @#{name}.master = self
+        @#{name}
       end
     RUBY
   end
