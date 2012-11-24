@@ -37,30 +37,5 @@ module Ruhoh::Views
     def context
       @context ||= RContext.new(self)
     end
-  
-    def partial(name)
-      p = @ruhoh.db.partials[name.to_s]
-      Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
-      p
-    end
- 
-    def to_json(sub_context)
-      sub_context.to_json
-    end
-  
-    def debug(sub_context)
-      Ruhoh::Friend.say { 
-        yellow "?debug:"
-        magenta sub_context.class
-        cyan sub_context.inspect
-      }
-
-      "<pre>#{sub_context.class}\n#{sub_context.pretty_inspect}</pre>"
-    end
-
-    def raw_code(sub_context)
-      code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('_', "&#95;")
-      "<pre><code>#{code}</code></pre>"
-    end
   end
 end
