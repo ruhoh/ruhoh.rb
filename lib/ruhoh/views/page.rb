@@ -18,13 +18,7 @@ module Ruhoh::Views
         @pointer = pointer_or_content
         
         collection = __send__(@pointer["resource"])
-        
-        # Singleton resource w/ access to resources collection and master view.
-        if collection.class.const_defined?(:Single)
-          @page = collection.class.const_get(:Single).new(@ruhoh, @data)
-          @page.collection = collection
-          @page.master = self
-        end
+        @page = collection.new_single(@data)
       else
         @content = pointer_or_content
         @data = {}

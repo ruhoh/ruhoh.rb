@@ -5,10 +5,7 @@ module Ruhoh::Resources::Pages
       pages = @ruhoh.db.pages.each_value.map { |val| val }
       pages = mark_active_page(pages)
       pages.map {|data|
-        model = Single.new(@ruhoh, data)
-        model.collection = self
-        model.master = master
-        model
+        new_single(data)
       }
     end
     
