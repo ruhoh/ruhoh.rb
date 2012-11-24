@@ -35,10 +35,6 @@ module Ruhoh::Views
     def page
       @page
     end
-    
-    def site
-      @ruhoh.db.site
-    end
 
     def urls
       @ruhoh.db.urls
