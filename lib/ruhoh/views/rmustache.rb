@@ -1,9 +1,10 @@
 module Ruhoh::Views  
-  class RMustache < Mustache
-    attr_accessor :master
+  
+  class Collection
+    attr_accessor :master, :context
+
     def initialize(ruhoh, context=nil)
       @ruhoh = ruhoh
-      # pass the parent context into the sub-view
       @context = context if context
     end
     
@@ -13,7 +14,9 @@ module Ruhoh::Views
         name
       end
     end
-    
+  end
+  
+  class RMustache < Mustache
     class RContext < Context
 
       # Overload find method to catch helper expressions

@@ -5,10 +5,10 @@ require 'ostruct'
 module Ruhoh::Views::Helpers
   module Page
     
-    class View < Ruhoh::Views::RMustache
+    class View < Ruhoh::Views::Collection
       include Tags
       include Categories
-
+      
       # Marks the active page if exists in the given pages Array
       def mark_active_page(pages)
         pages.each_with_index do |page, i| 

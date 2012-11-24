@@ -160,7 +160,7 @@ module Ruhoh::Resources
       Ruhoh::Resources::Resource.resources[registered_name]
     end
     
-    class View < Ruhoh::Views::RMustache
+    class View < Ruhoh::Views::Collection
 
     end
 

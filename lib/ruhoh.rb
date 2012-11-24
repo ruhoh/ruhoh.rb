@@ -22,18 +22,6 @@ require 'ruhoh/views/page'
 
 require 'ruhoh/db'
 
-class Ruhoh::Views::RMustache
-  Ruhoh::Resources::Resource.resources.keys.each do |name|
-    class_eval <<-RUBY
-      def to_#{name}(sub_context)
-        Array(sub_context).map { |id|
-          @ruhoh.db.#{name}[id]
-        }.compact
-      end
-    RUBY
-  end
-end
-
 class Ruhoh::Views::Page
   Ruhoh::Resources::Resource.resources.each do |name, namespace|
     next unless namespace.const_defined?(:View)
@@ -44,6 +32,12 @@ class Ruhoh::Views::Page
         @#{name} = #{namespace.const_get(:View)}.new(@ruhoh, context)
         @#{name}.master = self
         @#{name}
+      end
+      
+      def to_#{name}(sub_context)
+        Array(sub_context).map { |id|
+          @ruhoh.db.#{name}[id]
+        }.compact
       end
     RUBY
   end
