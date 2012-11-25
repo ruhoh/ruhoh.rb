@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Javascripts
-  class View < Ruhoh::Resources::Base::Collection
+  class CollectionView < Ruhoh::Resources::Base::CollectionView
     def all
       buffer = ''
       master_layout = self.context['master_layout']

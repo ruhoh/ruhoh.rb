@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Base
-  class Collection
+  class CollectionView
     attr_accessor :master, :context
 
     def initialize(ruhoh, context=nil)
@@ -8,7 +8,7 @@ module Ruhoh::Resources::Base
     end
     
     def self.inherited(base)
-      name = base.name.chomp("::View").split("::").pop.downcase
+      name = base.name.chomp("::CollectionView").split("::").pop.downcase
       base.send(:define_method, "resource_name") do
         name
       end

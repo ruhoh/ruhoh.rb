@@ -28,12 +28,12 @@ require 'ruhoh/db'
 
 class Ruhoh::Views::Page
   Ruhoh::Resources::Base::Parser.resources.each do |name, namespace|
-    next unless namespace.const_defined?(:View)
+    next unless namespace.const_defined?(:CollectionView)
     
     class_eval <<-RUBY
       def #{name}
         return @#{name} if @#{name}
-        @#{name} = #{namespace.const_get(:View)}.new(@ruhoh, context)
+        @#{name} = #{namespace.const_get(:CollectionView)}.new(@ruhoh, context)
         @#{name}.master = self
         @#{name}
       end

@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Site
-  class View < OpenStruct
+  class CollectionView < OpenStruct
     attr_accessor :collection
     attr_accessor :master
 
