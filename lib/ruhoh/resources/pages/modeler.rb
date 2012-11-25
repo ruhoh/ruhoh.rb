@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Pages
-  class Modeler < Ruhoh::Resources::Core::Pages::Modeler
+  class Modeler < Ruhoh::Resources::Page::Modeler
     
     # Generate this filepath
     # Returns data to be registered to the database

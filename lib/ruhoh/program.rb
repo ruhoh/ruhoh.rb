@@ -33,7 +33,7 @@ class Ruhoh
         
         ruhoh.db.urls.each do |name, url|
           next if ["javascripts", "stylesheets", "base_path"].include?(name)
-          namespace = Ruhoh::Resources::Core::Base::Parser.resources[name]
+          namespace = Ruhoh::Resources::Base::Parser.resources[name]
           next unless namespace && namespace.const_defined?(:Parser)
           parser = namespace.const_get(:Parser)
 

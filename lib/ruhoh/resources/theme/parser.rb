@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Theme
-  class Parser < Ruhoh::Resources::Core::Base::Parser
+  class Parser < Ruhoh::Resources::Base::Parser
     
     def config
       hash = super

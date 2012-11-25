@@ -19,7 +19,6 @@ require 'ruhoh/friend'
 require 'ruhoh/converter'
 
 module Ruhoh::Resources ; end
-module Ruhoh::Resources::Core ; end
 module Ruhoh::Views ; end
 module Ruhoh::Views::Helpers ; end
 
@@ -28,7 +27,7 @@ require 'ruhoh/views/page'
 require 'ruhoh/db'
 
 class Ruhoh::Views::Page
-  Ruhoh::Resources::Core::Base::Parser.resources.each do |name, namespace|
+  Ruhoh::Resources::Base::Parser.resources.each do |name, namespace|
     next unless namespace.const_defined?(:View)
     
     class_eval <<-RUBY

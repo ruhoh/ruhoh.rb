@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Partials
-  class Parser < Ruhoh::Resources::Core::Base::Parser
+  class Parser < Ruhoh::Resources::Base::Parser
   
   end
 end

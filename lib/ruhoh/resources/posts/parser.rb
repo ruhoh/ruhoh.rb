@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Posts
-  class Parser < Ruhoh::Resources::Core::Base::Parser
+  class Parser < Ruhoh::Resources::Base::Parser
     def config
       hash = super
       hash['permalink'] ||= "/:categories/:year/:month/:day/:title.html"

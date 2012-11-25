@@ -1,4 +1,4 @@
-module Ruhoh::Resources::Core::Base
+module Ruhoh::Resources::Base
   class Modeler
 
     def initialize(resource, pointer)

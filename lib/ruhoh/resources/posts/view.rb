@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Posts
-  class View < Ruhoh::Resources::Core::Pages::View
+  class View < Ruhoh::Resources::Page::View
 
     def all
       posts = @ruhoh.db.posts.each_value.map { |val| val }

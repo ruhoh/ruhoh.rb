@@ -1,4 +1,4 @@
-module Ruhoh::Resources::Core::Base
+module Ruhoh::Resources::Base
   class Parser
     # Register all available resources.
     # @resources is a key value hash, e.g:
@@ -156,7 +156,7 @@ module Ruhoh::Resources::Core::Base
     end
 
     def self.registered_namespace
-      Ruhoh::Resources::Core::Base::Parser.resources[registered_name]
+      Ruhoh::Resources::Base::Parser.resources[registered_name]
     end
   end
 end
