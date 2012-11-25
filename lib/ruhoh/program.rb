@@ -32,7 +32,7 @@ class Ruhoh
         use Rack::ShowExceptions
         
         ruhoh.db.urls.each do |name, url|
-          next if ["javascripts", "stylesheets", "base_path"].include?(name)
+          next if ["javascripts", "stylesheets"].include?(name)
           namespace = Ruhoh::Resources::Base::Parser.resources[name]
           next unless namespace && namespace.const_defined?(:Parser)
           parser = namespace.const_get(:Parser)
