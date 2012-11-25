@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Posts
-  class Modeler < Ruhoh::Resources::BaseModeler
+  class Modeler < Ruhoh::Resources::Core::Base::Modeler
     include Ruhoh::Resources::Page
     
     DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/

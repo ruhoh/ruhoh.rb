@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Partials
-  class Modeler < Ruhoh::Resources::BaseModeler
+  class Modeler < Ruhoh::Resources::Core::Base::Modeler
     def generate
       dict = {}
       name = @pointer['id'].chomp(File.extname(@pointer['id']))
