@@ -3,7 +3,7 @@ module Ruhoh::Resources::Pages
     
     def all
       pages = @ruhoh.db.pages.each_value.map { |val| val }
-      pages = mark_active_page(pages)
+      pages = master.mark_active_page(pages)
       pages.map {|data|
         new_single(data)
       }
