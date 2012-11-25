@@ -12,29 +12,18 @@ module Ruhoh::Resources::Base
       base.send(:define_method, "resource_name") do
         name
       end
+      base.send(:define_method, "namespace") do
+        Ruhoh::Resources::Base::Parser.resources[name]
+      end
     end
     
     # Create new singleton resource w/ access to resources collection and master view.
     def new_single(data={})
-      return nil unless self.class.const_defined?(:Single)
-      single = self.class.const_get(:Single).new(@ruhoh, data)
+      return nil unless namespace.const_defined?(:Single)
+      single = namespace.const_get(:Single).new(@ruhoh, data)
       single.collection = self
       single.master = master
       single
-    end
-    
-    # Model a single instance of a Page object
-    class BaseSingle < OpenStruct
-      attr_accessor :collection, :master
-
-      def initialize(ruhoh, data={})
-        @ruhoh = ruhoh
-        super(data) if data.is_a?(Hash)
-      end
-
-      def [](attribute)
-        __send__(attribute)
-      end
     end
   end
 end
