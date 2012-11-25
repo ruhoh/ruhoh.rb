@@ -113,6 +113,10 @@ module Ruhoh::Views
       sub_context.to_json
     end
   
+    def to_pretty_json(sub_context)
+      JSON.pretty_generate(sub_context)
+    end
+    
     def debug(sub_context)
       Ruhoh::Friend.say { 
         yellow "?debug:"
