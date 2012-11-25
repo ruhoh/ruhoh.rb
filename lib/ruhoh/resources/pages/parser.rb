@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Pages
-  class Parser < Ruhoh::Resources::Resource
+  class Parser < Ruhoh::Resources::Core::Base::Parser
     def config
       hash = super
       hash['layout'] ||= 'page'

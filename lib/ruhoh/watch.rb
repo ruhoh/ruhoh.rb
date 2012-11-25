@@ -33,7 +33,7 @@ class Ruhoh
         args.each {|event|
           path = event['path'].gsub(ruhoh.paths.base + '/', '')
 
-          watchers = Ruhoh::Resources::Resource.resources.map {|name, klass|
+          watchers = Ruhoh::Resources::Core::Base::Parser.resources.map {|name, klass|
             next unless klass.watcher
             resource = klass.new(ruhoh)
             resource.watcher.new(resource)

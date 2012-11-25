@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Scaffolds
-  class Parser < Ruhoh::Resources::Resource
+  class Parser < Ruhoh::Resources::Core::Base::Parser
   end  
 end

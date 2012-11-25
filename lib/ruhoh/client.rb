@@ -33,13 +33,13 @@ class Ruhoh
       Ruhoh::Friend.say { 
         red "Resource #{cmd} not found"
         exit 
-      } unless Ruhoh::Resources::Resource.resources.has_key?(cmd)
+      } unless Ruhoh::Resources::Core::Base::Parser.resources.has_key?(cmd)
       
       @ruhoh = Ruhoh.new
       @ruhoh.setup
       @ruhoh.setup_paths
       
-      klass = Ruhoh::Resources::Resource.resources[cmd].const_get(:Client)
+      klass = Ruhoh::Resources::Core::Base::Parser.resources[cmd].const_get(:Client)
       client = klass.new(@ruhoh, data)
       
       Ruhoh::Friend.say { 
@@ -62,7 +62,7 @@ class Ruhoh
     def help
       options = @opt_parser.help
       resources = [{"methods" => Help}]
-      resources += Ruhoh::Resources::Resource.resources.each.map {|name, klass|
+      resources += Ruhoh::Resources::Core::Base::Parser.resources.each.map {|name, klass|
         next unless klass.const_defined?(:Client)
         next unless klass.const_get(:Client).const_defined?(:Help)
         {

@@ -8,7 +8,7 @@ class Ruhoh
   class DB
 
     # Lazy-load all data endpoints but cache the result for this cycle.
-    Ruhoh::Resources::Resource.resources.keys.each do |name|
+    Ruhoh::Resources::Core::Base::Parser.resources.keys.each do |name|
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}
@@ -91,7 +91,7 @@ class Ruhoh
       @urls["base_path"] = @ruhoh.config['base_path']
       return @urls if @urls.keys.length > 1 # consider base_url
 
-      Ruhoh::Resources::Resource.resources.each do |name, namespace|
+      Ruhoh::Resources::Core::Base::Parser.resources.each do |name, namespace|
         next unless namespace.const_defined?(:Parser)
         parser = namespace.const_get(:Parser).new(@ruhoh)
         next unless parser.respond_to?(:url_endpoint)
@@ -103,7 +103,7 @@ class Ruhoh
     
     def paths
       return @paths unless @paths.empty?
-      Ruhoh::Resources::Resource.resources.each do |name, namespace|
+      Ruhoh::Resources::Core::Base::Parser.resources.each do |name, namespace|
         next unless namespace.const_defined?(:Parser)
         parser = namespace.const_get(:Parser).new(@ruhoh)
         next unless parser.respond_to?(:path)
