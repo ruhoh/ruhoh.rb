@@ -1,8 +1,8 @@
-module Ruhoh::Resources
-  module Page
-    
+module Ruhoh::Resources::Core::Pages
+  class Modeler < Ruhoh::Resources::Core::Base::Modeler
+  
     FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
-    
+  
     def content
       self.parse_page_file['content']
     end
@@ -27,7 +27,6 @@ module Ruhoh::Resources
       Ruhoh.log.error("ERROR in #{path}: #{e.message}")
       nil
     end
-    
-  end
   
+  end
 end

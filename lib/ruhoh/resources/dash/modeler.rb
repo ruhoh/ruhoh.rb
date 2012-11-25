@@ -1,10 +1,7 @@
 module Ruhoh::Resources::Dash
-  class Modeler < Ruhoh::Resources::Core::Base::Modeler
-    include Ruhoh::Resources::Page
-
+  class Modeler < Ruhoh::Resources::Core::Pages::Modeler
     def generate
       @pointer
     end
-    
   end
 end
