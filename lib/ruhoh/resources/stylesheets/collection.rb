@@ -4,7 +4,7 @@ module Ruhoh::Resources::Stylesheets
   # All styling is managed by the theme, including widget styles.
   # If the theme provides widget stylesheets they will load automatically.
   # theme.yml may also specify an explicit widget stylesheet to load.
-  class Parser < Ruhoh::Resources::Base::Parser
+  class Collection < Ruhoh::Resources::Base::Collection
     
     # Get the config from theme.yml
     def config

@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Media
-  class Parser < Ruhoh::Resources::Base::Parser
+  class Collection < Ruhoh::Resources::Base::Collection
     def url_endpoint
       "/assets/media"
     end

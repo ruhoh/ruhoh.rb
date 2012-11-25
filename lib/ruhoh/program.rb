@@ -33,13 +33,13 @@ class Ruhoh
         
         ruhoh.db.urls.each do |name, url|
           next if ["javascripts", "stylesheets"].include?(name)
-          namespace = Ruhoh::Resources::Base::Parser.resources[name]
-          next unless namespace && namespace.const_defined?(:Parser)
-          parser = namespace.const_get(:Parser)
+          namespace = Ruhoh::Resources::Base::Collection.resources[name]
+          next unless namespace && namespace.const_defined?(:Collection)
+          collection = namespace.const_get(:Collection)
 
           map url do
-            if parser.previewer
-              resource = parser.new(ruhoh)
+            if collection.previewer
+              resource = collection.new(ruhoh)
               run resource.previewer.new(resource)
             else
               run Rack::File.new(File.join(ruhoh.paths.base, ruhoh.db.paths[name]))

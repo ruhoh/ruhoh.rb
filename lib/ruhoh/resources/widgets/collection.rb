@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Widgets
-  class Parser < Ruhoh::Resources::Base::Parser
+  class Collection < Ruhoh::Resources::Base::Collection
 
     WidgetStructure = Struct.new(
       :name,

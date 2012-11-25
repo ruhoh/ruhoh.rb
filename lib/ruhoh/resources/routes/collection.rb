@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Routes
-  class Parser < Ruhoh::Resources::Base::Parser
+  class Collection < Ruhoh::Resources::Base::Collection
     
     # Blank container for routes
     # All page objects should update the routes dictionary

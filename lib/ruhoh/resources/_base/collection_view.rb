@@ -13,7 +13,7 @@ module Ruhoh::Resources::Base
         name
       end
       base.send(:define_method, "namespace") do
-        Ruhoh::Resources::Base::Parser.resources[name]
+        Ruhoh::Resources::Base::Collection.resources[name]
       end
     end
     

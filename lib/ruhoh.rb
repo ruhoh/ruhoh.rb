@@ -27,7 +27,7 @@ require 'ruhoh/views/page'
 require 'ruhoh/db'
 
 class Ruhoh::Views::Page
-  Ruhoh::Resources::Base::Parser.resources.each do |name, namespace|
+  Ruhoh::Resources::Base::Collection.resources.each do |name, namespace|
     next unless namespace.const_defined?(:CollectionView)
     
     class_eval <<-RUBY
