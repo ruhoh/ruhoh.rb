@@ -5,7 +5,7 @@ module Ruhoh::Resources::Pages
       pages = @ruhoh.db.pages.each_value.map { |val| val }
       pages = master.mark_active_page(pages)
       pages.map {|data|
-        new_single(data)
+        new_model_view(data)
       }
     end
     

@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Page
-  class Single < Ruhoh::Resources::Base::Single
+  class ModelView < Ruhoh::Resources::Base::ModelView
 
     def categories
       collection.to_categories(super)

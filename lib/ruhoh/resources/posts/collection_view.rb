@@ -6,7 +6,7 @@ module Ruhoh::Resources::Posts
       posts.sort {
         |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
       }.map {|data|
-        new_single(data)
+        new_model_view(data)
       }
     end
     

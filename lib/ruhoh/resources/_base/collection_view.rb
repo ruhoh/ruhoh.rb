@@ -17,13 +17,12 @@ module Ruhoh::Resources::Base
       end
     end
     
-    # Create new singleton resource w/ access to resources collection and master view.
-    def new_single(data={})
-      return nil unless namespace.const_defined?(:Single)
-      single = namespace.const_get(:Single).new(@ruhoh, data)
-      single.collection = self
-      single.master = master
-      single
+    def new_model_view(data={})
+      return nil unless namespace.const_defined?(:ModelView)
+      model_view = namespace.const_get(:ModelView).new(@ruhoh, data)
+      model_view.collection = self
+      model_view.master = master
+      model_view
     end
   end
 end

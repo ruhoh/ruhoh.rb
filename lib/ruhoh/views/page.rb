@@ -17,7 +17,7 @@ module Ruhoh::Views
         @pointer = pointer_or_content
         
         collection = __send__(@pointer["resource"])
-        @page = collection.new_single(@data)
+        @page = collection.new_model_view(@data)
       else
         @content = pointer_or_content
         @data = {}

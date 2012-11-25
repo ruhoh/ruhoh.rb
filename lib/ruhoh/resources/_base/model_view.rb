@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Base
-  class Single < OpenStruct
+  class ModelView < OpenStruct
     attr_accessor :collection, :master
 
     def initialize(ruhoh, data={})
