@@ -80,11 +80,11 @@ class Ruhoh
     def content(pointer)
       name = pointer['resource'].downcase # name is a stringified constant.
       resource = parser(name).new(@ruhoh)
-      modeler = resource.modeler.new(resource, pointer)
+      model = resource.model.new(resource, pointer)
       # TODO:
       # possible collisions here: ids are only unique relative to their resource dictionary.
       # that's the whole point of the pointer... =/
-      @content[pointer['id']] = modeler.content
+      @content[pointer['id']] = model.content
     end
     
     def urls

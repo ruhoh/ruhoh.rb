@@ -15,7 +15,7 @@ module Ruhoh::Resources::Pages
       end
 
       datas.each do |data|
-        modeler.new(self, data["pointer"]).compile
+        model.new(self, data["pointer"]).compile
       end
 
       nil

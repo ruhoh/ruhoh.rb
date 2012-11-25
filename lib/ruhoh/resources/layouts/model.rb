@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Layouts
-  class Modeler < Ruhoh::Resources::Base::Modeler
+  class Model < Ruhoh::Resources::Base::Model
     def generate
       dict = {}
       id = File.basename(@pointer['id'], File.extname(@pointer['id']))

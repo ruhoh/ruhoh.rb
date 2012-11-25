@@ -74,7 +74,7 @@ module Ruhoh::Resources::Base
     def generate(id=nil)
       dict = {}
       self.files(id).each { |pointer|
-        dict.merge!(modeler.new(self, pointer).generate)
+        dict.merge!(model.new(self, pointer).generate)
       }
       Ruhoh::Utils.report(self.registered_name, dict, [])
       dict
@@ -118,9 +118,9 @@ module Ruhoh::Resources::Base
       true
     end
     
-    # Proxy to the single modeler class for this resource.
-    def modeler
-      self.class.modeler
+    # Proxy to the single model class for this resource.
+    def model
+      self.class.model
     end
 
     # Proxy to the watcher for this resource
@@ -133,8 +133,8 @@ module Ruhoh::Resources::Base
       self.class.previewer
     end
     
-    def self.modeler
-      registered_namespace.const_get(:Modeler)
+    def self.model
+      registered_namespace.const_get(:Model)
     end
     
     def self.watcher

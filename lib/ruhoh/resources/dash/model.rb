@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Dash
-  class Modeler < Ruhoh::Resources::Page::Modeler
+  class Model < Ruhoh::Resources::Page::Model
     def generate
       @pointer
     end

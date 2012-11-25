@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Page
-  class Modeler < Ruhoh::Resources::Base::Modeler
+  class Model < Ruhoh::Resources::Base::Model
   
     FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
   

@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Base
-  class Modeler
+  class Model
 
     def initialize(resource, pointer)
       @resource = resource
