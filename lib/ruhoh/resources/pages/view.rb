@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Pages
-  class View < Ruhoh::Views::Helpers::Page::View
+  class View < Ruhoh::Resources::Core::Pages::View
     
     def all
       pages = @ruhoh.db.pages.each_value.map { |val| val }

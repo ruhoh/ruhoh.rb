@@ -18,7 +18,11 @@ require 'ruhoh/friend'
 
 require 'ruhoh/converter'
 
-require 'ruhoh/views/collection'
+module Ruhoh::Resources ; end
+module Ruhoh::Resources::Core ; end
+module Ruhoh::Views ; end
+module Ruhoh::Views::Helpers ; end
+
 require 'ruhoh/views/page'
 
 require 'ruhoh/db'

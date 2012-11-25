@@ -2,12 +2,13 @@ require 'ruhoh/views/helpers/categories'
 require 'ruhoh/views/helpers/tags'
 require 'ostruct'
 
-module Ruhoh::Views::Helpers
-  module Page
+module Ruhoh::Resources::Core
+  
+  module Pages
     
-    class View < Ruhoh::Views::Collection
-      include Tags
-      include Categories
+    class View < Ruhoh::Resources::Core::Base::Collection
+      include Ruhoh::Views::Helpers::Tags
+      include Ruhoh::Views::Helpers::Categories
       
       # Marks the active page if exists in the given pages Array
       def mark_active_page(pages)

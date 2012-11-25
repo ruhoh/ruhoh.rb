@@ -1,5 +1,4 @@
 # Require all the resources
-require File.join(File.dirname(__FILE__), 'resources', "resource.rb")
 Dir[File.join(File.dirname(__FILE__), 'resources', '**', '*.rb')].each { |f|
   require f
 }

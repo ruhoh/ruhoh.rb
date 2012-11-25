@@ -1,5 +1,4 @@
 require 'ruhoh/views/rmustache'
-require 'ruhoh/views/helpers/page'
 
 module Ruhoh::Views
   class Page < RMustache

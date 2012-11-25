@@ -1,4 +1,4 @@
-module Ruhoh::Views  
+module Ruhoh::Resources::Core::Base
   class Collection
     attr_accessor :master, :context
 
