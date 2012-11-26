@@ -21,6 +21,11 @@ module Ruhoh::Views
       end
     end
     
+    def render_full
+      process_layouts
+      render(expand_layouts)
+    end
+    
     # Delegate #page to the kind of resource this view is modeling.
     def page
       return @page if @page
@@ -32,65 +37,10 @@ module Ruhoh::Views
       @ruhoh.db.urls
     end
     
-    def render_full
-      process_layouts
-      render(expand_layouts)
-    end
-    
     def content
       render(@content || @ruhoh.db.content(@pointer))
     end
-    
-    def render_content
-      self.ensure_id
-      @templater.render('{{{content}}}', self.payload)
-    end
-    
-    def process_layouts
-      if @data['layout']
-        @sub_layout = @ruhoh.db.layouts[@data['layout']]
-        raise "Layout does not exist: #{@data['layout']}" unless @sub_layout
-      end
-    
-      if @sub_layout && @sub_layout['data']['layout']
-        @master_layout = @ruhoh.db.layouts[@sub_layout['data']['layout']]
-        raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
-      end
-      
-      @data['sub_layout'] = @sub_layout['id'] rescue nil
-      @data['master_layout'] = @master_layout['id'] rescue nil
-      @data
-    end
-    
-    # Expand the layout(s).
-    # Pages may have a single master_layout, a master_layout + sub_layout, or no layout.
-    def expand_layouts
-      if @sub_layout
-        layout = @sub_layout['content']
 
-        # If a master_layout is found we need to process the sub_layout
-        # into the master_layout using mustache.
-        if @master_layout && @master_layout['content']
-          layout = render(@master_layout['content'], {"content" => layout})
-        end
-      else
-        # Minimum layout if no layout defined.
-        layout = '{{{content}}}' 
-      end
-      
-      layout
-    end
-    
-    # Public: Formats the path to the compiled file based on the URL.
-    #
-    # Returns: [String] The relative path to the compiled file for this page.
-    def compiled_path
-      path = CGI.unescape(@data['url']).gsub(/^\//, '') #strip leading slash.
-      path = "index.html" if path.empty?
-      path += '/index.html' unless path =~ /\.\w+$/
-      path
-    end
-    
     def partial(name)
       p = @ruhoh.db.partials[name.to_s]
       Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
@@ -130,5 +80,53 @@ module Ruhoh::Views
       code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('_', "&#95;")
       "<pre><code>#{code}</code></pre>"
     end
+    
+    # Public: Formats the path to the compiled file based on the URL.
+    #
+    # Returns: [String] The relative path to the compiled file for this page.
+    def compiled_path
+      path = CGI.unescape(@data['url']).gsub(/^\//, '') #strip leading slash.
+      path = "index.html" if path.empty?
+      path += '/index.html' unless path =~ /\.\w+$/
+      path
+    end
+    
+    protected
+    
+    def process_layouts
+      if @data['layout']
+        @sub_layout = @ruhoh.db.layouts[@data['layout']]
+        raise "Layout does not exist: #{@data['layout']}" unless @sub_layout
+      end
+    
+      if @sub_layout && @sub_layout['data']['layout']
+        @master_layout = @ruhoh.db.layouts[@sub_layout['data']['layout']]
+        raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
+      end
+      
+      @data['sub_layout'] = @sub_layout['id'] rescue nil
+      @data['master_layout'] = @master_layout['id'] rescue nil
+      @data
+    end
+    
+    # Expand the layout(s).
+    # Pages may have a single master_layout, a master_layout + sub_layout, or no layout.
+    def expand_layouts
+      if @sub_layout
+        layout = @sub_layout['content']
+
+        # If a master_layout is found we need to process the sub_layout
+        # into the master_layout using mustache.
+        if @master_layout && @master_layout['content']
+          layout = render(@master_layout['content'], {"content" => layout})
+        end
+      else
+        # Minimum layout if no layout defined.
+        layout = '{{{content}}}' 
+      end
+      
+      layout
+    end
+    
   end #Page
 end #Ruhoh
