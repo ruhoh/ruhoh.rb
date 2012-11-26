@@ -1,13 +1,8 @@
-class Ruhoh
-  module Compiler
-    class Theme
-      
-      def initialize(ruhoh)
-        @ruhoh = ruhoh
-      end
+module Ruhoh::Resources::Theme
+  class Compiler < Ruhoh::Resources::Base::Compiler
       
       def run
-        self.copy
+        copy
       end
 
       # Copies all theme assets over to the compiled site.
@@ -44,7 +39,6 @@ class Ruhoh
         @ruhoh.db.config("theme")["exclude"].each {|regex| return false if filepath =~ regex }
         true
       end
-      
-    end
+    
   end
 end

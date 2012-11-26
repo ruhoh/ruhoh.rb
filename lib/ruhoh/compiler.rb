@@ -28,6 +28,14 @@ class Ruhoh
       FileUtils.rm_r ruhoh.paths.compiled if File.exist?(ruhoh.paths.compiled)
       FileUtils.mkdir_p ruhoh.paths.compiled
       
+      # Run the resource compilers
+      Ruhoh::Resources::Base::Collection.resources.each do |name, namespace|
+        next unless namespace.const_defined?(:Compiler)
+        compiler = namespace.const_get(:Compiler)
+        compiler.new(ruhoh).run
+      end
+      
+      # Run extra compiler tasks
       Ruhoh::Compiler.constants.each {|c|
         compiler = Ruhoh::Compiler.const_get(c)
         next unless compiler.respond_to?(:new)
