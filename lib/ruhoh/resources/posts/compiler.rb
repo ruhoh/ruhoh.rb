@@ -5,6 +5,7 @@ module Ruhoh::Resources::Posts
     def run
       super
       rss
+      pagination
     end
     
     def rss
@@ -35,6 +36,30 @@ module Ruhoh::Resources::Posts
        }
       end
       File.open(File.join(@ruhoh.paths.compiled, 'rss.xml'), 'w'){ |p| p.puts feed.to_xml }
+    end
+    
+    # This is post specific at the moment but probably should
+    # be abstracted out into paginator resource is possible.
+    def pagination
+      config = @ruhoh.db.config("paginator")
+      post_count = @ruhoh.db.posts.length
+      total_pages = (post_count.to_f/config["per_page"]).ceil
+      
+      FileUtils.cd(@ruhoh.paths.compiled) {
+        total_pages.times.map { |i| 
+          next if i.zero? # handled by config["root_page"]
+          url = "#{config["namespace"]}#{i+1}"
+          page = @ruhoh.page({"resource" => "posts"})
+          page.data = {
+            "layout" => @ruhoh.db.config("paginator")["layout"],
+            "current_page" => (i+1),
+            "url" => @ruhoh.to_url(url)
+          }
+          FileUtils.mkdir_p File.dirname(page.compiled_path)
+          File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render_full }
+          Ruhoh::Friend.say { green "Paginator: #{page.data['url']}" }
+        }
+      }
     end
   end
 end
