@@ -33,10 +33,10 @@ class Ruhoh
         args.each {|event|
           path = event['path'].gsub(ruhoh.paths.base + '/', '')
 
-          watchers = Ruhoh::Resources::Base::Collection.resources.map {|name, klass|
-            next unless klass.watcher
-            resource = klass.new(ruhoh)
-            resource.watcher.new(resource)
+          watchers = Ruhoh::Resources::Base::Collection.resources.map {|name, namespace|
+            next unless namespace.const_defined?(:Watcher)
+            collection = namespace.const_get(:Collection).new(ruhoh)
+            namespace.const_get(:Watcher).new(collection)
           }.compact
           
           watchers.each {|watcher|
