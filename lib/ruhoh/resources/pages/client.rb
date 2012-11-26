@@ -47,7 +47,7 @@ module Ruhoh::Resources::Pages
     
     # List pages
     def list
-      data = @ruhoh.db.posts
+      data = @ruhoh.db.pages
 
       if @options.verbose
         Ruhoh::Friend.say {
