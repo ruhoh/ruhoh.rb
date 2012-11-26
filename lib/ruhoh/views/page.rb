@@ -15,9 +15,6 @@ module Ruhoh::Views
 
         context.push(@data)
         @pointer = pointer_or_content
-        
-        collection = __send__(@pointer["resource"])
-        @page = collection.new_model_view(@data)
       else
         @content = pointer_or_content
         @data = {}
@@ -26,7 +23,9 @@ module Ruhoh::Views
     
     # Delegate #page to the kind of resource this view is modeling.
     def page
-      @page
+      return @page if @page
+      collection = __send__(@pointer["resource"])
+      @page = collection.new_model_view(data)
     end
 
     def urls
