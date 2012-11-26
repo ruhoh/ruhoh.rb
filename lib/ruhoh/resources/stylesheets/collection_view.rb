@@ -2,8 +2,8 @@ module Ruhoh::Resources::Stylesheets
   class CollectionView < Ruhoh::Resources::Base::CollectionView
     def all
       buffer = ''
-      master_layout = self.context['master_layout']
-      sub_layout = self.context['sub_layout']
+      master_layout = master.data['master_layout']
+      sub_layout = master.data['sub_layout']
       stylesheets = @ruhoh.db.stylesheets[master_layout] || []
       stylesheets += @ruhoh.db.stylesheets[sub_layout] || []
       stylesheets += @ruhoh.db.stylesheets["widgets"] || []
