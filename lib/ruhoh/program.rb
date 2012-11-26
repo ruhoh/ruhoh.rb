@@ -20,7 +20,7 @@ class Ruhoh
       ruhoh.setup
       ruhoh.config['env'] = opts[:env]
       ruhoh.setup_paths
-      ruhoh.setup_plugins unless opts[:enable_resources] == false
+      ruhoh.setup_plugins unless opts[:enable_plugins] == false
 
       # initialize the routes dictionary
       ruhoh.db.pages
@@ -86,7 +86,7 @@ class Ruhoh
       ruhoh.setup
       ruhoh.config['env'] = 'production'
       ruhoh.setup_paths
-      ruhoh.setup_resources
+      ruhoh.setup_plugins
       
       if target
         ruhoh.paths.compiled = File.expand_path(target)
