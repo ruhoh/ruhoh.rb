@@ -35,7 +35,8 @@ module Ruhoh::Resources::Posts
          }
        }
       end
-      File.open(File.join(@ruhoh.paths.compiled, 'rss.xml'), 'w'){ |p| p.puts feed.to_xml }
+      compiled_path = CGI.unescape(@ruhoh.config['base_path'] + 'rss.xml')
+      File.open(File.join(@ruhoh.paths.compiled, compiled_path), 'w'){ |p| p.puts feed.to_xml }
     end
     
     # This is post specific at the moment but probably should
