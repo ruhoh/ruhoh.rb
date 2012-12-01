@@ -18,19 +18,17 @@ module Ruhoh::Resources::Layouts
     # Public: Create a new layout file for the active theme.
     def new
       ruhoh = @ruhoh
-      name = @args[1]
+      name = @args[2]
       Ruhoh::Friend.say { 
         red "Please specify a layout name." 
-        cyan "ex: ruhoh new layout splash"
+        cyan "ex: ruhoh layouts new splash"
         exit
       } if name.nil?
-
-      filename = File.join(@ruhoh.paths.theme_layouts, name.gsub(/\s/, '-').downcase) + ".html"
+      
+      filename = File.join(@ruhoh.paths.theme, "layouts", name.gsub(/\s/, '-').downcase) + ".html"
       if File.exist?(filename)
         abort("Create new layout: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
       end
-
-      @ruhoh.db.update(:scaffolds)
 
       FileUtils.mkdir_p File.dirname(filename)
       File.open(filename, 'w:UTF-8') do |page|
