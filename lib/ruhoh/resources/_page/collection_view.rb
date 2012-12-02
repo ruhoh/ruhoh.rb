@@ -28,7 +28,7 @@ module Ruhoh::Resources::Page
   
       pages = total_pages.times.map { |i| 
         {
-          "url" => (i.zero? ? config["root_page"] : "#{config["namespace"]}#{i+1}"),
+          "url" => (i.zero? ? config["root_page"] : @ruhoh.to_url("#{config["namespace"]}#{i+1}")),
           "name" => "#{i+1}",
           "is_active_page" => (i+1 == current_page)
         }
