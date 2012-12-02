@@ -88,7 +88,7 @@ class Ruhoh
     end
     
     def urls
-      @urls["base_path"] = @ruhoh.config['base_path']
+      @urls["base_path"] = @ruhoh.base_path
       return @urls if @urls.keys.length > 1 # consider base_url
 
       Ruhoh::Resources::Base::Collection.resources.each do |name, namespace|

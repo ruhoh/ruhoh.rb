@@ -96,9 +96,9 @@ class Ruhoh
 
     config['base_path'] = config['base_path'].to_s.strip
     if config['base_path'].empty?
-      config['base_path'] += "/" unless config['base_path'][-1] == '/'
-    else
       config['base_path'] = '/'
+    else
+      config['base_path'] += "/" unless config['base_path'][-1] == '/'
     end
     
     @config = config
@@ -121,12 +121,19 @@ class Ruhoh
     plugins.each {|f| require f } unless plugins.empty?
   end
   
+  def base_path
+    (config['env'] == 'production') ?
+      config['base_path'] :
+      '/'
+  end
+  
   # @config['base_path'] is assumed to be well-formed.
   # Always remove trailing slash.
   # Returns String - normalized url with prepended base_path
   def to_url(*args)
-    url = args.join('/').chomp('/').reverse.chomp('/').reverse
-    url = @config['base_path'] + url
+    url = base_path + args.join('/')
+    url = url.gsub(/\/\//, '/')
+    (url == "/") ? url : url.chomp('/')
   end
   
   def relative_path(filename)
