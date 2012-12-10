@@ -30,7 +30,7 @@ module Ruhoh::Views
     def page
       return @page if @page
       collection = __send__(@pointer["resource"])
-      @page = collection.new_model_view(data)
+      @page = collection ? collection.new_model_view(data) : nil
     end
 
     def urls

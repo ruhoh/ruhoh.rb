@@ -28,22 +28,31 @@ require 'ruhoh/db'
 
 class Ruhoh::Views::Page
   Ruhoh::Resources::Base::Collection.resources.each do |name, namespace|
-    next unless namespace.const_defined?(:CollectionView)
-    
+    if namespace.const_defined?(:CollectionView)
+      class_eval <<-RUBY
+        def #{name}
+          return @#{name} if @#{name}
+          @#{name} = #{namespace.const_get(:CollectionView)}.new(@ruhoh, context)
+          @#{name}.master = self
+          @#{name}
+        end
+      RUBY
+    else
+      class_eval <<-RUBY
+        def #{name}
+          nil
+        end
+      RUBY
+    end
+
     class_eval <<-RUBY
-      def #{name}
-        return @#{name} if @#{name}
-        @#{name} = #{namespace.const_get(:CollectionView)}.new(@ruhoh, context)
-        @#{name}.master = self
-        @#{name}
-      end
-      
       def to_#{name}(sub_context)
         Array(sub_context).map { |id|
           @ruhoh.db.#{name}[id]
         }.compact
       end
     RUBY
+    
   end
 end
 
