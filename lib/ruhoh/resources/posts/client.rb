@@ -34,32 +34,32 @@ module Ruhoh::Resources::Posts
     
   
     def draft
-      self.draft_or_post(:draft)
+      draft_or_post(:draft)
     end
 
-    def post
-      self.draft_or_post(:post)
+    def new
+      draft_or_post(:post)
     end
   
     def draft_or_post(type)
       ruhoh = @ruhoh
       begin
-        name = @args[1] || "untitled-#{type}"
+        name = @args[2] || "untitled-#{type}"
         name = "#{name}-#{@iterator}" unless @iterator.zero?
         name = Ruhoh::Utils.to_slug(name)
-        filename = File.join(@ruhoh.paths.posts, "#{name}.#{@options.ext}")
+        filename = File.join(@ruhoh.paths.base, "posts", "#{name}.#{@options.ext}")
         @iterator += 1
       end while File.exist?(filename)
     
       FileUtils.mkdir_p File.dirname(filename)
       output = @ruhoh.db.scaffolds["#{type}.html"].to_s
-      output = output.gsub('{{DATE}}', Ruhoh::Resources::Posts.formatted_date(Time.now))
+      output = output.gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
       File.open(filename, 'w:UTF-8') {|f| f.puts output }
     
       Ruhoh::Friend.say { 
         green "New #{type}:" 
         green ruhoh.relative_path(filename)
-        green 'View drafts at the URL: /dash'
+        green 'View drafts/posts at the URL: /dash'
       }
     end
 
@@ -76,10 +76,17 @@ module Ruhoh::Resources::Posts
       end
     end
     
-    # List pages
+    def drafts
+      data = @ruhoh.db.posts.dup.keep_if {|k,v| v["type"] == "draft"}
+      _list(data)
+    end
+    
     def list
-      data = @ruhoh.db.posts
-
+      data = @ruhoh.db.posts.reject {|k,v| v["type"] == "draft"}
+      _list(data)
+    end
+    
+    def _list(data)
       if @options.verbose
         Ruhoh::Friend.say {
           data.each_value do |p|
