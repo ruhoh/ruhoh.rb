@@ -3,8 +3,11 @@ module Ruhoh::Resources::Posts
 
     def all
       posts = @ruhoh.db.posts.each_value.map { |val| val }
-      posts.sort {
-        |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
+      if @ruhoh.config['env'] == "production"
+        posts = posts.reject {|p| p["type"] == "draft"}
+      end  
+      posts.sort {|a,b| 
+        Date.parse(b['date']) <=> Date.parse(a['date'])
       }.map {|data|
         new_model_view(data)
       }

@@ -139,15 +139,17 @@
 
   <div id="drafts" class="page-pane">
     <ul class="page-list">
-    {{# db.posts.drafts?to_posts }}
-      <li>
-        <a href="{{url}}">
-          <span class="title">{{title}}</span>
-          <span class="date">{{date}}</span>
-          <br><span class="id">{{id}}</span></small>
-        </a>
-      </li>
-    {{/ db.posts.drafts?to_posts }}
+      {{#posts.all}}
+        {{# type }}
+          <li>
+            <a href="{{url}}">
+              <span class="title">{{title}}</span>
+              <span class="date">{{date}}</span>
+              <br><span class="id">{{id}}</span></small>
+            </a>
+          </li>
+        {{/ type }}
+      {{/posts.all}}
     </ul>
   </div>  
 

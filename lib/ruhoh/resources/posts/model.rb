@@ -21,10 +21,6 @@ module Ruhoh::Resources::Posts
         #invalid << [@pointer['id'], error] ; next
       end
 
-      if data['type'] == 'draft'
-        return {"type" => "draft"} if @ruhoh.config['env'] == 'production'
-      end  
-
       data['pointer']       = @pointer
       data['id']            = @pointer['id']
       data['date']          = data['date'].to_s
