@@ -18,6 +18,18 @@ class Ruhoh
       RUBY
     end
     
+    def resources
+      Ruhoh::Resources::Base::Collection.resources
+    end
+
+    def resource(name)
+      resources[name]
+    end
+    
+    def resource?(name)
+      !!resources[name]
+    end
+    
     def initialize(ruhoh)
       @ruhoh = ruhoh
       @content = {}
