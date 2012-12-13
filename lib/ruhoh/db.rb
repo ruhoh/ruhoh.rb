@@ -35,6 +35,10 @@ class Ruhoh
       constantize(name).const_get(:Collection)
     end
     
+    def collection_view(name)
+      constantize(name).const_get(:CollectionView)
+    end
+    
     # Get a data endpoint from pointer
     # Note this differs from update in that
     # it should retrieve the cached version.
