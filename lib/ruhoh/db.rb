@@ -26,19 +26,6 @@ class Ruhoh
       @paths = {}
     end
     
-    def constantize(name)
-      camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
-      Ruhoh::Resources.const_get(camelized_name)
-    end
-    
-    def collection(name)
-      constantize(name).const_get(:Collection)
-    end
-    
-    def collection_view(name)
-      constantize(name).const_get(:CollectionView)
-    end
-    
     # Get a data endpoint from pointer
     # Note this differs from update in that
     # it should retrieve the cached version.
@@ -126,6 +113,19 @@ class Ruhoh
     
     def clear(name)
       self.instance_variable_set("@#{name}", nil)
+    end
+    
+    def collection(name)
+      constantize(name).const_get(:Collection)
+    end
+    
+    def collection_view(name)
+      constantize(name).const_get(:CollectionView)
+    end
+    
+    def constantize(name)
+      camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
+      Ruhoh::Resources.const_get(camelized_name)
     end
     
   end #DB
