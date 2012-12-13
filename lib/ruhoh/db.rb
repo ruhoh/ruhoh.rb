@@ -115,14 +115,26 @@ class Ruhoh
       self.instance_variable_set("@#{name}", nil)
     end
     
-    def collection(name)
-      constantize(name).const_get(:Collection)
+    %w{
+      collection
+      collection_view
+      model
+      model_view
+      client
+      compiler
+      watcher
+    }.each do |method_name|
+      constant_sym = method_name.to_s.split('_').map {|a| a.capitalize}.join.to_sym
+
+      define_method(method_name) do |name|
+        constantize(name).const_get(constant_sym)
+      end
+
+      define_method("#{method_name}?") do |name|
+        constantize(name).const_defined?(constant_sym)
+      end
     end
-    
-    def collection_view(name)
-      constantize(name).const_get(:CollectionView)
-    end
-    
+      
     def constantize(name)
       camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
       Ruhoh::Resources.const_get(camelized_name)
