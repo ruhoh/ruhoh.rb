@@ -11,8 +11,6 @@ module Ruhoh::Resources::Layouts
       @ruhoh = ruhoh
       @args = data[:args]
       @options = data[:options]
-      @opt_parser = data[:opt_parser]
-      @options.ext = (@options.ext || 'md').gsub('.', '')
     end
     
     # Public: Create a new layout file for the active theme.

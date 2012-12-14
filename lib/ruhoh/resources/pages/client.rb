@@ -15,7 +15,6 @@ module Ruhoh::Resources::Pages
       @ruhoh = ruhoh
       @args = data[:args]
       @options = data[:options]
-      @opt_parser = data[:opt_parser]
       @options.ext = (@options.ext || 'md').gsub('.', '')
     end
     

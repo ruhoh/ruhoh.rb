@@ -24,11 +24,10 @@ class Ruhoh
       @args = data[:args]
       @options = data[:options]
       @opt_parser = data[:opt_parser]
-      @options.ext = (@options.ext || 'md').gsub('.', '')
       @ruhoh = Ruhoh.new
-      cmd = (data[:args][0] == 'new') ? 'blog' : (data[:args][0] || 'help')
-      
-      return self.__send__(cmd) if self.respond_to?(cmd)
+      cmd = (@args[0] == 'new') ? 'blog' : (@args[0] || 'help')
+
+      return __send__(cmd) if respond_to?(cmd)
 
       Ruhoh::Friend.say { 
         red "Resource #{cmd} not found"
@@ -60,7 +59,7 @@ class Ruhoh
     def help
       options = @opt_parser.help
       resources = [{"methods" => Help}]
-      resources += @ruhoh.resources.resources.keys.map {|name|
+      resources += @ruhoh.resources.all.keys.map {|name|
         next unless @ruhoh.resources.client?(name)
         next unless @ruhoh.resources.client(name).const_defined?(:Help)
         {

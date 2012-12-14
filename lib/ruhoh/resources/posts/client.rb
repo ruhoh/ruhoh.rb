@@ -27,7 +27,6 @@ module Ruhoh::Resources::Posts
       @ruhoh = ruhoh
       @args = data[:args]
       @options = data[:options]
-      @opt_parser = data[:opt_parser]
       @options.ext = (@options.ext || 'md').gsub('.', '')
       @iterator = 0
     end
