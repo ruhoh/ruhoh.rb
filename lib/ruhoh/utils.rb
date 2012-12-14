@@ -39,26 +39,6 @@ class Ruhoh
       nil
     end
     
-    def self.parse_layout_file(*args)
-      path = File.__send__(:join, args)
-      raise "Layout file not found: #{path}" unless File.exist?(path)
-      data = {}
-      page = File.open(path, 'r:UTF-8') {|f| f.read }
-
-      front_matter = page.match(FMregex)
-      if front_matter
-        data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
-      end
-      
-      { 
-        "data" => data,
-        "content" => page.gsub(FMregex, '')
-      }
-    rescue Psych::SyntaxError => e
-      Ruhoh.log.error("ERROR in #{path}: #{e.message}")
-      nil
-    end
-    
     def self.url_to_path(url, base=nil)
       parts = url.split('/')
       parts = parts.unshift(base) if base
