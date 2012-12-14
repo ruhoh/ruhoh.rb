@@ -50,7 +50,7 @@ class Ruhoh
         name = name_or_pointer.downcase # name is a stringified constant.
       end
       
-      resource = @ruhoh.resources.collection(name).new(@ruhoh)
+      resource = @ruhoh.resources.load_collection(name)
 
       if id
         data = resource.generate(id).values.first
@@ -68,7 +68,7 @@ class Ruhoh
     # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
       name = pointer['resource'].downcase # name is a stringified constant.
-      resource = @ruhoh.resources.collection(name).new(@ruhoh)
+      resource = @ruhoh.resources.load_collection(name)
       model = resource.model.new(resource, pointer)
       # TODO:
       # possible collisions here: ids are only unique relative to their resource dictionary.
@@ -82,7 +82,7 @@ class Ruhoh
 
       @ruhoh.resources.all.keys.each do |name|
         next unless @ruhoh.resources.collection?(name)
-        collection = @ruhoh.resources.collection(name).new(@ruhoh)
+        collection = @ruhoh.resources.load_collection(name)
         next unless collection.respond_to?(:url_endpoint)
         @urls[name] = @ruhoh.to_url(collection.url_endpoint)
       end
@@ -94,7 +94,7 @@ class Ruhoh
       return @paths unless @paths.empty?
       @ruhoh.resources.all.keys.each do |name|
         next unless @ruhoh.resources.collection?(name)
-        collection = @ruhoh.resources.collection(name).new(@ruhoh)
+        collection = @ruhoh.resources.load_collection(name)
         next unless collection.respond_to?(:path)
         @paths[name] = collection.path
       end
@@ -106,7 +106,7 @@ class Ruhoh
     def config(name)
       name = name.downcase
       return @config[name] if @config[name]
-      @config[name] = @ruhoh.resources.collection(name).new(@ruhoh).config
+      @config[name] = @ruhoh.resources.load_collection(name).config
     end
     
     def clear(name)
