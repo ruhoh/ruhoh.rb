@@ -18,6 +18,7 @@ module Ruhoh::Resources::Base
     end
     
     attr_reader :ruhoh
+    
     def initialize(ruhoh)
       @ruhoh = ruhoh
     end
@@ -123,30 +124,8 @@ module Ruhoh::Resources::Base
       self.class.model
     end
 
-    # Proxy to the watcher for this resource
-    def watcher
-      self.class.watcher
-    end
-    
-    # Proxy to the previewer for this resource
-    def previewer
-      self.class.previewer
-    end
-    
     def self.model
       registered_namespace.const_get(:Model)
-    end
-    
-    def self.watcher
-      registered_namespace.const_defined?(:Watcher) ?
-        registered_namespace.const_get(:Watcher) :
-        nil
-    end
-    
-    def self.previewer
-      registered_namespace.const_defined?(:Previewer) ?
-        registered_namespace.const_get(:Previewer) :
-        nil
     end
     
     def self.registered_name
