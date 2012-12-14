@@ -1,10 +1,9 @@
 module Ruhoh::Resources::Base
   class CollectionView
-    attr_accessor :master, :context
+    attr_accessor :master
 
-    def initialize(ruhoh, context=nil)
+    def initialize(ruhoh)
       @ruhoh = ruhoh
-      @context = context if context
     end
     
     def self.inherited(base)

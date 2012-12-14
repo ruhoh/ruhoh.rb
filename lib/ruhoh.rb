@@ -33,7 +33,7 @@ class Ruhoh::Views::Page
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}
-          @#{name} = @ruhoh.resources.collection_view('#{name}').new(@ruhoh, context)
+          @#{name} = @ruhoh.resources.load_collection_view('#{name}')
           @#{name}.master = self
           @#{name}
         end

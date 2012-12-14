@@ -30,8 +30,6 @@ module Ruhoh::Resources::Page
     end
 
     def get_page_content
-      #data = self.context['id'] ? self.context : self.context['page']
-      #return '' unless data['id']
       content = @ruhoh.db.content(pointer)
       [content, id]
     end
