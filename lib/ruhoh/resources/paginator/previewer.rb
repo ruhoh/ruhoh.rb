@@ -1,8 +1,7 @@
 module Ruhoh::Resources::Paginator
   class Previewer
-    def initialize(resource)
-      @resource = resource
-      @ruhoh = resource.ruhoh
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
     end
 
     def call(env)

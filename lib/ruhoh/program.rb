@@ -33,13 +33,10 @@ class Ruhoh
         
         ruhoh.db.urls.each do |name, url|
           next if ["base_path", "javascripts", "stylesheets"].include?(name)
-          next unless ruhoh.db.collection?(name)
-          collection = ruhoh.db.collection(name)
-
+          next unless ruhoh.db.resource?(name)
           map url do
-            if collection.previewer
-              resource = collection.new(ruhoh)
-              run resource.previewer.new(resource)
+            if ruhoh.db.previewer?(name)
+              run ruhoh.db.previewer(name).new(ruhoh)
             else
               run Rack::File.new(File.join(ruhoh.paths.base, ruhoh.db.paths[name]))
             end
