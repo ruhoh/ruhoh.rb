@@ -18,8 +18,8 @@ module Ruhoh::Resources::Base
     end
     
     def new_model_view(data={})
-      return nil unless namespace.const_defined?(:ModelView)
-      model_view = namespace.const_get(:ModelView).new(@ruhoh, data)
+      return nil unless @ruhoh.db.model_view?(resource_name)
+      model_view = @ruhoh.db.model_view(resource_name).new(@ruhoh, data)
       model_view.collection = self
       model_view.master = master
       model_view

@@ -29,9 +29,9 @@ class Ruhoh
       FileUtils.mkdir_p ruhoh.paths.compiled
       
       # Run the resource compilers
-      Ruhoh::Resources::Base::Collection.resources.each do |name, namespace|
-        next unless namespace.const_defined?(:Compiler)
-        compiler = namespace.const_get(:Compiler)
+      ruhoh.db.resources.keys.each do |name|
+        next unless ruhoh.db.compiler?(name)
+        compiler = ruhoh.db.compiler(name)
         compiler.new(ruhoh).run
       end
       

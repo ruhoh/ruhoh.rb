@@ -25,7 +25,7 @@ class Ruhoh
       @options = data[:options]
       @opt_parser = data[:opt_parser]
       @options.ext = (@options.ext || 'md').gsub('.', '')
-      
+      @ruhoh = Ruhoh.new
       cmd = (data[:args][0] == 'new') ? 'blog' : (data[:args][0] || 'help')
       
       return self.__send__(cmd) if self.respond_to?(cmd)
@@ -33,17 +33,15 @@ class Ruhoh
       Ruhoh::Friend.say { 
         red "Resource #{cmd} not found"
         exit 
-      } unless Ruhoh::Resources::Base::Collection.resources.has_key?(cmd)
+      } unless @ruhoh.db.resource?(cmd)
       
-      @ruhoh = Ruhoh.new
       @ruhoh.setup
       @ruhoh.setup_paths
       
-      namespace = Ruhoh::Resources::Base::Collection.resources[cmd]
-      client = namespace.const_get(:Client).new(@ruhoh, data)
+      client = @ruhoh.db.client(cmd).new(@ruhoh, data)
       
       Ruhoh::Friend.say { 
-        red "method '#{data[:args][1]}' not found for #{klass}"
+        red "method '#{data[:args][1]}' not found for #{client.class}"
         exit 
       } unless client.respond_to?(@args[1])
       
@@ -62,12 +60,12 @@ class Ruhoh
     def help
       options = @opt_parser.help
       resources = [{"methods" => Help}]
-      resources += Ruhoh::Resources::Base::Collection.resources.each.map {|name, namespace|
-        next unless namespace.const_defined?(:Client)
-        next unless namespace.const_get(:Client).const_defined?(:Help)
+      resources += @ruhoh.db.resources.keys.map {|name|
+        next unless @ruhoh.db.client?(name)
+        next unless @ruhoh.db.client(name).const_defined?(:Help)
         {
           "name" => name,
-          "methods" => namespace.const_get(:Client).const_get(:Help)
+          "methods" => @ruhoh.db.client(name).const_get(:Help)
         }
       }.compact
       
