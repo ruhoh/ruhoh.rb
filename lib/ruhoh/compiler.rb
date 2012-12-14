@@ -29,7 +29,7 @@ class Ruhoh
       FileUtils.mkdir_p ruhoh.paths.compiled
       
       # Run the resource compilers
-      ruhoh.resources.resources.keys.each do |name|
+      ruhoh.resources.all.keys.each do |name|
         next unless ruhoh.resources.compiler?(name)
         ruhoh.resources.load_compiler(name).run
       end
