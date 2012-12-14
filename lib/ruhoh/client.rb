@@ -33,12 +33,12 @@ class Ruhoh
       Ruhoh::Friend.say { 
         red "Resource #{cmd} not found"
         exit 
-      } unless @ruhoh.db.resource?(cmd)
+      } unless @ruhoh.resources.exists?(cmd)
       
       @ruhoh.setup
       @ruhoh.setup_paths
       
-      client = @ruhoh.db.client(cmd).new(@ruhoh, data)
+      client = @ruhoh.resources.client(cmd).new(@ruhoh, data)
       
       Ruhoh::Friend.say { 
         red "method '#{data[:args][1]}' not found for #{client.class}"
@@ -60,12 +60,12 @@ class Ruhoh
     def help
       options = @opt_parser.help
       resources = [{"methods" => Help}]
-      resources += @ruhoh.db.resources.keys.map {|name|
-        next unless @ruhoh.db.client?(name)
-        next unless @ruhoh.db.client(name).const_defined?(:Help)
+      resources += @ruhoh.resources.resources.keys.map {|name|
+        next unless @ruhoh.resources.client?(name)
+        next unless @ruhoh.resources.client(name).const_defined?(:Help)
         {
           "name" => name,
-          "methods" => @ruhoh.db.client(name).const_get(:Help)
+          "methods" => @ruhoh.resources.client(name).const_get(:Help)
         }
       }.compact
       

@@ -24,6 +24,7 @@ module Ruhoh::Views::Helpers ; end
 
 require 'ruhoh/views/page'
 
+require 'ruhoh/resources_interface'
 require 'ruhoh/db'
 
 class Ruhoh::Views::Page
@@ -32,7 +33,7 @@ class Ruhoh::Views::Page
       class_eval <<-RUBY
         def #{name}
           return @#{name} if @#{name}
-          @#{name} = @ruhoh.db.collection_view('#{name}').new(@ruhoh, context)
+          @#{name} = @ruhoh.resources.collection_view('#{name}').new(@ruhoh, context)
           @#{name}.master = self
           @#{name}
         end
@@ -66,13 +67,14 @@ class Ruhoh
   end
   
   attr_accessor :log
-  attr_reader :config, :paths, :root, :base, :db
+  attr_reader :config, :paths, :root, :base, :db, :resources
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   @log = Ruhoh::Logger.new
   @root = Root
   
   def initialize
+    @resources = Ruhoh::ResourcesInterface.new(self)
     @db = Ruhoh::DB.new(self)
   end
   

@@ -43,7 +43,7 @@ module Ruhoh::Resources::Posts
     # be abstracted out into paginator resource is possible.
     def pagination
       config = @ruhoh.db.config("paginator")
-      post_count = @ruhoh.db.collection_view("posts").new(@ruhoh).all.length
+      post_count = @ruhoh.resources.collection_view("posts").new(@ruhoh).all.length
       total_pages = (post_count.to_f/config["per_page"]).ceil
       
       FileUtils.cd(@ruhoh.paths.compiled) {
