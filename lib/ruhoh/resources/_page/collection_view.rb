@@ -14,15 +14,15 @@ module Ruhoh::Resources::Page
       current_page = current_page.zero? ? 1 : current_page
       offset = (current_page-1)*per_page
 
-      post_batch = all[offset, per_page]
-      raise "Page does not exist" unless post_batch
-      post_batch
+      page_batch = all[offset, per_page]
+      raise "Page does not exist" unless page_batch
+      page_batch
     end
 
     def paginator_navigation
       config = @ruhoh.db.config("paginator")
-      post_count = @ruhoh.db.posts.length
-      total_pages = (post_count.to_f/config["per_page"]).ceil
+      page_count = all.length
+      total_pages = (page_count.to_f/config["per_page"]).ceil
       current_page = master.context["page"]['current_page'].to_i rescue 0
       current_page = current_page.zero? ? 1 : current_page
   
