@@ -31,8 +31,7 @@ class Ruhoh
       # Run the resource compilers
       ruhoh.resources.resources.keys.each do |name|
         next unless ruhoh.resources.compiler?(name)
-        compiler = ruhoh.resources.compiler(name)
-        compiler.new(ruhoh).run
+        ruhoh.resources.load_compiler(name).run
       end
       
       # Run extra compiler tasks
