@@ -135,6 +135,7 @@ class Ruhoh
       client
       compiler
       watcher
+      previewer
     }.each do |method_name|
       constant_sym = method_name.to_s.split('_').map {|a| a.capitalize}.join.to_sym
 
