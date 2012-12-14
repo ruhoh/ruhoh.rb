@@ -1,12 +1,12 @@
 module Ruhoh::Resources::Theme
   class Watcher
-    def initialize(resource)
-      @resource = resource
-      @ruhoh = resource.ruhoh
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
+      @collection = ruhoh.resources.load_collection("theme")
     end
   
     def match(path)
-      path =~ Regexp.new("^#{@resource.path}")
+      path =~ Regexp.new("^#{@collection.path}")
     end
   
     def update(path)

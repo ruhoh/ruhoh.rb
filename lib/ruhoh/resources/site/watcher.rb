@@ -1,8 +1,7 @@
 module Ruhoh::Resources::Site
   class Watcher
-    def initialize(resource)
-      @resource = resource
-      @ruhoh = resource.ruhoh
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
     end
   
     def match(path)

@@ -35,8 +35,7 @@ class Ruhoh
 
           watchers = ruhoh.resources.resources.keys.map {|name|
             next unless ruhoh.resources.watcher?(name)
-            collection = ruhoh.resources.collection(name).new(ruhoh)
-            ruhoh.resources.watcher(name).new(collection)
+            ruhoh.resources.load_watcher(name)
           }.compact
           
           watchers.each {|watcher|
