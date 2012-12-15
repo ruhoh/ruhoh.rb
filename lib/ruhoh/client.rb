@@ -54,6 +54,7 @@ class Ruhoh
       IRB::ExtendCommandBundle.send :include, Ruhoh::ConsoleMethods
       IRB.start
     end
+    alias_method :c, :console
     
     # Show Client Utility help documentation.
     def help

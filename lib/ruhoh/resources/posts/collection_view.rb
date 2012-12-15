@@ -3,7 +3,7 @@ module Ruhoh::Resources::Posts
 
     def all
       posts = @ruhoh.db.posts.each_value.map { |val| val }
-      if @ruhoh.config['env'] == "production"
+      if @ruhoh.env == "production"
         posts = posts.reject {|p| p["type"] == "draft"}
       end  
       posts.sort {|a,b| 

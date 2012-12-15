@@ -66,7 +66,7 @@ class Ruhoh
     attr_reader :names, :root
   end
   
-  attr_accessor :log
+  attr_accessor :log, :env
   attr_reader :config, :paths, :root, :base, :db, :resources
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
@@ -131,9 +131,13 @@ class Ruhoh
     plugins = Dir[File.join(@base, "plugins", "**/*.rb")]
     plugins.each {|f| require f } unless plugins.empty?
   end
+
+  def env
+    @env || 'development'
+  end
   
   def base_path
-    (config['env'] == 'production') ?
+    (env == 'production') ?
       config['base_path'] :
       '/'
   end
