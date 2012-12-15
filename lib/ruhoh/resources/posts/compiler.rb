@@ -11,11 +11,8 @@ module Ruhoh::Resources::Posts
     def rss
       Ruhoh::Friend.say { green "Generating RSS for posts." }
       num_posts = @ruhoh.db.config("posts")["rss_limit"]
-      posts = @ruhoh.db.posts.each_value.map { |val| val }
-      posts.sort! {
-        |a,b| Date.parse(b['date']) <=> Date.parse(a['date'])
-      }
-      posts = posts.first(num_posts)
+      posts_view = @ruhoh.resources.load_collection_view("posts")
+      posts = posts_view.all.first(num_posts)
 
       feed = Nokogiri::XML::Builder.new do |xml|
        xml.rss(:version => '2.0') {
@@ -23,13 +20,13 @@ module Ruhoh::Resources::Posts
            xml.title_ @ruhoh.db.site['title']
            xml.link_ @ruhoh.config['production_url']
            xml.pubDate_ Time.now          
-           posts.each do |data|
-             page = @ruhoh.page(data["pointer"])
+           posts.each do |post|
+             page = @ruhoh.page(post.pointer)
              xml.item {
-               xml.title_ data['title']
-               xml.link "#{@ruhoh.config['production_url']}#{data['url']}"
-               xml.pubDate_ data['date']
-               xml.description_ (data['description'] ? data['description'] : page.render_full)
+               xml.title_ post.title
+               xml.link "#{@ruhoh.config['production_url']}#{post.url}"
+               xml.pubDate_ post.date
+               xml.description_ (post.description ? post.description : page.render_content)
              }
            end
          }

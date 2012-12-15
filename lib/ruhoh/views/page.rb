@@ -25,7 +25,11 @@ module Ruhoh::Views
       process_layouts
       render(expand_layouts)
     end
-    
+
+    def render_content
+      render('{{{page.content}}}')
+    end
+
     # Delegate #page to the kind of resource this view is modeling.
     def page
       return @page if @page
