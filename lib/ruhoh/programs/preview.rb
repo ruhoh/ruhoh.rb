@@ -1,4 +1,4 @@
-require 'ruhoh/watch'
+require 'ruhoh/programs/watch'
 class Ruhoh
   module Program
     # Public: A program for running ruhoh as a rack application
@@ -26,7 +26,7 @@ class Ruhoh
       ruhoh.db.pages
       ruhoh.db.posts
       
-      Ruhoh::Watch.start(ruhoh) if opts[:watch]
+      Ruhoh::Program.watch(ruhoh) if opts[:watch]
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions

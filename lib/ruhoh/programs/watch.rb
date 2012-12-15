@@ -1,14 +1,14 @@
 require 'directory_watcher'
 
 class Ruhoh
-  module Watch
+  module Program
 
     # Internal: Watch website source directory for file changes.
     # The observer triggers data regeneration as files change
     # in order to keep the data up to date in real time.
     #
     # Returns: Nothing
-    def self.start(ruhoh)
+    def self.watch(ruhoh)
       ruhoh.ensure_setup
 
       Ruhoh::Friend.say {
