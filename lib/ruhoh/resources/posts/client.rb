@@ -64,20 +64,24 @@ module Ruhoh::Resources::Posts
 
     # Public: Update draft filenames to their corresponding titles.
     def titleize
-      @ruhoh.db.posts['drafts'].each do |file|
-        next unless File.basename(file) =~ /^untitled/
-        parsed_page = Ruhoh::Utils.parse_page_file(file)
-        next unless parsed_page['data']['title']
-        new_name = Ruhoh::Utils.to_slug(parsed_page['data']['title'])
-        new_file = File.join(File.dirname(file), "#{new_name}#{File.extname(file)}")
-        FileUtils.mv(file, new_file)
-        Ruhoh::Friend.say { green "Renamed #{file} to: #{new_file}" }
+      _drafts.values.each do |data|
+        next unless File.basename(data['id']) =~ /^untitled/
+        new_name = Ruhoh::Utils.to_slug(data['title'])
+        new_file = "#{new_name}#{File.extname(data['id'])}"
+        next if data['id'] == new_file
+        FileUtils.cd(File.dirname(data['pointer']['realpath'])) {
+          FileUtils.mv(data['id'], new_file)
+        }
+        Ruhoh::Friend.say { green "Renamed #{data['id']} to: #{new_file}" }
       end
     end
     
     def drafts
-      data = @ruhoh.db.posts.dup.keep_if {|k,v| v["type"] == "draft"}
-      _list(data)
+      _list(_drafts)
+    end
+    
+    def _drafts
+      @ruhoh.db.posts.dup.keep_if {|k,v| v["type"] == "draft"}
     end
     
     def list
