@@ -57,8 +57,7 @@ class Ruhoh::Views::Page
   end
 end
 
-require 'ruhoh/watch'
-require 'ruhoh/program'
+require 'ruhoh/programs/preview'
 
 class Ruhoh
   class << self

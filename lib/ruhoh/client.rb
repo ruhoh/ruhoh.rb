@@ -1,4 +1,4 @@
-require 'ruhoh/compiler'
+require 'ruhoh/programs/compile'
 require 'ruhoh/console_methods'
 require 'irb'
 
