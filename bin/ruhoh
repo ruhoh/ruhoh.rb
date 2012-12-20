@@ -14,10 +14,6 @@ options = Options.new
 opt_parser = OptionParser.new do |opts|
   opts.banner = 'Use `ruhoh help` for full command list.'
   
-  opts.on("-e", "--ext [EXT]", "Specify filename extension. Defaults to '.md' ") do |ext|
-    options.ext = ext
-  end
-  
   opts.on("--hg", "Use mercurial (hg) instead of git for source control.") do
     options.hg = true
   end

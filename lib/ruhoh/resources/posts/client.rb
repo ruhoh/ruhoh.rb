@@ -43,10 +43,13 @@ module Ruhoh::Resources::Posts
     def draft_or_post(type)
       ruhoh = @ruhoh
       begin
-        name = @args[2] || "untitled-#{type}"
+        file = @args[2] || "untitled-#{type}"
+        ext = File.extname(file).to_s
+        name = File.basename(file, ext)
         name = "#{name}-#{@iterator}" unless @iterator.zero?
         name = Ruhoh::Utils.to_slug(name)
-        filename = File.join(@ruhoh.paths.base, "posts", "#{name}.#{@options.ext}")
+        ext  = ext.empty? ? @ruhoh.db.config("posts")["ext"] : ext
+        filename = File.join(@ruhoh.paths.base, "posts", "#{name}#{ext}")
         @iterator += 1
       end while File.exist?(filename)
     
