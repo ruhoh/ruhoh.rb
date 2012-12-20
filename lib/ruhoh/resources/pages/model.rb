@@ -37,7 +37,7 @@ module Ruhoh::Resources::Pages
       ext = '.html' if Ruhoh::Converter.extensions.include?(ext)
       url = name.split('/').map {|p| Ruhoh::Utils.to_url_slug(p) }.join('/')
       url = "#{url}#{ext}".gsub(/index.html$/, '')
-      if page['permalink'] == 'pretty' || config['permalink'] == 'pretty'
+      unless (page['permalink'] == 'preserve' || config['permalink'] == 'preserve')
         url = url.gsub(/\.html$/, '')
       end
     
