@@ -10,13 +10,6 @@ module Ruhoh::Resources::Page
     end
 
     # Lazy-load the page body.
-    # When in a global scope (layouts, pages), the content is for the current page.
-    # May also be called in sub-contexts such as looping through resources.
-    #
-    #  {{# posts }}
-    #    {{{ content }}}
-    #  {{/ posts }}
-    #
     # Notes:
     # @content is not used for caching, it's used to manually
     # define content for a given page. Useful in the case that

@@ -44,15 +44,5 @@ module Ruhoh::Resources::Pages
       url = '/' if url.empty?
       @ruhoh.to_url(url)
     end
-    
-    def compile
-      pointer = @pointer
-      FileUtils.cd(@ruhoh.paths.compiled) {
-        page = @ruhoh.page(@pointer)
-        FileUtils.mkdir_p File.dirname(page.compiled_path)
-        File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render_full }
-        Ruhoh::Friend.say { green "processed: #{pointer['id']}" }
-      }
-    end
   end
 end
