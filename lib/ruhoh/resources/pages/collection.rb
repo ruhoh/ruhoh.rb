@@ -4,6 +4,7 @@ module Ruhoh::Resources::Pages
       hash = super
       hash['layout'] ||= 'page'
       hash['exclude'] = Array(hash['exclude']).map {|node| Regexp.new(node) }
+      hash['ext'] ||= ".md"
       hash
     end
   end

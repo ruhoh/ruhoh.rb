@@ -26,9 +26,11 @@ module Ruhoh::Resources::Pages
         plain "  ex: ruhoh pages new projects/hello-world"
         exit
       } if (name.nil? || name.gsub(/\s/, '').empty?)
-
-      filename = File.join(@ruhoh.paths.base, "pages", name.gsub(/\s/, '-'))
-      filename = File.join(filename, "index.#{@options.ext}") if File.extname(filename) == ""
+      
+      ext = File.extname(name).to_s
+      name = File.basename(name, ext)
+      ext  = ext.empty? ? @ruhoh.db.config("pages")["ext"] : ext
+      filename = File.join(@ruhoh.paths.base, "pages", (name.gsub(/\s/, '-') + ext))
       if File.exist?(filename)
         abort("Create new page: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
       end
