@@ -17,7 +17,7 @@ module Ruhoh::Resources::Posts
       feed = Nokogiri::XML::Builder.new do |xml|
        xml.rss(:version => '2.0') {
          xml.channel {
-           xml.title_ @ruhoh.db.site['title']
+           xml.title_ @ruhoh.db.data['title']
            xml.link_ @ruhoh.config['production_url']
            xml.pubDate_ Time.now          
            posts.each do |post|
