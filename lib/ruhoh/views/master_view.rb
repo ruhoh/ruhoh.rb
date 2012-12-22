@@ -3,21 +3,21 @@ require 'ruhoh/views/rmustache'
 module Ruhoh::Views
   class MasterView < RMustache
     attr_reader :sub_layout, :master_layout
-    attr_accessor :data
+    attr_accessor :page_data
     
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
       if pointer_or_content.is_a?(Hash)
-        @data = @ruhoh.db.get(pointer_or_content)
-        @data = {} unless @data.is_a?(Hash)
+        @page_data = @ruhoh.db.get(pointer_or_content)
+        @page_data = {} unless @page_data.is_a?(Hash)
 
-        raise "Page #{pointer_or_content['id']} not found in database" unless @data
+        raise "Page #{pointer_or_content['id']} not found in database" unless @page_data
 
-        context.push(@data)
+        context.push(@page_data)
         @pointer = pointer_or_content
       else
         @content = pointer_or_content
-        @data = {}
+        @page_data = {}
       end
     end
     
@@ -34,7 +34,7 @@ module Ruhoh::Views
     def page
       return @page if @page
       collection = __send__(@pointer["resource"])
-      @page = collection ? collection.new_model_view(data) : nil
+      @page = collection ? collection.new_model_view(@page_data) : nil
     end
 
     def urls
@@ -89,7 +89,7 @@ module Ruhoh::Views
     #
     # Returns: [String] The relative path to the compiled file for this page.
     def compiled_path
-      path = CGI.unescape(@data['url']).gsub(/^\//, '') #strip leading slash.
+      path = CGI.unescape(@page_data['url']).gsub(/^\//, '') #strip leading slash.
       path = "index.html" if path.empty?
       path += '/index.html' unless path =~ /\.\w+$/
       path
@@ -98,9 +98,9 @@ module Ruhoh::Views
     protected
     
     def process_layouts
-      if @data['layout']
-        @sub_layout = @ruhoh.db.layouts[@data['layout']]
-        raise "Layout does not exist: #{@data['layout']}" unless @sub_layout
+      if @page_data['layout']
+        @sub_layout = @ruhoh.db.layouts[@page_data['layout']]
+        raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
       end
     
       if @sub_layout && @sub_layout['data']['layout']
@@ -108,9 +108,9 @@ module Ruhoh::Views
         raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
       end
       
-      @data['sub_layout'] = @sub_layout['id'] rescue nil
-      @data['master_layout'] = @master_layout['id'] rescue nil
-      @data
+      @page_data['sub_layout'] = @sub_layout['id'] rescue nil
+      @page_data['master_layout'] = @master_layout['id'] rescue nil
+      @page_data
     end
     
     # Expand the layout(s).

@@ -9,7 +9,7 @@ module Ruhoh::Resources::Paginator
       env['PATH_INFO'].gsub!(/\/$/, '') unless env['PATH_INFO'] == "/"
       path = env['PATH_INFO'].reverse.chomp("/").reverse
       view = @ruhoh.master_view({"resource" => "posts"})
-      view.data = {
+      view.page_data = {
         "layout" => @ruhoh.db.config("paginator")["layout"],
         "current_page" => path
       }

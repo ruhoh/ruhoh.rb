@@ -3,7 +3,7 @@ module Ruhoh::Resources::Widgets
     
 
     def widget(name)
-      return '' if master.data[name.to_s].to_s == 'false'
+      return '' if master.page_data[name.to_s].to_s == 'false'
       @ruhoh.db.widgets[name.to_s]['layout']
     end
 

@@ -48,14 +48,14 @@ module Ruhoh::Resources::Posts
           next if i.zero? # handled by config["root_page"]
           url = "#{config["namespace"]}#{i+1}"
           view = @ruhoh.master_view({"resource" => "posts"})
-          view.data = {
+          view.page_data = {
             "layout" => @ruhoh.db.config("paginator")["layout"],
             "current_page" => (i+1),
             "url" => @ruhoh.to_url(url)
           }
           FileUtils.mkdir_p File.dirname(view.compiled_path)
           File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
-          Ruhoh::Friend.say { green "Paginator: #{view.data['url']}" }
+          Ruhoh::Friend.say { green "Paginator: #{view.page_data['url']}" }
         }
       }
     end
