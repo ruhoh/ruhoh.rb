@@ -1,7 +1,7 @@
 require 'ruhoh/views/rmustache'
 
 module Ruhoh::Views
-  class Page < RMustache
+  class MasterView < RMustache
     attr_reader :sub_layout, :master_layout
     attr_accessor :data
     
@@ -131,6 +131,5 @@ module Ruhoh::Views
       
       layout
     end
-    
-  end #Page
-end #Ruhoh
+  end
+end

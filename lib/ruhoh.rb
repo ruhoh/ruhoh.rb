@@ -22,12 +22,12 @@ module Ruhoh::Resources ; end
 module Ruhoh::Views ; end
 module Ruhoh::Views::Helpers ; end
 
-require 'ruhoh/views/page'
+require 'ruhoh/views/master_view'
 
 require 'ruhoh/resources_interface'
 require 'ruhoh/db'
 
-class Ruhoh::Views::Page
+class Ruhoh::Views::MasterView
   Ruhoh::Resources::Base::Collection.resources.each do |name, namespace|
     if namespace.const_defined?(:CollectionView)
       class_eval <<-RUBY
@@ -77,8 +77,8 @@ class Ruhoh
     @db = Ruhoh::DB.new(self)
   end
   
-  def page(route)
-    Ruhoh::Views::Page.new(self, route)
+  def master_view(pointer)
+    Ruhoh::Views::MasterView.new(self, pointer)
   end
   
   # Public: Setup Ruhoh utilities relative to the current application directory.

@@ -5,8 +5,8 @@ module Ruhoh::Resources::Dash
     end
 
     def call(env)
-      page = @ruhoh.page(@ruhoh.db.dash)
-      [200, {'Content-Type' => 'text/html'}, [page.render_full]]
+      view = @ruhoh.master_view(@ruhoh.db.dash)
+      [200, {'Content-Type' => 'text/html'}, [view.render_full]]
     end
   end
 end

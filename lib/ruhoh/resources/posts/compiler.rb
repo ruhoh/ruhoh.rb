@@ -21,12 +21,12 @@ module Ruhoh::Resources::Posts
            xml.link_ @ruhoh.config['production_url']
            xml.pubDate_ Time.now          
            posts.each do |post|
-             page = @ruhoh.page(post.pointer)
+             view = @ruhoh.master_view(post.pointer)
              xml.item {
                xml.title_ post.title
                xml.link "#{@ruhoh.config['production_url']}#{post.url}"
                xml.pubDate_ post.date
-               xml.description_ (post.description ? post.description : page.render_content)
+               xml.description_ (post.description ? post.description : view.render_content)
              }
            end
          }
@@ -47,15 +47,15 @@ module Ruhoh::Resources::Posts
         total_pages.times.map { |i| 
           next if i.zero? # handled by config["root_page"]
           url = "#{config["namespace"]}#{i+1}"
-          page = @ruhoh.page({"resource" => "posts"})
-          page.data = {
+          view = @ruhoh.master_view({"resource" => "posts"})
+          view.data = {
             "layout" => @ruhoh.db.config("paginator")["layout"],
             "current_page" => (i+1),
             "url" => @ruhoh.to_url(url)
           }
-          FileUtils.mkdir_p File.dirname(page.compiled_path)
-          File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render_full }
-          Ruhoh::Friend.say { green "Paginator: #{page.data['url']}" }
+          FileUtils.mkdir_p File.dirname(view.compiled_path)
+          File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
+          Ruhoh::Friend.say { green "Paginator: #{view.data['url']}" }
         }
       }
     end
