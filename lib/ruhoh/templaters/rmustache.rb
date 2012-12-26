@@ -55,9 +55,9 @@ class Ruhoh
         Ruhoh::DB.widgets[name.to_s]['layout']
       end
       
-	  def posts_count
-		postcount=$posts_count
-	  end 
+      def posts_count
+	postcount=$posts_count
+      end 
 	  
       def method_missing(name, *args, &block)
         return self.widget(name.to_s) if Ruhoh::DB.widgets.has_key?(name.to_s)
