@@ -70,6 +70,11 @@ class Ruhoh
     end    
 
     def self.report(name, collection, invalid)
+	
+		 if name=="Posts"  
+			$posts_count=collection.count	
+		  end
+		  
       output = "#{collection.count}/#{collection.count + invalid.count} #{name} processed."
       if collection.empty? && invalid.empty?
         Ruhoh::Friend.say { plain "0 #{name} to process." }
