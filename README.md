@@ -4,8 +4,9 @@
 
 ### Usage
 
-$ gem install ruhoh     
-$ ruhoh help
+This is the new ruhoh 2.x.alpha code.
+
+Please follow the directions on the [new 2.0.alpha blog scaffold](https://github.com/ruhoh/blog/tree/2.0.alpha#readme)
 
 ### Platforms
 
