@@ -26,7 +26,7 @@ module Ruhoh::Resources::Posts
       data['date']          = data['date'].to_s
       data['title']         = data['title'] || filename_data['title']
       data['url']           = self.permalink(data)
-      data['layout']        = config['layout'] if data['layout'].nil?
+      data['layout']        = config['layout'] unless data['layout'] == false
       data['categories']    = Array(data['categories'])
       data['tags']          = Array(data['tags'])
       
