@@ -28,56 +28,82 @@ Gem::Specification.new do |s|
     bin/ruhoh
     history.json
     lib/ruhoh.rb
-    lib/ruhoh/client/client.rb
-    lib/ruhoh/client/console_methods.rb
-    lib/ruhoh/client/help.yml
+    lib/ruhoh/client.rb
     lib/ruhoh/compiler.rb
-    lib/ruhoh/compilers/rss.rb
-    lib/ruhoh/compilers/theme.rb
-    lib/ruhoh/config.rb
-    lib/ruhoh/converters/converter.rb
+    lib/ruhoh/console_methods.rb
+    lib/ruhoh/converter.rb
     lib/ruhoh/converters/markdown.rb
     lib/ruhoh/db.rb
-    lib/ruhoh/deployers/s3.rb
     lib/ruhoh/friend.rb
     lib/ruhoh/logger.rb
-    lib/ruhoh/page.rb
-    lib/ruhoh/parsers/javascripts.rb
-    lib/ruhoh/parsers/layouts.rb
-    lib/ruhoh/parsers/pages.rb
-    lib/ruhoh/parsers/partials.rb
-    lib/ruhoh/parsers/payload.rb
-    lib/ruhoh/parsers/posts.rb
-    lib/ruhoh/parsers/routes.rb
-    lib/ruhoh/parsers/scaffolds.rb
-    lib/ruhoh/parsers/site.rb
-    lib/ruhoh/parsers/stylesheets.rb
-    lib/ruhoh/parsers/theme_config.rb
-    lib/ruhoh/parsers/widgets.rb
-    lib/ruhoh/paths.rb
-    lib/ruhoh/previewer.rb
-    lib/ruhoh/program.rb
-    lib/ruhoh/templaters/asset_helpers.rb
-    lib/ruhoh/templaters/base_helpers.rb
-    lib/ruhoh/templaters/helpers.rb
-    lib/ruhoh/templaters/rmustache.rb
-    lib/ruhoh/urls.rb
+    lib/ruhoh/programs/compile.rb
+    lib/ruhoh/programs/preview.rb
+    lib/ruhoh/programs/watch.rb
+    lib/ruhoh/resources/_base/collection.rb
+    lib/ruhoh/resources/_base/collection_view.rb
+    lib/ruhoh/resources/_base/compiler.rb
+    lib/ruhoh/resources/_base/model.rb
+    lib/ruhoh/resources/_base/model_view.rb
+    lib/ruhoh/resources/_page/collection_view.rb
+    lib/ruhoh/resources/_page/compiler.rb
+    lib/ruhoh/resources/_page/model.rb
+    lib/ruhoh/resources/_page/model_view.rb
+    lib/ruhoh/resources/_page/previewer.rb
+    lib/ruhoh/resources/dash/collection.rb
+    lib/ruhoh/resources/dash/model.rb
+    lib/ruhoh/resources/dash/previewer.rb
+    lib/ruhoh/resources/data/collection.rb
+    lib/ruhoh/resources/data/collection_view.rb
+    lib/ruhoh/resources/data/watcher.rb
+    lib/ruhoh/resources/javascripts/collection.rb
+    lib/ruhoh/resources/javascripts/collection_view.rb
+    lib/ruhoh/resources/layouts/client.rb
+    lib/ruhoh/resources/layouts/collection.rb
+    lib/ruhoh/resources/layouts/model.rb
+    lib/ruhoh/resources/media/collection.rb
+    lib/ruhoh/resources/media/model.rb
+    lib/ruhoh/resources/media/static_assets.rb
+    lib/ruhoh/resources/pages/client.rb
+    lib/ruhoh/resources/pages/collection.rb
+    lib/ruhoh/resources/pages/collection_view.rb
+    lib/ruhoh/resources/pages/compiler.rb
+    lib/ruhoh/resources/pages/model.rb
+    lib/ruhoh/resources/pages/model_view.rb
+    lib/ruhoh/resources/pages/watcher.rb
+    lib/ruhoh/resources/paginator/collection.rb
+    lib/ruhoh/resources/paginator/previewer.rb
+    lib/ruhoh/resources/partials/collection.rb
+    lib/ruhoh/resources/partials/model.rb
+    lib/ruhoh/resources/partials/watcher.rb
+    lib/ruhoh/resources/posts/client.rb
+    lib/ruhoh/resources/posts/collection.rb
+    lib/ruhoh/resources/posts/collection_view.rb
+    lib/ruhoh/resources/posts/compiler.rb
+    lib/ruhoh/resources/posts/model.rb
+    lib/ruhoh/resources/posts/model_view.rb
+    lib/ruhoh/resources/posts/watcher.rb
+    lib/ruhoh/resources/routes/collection.rb
+    lib/ruhoh/resources/scaffolds/collection.rb
+    lib/ruhoh/resources/scaffolds/model.rb
+    lib/ruhoh/resources/stylesheets/collection.rb
+    lib/ruhoh/resources/stylesheets/collection_view.rb
+    lib/ruhoh/resources/theme/collection.rb
+    lib/ruhoh/resources/theme/compiler.rb
+    lib/ruhoh/resources/theme/watcher.rb
+    lib/ruhoh/resources/widgets/collection.rb
+    lib/ruhoh/resources/widgets/collection_view.rb
+    lib/ruhoh/resources/widgets/watcher.rb
+    lib/ruhoh/resources_interface.rb
     lib/ruhoh/utils.rb
     lib/ruhoh/version.rb
-    lib/ruhoh/watch.rb
+    lib/ruhoh/views/helpers/categories.rb
+    lib/ruhoh/views/helpers/tags.rb
+    lib/ruhoh/views/master_view.rb
+    lib/ruhoh/views/rmustache.rb
     ruhoh.gemspec
-    spec/config_spec.rb
-    spec/db_spec.rb
-    spec/page_spec.rb
-    spec/parsers/layouts_spec.rb
-    spec/parsers/pages_spec.rb
-    spec/parsers/posts_spec.rb
-    spec/parsers/routes_spec.rb
-    spec/parsers/site_spec.rb
-    spec/setup_spec.rb
     spec/spec_helper.rb
     spec/support/shared_contexts.rb
-    system/dash.html
+    system/dash/index.html
     system/partials/categories_list.html
     system/partials/pages_list.html
     system/partials/posts_collate.html
