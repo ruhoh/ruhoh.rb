@@ -31,10 +31,20 @@ class Ruhoh
             line_count += 1
           end
         end
-        
-        content = content.lines.to_a[0, line_breakpoint].join
-        content = self.render(content)
-        Ruhoh::Converter.convert(content, id)
+
+        summary = content.lines.to_a[0, line_breakpoint].join
+
+        # The summary may be missing some key items needed to render properly.
+        # So search the rest of the content and add it to the summary.
+        content.lines.with_index(line_breakpoint) do |line, i|
+          # Add lines containing destination urls.
+          if line =~ /^\[[^\]]+\]:/
+            summary << "\n#{line}"
+          end
+        end
+
+        summary = self.render(summary)
+        Ruhoh::Converter.convert(summary, id)
       end
       
       def pages
