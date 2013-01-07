@@ -60,7 +60,11 @@ module Ruhoh::Resources::Base
     end
     
     def config
-      @ruhoh.config[self.registered_name] || {}
+      config = @ruhoh.config[registered_name] || {}
+      unless config.is_a?(Hash)
+        Ruhoh.log.error("'#{registered_name}' config key in config.yml is a #{config.class}; it needs to be a Hash (object).")
+      end
+      config
     end
     
     def path
