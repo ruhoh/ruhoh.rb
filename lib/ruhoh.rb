@@ -48,8 +48,10 @@ class Ruhoh::Views::MasterView
 
     class_eval <<-RUBY
       def to_#{name}(sub_context)
+        collection_view = #{name}
         Array(sub_context).map { |id|
-          @ruhoh.db.#{name}[id]
+          data = @ruhoh.db.#{name}[id]
+          collection_view ? collection_view.new_model_view(data) : data
         }.compact
       end
     RUBY
