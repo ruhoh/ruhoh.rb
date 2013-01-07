@@ -3,9 +3,8 @@ module Ruhoh::Resources::Theme
     
     def config
       hash = super
-      hash['name'] = hash['name'].to_s.strip
       if hash['name'].empty?
-        Ruhoh.log.error("Theme not specified in #{"config.yml"}")
+        Ruhoh.log.error("Theme not specified in config.yml")
         return false
       end
       
