@@ -10,5 +10,9 @@ module Ruhoh::Resources::Base
     def [](attribute)
       __send__(attribute)
     end
+    
+    def []=(key, value)
+      __send__("#{key}=", value)
+    end
   end
 end
