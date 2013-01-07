@@ -1,6 +1,11 @@
 module Ruhoh::Resources::Page
   class ModelView < Ruhoh::Resources::Base::ModelView
-
+    
+    # Default order by alphabetical title name.
+    def <=>(other)
+      title <=> other.title
+    end
+    
     def categories
       collection.to_categories(super)
     end
