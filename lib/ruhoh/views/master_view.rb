@@ -82,7 +82,7 @@ module Ruhoh::Views
 
     def raw_code(sub_context)
       code = sub_context.gsub('{', '&#123;').gsub('}', '&#125;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('_', "&#95;")
-      "<pre><code>#{code}</code></pre>"
+      "<pre><code>#{code}</code></pre>\n"
     end
     
     # Public: Formats the path to the compiled file based on the URL.
