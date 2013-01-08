@@ -29,7 +29,7 @@ module Ruhoh::Resources::Stylesheets
         }
       end
       
-      assets
+      assets.merge(widget_stylesheets)
     end
     
     def url_endpoint
@@ -53,15 +53,16 @@ module Ruhoh::Resources::Stylesheets
         default_name = "#{name}.css"
         stylesheet = config["widgets"][name] rescue default_name
         stylesheet ||=  default_name
-        file = File.join(@ruhoh.db.config("theme")['path_widgets'], name, "stylesheets", stylesheet)
+        file = File.join(@ruhoh.paths.theme, "widgets", name, "stylesheets", stylesheet)
+        puts file
         next unless File.exists?(file)
         assets << {
-          "url" => [@ruhoh.db.urls["theme_widgets"], name, "stylesheets", stylesheet].join('/'),
+          "url" => [@ruhoh.db.urls["theme"], "widgets", name, "stylesheets", stylesheet].join('/'),
           "id" => file
         }
       end
 
-      assets
+      {"widgets" => assets}
     end
 
   end
