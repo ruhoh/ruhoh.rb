@@ -41,6 +41,11 @@ module Ruhoh::Resources::Posts
     # be abstracted out into paginator resource is possible.
     def pagination
       config = @ruhoh.db.config("paginator")
+      if config["enable"] == false
+        Ruhoh::Friend.say { yellow "Paginator: disabled - skipping." }
+        return
+      end
+
       post_count = @ruhoh.resources.load_collection_view("posts").all.length
       total_pages = (post_count.to_f/config["per_page"]).ceil
       
