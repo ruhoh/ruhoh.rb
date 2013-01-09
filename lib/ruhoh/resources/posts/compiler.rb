@@ -9,11 +9,11 @@ module Ruhoh::Resources::Posts
     end
     
     def rss
-      Ruhoh::Friend.say { green "Generating RSS for posts." }
       num_posts = @ruhoh.db.config("posts")["rss_limit"]
       posts_view = @ruhoh.resources.load_collection_view("posts")
       posts = posts_view.all.first(num_posts)
-
+      Ruhoh::Friend.say { cyan "Posts RSS: (first #{num_posts} posts)" }
+      
       feed = Nokogiri::XML::Builder.new do |xml|
        xml.rss(:version => '2.0') {
          xml.channel {
@@ -34,6 +34,7 @@ module Ruhoh::Resources::Posts
       end
       compiled_path = CGI.unescape(@ruhoh.config['base_path'] + 'rss.xml')
       File.open(File.join(@ruhoh.paths.compiled, compiled_path), 'w'){ |p| p.puts feed.to_xml }
+      Ruhoh::Friend.say { green "  -> seems good!" }
     end
     
     # This is post specific at the moment but probably should
@@ -42,6 +43,8 @@ module Ruhoh::Resources::Posts
       config = @ruhoh.db.config("paginator")
       post_count = @ruhoh.resources.load_collection_view("posts").all.length
       total_pages = (post_count.to_f/config["per_page"]).ceil
+      
+      Ruhoh::Friend.say { cyan "Paginator: (#{total_pages} pages)" }
       
       FileUtils.cd(@ruhoh.paths.compiled) {
         total_pages.times.map { |i| 
@@ -57,7 +60,7 @@ module Ruhoh::Resources::Posts
           }
           FileUtils.mkdir_p File.dirname(view.compiled_path)
           File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
-          Ruhoh::Friend.say { green "Paginator: #{view.page_data['url']}" }
+          Ruhoh::Friend.say { green "  -> #{view.page_data['url']}" }
         }
       }
     end

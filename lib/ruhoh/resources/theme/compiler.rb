@@ -9,6 +9,9 @@ module Ruhoh::Resources::Theme
       # Note the compiled assets are namespaced at /assets/<theme-name>/
       # theme.yml may specify exclusion rules for excluding assets.
       def copy
+        theme_name = @ruhoh.db.config("theme")["name"]
+        Ruhoh::Friend.say { cyan "Theme: (generating '#{theme_name}')" }
+
         url = @ruhoh.db.urls["theme"].gsub(/^\//, '')
         theme = Ruhoh::Utils.url_to_path(url, @ruhoh.paths.compiled)
         FileUtils.mkdir_p theme
@@ -18,6 +21,7 @@ module Ruhoh::Resources::Theme
           compiled_file = File.join(theme, file)
           FileUtils.mkdir_p File.dirname(compiled_file)
           FileUtils.cp_r original_file, compiled_file
+          Ruhoh::Friend.say { green "  -> #{file}" }
         end
       end
       
