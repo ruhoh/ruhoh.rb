@@ -1,5 +1,5 @@
 # Require all the resources
-Dir[File.join(File.dirname(__FILE__), 'resources', '**', '*.rb')].each { |f|
+Dir[File.join(File.dirname(__FILE__), 'resources', '**', '*.rb')].sort.each { |f|
   require f
 }
 
