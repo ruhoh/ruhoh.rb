@@ -27,8 +27,14 @@ module Ruhoh::Resources::Page
       current_page = current_page.zero? ? 1 : current_page
   
       pages = total_pages.times.map { |i| 
+        url = if i.zero? && config["root_page"]
+          config["root_page"]
+        else
+          "#{config["namespace"]}/#{i+1}"
+        end
+        
         {
-          "url" => (i.zero? ? config["root_page"] : @ruhoh.to_url("#{config["namespace"]}/#{i+1}")),
+          "url" => @ruhoh.to_url(url),
           "name" => "#{i+1}",
           "is_active_page" => (i+1 == current_page)
         }

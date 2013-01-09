@@ -45,7 +45,9 @@ module Ruhoh::Resources::Posts
       
       FileUtils.cd(@ruhoh.paths.compiled) {
         total_pages.times.map { |i| 
-          next if i.zero? # handled by config["root_page"]
+          # if a root page is defined we assume it's getting compiled elsewhere.
+          next if (i.zero? && config["root_page"])
+
           url = "#{config["namespace"]}/#{i+1}"
           view = @ruhoh.master_view({"resource" => "posts"})
           view.page_data = {
