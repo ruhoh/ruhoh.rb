@@ -54,7 +54,6 @@ module Ruhoh::Resources::Stylesheets
         stylesheet = config["widgets"][name] rescue default_name
         stylesheet ||=  default_name
         file = File.join(@ruhoh.paths.theme, "widgets", name, "stylesheets", stylesheet)
-        puts file
         next unless File.exists?(file)
         assets << {
           "url" => [@ruhoh.db.urls["theme"], "widgets", name, "stylesheets", stylesheet].join('/'),
