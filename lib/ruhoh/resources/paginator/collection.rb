@@ -16,12 +16,13 @@ module Ruhoh::Resources::Paginator
       hash["per_page"] = hash["per_page"].to_i
       hash["layout"] ||=  "paginator"
 
-      hash["root_page"] ||=  hash["namespace"]
-      unless hash["root_page"].start_with?('/')
-        hash["root_page"] = "/#{hash["root_page"]}"
-      end
-      unless hash["root_page"] == '/'
-        hash["root_page"] = hash["root_page"].chomp('/')
+      if hash["root_page"]
+        unless hash["root_page"].start_with?('/')
+          hash["root_page"] = "/#{hash["root_page"]}"
+        end
+        unless hash["root_page"] == '/'
+          hash["root_page"] = hash["root_page"].chomp('/')
+        end
       end
 
       hash
