@@ -12,7 +12,7 @@ module Ruhoh::Resources::Media
       media = Ruhoh::Utils.url_to_path(collection.url_endpoint, @ruhoh.paths.compiled)
       FileUtils.mkdir_p media
       FileUtils.cp_r(File.join(media_path, '.'), media)
-      Ruhoh::Friend.say { green "  -> done!" }
+      Ruhoh::Friend.say { green "  > done!" }
     end
   end
 end

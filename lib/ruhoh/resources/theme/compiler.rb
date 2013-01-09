@@ -21,7 +21,7 @@ module Ruhoh::Resources::Theme
           compiled_file = File.join(theme, file)
           FileUtils.mkdir_p File.dirname(compiled_file)
           FileUtils.cp_r original_file, compiled_file
-          Ruhoh::Friend.say { green "  -> #{file}" }
+          Ruhoh::Friend.say { green "  > #{file}" }
         end
       end
       

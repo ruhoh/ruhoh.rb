@@ -12,7 +12,7 @@ module Ruhoh::Resources::Page
           FileUtils.mkdir_p File.dirname(view.compiled_path)
           File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
 
-          Ruhoh::Friend.say { green "  -> #{data['id']}" }
+          Ruhoh::Friend.say { green "  > #{data['id']}" }
         }
       }
     end
