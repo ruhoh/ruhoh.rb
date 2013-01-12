@@ -1,4 +1,3 @@
-require 'ruhoh/compiler'
 class Ruhoh
   module Program
     # Public: A program for compiling to a static website.
@@ -17,7 +16,7 @@ class Ruhoh
         ruhoh.paths.compiled = ruhoh.config["compiled"]
       end
       
-      Ruhoh::Compiler.compile(ruhoh)
+      ruhoh.compile
     end
   end
 end

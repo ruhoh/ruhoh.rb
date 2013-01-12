@@ -156,6 +156,56 @@ class Ruhoh
     filename.gsub(Regexp.new("^#{@base}/"), '')
   end
   
+  # Compile the ruhoh instance (save to disk).
+  # Note: This method recursively removes the target directory. Should there be a warning?
+  #
+  # Extending:
+  #   TODO: Deprecate this functionality and come up with a 2.0-friendly interface.
+  #   The Compiler module is a namespace for all compile "tasks".
+  #   A "task" is a ruby Class that accepts @ruhoh instance via initialize.
+  #   At compile time all classes in the Ruhoh::Compiler namespace are initialized and run.
+  #   To add your own compile task simply namespace a class under Ruhoh::Compiler
+  #   and provide initialize and run methods:
+  #
+  #  class Ruhoh
+  #    module Compiler
+  #      class CustomTask
+  #        def initialize(ruhoh)
+  #          @ruhoh = ruhoh
+  #        end
+  #       
+  #        def run
+  #          # do something here
+  #        end
+  #      end
+  #    end
+  #  end
+  def compile
+    ensure_paths
+    Ruhoh::Friend.say { plain "Compiling for environment: '#{@env}'" }
+    FileUtils.rm_r @paths.compiled if File.exist?(@paths.compiled)
+    FileUtils.mkdir_p @paths.compiled
+    
+    # Run the resource compilers
+    @resources.all.keys.each do |name|
+      next unless @resources.compiler?(name)
+      @resources.load_compiler(name).run
+    end
+    
+    # Run extra compiler tasks if available:
+    if Ruhoh.const_defined?(:Compiler)
+      Ruhoh::Compiler.constants.each {|c|
+        compiler = Ruhoh::Compiler.const_get(c)
+        next unless compiler.respond_to?(:new)
+        task = compiler.new(self)
+        next unless task.respond_to?(:run)
+        task.run
+      }
+    end
+
+    true
+  end
+  
   def ensure_setup
     return if @config && @paths
     raise 'Ruhoh has not been fully setup. Please call: Ruhoh.setup'
