@@ -79,7 +79,9 @@ module Ruhoh::Resources::Base
     def generate(id=nil)
       dict = {}
       self.files(id).each { |pointer|
-        dict.merge!(model.new(self, pointer).generate)
+        pointer["resource"] = registered_name
+        model = @ruhoh.resources.model(registered_name).new(@ruhoh, pointer)
+        dict.merge!(model.generate)
       }
       Ruhoh::Utils.report(self.registered_name, dict, [])
       dict
@@ -121,15 +123,6 @@ module Ruhoh::Resources::Base
       return false if filepath.start_with?('.')
       Array(config['exclude']).each {|regex| return false if filepath =~ regex }
       true
-    end
-    
-    # Proxy to the single model class for this resource.
-    def model
-      self.class.model
-    end
-
-    def self.model
-      registered_namespace.const_get(:Model)
     end
     
     def self.registered_name

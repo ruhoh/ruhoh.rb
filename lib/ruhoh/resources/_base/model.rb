@@ -1,11 +1,8 @@
 module Ruhoh::Resources::Base
   class Model
 
-    def initialize(resource, pointer)
-      @resource = resource
-      @ruhoh = resource.ruhoh
-      # Automatically set which resource type is being used.
-      pointer["resource"] = resource.registered_name
+    def initialize(ruhoh, pointer)
+      @ruhoh = ruhoh
       @pointer = pointer
     end
     

@@ -68,8 +68,8 @@ class Ruhoh
     # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
       name = pointer['resource'].downcase # name is a stringified constant.
-      resource = @ruhoh.resources.load_collection(name)
-      model = resource.model.new(resource, pointer)
+      model = @ruhoh.resources.model(name).new(@ruhoh, pointer)
+      
       # TODO:
       # possible collisions here: ids are only unique relative to their resource dictionary.
       # that's the whole point of the pointer... =/
