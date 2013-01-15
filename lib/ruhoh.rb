@@ -87,7 +87,7 @@ class Ruhoh
   # Returns boolean on success/failure
   def setup(opts={})
     self.reset
-    @log.log_file = opts[:log_file] if opts[:log_file] #todo
+    self.class.log.log_file = opts[:log_file] if opts[:log_file] #todo
     @base = opts[:source] if opts[:source]
     !!self.config
   end
