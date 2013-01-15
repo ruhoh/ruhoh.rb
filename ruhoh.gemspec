@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
     history.json
     lib/ruhoh.rb
     lib/ruhoh/client.rb
-    lib/ruhoh/compiler.rb
     lib/ruhoh/console_methods.rb
     lib/ruhoh/converter.rb
     lib/ruhoh/converters/markdown.rb
@@ -61,6 +60,7 @@ Gem::Specification.new do |s|
     lib/ruhoh/resources/layouts/collection.rb
     lib/ruhoh/resources/layouts/model.rb
     lib/ruhoh/resources/media/collection.rb
+    lib/ruhoh/resources/media/compiler.rb
     lib/ruhoh/resources/media/model.rb
     lib/ruhoh/resources/media/static_assets.rb
     lib/ruhoh/resources/pages/client.rb
