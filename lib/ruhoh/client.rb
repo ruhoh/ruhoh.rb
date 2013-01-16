@@ -49,9 +49,11 @@ class Ruhoh
     
     # Thanks rails! https://github.com/rails/rails/blob/master/railties/lib/rails/commands/console.rb
     def console
-      ARGV.clear # IRB throws an error otherwise.
       require 'pp'
+      Ruhoh::ConsoleMethods.env = @args[1]
       IRB::ExtendCommandBundle.send :include, Ruhoh::ConsoleMethods
+      
+      ARGV.clear # IRB throws an error otherwise.
       IRB.start
     end
     alias_method :c, :console
