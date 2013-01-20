@@ -85,6 +85,13 @@ module Ruhoh::Views
       "<pre><code>#{code}</code></pre>\n"
     end
     
+    # My Post Title ===> my-post-title
+    # Handy for transforming ids into css-classes in your views.
+    # @returns[String]
+    def to_slug(sub_context)
+      Ruhoh::Utils.to_slug(sub_context)
+    end
+    
     # Public: Formats the path to the compiled file based on the URL.
     #
     # Returns: [String] The relative path to the compiled file for this page.
