@@ -31,7 +31,11 @@ module Ruhoh::Resources::Page
       content = @ruhoh.db.content(pointer)
       [content, id]
     end
-
+    
+    def is_active_page
+      id == master.page_data['id']
+    end
+    
     # Truncate the page content relative to a line_count limit.
     # This is optimized for markdown files in which content is largely
     # blocked into chunks and separating by blank lines.

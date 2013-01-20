@@ -50,18 +50,7 @@ module Ruhoh::Views
       Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
       p.to_s + "\n" # newline ensures proper markdown rendering.
     end
-    
-    # Marks the active page if exists in the given pages Array
-    def mark_active_page(pages)
-      pages.each_with_index do |page, i| 
-        next unless context["page"] && (page['id'] == context["page"]['id'])
-        active_page = page.dup
-        active_page['is_active_page'] = true
-        pages[i] = active_page
-      end
-      pages
-    end
-    
+
     def to_json(sub_context)
       sub_context.to_json
     end
