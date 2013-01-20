@@ -48,7 +48,7 @@ module Ruhoh::Views
     def partial(name)
       p = @ruhoh.db.partials[name.to_s]
       Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
-      p
+      p.to_s + "\n" # newline ensures proper markdown rendering.
     end
     
     # Marks the active page if exists in the given pages Array
