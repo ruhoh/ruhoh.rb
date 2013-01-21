@@ -6,7 +6,7 @@ module Ruhoh::Resources::Partials
     end
     
     def match(path)
-      path =~ %r{^(#{@collection.path}|themes\/#{@ruhoh.config['theme']['name']}\/partials)}
+      path =~ %r{^(#{@collection.path}|#{@ruhoh.config['theme']['name']}\/partials)}
     end
     
     def update(path)

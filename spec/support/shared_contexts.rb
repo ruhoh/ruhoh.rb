@@ -10,7 +10,7 @@ theme: '#{theme}'
 ---  
   TEXT
     }
-    theme_dir = File.join(SampleSitePath, "themes", theme)
+    theme_dir = File.join(SampleSitePath, theme)
     FileUtils.makedirs theme_dir
   end
 end

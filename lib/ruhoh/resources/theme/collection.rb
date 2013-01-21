@@ -8,7 +8,7 @@ module Ruhoh::Resources::Theme
         return false
       end
       
-      config_path = File.join(@ruhoh.base, "themes", hash["name"], "theme.yml")
+      config_path = File.join(@ruhoh.base, hash["name"], "theme.yml")
       config = Ruhoh::Utils.parse_yaml_file(config_path)
       if config.nil?
         Ruhoh::Friend.say{ 
@@ -35,7 +35,7 @@ module Ruhoh::Resources::Theme
     end
     
     def path
-      "themes/#{config["name"]}"
+      config["name"]
     end
     
     # noop

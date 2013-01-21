@@ -121,7 +121,7 @@ class Ruhoh
     self.ensure_config
     @paths = Paths.new
     @paths.base = @base
-    @paths.theme = File.join(@base, "themes", self.db.config('theme')['name'])
+    @paths.theme = File.join(@base, @db.config('theme')['name'])
     @paths.system = File.join(Ruhoh::Root, "system")
     @paths.compiled = @config["compiled"]
     @paths
