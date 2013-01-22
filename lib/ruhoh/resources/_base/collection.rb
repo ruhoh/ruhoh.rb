@@ -80,8 +80,15 @@ module Ruhoh::Resources::Base
       dict = {}
       self.files(id).each { |pointer|
         pointer["resource"] = registered_name
-        model = @ruhoh.resources.model(registered_name).new(@ruhoh, pointer)
-        dict.merge!(model.generate)
+        result = if @ruhoh.resources.model?(registered_name)
+          model = @ruhoh.resources.model(registered_name).new(@ruhoh, pointer)
+          model.generate
+        else
+          {
+            pointer['id'] => pointer
+          }
+        end
+        dict.merge!(result)
       }
       Ruhoh::Utils.report(self.registered_name, dict, [])
       dict
