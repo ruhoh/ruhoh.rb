@@ -121,7 +121,8 @@ module Ruhoh::Resources::Base
       return false unless File.exist? filepath
       return false if FileTest.directory?(filepath)
       return false if filepath.start_with?('.')
-      Array(config['exclude']).each {|regex| return false if filepath =~ regex }
+      excludes = Array(config['exclude']).map { |node| Regexp.new(node) }
+      excludes.each { |regex| return false if filepath =~ regex }
       true
     end
     

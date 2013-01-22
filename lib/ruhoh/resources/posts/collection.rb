@@ -10,7 +10,6 @@ module Ruhoh::Resources::Posts
       hash['latest'] = hash['latest'].to_i
       hash['rss_limit'] ||= 20
       hash['rss_limit'] = hash['rss_limit'].to_i
-      hash['exclude'] = Array(hash['exclude']).map {|node| Regexp.new(node) }
       hash['ext'] ||= ".md"
       hash
     end
