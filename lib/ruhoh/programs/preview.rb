@@ -31,14 +31,19 @@ class Ruhoh
         use Rack::Lint
         use Rack::ShowExceptions
         
-        ruhoh.db.urls.each do |name, url|
-          next if name == "base_path"
-          next unless ruhoh.resources.exists?(name)
-          map url do
-            if ruhoh.resources.previewer?(name)
-              run ruhoh.resources.load_previewer(name)
+        sorted_urls = ruhoh.db.urls.each.map {|k, v| {"name" => k, "url" => v} }
+        sorted_urls = sorted_urls.sort { |a, b| b["url"].length <=> a["url"].length }
+        sorted_urls.each do |h|
+          next if h["name"] == "base_path"
+          next unless ruhoh.resources.exists?(h["name"])
+          map h["url"] do
+            if ruhoh.resources.previewer?(h["name"])
+              run ruhoh.resources.load_previewer(h["name"])
             else
-              run Rack::File.new(File.join(ruhoh.paths.base, ruhoh.db.paths[name]))
+              realpath = (ruhoh.db.paths[h["name"]] =~ %r{^#{ruhoh.paths.base}}) ?
+                         ruhoh.db.paths[h["name"]] :
+                         File.join(ruhoh.paths.base, ruhoh.db.paths[h["name"]])
+              run Rack::File.new(realpath)
             end
           end
         end
