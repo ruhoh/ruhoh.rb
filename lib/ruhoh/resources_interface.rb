@@ -1,7 +1,15 @@
 # Require all the resources
-Dir[File.join(File.dirname(__FILE__), 'resources', '**', '*.rb')].sort.each { |f|
-  require f
-}
+# Ensure _base is loaded first.
+FileUtils.cd(File.join(File.dirname(__FILE__), 'resources')) do
+  directories = Dir['*']
+  directories.delete('_base')
+  directories.unshift('_base')
+  directories.each do |dir|
+    Dir[File.join(dir, '**', '*.rb')].each do |f|
+      require File.join(File.dirname(__FILE__), 'resources', f)
+    end
+  end
+end
 
 class Ruhoh
   class ResourcesInterface
