@@ -32,7 +32,7 @@ class Ruhoh
         use Rack::ShowExceptions
         
         ruhoh.db.urls.each do |name, url|
-          next if ["base_path", "javascripts", "stylesheets"].include?(name)
+          next if name == "base_path"
           next unless ruhoh.resources.exists?(name)
           map url do
             if ruhoh.resources.previewer?(name)
