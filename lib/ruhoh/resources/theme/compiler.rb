@@ -24,23 +24,22 @@ module Ruhoh::Resources::Theme
       end
     end
 
-    # Returns list of all files from the theme that need to be
-    # compiled to the production environment.
-    # Returns Array of relative filepaths
+    # Returns list of all files from the theme to be compiled.
+    # @returns[Array] relative filepaths
     def files
       FileUtils.cd(@ruhoh.paths.theme) {
         return Dir["**/*"].select { |filepath|
-          next if filepath.start_with?('javascripts') # protect javascripts
-          next if filepath.start_with?('stylesheets') # protect stylesheets
-          next unless is_valid_asset?(filepath)
-          true
+          is_valid_asset?(filepath)
         }
       }
     end
 
     # Checks a given asset filepath against any user-defined exclusion rules in theme.yml
+    # Omit layouts, stylesheets, javascripts as they are handled by their respective resources.
+    # @returns[Boolean]
     def is_valid_asset?(filepath)
       return false if FileTest.directory?(filepath)
+      return false if filepath.start_with?('layouts', 'stylesheets', 'javascripts') 
       @ruhoh.db.config("theme")["exclude"].each {|regex| return false if filepath =~ regex }
       true
     end
