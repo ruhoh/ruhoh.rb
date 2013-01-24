@@ -16,6 +16,7 @@ class Ruhoh
     end
     
     def self.url_to_path(url, base=nil)
+      url = url.gsub(/^\//, '')
       parts = url.split('/')
       parts = parts.unshift(base) if base
       File.__send__(:join, parts)

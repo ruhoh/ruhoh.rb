@@ -14,8 +14,7 @@ class Ruhoh
       
       def media
         return unless FileTest.directory? @ruhoh.paths.media
-        url = @ruhoh.db.urls["media"].gsub(/^\//, '')
-        media = Ruhoh::Utils.url_to_path(url, @ruhoh.paths.compiled)
+        media = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["media"], @ruhoh.paths.compiled)
         FileUtils.mkdir_p media
         FileUtils.cp_r File.join(@ruhoh.paths.media, '.'), media
       end

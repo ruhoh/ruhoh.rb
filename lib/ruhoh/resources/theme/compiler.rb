@@ -11,8 +11,7 @@ module Ruhoh::Resources::Theme
       theme_name = @ruhoh.db.config("theme")["name"]
       Ruhoh::Friend.say { cyan "Theme: (generating '#{theme_name}')" }
 
-      url = @ruhoh.db.urls["theme"].gsub(/^\//, '')
-      theme = Ruhoh::Utils.url_to_path(url, @ruhoh.paths.compiled)
+      theme = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["theme"], @ruhoh.paths.compiled)
       FileUtils.mkdir_p theme
 
       self.files.each do |file|
