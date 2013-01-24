@@ -10,8 +10,6 @@ module Ruhoh::Resources::Theme
     end
   
     def update(path)
-      @ruhoh.db.clear(:stylesheets)
-      @ruhoh.db.clear(:javascripts)
       @ruhoh.db.clear(:widgets)
       @ruhoh.db.clear(:layouts)
     end
