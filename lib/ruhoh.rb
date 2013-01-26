@@ -187,7 +187,14 @@ class Ruhoh
     FileUtils.mkdir_p @paths.compiled
     
     # Run the resource compilers
-    @resources.all.keys.each do |name|
+    compilers = @resources.all.keys
+    # Hack to ensure assets are processed first so post-processing logic reflects in the templates.
+    compilers.delete('stylesheets')
+    compilers.unshift('stylesheets')
+    compilers.delete('javascripts')
+    compilers.unshift('javascripts')
+    
+    compilers.each do |name|
       next unless @resources.compiler?(name)
       @resources.load_compiler(name).run
     end
