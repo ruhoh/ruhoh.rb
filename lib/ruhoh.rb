@@ -128,7 +128,15 @@ class Ruhoh
   end
   
   def setup_plugins
-    self.ensure_paths
+    ensure_paths
+
+    enable_sprockets = @config['asset_pipeline']['enable'] rescue false
+    if enable_sprockets
+      Ruhoh::Friend.say { green "=> Oh boy! Asset pipeline enabled by way of sprockets =D" }
+      sprockets = Dir[File.join(@paths.system, "plugins", "sprockets", "**/*.rb")]
+      sprockets.each {|f| require f }
+    end
+
     plugins = Dir[File.join(@base, "plugins", "**/*.rb")]
     plugins.each {|f| require f } unless plugins.empty?
   end
