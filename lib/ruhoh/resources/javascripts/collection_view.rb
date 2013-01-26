@@ -1,5 +1,13 @@
 module Ruhoh::Resources::Javascripts
   class CollectionView < Ruhoh::Resources::Base::CollectionView
+    attr_accessor :_cache
+
+    def initialize(ruhoh)
+      super(ruhoh)
+      @collection = ruhoh.resources.load_collection("javascripts")
+      @_cache = {}
+    end
+
     # Load javascripts as defined within the given sub_context
     #
     # Example:
@@ -14,15 +22,26 @@ module Ruhoh::Resources::Javascripts
     #
     # @returns[String] HTML script tags for given javascripts.
     def load(sub_context)
-      collection = @ruhoh.resources.load_collection("javascripts")
       javascripts = sub_context.split("\n").map{ |s| s.gsub(/\s/, '') }.delete_if(&:empty?)
       javascripts.map { |name|
-        url = (name =~ /^(http:|https:)?\/\//i) ?
-          name :
-          (@ruhoh.to_url(collection.url_endpoint, name) + "?#{rand()}")
-        
-        "<script src='#{url}'></script>"
+        "<script src='#{make_url(name)}'></script>"
       }.join("\n")
     end
+
+    protected
+
+    def make_url(name)
+      return name if name =~ /^(http:|https:)?\/\//i
+
+      path = if @_cache[name]
+        @_cache[name]
+      else
+        @_cache[name] = name
+        "#{name}?#{rand()}"
+      end
+
+      @ruhoh.to_url(@collection.url_endpoint, path)
+    end
+
   end
 end
