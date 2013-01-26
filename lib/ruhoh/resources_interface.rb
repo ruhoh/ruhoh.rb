@@ -51,9 +51,22 @@ class Ruhoh
         constantize(name).const_defined?(constant_sym)
       end
       
-      define_method("load_#{method_name}") do |name|
-        constantize(name).const_get(constant_sym).new(@ruhoh)
-      end
+      # Load and cache a given resource class.
+      # This allows you to work with single object instance and perform
+      # persistant mutations on it if necessary.
+      # TODO: Kind of ugly, maybe a better way to do this. Singleton?
+      class_eval <<-RUBY
+        def load_#{method_name}(name)
+          var = "@" + name.to_s + '_#{method_name}'
+          if instance_variable_defined?(var) && instance_variable_get(var)
+            instance_variable_get(var)
+          else
+            instance_variable_set(var, constantize(name).const_get('#{constant_sym}'.to_sym).new(@ruhoh))
+            instance_variable_get(var)
+          end
+        end
+      RUBY
+
     end
       
     def constantize(name)
