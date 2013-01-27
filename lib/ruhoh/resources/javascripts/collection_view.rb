@@ -4,7 +4,6 @@ module Ruhoh::Resources::Javascripts
 
     def initialize(ruhoh)
       super(ruhoh)
-      @collection = ruhoh.resources.load_collection("javascripts")
       @_cache = {}
     end
 

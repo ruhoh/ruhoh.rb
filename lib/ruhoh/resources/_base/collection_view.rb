@@ -4,6 +4,7 @@ module Ruhoh::Resources::Base
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
+      @collection = ruhoh.resources.load_collection(resource_name)
     end
     
     def self.inherited(base)

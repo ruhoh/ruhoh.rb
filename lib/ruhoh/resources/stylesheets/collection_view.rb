@@ -4,7 +4,6 @@ module Ruhoh::Resources::Stylesheets
 
     def initialize(ruhoh)
       super(ruhoh)
-      @collection = ruhoh.resources.load_collection("stylesheets")
       @_cache = {}
     end
     

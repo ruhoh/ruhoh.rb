@@ -1,11 +1,6 @@
 module Ruhoh::Resources::Widgets
   class CollectionView < Ruhoh::Resources::Base::CollectionView
 
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
-      @collection = @ruhoh.resources.load_collection(resource_name)
-    end
-
     def widget(name)
       return '' if master.page_data[name].to_s == 'false'
       config = @ruhoh.db.config('widgets')[name] || {}
