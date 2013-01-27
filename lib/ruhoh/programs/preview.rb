@@ -30,7 +30,12 @@ class Ruhoh
       Rack::Builder.new {
         use Rack::Lint
         use Rack::ShowExceptions
-        
+
+        # ruhoh.db.urls contains url endpoints as registered by the resources.
+        # The urls are mapped to the resource's individual rack-compatable Previewer class.
+        # Note page-like resources (posts, pages) don't render uniform url endpoints,
+        # since presumably they define customized permalinks per singular resource.
+        # Page-like resources are handled the root mapping below.
         sorted_urls = ruhoh.db.urls.each.map {|k, v| {"name" => k, "url" => v} }
         sorted_urls = sorted_urls.sort { |a, b| b["url"].length <=> a["url"].length }
         sorted_urls.each do |h|
@@ -47,7 +52,9 @@ class Ruhoh
             end
           end
         end
-        
+
+        # The generic Page::Previewer is used to render any/all page-like resources,
+        # since they likely have arbitrary urls based on permalink settings.
         map '/' do
           run Ruhoh::Resources::Page::Previewer.new(ruhoh)
         end
