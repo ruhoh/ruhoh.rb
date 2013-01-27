@@ -1,0 +1,16 @@
+---
+appid : 123
+num_posts: 5
+width: 580
+colorscheme: light
+---
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId={{ config.appid }}";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-comments" data-href="{{ urls.production_url }}" data-num-posts="{{ config.num_posts }}" data-width="{{ config.width }}" data-colorscheme="{{ config.colorscheme }}"></div>
