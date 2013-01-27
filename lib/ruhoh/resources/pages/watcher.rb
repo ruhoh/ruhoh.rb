@@ -1,14 +1,9 @@
 module Ruhoh::Resources::Pages
-  class Watcher
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
-      @collection = ruhoh.resources.load_collection("pages")
-    end
-    
+  class Watcher < Ruhoh::Resources::Base::Watcher
     def match(path)
       path =~ %r{^#{@collection.path}}
     end
-    
+
     def update(path)
       path = path.gsub(/^.+\//, '')
       key = @ruhoh.db.routes.key(path)

@@ -1,14 +1,9 @@
 module Ruhoh::Resources::Layouts
-  class Watcher
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
-      @collection = ruhoh.resources.load_collection("layouts")
-    end
-  
+  class Watcher < Ruhoh::Resources::Base::Watcher
     def match(path)
       path =~ Regexp.new("^#{@collection.path}")
     end
-  
+
     def update(path)
       @ruhoh.db.clear(:layouts)
     end
