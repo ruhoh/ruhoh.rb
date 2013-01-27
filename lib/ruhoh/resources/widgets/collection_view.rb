@@ -4,6 +4,7 @@ module Ruhoh::Resources::Widgets
     def widget(name)
       return '' if master.page_data[name].to_s == 'false'
       config = @ruhoh.db.config('widgets')[name] || {}
+      return '' if config['enable'].to_s == 'false'
       pointer = @ruhoh.db.widgets["#{name}/#{(config['use'] || "default")}.html"]['pointer'] rescue nil
       return '' unless pointer
 
