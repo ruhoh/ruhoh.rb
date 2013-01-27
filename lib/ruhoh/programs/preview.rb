@@ -45,10 +45,13 @@ class Ruhoh
             if ruhoh.resources.previewer?(h["name"])
               run ruhoh.resources.load_previewer(h["name"])
             else
-              realpath = (ruhoh.db.paths[h["name"]] =~ %r{^#{ruhoh.paths.base}}) ?
-                         ruhoh.db.paths[h["name"]] :
-                         File.join(ruhoh.paths.base, ruhoh.db.paths[h["name"]])
-              run Rack::File.new(realpath)
+              collection = ruhoh.resources.load_collection(h["name"])
+              relative_path = ruhoh.db.paths[h["name"]].gsub(%r{^#{ruhoh.paths.base}}, '')
+              try_files = collection.paths.reverse.map do |data|
+                Rack::File.new(File.join(data["path"], relative_path))
+              end
+
+              run Rack::Cascade.new(try_files)
             end
           end
         end
