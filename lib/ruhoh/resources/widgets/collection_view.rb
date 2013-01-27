@@ -1,21 +1,40 @@
 module Ruhoh::Resources::Widgets
   class CollectionView < Ruhoh::Resources::Base::CollectionView
-    
+
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
+      @collection = @ruhoh.resources.load_collection(resource_name)
+    end
 
     def widget(name)
-      return '' if master.page_data[name.to_s].to_s == 'false'
-      @ruhoh.db.widgets[name.to_s]['layout']
+      return '' if master.page_data[name].to_s == 'false'
+      config = @ruhoh.db.config('widgets')[name] || {}
+      pointer = @ruhoh.db.widgets["#{name}/#{(config['use'] || "default")}.html"]['pointer'] rescue nil
+      return '' unless pointer
+
+      model = @ruhoh.resources.model('widgets').new(@ruhoh, pointer)
+      parsed = model.parse_page_file
+      data = parsed['data']
+      content = parsed['content']
+
+      view = @ruhoh.master_view('')
+
+      # merge the config.yml data into the inline layout data.
+      # Note this is reversing the normal hierarchy 
+      # in that inline should always override config level.
+      # However the inline in this case is set as implementation defaults 
+      # and meant to be overridden by user specific data.
+      view.render(content, {"config" => data.merge(config)})
     end
 
     def method_missing(name, *args, &block)
-      return widget(name.to_s) if @ruhoh.db.widgets.has_key?(name.to_s)
-      super
+      name = name.to_s
+      @collection.widgets.include?(name) ? widget(name) : super
     end
 
     def respond_to?(method)
-      return true if @ruhoh.db.widgets.has_key?(method.to_s)
-      super
+      @collection.widgets.include?(method.to_s) ? true : super
     end
-    
+
   end
 end
