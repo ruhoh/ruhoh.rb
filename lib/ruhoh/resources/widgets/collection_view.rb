@@ -20,7 +20,10 @@ module Ruhoh::Resources::Widgets
       # in that inline should always override config level.
       # However the inline in this case is set as implementation defaults 
       # and meant to be overridden by user specific data.
-      view.render(content, {"config" => data.merge(config)})
+      view.render(content, {
+        "config" => data.merge(config),
+        "this_path" => @ruhoh.to_url(@collection.url_endpoint, name)
+      })
     end
 
     def method_missing(name, *args, &block)
