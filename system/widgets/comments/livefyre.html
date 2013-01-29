@@ -5,6 +5,6 @@ site_id : 123
 <script type='text/javascript' src='http://zor.livefyre.com/wjs/v1.0/javascripts/livefyre_init.js'></script>
 <script type='text/javascript'>
     var fyre = LF({
-        site_id: {{ config.site_id }}
+        site_id: {{ this_config.site_id }}
     });
 </script>

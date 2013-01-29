@@ -7,7 +7,7 @@ linenums : true
 <script>
   var pres = document.getElementsByTagName("pre");
   for (var i=0; i < pres.length; ++i) {
-    pres[i].className = "prettyprint {{# config.linenums }}linenums{{/config.linenums}}";
+    pres[i].className = "prettyprint {{# this_config.linenums }}linenums{{/this_config.linenums}}";
   }
   prettyPrint();
 </script>

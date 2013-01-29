@@ -10,7 +10,7 @@ colorscheme: light
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId={{ config.appid }}";
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId={{ this_config.appid }}";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-comments" data-href="{{ urls.production_url }}" data-num-posts="{{ config.num_posts }}" data-width="{{ config.width }}" data-colorscheme="{{ config.colorscheme }}"></div>
+<div class="fb-comments" data-href="{{ urls.production_url }}" data-num-posts="{{ this_config.num_posts }}" data-width="{{ this_config.width }}" data-colorscheme="{{ this_config.colorscheme }}"></div>

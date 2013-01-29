@@ -21,7 +21,7 @@ module Ruhoh::Resources::Widgets
       # However the inline in this case is set as implementation defaults 
       # and meant to be overridden by user specific data.
       view.render(content, {
-        "config" => data.merge(config),
+        "this_config" => data.merge(config),
         "this_path" => @ruhoh.to_url(@collection.url_endpoint, name)
       })
     end

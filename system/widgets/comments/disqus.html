@@ -5,7 +5,7 @@ short_name : jekyllbootstrap # Change This!
 <div id="disqus_thread"></div>
 <script>
     {{^ env.production }}var disqus_developer = 1;{{/ env.production }}
-    var disqus_shortname = '{{ config.short_name }}'; // required: replace example with your forum shortname
+    var disqus_shortname = '{{ this_config.short_name }}'; // required: replace example with your forum shortname
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
