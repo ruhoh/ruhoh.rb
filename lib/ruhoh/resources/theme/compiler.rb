@@ -8,7 +8,7 @@ module Ruhoh::Resources::Theme
     # Copies all assets over to the compiled site.
     # Note the compiled assets are namespaced at /assets/<theme-name>/
     def copy
-      theme_name = @ruhoh.db.config("theme")["name"]
+      theme_name = @collection.config["name"]
       Ruhoh::Friend.say { cyan "Theme: (generating '#{theme_name}')" }
 
       theme = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["theme"], @ruhoh.paths.compiled)
@@ -37,9 +37,11 @@ module Ruhoh::Resources::Theme
     # Omit layouts, stylesheets, javascripts as they are handled by their respective resources.
     # @returns[Boolean]
     def is_valid_asset?(filepath)
+      return false unless File.exist? filepath
       return false if FileTest.directory?(filepath)
-      return false if filepath.start_with?('layouts', 'stylesheets', 'javascripts') 
-      @ruhoh.db.config("theme")["exclude"].each {|regex| return false if filepath =~ regex }
+      return false if filepath.start_with?('.', 'layouts', 'stylesheets', 'javascripts') 
+      excludes = Array(@collection.config['exclude']).map { |node| Regexp.new(node) }
+      excludes.each { |regex| return false if filepath =~ regex }
       true
     end
   end
