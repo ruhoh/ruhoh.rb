@@ -46,9 +46,8 @@ class Ruhoh
               run ruhoh.resources.load_previewer(h["name"])
             else
               collection = ruhoh.resources.load_collection(h["name"])
-              relative_path = ruhoh.db.paths[h["name"]].gsub(%r{^#{ruhoh.paths.base}}, '')
               try_files = collection.paths.reverse.map do |data|
-                Rack::File.new(File.join(data["path"], relative_path))
+                Rack::File.new(File.join(data["path"], h["name"]))
               end
 
               run Rack::Cascade.new(try_files)
