@@ -5,7 +5,7 @@ module Ruhoh::Resources::Media
     # but currently no way to dynamically update all media links in views with digest path.
     def run
       collection = @collection
-      unless FileTest.directory? @collection.path
+      unless @collection.paths?
         Ruhoh::Friend.say { yellow "#{collection.namespace.capitalize}: directory not found - skipping." }
         return
       end

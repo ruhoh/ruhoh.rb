@@ -58,7 +58,17 @@ module Ruhoh::Resources::Base
         }
       ]
     end
-    
+
+    # Does this resource any valid paths to process?
+    # A valid path may exist on any of the cascade levels.
+    # False means there are no directories on any cascade level.
+    # @returns[Boolean]
+    def paths?
+      !!Array(paths.map{ |h| h["path"] }).find do |path|
+        File.directory?(File.join(path, namespace))
+      end
+    end
+
     def config
       config = @ruhoh.config[registered_name] || {}
       unless config.is_a?(Hash)
