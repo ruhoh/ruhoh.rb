@@ -26,9 +26,9 @@ module Ruhoh::Resources::Posts
       data['date']          = data['date'].to_s
       data['title']         = data['title'] || filename_data['title']
       data['url']           = self.permalink(data)
-      data['layout']        = config['layout'] if data['layout'].nil?
       data['categories']    = Array(data['categories'])
       data['tags']          = Array(data['tags'])
+      data['layout'] ||= config['layout']
       
       # Register this route for the previewer
       @ruhoh.db.routes[data['url']] = @pointer

@@ -3,7 +3,6 @@ module Ruhoh::Resources::Posts
     def config
       hash = super
       hash['permalink'] ||= "/:categories/:year/:month/:day/:title.html"
-      hash['layout'] ||= 'post'
       hash['summary_lines'] ||= 20
       hash['summary_lines'] = hash['summary_lines'].to_i
       hash['latest'] ||= 2

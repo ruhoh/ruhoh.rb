@@ -97,8 +97,11 @@ module Ruhoh::Views
       if @page_data['layout']
         @sub_layout = @ruhoh.db.layouts[@page_data['layout']]
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
+      elsif @page_data['layout'] != false
+        # try default
+        @sub_layout = @ruhoh.db.layouts[@pointer["resource"]]
       end
-    
+
       if @sub_layout && @sub_layout['data']['layout']
         @master_layout = @ruhoh.db.layouts[@sub_layout['data']['layout']]
         raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
