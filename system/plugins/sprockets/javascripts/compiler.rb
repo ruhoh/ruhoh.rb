@@ -5,7 +5,7 @@ module Ruhoh::Resources::Javascripts
       Ruhoh::Friend.say { cyan "Javascripts: (using sprockets)" }
       collection = @ruhoh.resources.load_collection('javascripts')
       env = Sprockets::Environment.new
-      env.append_path(collection.path)
+      env.append_path(collection.namespace)
       env.logger = Logger.new(STDOUT)
 
       compiled_path = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["javascripts"], @ruhoh.paths.compiled)

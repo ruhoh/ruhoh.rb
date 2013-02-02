@@ -47,7 +47,7 @@ class Ruhoh
             else
               collection = ruhoh.resources.load_collection(h["name"])
               try_files = collection.paths.reverse.map do |data|
-                Rack::File.new(File.join(data["path"], h["name"]))
+                Rack::File.new(File.join(data["path"], collection.namespace))
               end
 
               run Rack::Cascade.new(try_files)

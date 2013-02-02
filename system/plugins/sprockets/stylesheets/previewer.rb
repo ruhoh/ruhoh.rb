@@ -8,7 +8,7 @@ module Ruhoh::Resources::Stylesheets
     def initialize(ruhoh)
       collection = ruhoh.resources.load_collection('stylesheets')
       environment = Sprockets::Environment.new
-      environment.append_path(collection.path)
+      environment.append_path(collection.namespace)
       @environment = environment
     end
   end
