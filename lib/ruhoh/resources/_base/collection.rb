@@ -16,23 +16,25 @@ module Ruhoh::Resources::Base
         @resources[name] = namespace
       end
     end
-    
+
+    def self.registered_name
+      parts = name.split("::")
+      parts.pop
+      Ruhoh::Utils.underscore(parts.pop)
+    end
+
     attr_reader :ruhoh
-    
+
     def initialize(ruhoh)
       @ruhoh = ruhoh
     end
-    
+
     def registered_name
       self.class.registered_name
     end
-    
+
     def namespace
-      if self.class.class_variable_defined?(:@@namespace)
-        self.class.class_variable_get(:@@namespace)
-      else
-        Ruhoh::Utils.underscore(registered_name)
-      end
+      Ruhoh::Utils.underscore(registered_name)
     end
 
     # The default glob for finding files.
@@ -131,7 +133,7 @@ module Ruhoh::Resources::Base
       end
       a
     end
-    
+
     def valid_file?(filepath)
       return false unless File.exist? filepath
       return false if FileTest.directory?(filepath)
@@ -139,16 +141,6 @@ module Ruhoh::Resources::Base
       excludes = Array(config['exclude']).map { |node| Regexp.new(node) }
       excludes.each { |regex| return false if filepath =~ regex }
       true
-    end
-    
-    def self.registered_name
-      parts = name.split("::")
-      parts.pop
-      Ruhoh::Utils.underscore(parts.pop)
-    end
-
-    def self.registered_namespace
-      Ruhoh::Resources::Base::Collection.resources[registered_name]
     end
   end
 end
