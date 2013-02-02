@@ -97,13 +97,7 @@ class Ruhoh
   end
   
   def config
-    return @config if @config
-    config = Ruhoh::Utils.parse_yaml_file(@base, "config.yml")
-    unless config
-      Ruhoh.log.error("Empty config.\nEnsure ./#{"config.yml"} exists and contains valid YAML")
-      return false
-    end
-
+    config = Ruhoh::Utils.parse_yaml_file(@base, "config.yml") || {}
     config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : "compiled"
 
     config['base_path'] = config['base_path'].to_s.strip
@@ -112,7 +106,7 @@ class Ruhoh
     else
       config['base_path'] += "/" unless config['base_path'][-1] == '/'
     end
-    
+
     @config = config
   end
   
