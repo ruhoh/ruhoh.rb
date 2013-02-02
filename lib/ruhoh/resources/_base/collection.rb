@@ -40,10 +40,10 @@ module Ruhoh::Resources::Base
     def glob
       "**/*"
     end
-    
+
     # Default paths to the 3 levels of the cascade.
     def paths
-      [
+      a = [
         {
           "name" => "system",
           "path" => @ruhoh.paths.system
@@ -51,12 +51,14 @@ module Ruhoh::Resources::Base
         {
           "name" => "base",
           "path" => @ruhoh.paths.base
-        }, 
-        {
-          "name" => "theme",
-          "path" => @ruhoh.paths.theme
         }
       ]
+      a << {
+        "name" => "theme",
+        "path" => @ruhoh.paths.theme
+      } if @ruhoh.paths.theme
+
+      a
     end
 
     # Does this resource any valid paths to process?

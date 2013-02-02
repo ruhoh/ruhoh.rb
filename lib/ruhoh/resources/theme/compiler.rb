@@ -6,10 +6,15 @@ module Ruhoh::Resources::Theme
     end
 
     # Copies all assets over to the compiled site.
-    # Note the compiled assets are namespaced at /assets/<theme-name>/
+    # Note the compiled assets are namespaced at /assets/
     def copy
-      theme_name = @collection.config["name"]
-      Ruhoh::Friend.say { cyan "Theme: (generating '#{theme_name}')" }
+      collection = @collection
+      unless @collection.paths?
+        Ruhoh::Friend.say { yellow "#{collection.namespace.capitalize}: directory not found - skipping." }
+        return
+      end
+
+      Ruhoh::Friend.say { cyan "Theme: (generating '#{collection.namespace}')" }
 
       theme = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["theme"], @ruhoh.paths.compiled)
       FileUtils.mkdir_p theme
@@ -34,12 +39,12 @@ module Ruhoh::Resources::Theme
     end
 
     # Checks a given asset filepath against any user-defined exclusion rules in theme.yml
-    # Omit layouts, stylesheets, javascripts as they are handled by their respective resources.
+    # Omit layouts, stylesheets, javascripts, media as they are handled by their respective resources.
     # @returns[Boolean]
     def is_valid_asset?(filepath)
       return false unless File.exist? filepath
       return false if FileTest.directory?(filepath)
-      return false if filepath.start_with?('.', 'layouts', 'stylesheets', 'javascripts') 
+      return false if filepath.start_with?('.', 'layouts', 'stylesheets', 'javascripts', 'media')
       excludes = Array(@collection.config['exclude']).map { |node| Regexp.new(node) }
       excludes.each { |regex| return false if filepath =~ regex }
       true
