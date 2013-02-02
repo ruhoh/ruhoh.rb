@@ -89,19 +89,7 @@ class Ruhoh
       
       @urls
     end
-    
-    def paths
-      return @paths unless @paths.empty?
-      @ruhoh.resources.all.keys.each do |name|
-        next unless @ruhoh.resources.collection?(name)
-        collection = @ruhoh.resources.load_collection(name)
-        next unless collection.respond_to?(:path)
-        @paths[name] = collection.path
-      end
-      
-      @paths
-    end
-    
+  
     # Get the config for a given resource.
     def config(name)
       name = name.downcase

@@ -78,11 +78,7 @@ module Ruhoh::Resources::Base
       end
       config
     end
-    
-    def path
-      namespace
-    end
-    
+
     # Generate all data resources for this data endpoint.
     # Returns dictionary of all data resources.
     #

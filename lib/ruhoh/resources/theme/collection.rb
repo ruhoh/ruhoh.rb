@@ -5,7 +5,7 @@ module Ruhoh::Resources::Theme
       "/assets"
     end
 
-    def path
+    def namespace
       config["name"].to_s
     end
 

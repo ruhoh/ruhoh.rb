@@ -1,7 +1,7 @@
 module Ruhoh::Resources::Theme
   class Watcher < Ruhoh::Resources::Base::Watcher
     def match(path)
-      path =~ Regexp.new("^#{@collection.path}")
+      path =~ Regexp.new("^#{@collection.namespace}")
     end
 
     def update(path)
