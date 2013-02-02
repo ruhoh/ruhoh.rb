@@ -1,12 +1,8 @@
 module Ruhoh::Resources::Javascripts
   class Collection < Ruhoh::Resources::Base::Collection
 
-    def path
-      File.join(@ruhoh.paths.theme, namespace)
-    end
-
     def url_endpoint
-      "assets/#{@ruhoh.db.config('theme')['name']}/#{namespace}"
+      "assets/#{namespace}"
     end
 
     # widgets may register javascript dependencies, which are resolved here.

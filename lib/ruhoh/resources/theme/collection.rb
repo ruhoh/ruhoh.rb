@@ -11,7 +11,7 @@ module Ruhoh::Resources::Theme
     end
 
     def url_endpoint
-      "/assets/#{config['name']}"
+      "/assets"
     end
 
     def path
