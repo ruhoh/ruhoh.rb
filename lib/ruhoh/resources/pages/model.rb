@@ -1,15 +1,14 @@
 module Ruhoh::Resources::Pages
   class Model < Ruhoh::Resources::Page::Model
-
     # Generate this filepath
     # Returns data to be registered to the database
     def generate
-      parsed_page     = self.parse_page_file
+      parsed_page     = parse_page_file
       data            = parsed_page['data']
       data['pointer'] = @pointer
       data['id']      = @pointer['id']
-      data['url']     = self.permalink(data)
-      data['title']   = data['title'] || self.to_title
+      data['url']     = permalink(data)
+      data['title']   = data['title'] || to_title
       data['layout']  = config['layout'] if data['layout'].nil?
 
       # Register this route for the previewer
@@ -25,6 +24,5 @@ module Ruhoh::Resources::Pages
       name = @pointer['id'].split('/')[-2] if name == 'index' && !@pointer['id'].index('/').nil?
       name.gsub(/[^\p{Word}+]/u, ' ').gsub(/\b\w/){$&.upcase}
     end
-
   end
 end

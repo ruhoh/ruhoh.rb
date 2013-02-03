@@ -6,7 +6,7 @@ module Ruhoh::Resources::Page
     Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
     def content
-      self.parse_page_file['content']
+      parse_page_file['content']
     end
 
     def parse_page_file
@@ -15,11 +15,9 @@ module Ruhoh::Resources::Page
       page = File.open(@pointer['realpath'], 'r:UTF-8') {|f| f.read }
 
       front_matter = page.match(FMregex)
-      if front_matter
-        data = YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
-      else
-        data = {}
-      end
+      data = front_matter ?
+        (YAML.load(front_matter[0].gsub(/---\n/, "")) || {}) :
+        {}
 
       {
         "data" => data,
@@ -31,9 +29,7 @@ module Ruhoh::Resources::Page
     end
 
     def formatted_date(date)
-      Time.parse(date.to_s).strftime('%Y-%m-%d')
-    rescue
-      false
+      Time.parse(date.to_s).strftime('%Y-%m-%d') rescue false
     end
 
     def parse_page_filename(filename)
@@ -66,16 +62,17 @@ module Ruhoh::Resources::Page
 
     # Another blatently stolen method from Jekyll
     # The category is only the first one if multiple categories exist.
-    def permalink(post)
-      format = post['permalink'] || config['permalink']
-      if format && format.include?(':')
-        date = Date.parse(post['date']) rescue nil
-        title = Ruhoh::Utils.to_url_slug(post['title'])
-        filename = File.basename(post['id'], File.extname(post['id']))
-        category = Array(post['categories'])[0]
+    def permalink(page_data)
+      format = page_data['permalink'] || config['permalink']
+
+      url = if format && format.include?(':')
+        date = Date.parse(page_data['date']) rescue nil
+        title = Ruhoh::Utils.to_url_slug(page_data['title'])
+        filename = File.basename(page_data['id'], File.extname(page_data['id']))
+        category = Array(page_data['categories'])[0]
         category = category.split('/').map {|c| Ruhoh::Utils.to_url_slug(c) }.join('/') if category
 
-        url = {
+        {
           "year"       => date.strftime("%Y"),
           "month"      => date.strftime("%m"),
           "day"        => date.strftime("%d"),
@@ -89,19 +86,20 @@ module Ruhoh::Resources::Page
         }.gsub(/\/+/, "/")
       elsif format
         # Use the literal permalink if it is a non-tokenized string.
-        url = format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
+        format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
       else
         # Use the filepath.
         # Only recognize extensions registered from a 'convertable' module.
         # This means 'non-convertable' extensions should pass-through.
-        ext = File.extname(post['id'])
-        name = post['id'].gsub(Regexp.new("#{ext}$"), '')
+        ext = File.extname(page_data['id'])
+        name = page_data['id'].gsub(Regexp.new("#{ext}$"), '')
         ext = '.html' if Ruhoh::Converter.extensions.include?(ext)
         url = name.split('/').map {|p| Ruhoh::Utils.to_url_slug(p) }.join('/')
         url = "#{url}#{ext}".gsub(/index.html$/, '')
-        unless (post['permalink'] == 'preserve' || config['permalink'] == 'preserve')
+        unless (page_data['permalink'] == 'preserve' || config['permalink'] == 'preserve')
           url = url.gsub(/\.html$/, '')
         end
+        url
       end
 
       url = '/' if url.empty?
