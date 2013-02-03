@@ -28,7 +28,7 @@ module Ruhoh::Resources::Posts
       data['url']           = self.permalink(data)
       data['categories']    = Array(data['categories'])
       data['tags']          = Array(data['tags'])
-      data['layout'] ||= config['layout']
+      data['layout']  = config['layout'] if data['layout'].nil?
       
       # Register this route for the previewer
       @ruhoh.db.routes[data['url']] = @pointer

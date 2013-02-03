@@ -10,7 +10,7 @@ module Ruhoh::Resources::Pages
       data['id']      = @pointer['id']
       data['url']     = self.permalink(data)
       data['title']   = data['title'] || self.to_title
-      data['layout']  ||= config['layout']
+      data['layout']  = config['layout'] if data['layout'].nil?
 
       # Register this route for the previewer
       @ruhoh.db.routes[data['url']] = @pointer
