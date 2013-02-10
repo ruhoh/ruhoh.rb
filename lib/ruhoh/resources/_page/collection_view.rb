@@ -47,5 +47,49 @@ module Ruhoh::Resources::Page
       }
       pages 
     end
+
+    # Internal: Create a collated pages data structure.
+    #
+    # pages - Required [Array] 
+    #  Must be sorted chronologically beforehand.
+    #
+    # @returns[Array] collated pages:
+    # [{ 'year': year, 
+    #   'months' : [{ 'month' : month, 
+    #     'pages': [{}, {}, ..] }, ..] }, ..]
+    def collated
+      collated = []
+      pages = all
+      pages.each_with_index do |page, i|
+        thisYear = Time.parse(page['date']).strftime('%Y')
+        thisMonth = Time.parse(page['date']).strftime('%B')
+        if (i-1 >= 0)
+          prevYear = Time.parse(pages[i-1]['date']).strftime('%Y')
+          prevMonth = Time.parse(pages[i-1]['date']).strftime('%B')
+        end
+
+        if(prevYear == thisYear) 
+          if(prevMonth == thisMonth)
+            collated.last['months'].last[resource_name] << page['id'] # append to last year & month
+          else
+            collated.last['months'] << {
+                'month' => thisMonth,
+                resource_name => [page['id']]
+              } # create new month
+          end
+        else
+          collated << { 
+            'year' => thisYear,
+            'months' => [{ 
+              'month' => thisMonth,
+              resource_name => [page['id']]
+            }]
+          } # create new year & month
+        end
+
+      end
+
+      collated
+    end
   end
 end
