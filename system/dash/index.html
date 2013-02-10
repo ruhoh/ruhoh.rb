@@ -139,32 +139,28 @@
 
   <div id="drafts" class="page-pane">
     <ul class="page-list">
-      {{#posts.all}}
-        {{# type }}
-          <li>
-            <a href="{{url}}">
-              <span class="title">{{title}}</span>
-              <span class="date">{{date}}</span>
-              <br><span class="id">{{id}}</span></small>
-            </a>
-          </li>
-        {{/ type }}
-      {{/posts.all}}
+      {{#posts.drafts}}
+        <li>
+          <a href="{{url}}">
+            <span class="title">{{title}}</span>
+            <span class="date">{{date}}</span>
+            <br><span class="id">{{id}}</span></small>
+          </a>
+        </li>
+      {{/posts.drafts}}
     </ul>
   </div>  
 
   <div id="public" class="page-pane" style="display:none">
     <ul class="page-list">
   {{#posts.all}}
-    {{^ type }}
-      <li>
-        <a href="{{url}}">
-          <span class="title">{{title}}</span>
-          <span class="date">{{date}}</span>
-          <br><span class="id">{{id}}</span></small>
-        </a>
-      </li>
-    {{/ type }}
+    <li>
+      <a href="{{url}}">
+        <span class="title">{{title}}</span>
+        <span class="date">{{date}}</span>
+        <br><span class="id">{{id}}</span></small>
+      </a>
+    </li>
   {{/posts.all}}
     </ul>
   </div>

@@ -84,11 +84,11 @@ module Ruhoh::Resources::Posts
     end
     
     def _drafts
-      @ruhoh.db.posts.dup.keep_if {|k,v| v["type"] == "draft"}
+      @ruhoh.resources.load_collection_view("posts").drafts
     end
     
     def list
-      data = @ruhoh.db.posts.reject {|k,v| v["type"] == "draft"}
+      data = @ruhoh.resources.load_collection_view("posts").all
       _list(data)
     end
     
@@ -103,7 +103,7 @@ module Ruhoh::Resources::Posts
         }
       else
         Ruhoh::Friend.say {
-          data.each_value do |p|
+          data.each do |p|
             cyan("- #{p['id']}")
           end
         }

@@ -2,19 +2,25 @@ module Ruhoh::Resources::Posts
   class CollectionView < Ruhoh::Resources::Page::CollectionView
 
     def all
-      posts = @ruhoh.db.posts.each_value.map { |val| val }
-      if @ruhoh.env == "production"
-        posts = posts.reject {|p| p["type"] == "draft"}
-      end  
-      posts.map{ |data| new_model_view(data) }.sort
+      @ruhoh.db.posts.each_value.map { |data|
+        next if (File.basename(File.dirname(data['id'])) == "drafts")
+        new_model_view(data)
+      }.compact.sort
     end
-    
+
+    def drafts
+      @ruhoh.db.posts.each_value.map { |data|
+        next unless (File.basename(File.dirname(data['id'])) == "drafts")
+        new_model_view(data)
+      }.compact.sort
+    end
+
     def latest
       latest = @ruhoh.db.config("posts")['latest']
       latest ||= 10
       (latest.to_i > 0) ? self.all[0, latest.to_i] : self.all
     end
-  
+
     # Internal: Create a collated posts data structure.
     #
     # posts - Required [Array] 
