@@ -1,10 +1,24 @@
 require 'ruhoh/views/helpers/categories'
 require 'ruhoh/views/helpers/tags'
 module Ruhoh::Resources::Page
-  
+
   class CollectionView < Ruhoh::Resources::Base::CollectionView
     include Ruhoh::Views::Helpers::Tags
     include Ruhoh::Views::Helpers::Categories
+
+    def all
+      @ruhoh.db.__send__(resource_name).each_value.map { |data|
+        next if (File.basename(File.dirname(data['id'])) == "drafts")
+        new_model_view(data)
+      }.compact.sort
+    end
+
+    def drafts
+      @ruhoh.db.__send__(resource_name).each_value.map { |data|
+        next unless (File.basename(File.dirname(data['id'])) == "drafts")
+        new_model_view(data)
+      }.compact.sort
+    end
 
     def latest
       latest = @ruhoh.db.config(resource_name)['latest']
