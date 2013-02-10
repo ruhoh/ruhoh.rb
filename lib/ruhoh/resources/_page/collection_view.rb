@@ -5,7 +5,13 @@ module Ruhoh::Resources::Page
   class CollectionView < Ruhoh::Resources::Base::CollectionView
     include Ruhoh::Views::Helpers::Tags
     include Ruhoh::Views::Helpers::Categories
-    
+
+    def latest
+      latest = @ruhoh.db.config(resource_name)['latest']
+      latest ||= 10
+      (latest.to_i > 0) ? all[0, latest.to_i] : all
+    end
+
     # current_page is set via a compiler or previewer
     # in which it can discern what current_page to serve
     def paginator

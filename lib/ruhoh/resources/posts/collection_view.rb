@@ -15,12 +15,6 @@ module Ruhoh::Resources::Posts
       }.compact.sort
     end
 
-    def latest
-      latest = @ruhoh.db.config("posts")['latest']
-      latest ||= 10
-      (latest.to_i > 0) ? self.all[0, latest.to_i] : self.all
-    end
-
     # Internal: Create a collated posts data structure.
     #
     # posts - Required [Array] 
