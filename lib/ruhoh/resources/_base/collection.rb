@@ -82,13 +82,20 @@ module Ruhoh::Resources::Base
     end
 
     # Generate all data resources for this data endpoint.
-    # Returns dictionary of all data resources.
     #
-    # Generate a single data resource as identified by `id`
-    # Returns dictionary containing the singular data resource.
-    def generate(id=nil)
+    # id - (Optional) String or Array.
+    #   Generate a single data resource at id.
+    # block - (Optional) block.
+    #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
+    #   Return true/false for whether the file is valid/invalid.
+    #   Example:
+    #     Generate only files startng with the letter "a" :
+    #     generate {|id| id.start_with?("a") }
+    #
+    # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
+    def generate(id=nil, &block)
       dict = {}
-      self.files(id).each { |pointer|
+      files(id, &block).each { |pointer|
         pointer["resource"] = registered_name
         result = if @ruhoh.resources.model?(registered_name)
           model = @ruhoh.resources.model(registered_name).new(@ruhoh, pointer)
@@ -111,10 +118,15 @@ module Ruhoh::Resources::Base
     # Returns Array of file data hashes.
     # 
     # id - (Optional) String or Array.
-    # Collect all files for a single data resource.
-    # Can be many files due to the cascade.
+    #   Collect all files for a single data resource.
+    #   Can be many files due to the cascade.
+    # block - (Optional) block.
+    #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
+    #   Return true/false for whether the file is valid/invalid.
+    #   Note it is preferred to pass the block to #generate as #files is a low-level method.
+    #
     # Returns Array of file hashes.
-    def files(id=nil)
+    def files(id=nil, &block)
       a = []
       Array(self.paths.map{|h| h["path"]}).each do |path|
         namespaced_path = File.join(path, namespace)
@@ -122,7 +134,9 @@ module Ruhoh::Resources::Base
         FileUtils.cd(namespaced_path) {
           file_array = (id ? Array(id) : Dir[self.glob])
           file_array.each { |id|
-            next unless self.valid_file?(id)
+
+            next unless(block_given? ? yield(id, self) : valid_file?(id))
+
             a << {
               "id" => id,
               "realpath" => File.realpath(id),
