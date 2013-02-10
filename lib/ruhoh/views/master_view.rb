@@ -125,7 +125,7 @@ module Ruhoh::Views
         end
       else
         # Minimum layout if no layout defined.
-        layout = '{{{page.content}}}'
+        layout = page ? '{{{ page.content }}}' : '{{{ content }}}'
       end
       
       layout
