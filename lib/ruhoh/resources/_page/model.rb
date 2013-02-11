@@ -64,42 +64,50 @@ module Ruhoh::Resources::Page
     # The category is only the first one if multiple categories exist.
     def permalink(page_data)
       format = page_data['permalink'] || config['permalink']
+      format ||= "/:path/:filename"
 
-      url = if format && format.include?(':')
-        date = Date.parse(page_data['date']) rescue nil
+      url = if format.include?(':')
         title = Ruhoh::Utils.to_url_slug(page_data['title'])
-        filename = File.basename(page_data['id'], File.extname(page_data['id']))
+        filename = File.basename(page_data['id'])
         category = Array(page_data['categories'])[0]
         category = category.split('/').map {|c| Ruhoh::Utils.to_url_slug(c) }.join('/') if category
-
-        {
-          "year"       => date.strftime("%Y"),
-          "month"      => date.strftime("%m"),
-          "day"        => date.strftime("%d"),
+        relative_path = File.dirname(page_data['id'])
+        relative_path = "" if relative_path == "."
+        data = {
           "title"      => title,
           "filename"   => filename,
-          "i_day"      => date.strftime("%d").to_i.to_s,
-          "i_month"    => date.strftime("%m").to_i.to_s,
+          "path"      => File.join(@pointer["resource"], relative_path),
+          "relative_path" => relative_path,
           "categories" => category || '',
-        }.inject(format) { |result, token|
+        }
+
+        date = Date.parse(page_data['date']) rescue nil
+        if date
+          data.merge({
+            "year"       => date.strftime("%Y"),
+            "month"      => date.strftime("%m"),
+            "day"        => date.strftime("%d"),
+            "i_day"      => date.strftime("%d").to_i.to_s,
+            "i_month"    => date.strftime("%m").to_i.to_s,
+          })
+        end
+
+        data.inject(format) { |result, token|
           result.gsub(/:#{Regexp.escape token.first}/, token.last)
         }.gsub(/\/+/, "/")
-      elsif format
+      else
         # Use the literal permalink if it is a non-tokenized string.
         format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
-      else
-        # Use the filepath.
-        # Only recognize extensions registered from a 'convertable' module.
-        # This means 'non-convertable' extensions should pass-through.
-        ext = File.extname(page_data['id'])
-        name = page_data['id'].gsub(Regexp.new("#{ext}$"), '')
-        ext = '.html' if Ruhoh::Converter.extensions.include?(ext)
-        url = name.split('/').map {|p| Ruhoh::Utils.to_url_slug(p) }.join('/')
-        url = "#{url}#{ext}".gsub(/index.html$/, '')
-        unless (page_data['permalink'] == 'preserve' || config['permalink'] == 'preserve')
-          url = url.gsub(/\.html$/, '')
-        end
-        url
+      end
+
+      # Only recognize extensions registered from a 'convertable' module.
+      # This means 'non-convertable' extensions should pass-through.
+      if Ruhoh::Converter.extensions.include?(File.extname(url))
+        url = url.gsub(%r{#{File.extname(url)}$}, '.html')
+      end
+
+      unless (page_data['permalink_ext'] || config['permalink_ext'])
+        url = url.gsub(/index.html$/, '').gsub(/\.html$/, '')
       end
 
       url = '/' if url.empty?
