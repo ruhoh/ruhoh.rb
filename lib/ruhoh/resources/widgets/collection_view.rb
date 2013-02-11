@@ -2,9 +2,10 @@ module Ruhoh::Resources::Widgets
   class CollectionView < Ruhoh::Resources::Base::CollectionView
 
     def widget(name)
-      return '' if master.page_data[name].to_s == 'false'
-      config = @ruhoh.db.config('widgets')[name] || {}
+      page_config = (master.page_data["widgets"][name] || {}) rescue {}
+      config = (@ruhoh.db.config('widgets')[name] || {}).merge(page_config)
       return '' if config['enable'].to_s == 'false'
+
       pointer = @ruhoh.db.widgets["#{name}/#{(config['use'] || "default")}.html"]['pointer'] rescue nil
       return '' unless pointer
 
