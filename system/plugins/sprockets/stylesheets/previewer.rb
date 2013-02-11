@@ -6,9 +6,11 @@ module Ruhoh::Resources::Stylesheets
     def_instance_delegator :@environment, :call
 
     def initialize(ruhoh)
-      collection = ruhoh.resources.load_collection('stylesheets')
       environment = Sprockets::Environment.new
-      environment.append_path(collection.namespace)
+      collection = ruhoh.resources.load_collection('stylesheets')
+      collection.paths.reverse.each do |h|
+        environment.append_path(File.join(h["path"], collection.namespace))
+      end
       @environment = environment
     end
   end
