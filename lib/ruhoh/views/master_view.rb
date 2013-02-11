@@ -13,7 +13,6 @@ module Ruhoh::Views
 
         raise "Page #{pointer_or_content['id']} not found in database" unless @page_data
 
-        context.push(@page_data)
         @pointer = pointer_or_content
       else
         @content = pointer_or_content
