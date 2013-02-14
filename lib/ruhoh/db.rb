@@ -4,17 +4,6 @@ class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
 
-    # Lazy-load all data endpoints but cache the result for this cycle.
-    Ruhoh::Resources::Base::Collection.resources.keys.each do |name|
-      class_eval <<-RUBY
-        def #{name}
-          return @#{name} if @#{name}
-          update(:#{name})
-          @#{name}
-        end
-      RUBY
-    end
-    
     def initialize(ruhoh)
       @ruhoh = ruhoh
       @content = {}
@@ -99,6 +88,28 @@ class Ruhoh
     
     def clear(name)
       self.instance_variable_set("@#{name}", nil)
+    end
+
+    def method_missing(name, *args, &block)
+      name = name.to_s
+      return data_for(name) if @ruhoh.resources.exist?(name)
+      super
+    end
+
+    def respond_to?(method)
+      return true if @ruhoh.resources.exist?(method.to_s)
+      super
+    end
+
+    protected
+
+    # Lazy-load all data endpoints but cache the result for this cycle.
+    def data_for(resource)
+      if instance_variable_defined?("@#{resource}")
+        instance_variable_get("@#{resource}")
+      else
+        update(resource)
+      end
     end
   end #DB
 end #Ruhoh
