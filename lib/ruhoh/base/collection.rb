@@ -1,21 +1,5 @@
 module Ruhoh::Base
   class Collection
-    # Register all available resources.
-    # @resources is a key value hash, e.g:
-    #   "posts" => Ruhoh::Resources::Posts
-    @resources = {}
-    class << self
-      attr_accessor :resources
-      def inherited(resource)
-        parts = resource.name.split("::")
-        parts.pop
-        name = parts.pop
-        return if ["page"].include?(name)
-        namespace = Ruhoh::Resources.const_get(name)
-        name = Ruhoh::Utils.underscore(name)
-        Ruhoh::Base::Collection.resources[name] = namespace
-      end
-    end
 
     def self.registered_name
       parts = name.split("::")
