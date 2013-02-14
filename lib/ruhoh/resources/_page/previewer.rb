@@ -11,11 +11,34 @@ module Ruhoh::Resources::Page
 
       # Always remove trailing slash if sent unless it's the root page.
       env['PATH_INFO'].chomp!("/") unless env['PATH_INFO'] == "/"
-    
-      pointer =  @ruhoh.db.routes[env['PATH_INFO']]
-      raise "Page id not found for url: #{env['PATH_INFO']}" unless pointer
-      view = @ruhoh.master_view(pointer)
-      [200, {'Content-Type' => 'text/html'}, [view.render_full]]
+
+      pointer = @ruhoh.db.routes[env['PATH_INFO']]
+      view = pointer ? @ruhoh.master_view(pointer) : paginator_view(env)
+
+      if view
+        [200, {'Content-Type' => 'text/html'}, [view.render_full]]
+      else
+        raise "Page id not found for url: #{env['PATH_INFO']}"
+      end
+    end
+
+    # Try the paginator.
+    # search for the namespace and match it to a resource:
+    # need a way to register pagination namespaces then search the register. 
+    def paginator_view(env)
+      path = env['PATH_INFO'].reverse.chomp("/").reverse
+      resource = path.split('/').first
+      return nil unless @ruhoh.resources.exist?(resource)
+
+      config = @ruhoh.db.config(resource)["paginator"] || {}
+      page_number = path.split('/').pop
+
+      view = @ruhoh.master_view({"resource" => resource})
+      view.page_data = {
+        "layout" => config["layout"],
+        "current_page" => page_number
+      }
+      view
     end
 
     def favicon

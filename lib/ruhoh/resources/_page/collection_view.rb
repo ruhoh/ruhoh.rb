@@ -29,8 +29,8 @@ module Ruhoh::Resources::Page
     # current_page is set via a compiler or previewer
     # in which it can discern what current_page to serve
     def paginator
-      per_page = @ruhoh.db.config("paginator")["per_page"]
-      current_page = master.context["page"]['current_page'].to_i rescue 0
+      per_page = @ruhoh.db.config(resource_name)["paginator"]["per_page"] rescue 5
+      current_page = master.page_data['current_page'].to_i
       current_page = current_page.zero? ? 1 : current_page
       offset = (current_page-1)*per_page
 
@@ -40,10 +40,10 @@ module Ruhoh::Resources::Page
     end
 
     def paginator_navigation
-      config = @ruhoh.db.config("paginator")
+      config = @ruhoh.db.config(resource_name)["paginator"] || {}
       page_count = all.length
       total_pages = (page_count.to_f/config["per_page"]).ceil
-      current_page = master.context["page"]['current_page'].to_i rescue 0
+      current_page = master.page_data['current_page'].to_i
       current_page = current_page.zero? ? 1 : current_page
   
       pages = total_pages.times.map { |i| 
