@@ -26,39 +26,6 @@ require 'ruhoh/views/master_view'
 
 require 'ruhoh/resources_interface'
 require 'ruhoh/db'
-
-class Ruhoh::Views::MasterView
-  Ruhoh::Resources::Base::Collection.resources.each do |name, namespace|
-    if namespace.const_defined?(:CollectionView)
-      class_eval <<-RUBY
-        def #{name}
-          return @#{name} if @#{name}
-          @#{name} = @ruhoh.resources.load_collection_view('#{name}')
-          @#{name}.master = self
-          @#{name}
-        end
-      RUBY
-    else
-      class_eval <<-RUBY
-        def #{name}
-          nil
-        end
-      RUBY
-    end
-
-    class_eval <<-RUBY
-      def to_#{name}(sub_context)
-        collection_view = #{name}
-        Array(sub_context).map { |id|
-          data = @ruhoh.db.#{name}[id]
-          collection_view ? collection_view.new_model_view(data) : data
-        }.compact
-      end
-    RUBY
-    
-  end
-end
-
 require 'ruhoh/programs/preview'
 
 class Ruhoh

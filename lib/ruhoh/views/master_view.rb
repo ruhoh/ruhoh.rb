@@ -92,9 +92,56 @@ module Ruhoh::Views
       path += '/index.html' unless path =~ /\.\w+$/
       path
     end
-    
+
+    def method_missing(name, *args, &block)
+      name = name.to_s
+      # Suport for calling resource namespace
+      if @ruhoh.resources.exist?(name)
+        return load_collection_view_for(name)
+      end
+
+      # Suport for calling ?to_resource contextual block helpers
+      resource = name.gsub(/^to_/, '')
+      if @ruhoh.resources.exist?(resource)
+        return resource_generator_for(resource, *args)
+      end
+
+      super
+    end
+
+    def respond_to?(method)
+      # Suport for calling resource namespace
+      return true if @ruhoh.resources.exist?(method.to_s)
+
+      # Suport for calling ?to_resource contextual block helpers
+      return true if @ruhoh.resources.exist?(method.to_s.gsub(/^to_/, ''))
+
+      super
+    end
+
     protected
-    
+
+    # Load collection views dynamically when calling a resources name.
+    # Uses method_missing to catch calls to resource namespace.
+    # @returns[CollectionView|nil] for the calling resource.
+    def load_collection_view_for(resource)
+      return nil unless @ruhoh.resources.collection_view?(resource)
+      collection_view = @ruhoh.resources.load_collection_view(resource)
+      collection_view.master = self
+      collection_view
+    end
+
+    # Takes an Array or string of resource ids and generates the resource objects
+    # Uses method_missing to catch calls to 'to_<resource>` contextual helper.
+    # @returns[Array] the resource model view objects or raw data hash.
+    def resource_generator_for(resource, sub_context)
+      collection_view = load_collection_view_for(resource)
+      Array(sub_context).map { |id|
+        data = @ruhoh.db.__send__(resource)[id] || {}
+        collection_view ? collection_view.new_model_view(data) : data
+      }.compact
+    end
+
     def process_layouts
       if @page_data['layout']
         @sub_layout = @ruhoh.db.layouts[@page_data['layout']]
