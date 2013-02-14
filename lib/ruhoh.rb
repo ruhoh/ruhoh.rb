@@ -18,10 +18,6 @@ require 'ruhoh/friend'
 
 require 'ruhoh/converter'
 
-module Ruhoh::Resources ; end
-module Ruhoh::Views ; end
-module Ruhoh::Views::Helpers ; end
-
 require 'ruhoh/views/master_view'
 
 require 'ruhoh/resources_interface'

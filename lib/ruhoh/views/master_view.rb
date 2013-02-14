@@ -1,6 +1,7 @@
 require 'ruhoh/views/rmustache'
 
 module Ruhoh::Views
+  module Helpers ; end
   class MasterView < RMustache
     attr_reader :sub_layout, :master_layout
     attr_accessor :page_data
