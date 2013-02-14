@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Posts
-  class Watcher < Ruhoh::Resources::Base::Watcher
+  class Watcher < Ruhoh::Base::Watcher
     def match(path)
       path =~ %r{^#{@collection.namespace}}
     end

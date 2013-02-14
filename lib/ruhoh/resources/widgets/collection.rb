@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Widgets
-  class Collection < Ruhoh::Resources::Base::Collection
+  class Collection < Ruhoh::Base::Collection
 
     def initialize(ruhoh)
       @ruhoh = ruhoh

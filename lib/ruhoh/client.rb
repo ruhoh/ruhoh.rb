@@ -62,7 +62,7 @@ class Ruhoh
     def help
       options = @opt_parser.help
       resources = [{"methods" => Help}]
-      resources += @ruhoh.resources.all.keys.map {|name|
+      resources += @ruhoh.resources.all.map {|name|
         next unless @ruhoh.resources.client?(name)
         next unless @ruhoh.resources.client(name).const_defined?(:Help)
         {

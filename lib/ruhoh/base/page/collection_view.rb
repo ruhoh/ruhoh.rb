@@ -1,8 +1,8 @@
 require 'ruhoh/views/helpers/categories'
 require 'ruhoh/views/helpers/tags'
-module Ruhoh::Resources::Page
+module Ruhoh::Base::Page
 
-  class CollectionView < Ruhoh::Resources::Base::CollectionView
+  class CollectionView < Ruhoh::Base::CollectionView
     include Ruhoh::Views::Helpers::Tags
     include Ruhoh::Views::Helpers::Categories
 

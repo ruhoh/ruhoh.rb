@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Stylesheets
-  class Compiler < Ruhoh::Resources::Asset::Compiler
+  class Compiler < Ruhoh::Base::Asset::Compiler
   end
 end

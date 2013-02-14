@@ -1,5 +1,5 @@
-module Ruhoh::Resources::Page
-  class Model < Ruhoh::Resources::Base::Model
+module Ruhoh::Base::Page
+  class Model < Ruhoh::Base::Model
 
     FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
     DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/

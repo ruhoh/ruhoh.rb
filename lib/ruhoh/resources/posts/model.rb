@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Posts
-  class Model < Ruhoh::Resources::Page::Model
+  class Model < Ruhoh::Base::Page::Model
     def generate
       parsed_page = parse_page_file
       data = parsed_page['data']

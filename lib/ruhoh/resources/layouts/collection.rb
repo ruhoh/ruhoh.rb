@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Layouts
-  class Collection < Ruhoh::Resources::Base::Collection
+  class Collection < Ruhoh::Base::Collection
   
   end
 end

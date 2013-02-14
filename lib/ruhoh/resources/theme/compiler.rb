@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Theme
-  class Compiler < Ruhoh::Resources::Base::Compiler
+  class Compiler < Ruhoh::Base::Compiler
 
     def run
       copy

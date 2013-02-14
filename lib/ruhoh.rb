@@ -161,7 +161,7 @@ class Ruhoh
     FileUtils.mkdir_p @paths.compiled
     
     # Run the resource compilers
-    compilers = @resources.all.keys
+    compilers = @resources.all
     # Hack to ensure assets are processed first so post-processing logic reflects in the templates.
     compilers.delete('stylesheets')
     compilers.unshift('stylesheets')

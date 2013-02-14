@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Pages
-  class ModelView < Ruhoh::Resources::Page::ModelView
+  class ModelView < Ruhoh::Base::Page::ModelView
   end
 end

@@ -1,5 +1,6 @@
-module Ruhoh::Resources::Page
-  class Collection < Ruhoh::Resources::Base::Collection
+module Ruhoh::Base::Page
+  class Collection < Ruhoh::Base::Collection
+
     def config
       hash = super
       hash['permalink'] ||= "/:path/:filename"

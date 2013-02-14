@@ -1,5 +1,5 @@
-module Ruhoh::Resources::Page
-  class Compiler < Ruhoh::Resources::Base::Compiler
+module Ruhoh::Base::Page
+  class Compiler < Ruhoh::Base::Compiler
     def run
       pages = @ruhoh.db.__send__(resource_name)
       resource_name = self.resource_name

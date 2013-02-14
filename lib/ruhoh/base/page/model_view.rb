@@ -1,5 +1,5 @@
-module Ruhoh::Resources::Page
-  class ModelView < Ruhoh::Resources::Base::ModelView
+module Ruhoh::Base::Page
+  class ModelView < Ruhoh::Base::ModelView
     
     # Default order by alphabetical title name.
     def <=>(other)

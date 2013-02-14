@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Pages
-  class CollectionView < Ruhoh::Resources::Page::CollectionView
+  class CollectionView < Ruhoh::Base::Page::CollectionView
   end
 end

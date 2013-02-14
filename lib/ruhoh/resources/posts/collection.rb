@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Posts
-  class Collection < Ruhoh::Resources::Page::Collection
+  class Collection < Ruhoh::Base::Page::Collection
     def config
       hash = super
       hash['permalink'] ||= "/:categories/:year/:month/:day/:title"

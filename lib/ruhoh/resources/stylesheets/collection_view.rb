@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Stylesheets
-  class CollectionView < Ruhoh::Resources::Base::CollectionView
+  class CollectionView < Ruhoh::Base::CollectionView
     attr_accessor :_cache
 
     def initialize(ruhoh)

@@ -1,13 +1,15 @@
 # Require all the resources
-# Ensure _base is loaded first.
+FileUtils.cd(File.join(File.dirname(__FILE__), 'base')) do
+  Dir['*.rb'].each do |f|
+    require File.join(File.dirname(__FILE__), 'base', f)
+  end
+  Dir[File.join('*', '*.rb')].each do |f|
+    require File.join(File.dirname(__FILE__), 'base', f)
+  end
+end
 FileUtils.cd(File.join(File.dirname(__FILE__), 'resources')) do
-  directories = Dir['*']
-  directories.delete('_base')
-  directories.unshift('_base')
-  directories.each do |dir|
-    Dir[File.join(dir, '**', '*.rb')].each do |f|
-      require File.join(File.dirname(__FILE__), 'resources', f)
-    end
+  Dir[File.join('**', '*.rb')].each do |f|
+    require File.join(File.dirname(__FILE__), 'resources', f)
   end
 end
 
@@ -19,18 +21,14 @@ class Ruhoh
     end
     
     def all
-      Ruhoh::Resources::Base::Collection.resources
+      Ruhoh::Resources.constants.map{ |a| a.to_s.downcase }
     end
 
     def exists?(name)
-      !!namespace(name)
+      all.include?(name)
     end
     alias_method :exist?, :exists?
-    
-    def namespace(name)
-      all[name]
-    end
-    
+
     %w{
       collection
       collection_view

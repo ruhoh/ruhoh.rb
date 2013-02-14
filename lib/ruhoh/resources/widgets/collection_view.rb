@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Widgets
-  class CollectionView < Ruhoh::Resources::Base::CollectionView
+  class CollectionView < Ruhoh::Base::CollectionView
 
     def widget(name)
       page_config = (master.page_data["widgets"][name] || {}) rescue {}

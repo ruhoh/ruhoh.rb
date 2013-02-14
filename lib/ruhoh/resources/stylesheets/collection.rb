@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Stylesheets
-  class Collection < Ruhoh::Resources::Base::Collection
+  class Collection < Ruhoh::Base::Collection
     def url_endpoint
       "assets/#{namespace}"
     end

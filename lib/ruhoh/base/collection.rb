@@ -1,4 +1,4 @@
-module Ruhoh::Resources::Base
+module Ruhoh::Base
   class Collection
     # Register all available resources.
     # @resources is a key value hash, e.g:
@@ -10,10 +10,10 @@ module Ruhoh::Resources::Base
         parts = resource.name.split("::")
         parts.pop
         name = parts.pop
+        return if ["page"].include?(name)
         namespace = Ruhoh::Resources.const_get(name)
         name = Ruhoh::Utils.underscore(name)
-        return if ["page"].include?(name)
-        Ruhoh::Resources::Base::Collection.resources[name] = namespace
+        Ruhoh::Base::Collection.resources[name] = namespace
       end
     end
 
@@ -63,7 +63,7 @@ module Ruhoh::Resources::Base
       a
     end
 
-    # Does this resource any valid paths to process?
+    # Does this resource have any valid paths to process?
     # A valid path may exist on any of the cascade levels.
     # False means there are no directories on any cascade level.
     # @returns[Boolean]
@@ -94,6 +94,11 @@ module Ruhoh::Resources::Base
     #
     # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
     def generate(id=nil, &block)
+      # NOT GONNA WORK SINCE IT SUPPOSTS SINGLE RESOURCE ALSO
+      if(@ruhoh.env == "production" && @_generate)
+        return @_generate
+      end
+
       dict = {}
       files(id, &block).each { |pointer|
         pointer["resource"] = registered_name
@@ -108,7 +113,7 @@ module Ruhoh::Resources::Base
         dict.merge!(result)
       }
       Ruhoh::Utils.report(self.registered_name, dict, [])
-      dict
+      @_generate = dict
     end
 
     # Collect all files (as mapped by data resources) for this data endpoint.

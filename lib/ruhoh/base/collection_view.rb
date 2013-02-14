@@ -1,4 +1,4 @@
-module Ruhoh::Resources::Base
+module Ruhoh::Base
   class CollectionView
     attr_accessor :master
 
@@ -13,7 +13,7 @@ module Ruhoh::Resources::Base
         name
       end
       base.send(:define_method, "namespace") do
-        Ruhoh::Resources::Base::Collection.resources[name]
+        Ruhoh::Base::Collection.resources[name]
       end
     end
     

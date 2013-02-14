@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Pages
-  class Compiler < Ruhoh::Resources::Page::Compiler
+  class Compiler < Ruhoh::Base::Page::Compiler
   end
 end

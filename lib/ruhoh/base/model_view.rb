@@ -1,4 +1,4 @@
-module Ruhoh::Resources::Base
+module Ruhoh::Base
   class ModelView < OpenStruct
     attr_accessor :collection, :master
     

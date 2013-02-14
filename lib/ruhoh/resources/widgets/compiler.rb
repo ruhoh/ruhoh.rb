@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Widgets
-  class Compiler < Ruhoh::Resources::Base::Compiler
+  class Compiler < Ruhoh::Base::Compiler
     def run
       collection = @collection
       unless @collection.paths?

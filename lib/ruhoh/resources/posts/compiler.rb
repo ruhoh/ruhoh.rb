@@ -1,6 +1,6 @@
 require 'nokogiri'
 module Ruhoh::Resources::Posts
-  class Compiler < Ruhoh::Resources::Page::Compiler
+  class Compiler < Ruhoh::Base::Page::Compiler
 
     def run
       super

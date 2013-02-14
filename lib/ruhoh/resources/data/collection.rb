@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Data
-  class Collection < Ruhoh::Resources::Base::Collection
+  class Collection < Ruhoh::Base::Collection
     def generate
       Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.base, "data.yml") || {}
     end

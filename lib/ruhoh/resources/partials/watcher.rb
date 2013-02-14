@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Partials
-  class Watcher < Ruhoh::Resources::Base::Watcher
+  class Watcher < Ruhoh::Base::Watcher
     def match(path)
       path =~ %r{^(#{@collection.namespace}|#{@ruhoh.config['theme']['name']}\/partials)}
     end

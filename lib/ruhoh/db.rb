@@ -69,7 +69,7 @@ class Ruhoh
       @urls["base_path"] = @ruhoh.base_path
       return @urls if @urls.keys.length > 1 # consider base_url
 
-      @ruhoh.resources.all.keys.each do |name|
+      @ruhoh.resources.all.each do |name|
         next unless @ruhoh.resources.collection?(name)
         collection = @ruhoh.resources.load_collection(name)
         next unless collection.respond_to?(:url_endpoint)
