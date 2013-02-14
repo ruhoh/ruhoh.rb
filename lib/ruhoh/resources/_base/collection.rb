@@ -10,10 +10,10 @@ module Ruhoh::Resources::Base
         parts = resource.name.split("::")
         parts.pop
         name = parts.pop
-        
         namespace = Ruhoh::Resources.const_get(name)
         name = Ruhoh::Utils.underscore(name)
-        @resources[name] = namespace
+        return if ["page"].include?(name)
+        Ruhoh::Resources::Base::Collection.resources[name] = namespace
       end
     end
 

@@ -1,9 +1,4 @@
 module Ruhoh::Resources::Pages
-  class Collection < Ruhoh::Resources::Base::Collection
-    def config
-      hash = super
-      hash['ext'] ||= ".md"
-      hash
-    end
+  class Collection < Ruhoh::Resources::Page::Collection
   end
 end
