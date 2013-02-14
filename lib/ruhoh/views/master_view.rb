@@ -32,10 +32,13 @@ module Ruhoh::Views
     # Delegate #page to the kind of resource this view is modeling.
     def page
       return @page if @page
-      collection = __send__(@pointer["resource"])
       @page = collection ? collection.new_model_view(@page_data) : nil
     end
 
+    def collection
+      __send__(@pointer["resource"])
+    end
+    
     def urls
       @ruhoh.db.urls
     end
