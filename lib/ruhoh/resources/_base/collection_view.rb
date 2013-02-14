@@ -6,7 +6,7 @@ module Ruhoh::Resources::Base
       @ruhoh = ruhoh
       @collection = ruhoh.resources.load_collection(resource_name)
     end
-    
+
     def self.inherited(base)
       name = base.name.chomp("::CollectionView").split("::").pop.downcase
       base.send(:define_method, "resource_name") do
@@ -23,6 +23,10 @@ module Ruhoh::Resources::Base
       model_view.collection = self
       model_view.master = master
       model_view
+    end
+
+    def resource_name
+      @collection.registered_name
     end
   end
 end
