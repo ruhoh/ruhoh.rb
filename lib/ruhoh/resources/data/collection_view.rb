@@ -3,8 +3,8 @@ module Ruhoh::Resources::Data
     attr_accessor :collection
     attr_accessor :master
 
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
+    def initialize(collection)
+      @ruhoh = collection.ruhoh
       super(@ruhoh.db.data)
     end
 

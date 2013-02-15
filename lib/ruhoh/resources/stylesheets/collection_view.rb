@@ -2,8 +2,8 @@ module Ruhoh::Resources::Stylesheets
   class CollectionView < Ruhoh::Base::CollectionView
     attr_accessor :_cache
 
-    def initialize(ruhoh)
-      super(ruhoh)
+    def initialize(collection)
+      super(collection)
       @_cache = {}
     end
     

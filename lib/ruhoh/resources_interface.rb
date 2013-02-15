@@ -79,7 +79,13 @@ class Ruhoh
       if instance_variable_defined?(var) && instance_variable_get(var)
         instance_variable_get(var)
       else
-        instance = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
+        instance = if class_name == "collection_view"
+          collection = load_class_instance_for("collection", resource)
+          get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(collection)
+        else
+          get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
+        end
+
         instance_variable_set(var, instance)
         instance_variable_get(var)
       end
