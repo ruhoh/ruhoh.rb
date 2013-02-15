@@ -1,12 +1,7 @@
 module Ruhoh::Base
   class Collection
 
-    def self.registered_name
-      parts = name.split("::")
-      parts.pop
-      Ruhoh::Utils.underscore(parts.pop)
-    end
-
+    attr_accessor :registered_name
     attr_reader :ruhoh
 
     def initialize(ruhoh)
@@ -14,7 +9,10 @@ module Ruhoh::Base
     end
 
     def registered_name
-      self.class.registered_name
+      return @registered_name if @registered_name
+      parts = self.class.name.split("::")
+      parts.pop
+      Ruhoh::Utils.underscore(parts.pop)
     end
 
     def namespace
