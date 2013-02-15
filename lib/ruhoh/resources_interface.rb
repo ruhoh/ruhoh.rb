@@ -16,11 +16,48 @@ end
 
 class Ruhoh
   class ResourcesInterface
-    
+    Whitelist = %w{
+      collection
+      collection_view
+      model
+      model_view
+      client
+      compiler
+      watcher
+      previewer
+    }
+
+    Whitelist.each do |method_name|
+      define_method(method_name) do |name|
+        constantize(name).const_get(camelize(method_name).to_sym)
+      end
+
+      define_method("#{method_name}?") do |name|
+        constantize(name).const_defined?(camelize(method_name).to_sym)
+      end
+    end
+
+    def method_missing(name, *args, &block)
+      name = name.to_s
+      resource = name.gsub(/^load_/, '')
+      if Whitelist.include?(resource)
+        load_class_instance_for(resource, *args)
+      else
+        super
+      end
+    end
+
+    def respond_to?(method)
+      resource = method.gsub(/^load_/, '')
+      return true if Whitelist.include?(resource)
+      super
+    end
+
+
     def initialize(ruhoh)
       @ruhoh = ruhoh
     end
-    
+
     def all
       Ruhoh::Resources.constants.map{ |a| a.to_s.downcase }
     end
@@ -30,48 +67,34 @@ class Ruhoh
     end
     alias_method :exist?, :exists?
 
-    %w{
-      collection
-      collection_view
-      model
-      model_view
-      client
-      compiler
-      watcher
-      previewer
-    }.each do |method_name|
-      constant_sym = method_name.to_s.split('_').map {|a| a.capitalize}.join.to_sym
+    protected
 
-      define_method(method_name) do |name|
-        constantize(name).const_get(constant_sym)
+    # Load and cache a given resource class.
+    # This allows you to work with single object instance and perform
+    # persistant mutations on it if necessary.
+    # TODO: Kind of ugly, maybe a better way to do this. Singleton?
+    # @returns[Class Instance] of the resource and class_name given.
+    def load_class_instance_for(class_name, resource)
+      var = "@#{resource}_#{class_name}"
+      if instance_variable_defined?(var) && instance_variable_get(var)
+        instance_variable_get(var)
+      else
+        instance = constantize(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
+        instance_variable_set(var, instance)
+        instance_variable_get(var)
       end
-
-      define_method("#{method_name}?") do |name|
-        constantize(name).const_defined?(constant_sym)
-      end
-      
-      # Load and cache a given resource class.
-      # This allows you to work with single object instance and perform
-      # persistant mutations on it if necessary.
-      # TODO: Kind of ugly, maybe a better way to do this. Singleton?
-      class_eval <<-RUBY
-        def load_#{method_name}(name)
-          var = "@" + name.to_s + '_#{method_name}'
-          if instance_variable_defined?(var) && instance_variable_get(var)
-            instance_variable_get(var)
-          else
-            instance_variable_set(var, constantize(name).const_get('#{constant_sym}'.to_sym).new(@ruhoh))
-            instance_variable_get(var)
-          end
-        end
-      RUBY
-
     end
-      
+
     def constantize(name)
-      camelized_name = name.to_s.split('_').map {|a| a.capitalize}.join
-      Ruhoh::Resources.const_get(camelized_name)
+      Ruhoh::Resources.const_get(camelize(name))
     end
-    
+
+    def camelize(name)
+      self.class.camelize(name)
+    end
+
+    def self.camelize(name)
+      name.to_s.split('_').map {|a| a.capitalize}.join
+    end
   end
 end
