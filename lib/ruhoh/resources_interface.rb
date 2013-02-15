@@ -29,11 +29,11 @@ class Ruhoh
 
     Whitelist.each do |method_name|
       define_method(method_name) do |name|
-        constantize(name).const_get(camelize(method_name).to_sym)
+        get_module_namespace_for(name).const_get(camelize(method_name).to_sym)
       end
 
       define_method("#{method_name}?") do |name|
-        constantize(name).const_defined?(camelize(method_name).to_sym)
+        get_module_namespace_for(name).const_defined?(camelize(method_name).to_sym)
       end
     end
 
@@ -79,13 +79,13 @@ class Ruhoh
       if instance_variable_defined?(var) && instance_variable_get(var)
         instance_variable_get(var)
       else
-        instance = constantize(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
+        instance = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
         instance_variable_set(var, instance)
         instance_variable_get(var)
       end
     end
 
-    def constantize(name)
+    def get_module_namespace_for(name)
       Ruhoh::Resources.const_get(camelize(name))
     end
 
