@@ -1,6 +1,7 @@
 require 'ruhoh/programs/compile'
 require 'ruhoh/console_methods'
 require 'irb'
+require 'benchmark'
 
 class Ruhoh
   
@@ -95,7 +96,9 @@ class Ruhoh
     
     # Public: Compile to static website.
     def compile
-      Ruhoh::Program.compile(@args[1])
+      puts Benchmark.measure {
+        Ruhoh::Program.compile(@args[1])
+      }
     end
     
     # Public: Create a new blog at the directory provided.
