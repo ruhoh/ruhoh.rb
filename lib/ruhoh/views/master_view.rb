@@ -138,7 +138,11 @@ module Ruhoh::Views
       collection_view = load_collection_view_for(resource)
       Array(sub_context).map { |id|
         data = @ruhoh.db.__send__(resource)[id] || {}
-        collection_view ? collection_view.new_model_view(data) : data
+        if collection_view && collection_view.respond_to?(:new_model_view)
+          collection_view.new_model_view(data)
+        else
+          data
+        end
       }.compact
     end
 
