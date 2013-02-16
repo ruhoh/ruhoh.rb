@@ -9,11 +9,8 @@ module Ruhoh::Resources::Widgets
       pointer = @ruhoh.db.widgets["#{name}/#{(config['use'] || "default")}.html"]['pointer'] rescue nil
       return '' unless pointer
 
-      model = @ruhoh.resources.model('widgets').new(@ruhoh, pointer)
-      parsed = model.parse_page_file
-      data = parsed['data']
-      content = parsed['content']
-
+      data = @ruhoh.db.update(pointer)
+      content = @ruhoh.db.content(pointer)
       view = @ruhoh.master_view('')
 
       # merge the config.yml data into the inline layout data.

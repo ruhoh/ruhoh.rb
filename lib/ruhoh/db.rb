@@ -74,17 +74,16 @@ class Ruhoh
     end
 
     # return a given resource's file content
-    # TODO: Cache this in compile mode but not development mode.
     def content(pointer)
       name = pointer['resource'].downcase # name is a stringified constant.
-      model = @ruhoh.resources.model(name).new(@ruhoh, pointer)
-      
-      # TODO:
-      # possible collisions here: ids are only unique relative to their resource dictionary.
-      # that's the whole point of the pointer... =/
-      @content[pointer['id']] = model.content
+      if(@ruhoh.env == "production" && @content["#{name}_#{pointer['id']}"])
+        @content["#{name}_#{pointer['id']}"]
+      else
+        model = @ruhoh.resources.model(name).new(@ruhoh, pointer)
+        @content["#{name}_#{pointer['id']}"] = model.content
+      end
     end
-    
+
     def urls
       @urls["base_path"] = @ruhoh.base_path
       return @urls if @urls.keys.length > 1 # consider base_url
