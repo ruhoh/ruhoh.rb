@@ -14,7 +14,7 @@ module Ruhoh::Resources::Theme
         return
       end
 
-      Ruhoh::Friend.say { cyan "Theme: (generating '#{collection.namespace}')" }
+      Ruhoh::Friend.say { cyan "Theme: ('#{collection.namespace}' copying non-resource files)" }
 
       theme = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["theme"], @ruhoh.paths.compiled)
       FileUtils.mkdir_p theme
