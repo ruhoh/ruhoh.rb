@@ -95,14 +95,13 @@ module Ruhoh::Views
     end
 
     def method_missing(name, *args, &block)
-      name = name.to_s
       # Suport for calling resource namespace
-      if @ruhoh.resources.exist?(name)
-        return load_collection_view_for(name)
+      if @ruhoh.resources.exist?(name.to_s)
+        return load_collection_view_for(name.to_s)
       end
 
       # Suport for calling ?to_resource contextual block helpers
-      resource = name.gsub(/^to_/, '')
+      resource = name.to_s.gsub(/^to_/, '')
       if @ruhoh.resources.exist?(resource)
         return resource_generator_for(resource, *args)
       end

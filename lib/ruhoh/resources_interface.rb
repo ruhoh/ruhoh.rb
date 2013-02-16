@@ -38,8 +38,7 @@ class Ruhoh
     end
 
     def method_missing(name, *args, &block)
-      name = name.to_s
-      resource = name.gsub(/^load_/, '')
+      resource = name.to_s.gsub(/^load_/, '')
       if Whitelist.include?(resource)
         load_class_instance_for(resource, *args)
       else

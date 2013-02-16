@@ -28,8 +28,7 @@ module Ruhoh::Resources::Widgets
     end
 
     def method_missing(name, *args, &block)
-      name = name.to_s
-      @collection.widgets.include?(name) ? widget(name) : super
+      @collection.widgets.include?(name.to_s) ? widget(name.to_s) : super
     end
 
     def respond_to?(method)

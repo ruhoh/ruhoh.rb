@@ -91,8 +91,7 @@ class Ruhoh
     end
 
     def method_missing(name, *args, &block)
-      name = name.to_s
-      return data_for(name) if @ruhoh.resources.exist?(name)
+      return data_for(name.to_s) if @ruhoh.resources.exist?(name.to_s)
       super
     end
 
