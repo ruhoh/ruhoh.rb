@@ -5,6 +5,30 @@ module Ruhoh::Base::Page
     DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
     Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
+    # Generate this filepath
+    # Returns data to be registered to the database
+    def generate
+      parsed_page = parse_page_file
+      data = parsed_page['data']
+
+      filename_data = parse_page_filename(@pointer['id'])
+
+      data['pointer'] = @pointer
+      data['id'] = @pointer['id']
+
+      data['title'] = data['title'] || filename_data['title']
+      data['date'] ||= filename_data['date'].to_s
+      data['url'] = permalink(data)
+      data['layout'] = config['layout'] if data['layout'].nil?
+
+      # Register this route for the previewer
+      @ruhoh.db.route_add(data['url'], @pointer)
+
+      {
+        "#{@pointer['id']}" => data
+      }
+    end
+
     def content
       parse_page_file['content']
     end
@@ -49,7 +73,7 @@ module Ruhoh::Base::Page
         {
           "path" => data[1],
           "slug" => data[2],
-          "title" => self.to_title(data[2]),
+          "title" => to_title(data[2]),
           "extension" => data[3]
         }
       end
@@ -57,6 +81,10 @@ module Ruhoh::Base::Page
 
     # my-post-title ===> My Post Title
     def to_title(file_slug)
+      if file_slug == 'index' && !@pointer['id'].index('/').nil?
+        file_slug = @pointer['id'].split('/')[-2]
+      end
+
       file_slug.gsub(/[^\p{Word}+]/u, ' ').gsub(/\b\w/){$&.upcase}
     end
 
