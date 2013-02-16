@@ -82,7 +82,7 @@ class Ruhoh
           i = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
           i.registered_name = resource
           i
-        elsif ["collection_view", "watcher"].include?(class_name)
+        elsif ["collection_view", "watcher", "compiler"].include?(class_name)
           collection = load_class_instance_for("collection", resource)
           get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(collection)
         else
