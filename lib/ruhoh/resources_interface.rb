@@ -26,7 +26,7 @@ class Ruhoh
       watcher
       previewer
     }
-
+    
     Whitelist.each do |method_name|
       define_method(method_name) do |name|
         get_module_namespace_for(name).const_get(camelize(method_name).to_sym)
@@ -58,7 +58,45 @@ class Ruhoh
     end
 
     def all
+      a = (discover + registered).uniq
+      a.delete("compiled")
+      a
+    end
+
+    def registered
       Ruhoh::Resources.constants.map{ |a| a.to_s.downcase }
+    end
+
+    # discover all the resource mappings
+    def discover
+      return FileUtils.cd(@ruhoh.base) {
+        return Dir['*'].select { |x| 
+          File.directory?(x) && !["plugins"].include?(x)
+        }
+      }
+    end
+
+    def acting_as_pages
+      r = registered.dup # registered non-pages
+      r.delete("pages")
+      r.delete("posts")
+
+      pages = @ruhoh.config.map do |resource, config|
+        next if resource == "theme"
+        next if (config && config["use"] && config["use"] != "pages")
+        next if r.include?(resource)
+        next unless discover.include?(resource)
+        resource
+      end.compact
+
+      pages
+    end
+
+    def non_pages
+      a = (discover + registered) - acting_as_pages 
+      a.delete("theme")
+      a.delete("compiled") # TODO: remove user-defined compiled folder.
+      a
     end
 
     def exists?(name)
@@ -94,8 +132,27 @@ class Ruhoh
       end
     end
 
-    def get_module_namespace_for(name)
-      Ruhoh::Resources.const_get(camelize(name))
+    # Load the registered resource else default to Pages if not configured.
+    # @returns[Constant] the resource's module namespace
+    def get_module_namespace_for(resource)
+      type = @ruhoh.config[resource]["use"] rescue nil
+      if type
+        if registered.include?(type)
+          Ruhoh::Resources.const_get(camelize(type))
+        else
+          klass = camelize(type)
+          Friend.say {
+            red "#{resource} resource set to use:'#{type}' in config.yml but Ruhoh::Resources::#{klass} does not exist."
+          }
+          abort
+        end
+      else
+        if registered.include?(resource)
+          Ruhoh::Resources.const_get(camelize(resource))
+        else
+          Ruhoh::Resources.const_get(:Pages)
+        end
+      end
     end
 
     def camelize(name)
