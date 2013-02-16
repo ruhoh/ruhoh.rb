@@ -76,11 +76,6 @@ module Ruhoh::Base
     #
     # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
     def generate(id=nil, &block)
-      # NOT GONNA WORK SINCE IT SUPPOSTS SINGLE RESOURCE ALSO
-      if(@ruhoh.env == "production" && @_generate)
-        return @_generate
-      end
-
       dict = {}
       files(id, &block).each { |pointer|
         pointer["resource"] = resource_name
@@ -95,7 +90,7 @@ module Ruhoh::Base
         dict.merge!(result)
       }
       Ruhoh::Utils.report(self.resource_name, dict, [])
-      @_generate = dict
+      dict
     end
 
     # Collect all files (as mapped by data resources) for this data endpoint.

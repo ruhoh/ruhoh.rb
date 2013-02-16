@@ -3,6 +3,7 @@ require 'ruhoh/resources_interface'
 class Ruhoh
   # Public: Database class for interacting with "data" in Ruhoh.
   class DB
+    attr_reader :routes
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
@@ -10,8 +11,22 @@ class Ruhoh
       @config = {}
       @urls = {}
       @paths = {}
+      @routes = {}
     end
-    
+
+    def route_add(route, pointer)
+      @routes[route] = pointer
+    end
+
+    def route_delete(route)
+      @routes.delete(route)
+    end
+
+    def routes_initialize
+      @ruhoh.resources.acting_as_pages.each {|r| __send__(r) }
+      @routes
+    end
+
     # Get a data endpoint from pointer
     # Note this differs from update in that
     # it should retrieve the cached version.
@@ -33,23 +48,28 @@ class Ruhoh
     # Returns the data that was updated.
     def update(name_or_pointer)
       if name_or_pointer.is_a?(Hash)
-        name = name_or_pointer['resource'].downcase
         id = name_or_pointer['id']
+        if id
+          name = name_or_pointer['resource'].downcase
+          if(@ruhoh.env == "production" && instance_variable_defined?("@_#{name}"))
+            instance_variable_get("@_#{name}")[id]
+          else
+            resource = @ruhoh.resources.load_collection(name)
+            data = resource.generate(id).values.first
+            endpoint = self.instance_variable_get("@_#{name}") || {}
+            endpoint[id] = data
+            data
+          end
+        end
       else
         name = name_or_pointer.downcase # name is a stringified constant.
-      end
-      
-      resource = @ruhoh.resources.load_collection(name)
-
-      if id
-        data = resource.generate(id).values.first
-        endpoint = self.instance_variable_get("@#{name}") || {}
-        endpoint[id] = data
-        data
-      else
-        data = resource.generate
-        self.instance_variable_set("@#{name}", data)
-        data
+        if(@ruhoh.env == "production" && instance_variable_defined?("@_#{name}"))
+          instance_variable_get("@_#{name}")
+        else
+          data = @ruhoh.resources.load_collection(name).generate
+          instance_variable_set("@_#{name}", data)
+          data
+        end
       end
     end
 
@@ -87,7 +107,7 @@ class Ruhoh
     end
     
     def clear(name)
-      self.instance_variable_set("@#{name}", nil)
+      self.instance_variable_set("@_#{name}", nil)
     end
 
     def method_missing(name, *args, &block)
@@ -104,8 +124,8 @@ class Ruhoh
 
     # Lazy-load all data endpoints but cache the result for this cycle.
     def data_for(resource)
-      if instance_variable_defined?("@#{resource}")
-        instance_variable_get("@#{resource}")
+      if instance_variable_defined?("@_#{resource}")
+        instance_variable_get("@_#{resource}")
       else
         update(resource)
       end
