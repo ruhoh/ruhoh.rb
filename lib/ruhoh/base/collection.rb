@@ -1,22 +1,22 @@
 module Ruhoh::Base
   class Collection
 
-    attr_accessor :registered_name
+    attr_accessor :resource_name
     attr_reader :ruhoh
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
     end
 
-    def registered_name
-      return @registered_name if @registered_name
+    def resource_name
+      return @resource_name if @resource_name
       parts = self.class.name.split("::")
       parts.pop
       Ruhoh::Utils.underscore(parts.pop)
     end
 
     def namespace
-      Ruhoh::Utils.underscore(registered_name)
+      Ruhoh::Utils.underscore(resource_name)
     end
 
     # The default glob for finding files.
@@ -56,9 +56,9 @@ module Ruhoh::Base
     end
 
     def config
-      config = @ruhoh.config[registered_name] || {}
+      config = @ruhoh.config[resource_name] || {}
       unless config.is_a?(Hash)
-        Ruhoh.log.error("'#{registered_name}' config key in config.yml is a #{config.class}; it needs to be a Hash (object).")
+        Ruhoh.log.error("'#{resource_name}' config key in config.yml is a #{config.class}; it needs to be a Hash (object).")
       end
       config
     end
@@ -83,9 +83,9 @@ module Ruhoh::Base
 
       dict = {}
       files(id, &block).each { |pointer|
-        pointer["resource"] = registered_name
-        result = if @ruhoh.resources.model?(registered_name)
-          model = @ruhoh.resources.model(registered_name).new(@ruhoh, pointer)
+        pointer["resource"] = resource_name
+        result = if @ruhoh.resources.model?(resource_name)
+          model = @ruhoh.resources.model(resource_name).new(@ruhoh, pointer)
           model.generate
         else
           {
@@ -94,7 +94,7 @@ module Ruhoh::Base
         end
         dict.merge!(result)
       }
-      Ruhoh::Utils.report(self.registered_name, dict, [])
+      Ruhoh::Utils.report(self.resource_name, dict, [])
       @_generate = dict
     end
 
@@ -127,7 +127,7 @@ module Ruhoh::Base
             a << {
               "id" => id,
               "realpath" => File.realpath(id),
-              "resource" => registered_name,
+              "resource" => resource_name,
             }
           }
         }

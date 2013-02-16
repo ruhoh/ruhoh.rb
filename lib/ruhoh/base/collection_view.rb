@@ -16,7 +16,7 @@ module Ruhoh::Base
     end
 
     def resource_name
-      @collection.registered_name
+      @collection.resource_name
     end
   end
 end

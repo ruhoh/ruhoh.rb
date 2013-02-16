@@ -118,7 +118,7 @@ class Ruhoh
       else
         instance = if class_name == "collection"
           i = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
-          i.registered_name = resource
+          i.resource_name = resource
           i
         elsif ["collection_view", "watcher", "compiler"].include?(class_name)
           collection = load_class_instance_for("collection", resource)
