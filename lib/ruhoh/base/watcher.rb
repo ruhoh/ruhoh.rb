@@ -1,9 +1,9 @@
 module Ruhoh::Base
   class Watcher
     
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
-      @collection = ruhoh.resources.load_collection(resource_name)
+    def initialize(collection)
+      @ruhoh = collection.ruhoh
+      @collection = collection
     end
 
     # noop - override in inheriting class
@@ -15,7 +15,7 @@ module Ruhoh::Base
     end
 
     def resource_name
-      self.class.name.chomp("::Watcher").split("::").pop.downcase
+      @collection.registered_name
     end
 
   end

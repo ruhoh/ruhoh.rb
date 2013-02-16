@@ -1,9 +1,5 @@
 module Ruhoh::Resources::Data
-  class Watcher
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
-    end
-  
+  class Watcher < Ruhoh::Base::Watcher
     def match(path)
       path == "data.yml"
     end
