@@ -1,3 +1,4 @@
+require 'nokogiri'
 module Ruhoh::Base::Page
   class Compiler < Ruhoh::Base::Compiler
     def run
@@ -17,6 +18,7 @@ module Ruhoh::Base::Page
       }
 
       pagination
+      rss
     end
 
     def pagination
@@ -48,6 +50,49 @@ module Ruhoh::Base::Page
           File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
           Ruhoh::Friend.say { green "  > #{view.page_data['url']}" }
         }
+      }
+    end
+
+    def rss
+      config = @ruhoh.db.config(resource_name)["rss"] || {}
+      resource_name = self.resource_name
+      if config["enable"] == false
+        Ruhoh::Friend.say { yellow "#{resource_name} RSS: disabled - skipping." }
+        return
+      end
+
+      limit = config["limit"] || 20
+      collection_view = @ruhoh.resources.load_collection_view(resource_name)
+      pages = collection_view.all.first(limit)
+      Ruhoh::Friend.say { cyan "#{resource_name} RSS: (first #{limit} pages)" }
+      
+      feed = Nokogiri::XML::Builder.new do |xml|
+       xml.rss(:version => '2.0') {
+         xml.channel {
+           xml.title_ @ruhoh.db.data['title']
+           xml.link_ @ruhoh.config['production_url']
+           xml.pubDate_ Time.now          
+           pages.each do |page|
+             view = @ruhoh.master_view(page.pointer)
+             xml.item {
+               xml.title_ page.title
+               xml.link "#{@ruhoh.config['production_url']}#{page.url}"
+               xml.pubDate_ page.date if page.date
+               xml.description_ (page.description ? page.description : view.render_content)
+             }
+           end
+         }
+       }
+      end
+
+      FileUtils.cd(@ruhoh.paths.compiled) {
+        compiled_path = CGI.unescape(@ruhoh.to_url(@collection.namespace, "rss.xml"))
+        compiled_path = compiled_path.gsub(/^\//, '')
+
+        FileUtils.mkdir_p File.dirname(compiled_path)
+        File.open(compiled_path, 'w'){ |p| p.puts feed.to_xml }
+
+        Ruhoh::Friend.say { green "  > #{compiled_path}" }
       }
     end
   end
