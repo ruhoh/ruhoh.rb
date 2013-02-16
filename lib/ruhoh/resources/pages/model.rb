@@ -12,7 +12,7 @@ module Ruhoh::Resources::Pages
       data['layout']  = config['layout'] if data['layout'].nil?
 
       # Register this route for the previewer
-      @ruhoh.db.routes[data['url']] = @pointer
+      @ruhoh.db.route_add(data['url'], @pointer)
 
       {
         "#{@pointer['id']}" => data

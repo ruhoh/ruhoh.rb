@@ -7,7 +7,7 @@ module Ruhoh::Resources::Posts
     def update(path)
       path = path.gsub(/^.+\//, '')
       key = @ruhoh.db.routes.key(path)
-      @ruhoh.db.routes.delete(key)
+      @ruhoh.db.route_delete(key)
       @ruhoh.db.update("resource" => "posts", "id" => path)
     end
   end

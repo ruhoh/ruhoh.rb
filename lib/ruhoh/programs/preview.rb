@@ -23,7 +23,7 @@ class Ruhoh
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
 
       # initialize the routes dictionary for all page resources.
-      ruhoh.resources.acting_as_pages.each {|r| ruhoh.db.__send__(r) }
+      ruhoh.db.routes_initialize
       
       Ruhoh::Program.watch(ruhoh) if opts[:watch]
       Rack::Builder.new {
