@@ -1,11 +1,27 @@
 module Ruhoh::Base::Page
   class ModelView < Ruhoh::Base::ModelView
-    
+
     # Default order by alphabetical title name.
     def <=>(other)
-      title <=> other.title
+      sort = @ruhoh.db.config(@collection.resource_name)["sort"] || []
+      attribute = sort[0] || "title"
+      direction = sort[1] || "asc"
+
+      this_data = __send__(attribute)
+      other_data = other.__send__(attribute)
+      if attribute == "date"
+        this_data = Date.parse(this_data)
+        other_data = Date.parse(other_data)
+        direction = sort[1] || "desc" #default should be reverse
+      end
+
+      if direction == "asc"
+        this_data <=> other_data
+      else
+        other_data <=> this_data
+      end
     end
-    
+
     def categories
       collection.to_categories(super)
     end
