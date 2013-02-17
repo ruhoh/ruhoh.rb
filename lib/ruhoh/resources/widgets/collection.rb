@@ -23,6 +23,5 @@ module Ruhoh::Resources::Widgets
       end
       names.uniq
     end
-
   end
 end
