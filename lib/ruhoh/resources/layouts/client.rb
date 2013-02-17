@@ -7,8 +7,9 @@ module Ruhoh::Resources::Layouts
       }
     ]      
 
-    def initialize(ruhoh, data)
-      @ruhoh = ruhoh
+    def initialize(collection, data)
+      @ruhoh = collection.ruhoh
+      @collection = collection
       @args = data[:args]
       @options = data[:options]
     end

@@ -29,21 +29,23 @@ class Ruhoh
       cmd = (@args[0] == 'new') ? 'blog' : (@args[0] || 'help')
 
       return __send__(cmd) if respond_to?(cmd)
-
+      
+      @ruhoh.setup
+      @ruhoh.setup_paths
+      
       Ruhoh::Friend.say { 
         red "Resource #{cmd} not found"
         exit 
       } unless @ruhoh.resources.exists?(cmd)
       
-      @ruhoh.setup
-      @ruhoh.setup_paths
       
-      client = @ruhoh.resources.client(cmd).new(@ruhoh, data)
+      puts "loading client: #{cmd}"
+      client = @ruhoh.resources.load_client(cmd, data)
       
       Ruhoh::Friend.say { 
         red "method '#{data[:args][1]}' not found for #{client.class}"
         exit 
-      } unless client.respond_to?(@args[1])
+      } unless @args[1] && client.respond_to?(@args[1])
       
       client.__send__(@args[1])
     end  
