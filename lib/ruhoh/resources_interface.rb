@@ -111,7 +111,9 @@ class Ruhoh
     # persistant mutations on it if necessary.
     # TODO: Kind of ugly, maybe a better way to do this. Singleton?
     # @returns[Class Instance] of the resource and class_name given.
-    def load_class_instance_for(class_name, resource)
+    def load_class_instance_for(class_name, *args)
+      resource, opts = *args
+      
       var = "@#{resource}_#{class_name}"
       if instance_variable_defined?(var) && instance_variable_get(var)
         instance_variable_get(var)
@@ -123,6 +125,9 @@ class Ruhoh
         elsif ["collection_view", "watcher", "compiler"].include?(class_name)
           collection = load_class_instance_for("collection", resource)
           get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(collection)
+        elsif class_name == "client"
+          collection = load_class_instance_for("collection", resource)
+          get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(collection, opts)
         else
           get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(@ruhoh)
         end
