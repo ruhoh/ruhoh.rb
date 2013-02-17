@@ -63,6 +63,14 @@ class Ruhoh
       a
     end
 
+    def base
+      Ruhoh::Base.constants.select{ |a|
+        Ruhoh::Base.const_get(a).class == Module
+      }.map{ |a| 
+        a.to_s.downcase
+      }
+    end 
+
     def registered
       Ruhoh::Resources.constants.map{ |a| a.to_s.downcase }
     end
@@ -144,6 +152,8 @@ class Ruhoh
       if type
         if registered.include?(type)
           Ruhoh::Resources.const_get(camelize(type))
+        elsif base.include?(type)
+          Ruhoh::Base.const_get(camelize(type))
         else
           klass = camelize(type)
           Friend.say {
@@ -155,7 +165,7 @@ class Ruhoh
         if registered.include?(resource)
           Ruhoh::Resources.const_get(camelize(resource))
         else
-          Ruhoh::Resources.const_get(:Pages)
+          Ruhoh::Base.const_get(:Pages)
         end
       end
     end
