@@ -3,11 +3,11 @@ module Ruhoh::Base::Page
     Help = [
       {
         "command" => "draft <title>",
-        "desc" => "Create a new draft. Post title is optional.",
+        "desc" => "Create a new draft. Title is optional.",
       },
       {
         "command" => "new <title>",
-        "desc" => "Create a new post. Post title is optional.",
+        "desc" => "Create a new resource. Title is optional.",
       },
       {
         "command" => "titleize",
@@ -30,68 +30,84 @@ module Ruhoh::Base::Page
       @options = data[:options]
       @iterator = 0
     end
-  
+
     def draft
-      draft_or_post(:draft)
+      create(draft: true)
     end
 
     def new
-      draft_or_post(:post)
-    end
-  
-    def draft_or_post(type)
-      ruhoh = @ruhoh
-      begin
-        file = @args[2] || "untitled-#{type}"
-        ext = File.extname(file).to_s
-        name = File.basename(file, ext)
-        name = "#{name}-#{@iterator}" unless @iterator.zero?
-        name = Ruhoh::Utils.to_slug(name)
-        ext  = ext.empty? ? @collection.config["ext"] : ext
-        filename = File.join(@ruhoh.paths.base, @collection.resource_name, "#{name}#{ext}")
-        @iterator += 1
-      end while File.exist?(filename)
-    
-      FileUtils.mkdir_p File.dirname(filename)
-      output = @ruhoh.db.scaffolds["#{type}.html"].to_s
-      output = output.gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
-      File.open(filename, 'w:UTF-8') {|f| f.puts output }
-    
-      resource_name = @collection.resource_name
-      Ruhoh::Friend.say { 
-        green "New #{type}:" 
-        green ruhoh.relative_path(filename)
-        green "View drafts/#{resource_name} at the URL: /dash"
-      }
+      create
     end
 
     # Public: Update draft filenames to their corresponding titles.
     def titleize
-      _drafts.values.each do |data|
+      @ruhoh.db.__send__(@collection.resource_name).each do |id, data|
         next unless File.basename(data['id']) =~ /^untitled/
         new_name = Ruhoh::Utils.to_slug(data['title'])
         new_file = "#{new_name}#{File.extname(data['id'])}"
-        next if data['id'] == new_file
+        old_file = File.basename(data['id'])
+        next if old_file == new_file
+
         FileUtils.cd(File.dirname(data['pointer']['realpath'])) {
-          FileUtils.mv(data['id'], new_file)
+          FileUtils.mv(old_file, new_file)
         }
-        Ruhoh::Friend.say { green "Renamed #{data['id']} to: #{new_file}" }
+        Ruhoh::Friend.say { green "Renamed #{old_file} to: #{new_file}" }
       end
     end
-    
+
     def drafts
       _list(_drafts)
     end
-    
-    def _drafts
-      @ruhoh.resources.load_collection_view(@collection.resource_name).drafts
-    end
-    
+
     def list
       data = @ruhoh.resources.load_collection_view(@collection.resource_name).all
       _list(data)
     end
-    
+
+    protected
+
+    def create(opts={})
+      ruhoh = @ruhoh
+
+      begin
+        file = @args[2] || "untitled"
+        ext = File.extname(file).to_s
+        ext  = ext.empty? ? @collection.config["ext"] : ext
+
+        # filepath vs title
+        name = if file.include?('/')
+          name = File.basename(file, ext).gsub(/\s/, '-')
+          File.join(File.dirname(file), name)
+        else
+          Ruhoh::Utils.to_slug(File.basename(file, ext))
+        end
+
+        name = "#{name}-#{@iterator}" unless @iterator.zero?
+        filename = opts[:draft] ?
+          File.join(@ruhoh.paths.base, @collection.resource_name, "drafts", "#{name}#{ext}") :
+          File.join(@ruhoh.paths.base, @collection.resource_name, "#{name}#{ext}")
+        @iterator += 1
+      end while File.exist?(filename)
+
+      FileUtils.mkdir_p File.dirname(filename)
+      output = @ruhoh.db.scaffolds["#{@collection.resource_name}.html"].to_s
+      output = output.gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
+      File.open(filename, 'w:UTF-8') {|f| f.puts output }
+
+      resource_name = @collection.resource_name
+      Ruhoh::Friend.say { 
+        green "New #{resource_name}:"
+        green "  > #{ruhoh.relative_path(filename)}"
+        if opts[:draft]
+          plain "View drafts at the URL: /dash"
+        end
+      }
+    end
+
+    def _drafts
+      @ruhoh.resources.load_collection_view(@collection.resource_name).drafts
+    end
+
     def _list(data)
       if @options.verbose
         Ruhoh::Friend.say {
@@ -109,7 +125,5 @@ module Ruhoh::Base::Page
         }
       end
     end
-    
   end
-  
 end
