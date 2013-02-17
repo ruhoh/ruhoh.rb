@@ -79,7 +79,7 @@ class Ruhoh
       if(@ruhoh.env == "production" && @content["#{name}_#{pointer['id']}"])
         @content["#{name}_#{pointer['id']}"]
       else
-        model = @ruhoh.resources.model(name).new(@ruhoh, pointer)
+        model = @ruhoh.resources.load_model(name, pointer)
         @content["#{name}_#{pointer['id']}"] = model.content
       end
     end

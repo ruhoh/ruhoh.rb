@@ -9,7 +9,7 @@ module Ruhoh::Base
 
     def new_model_view(data={})
       return nil unless @ruhoh.resources.model_view?(resource_name)
-      model_view = @ruhoh.resources.model_view(resource_name).new(@ruhoh, data)
+      model_view = @ruhoh.resources.load_model_view(resource_name, data)
       model_view.collection = self
       model_view.master = master
       model_view

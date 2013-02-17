@@ -80,8 +80,7 @@ module Ruhoh::Base
       files(id, &block).each { |pointer|
         pointer["resource"] = resource_name
         result = if @ruhoh.resources.model?(resource_name)
-          model = @ruhoh.resources.model(resource_name).new(@ruhoh, pointer)
-          model.generate
+          @ruhoh.resources.load_model(resource_name, pointer).generate
         else
           {
             pointer['id'] => pointer

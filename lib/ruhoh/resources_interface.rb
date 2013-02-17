@@ -123,7 +123,7 @@ class Ruhoh
       resource, opts = *args
       
       var = "@#{resource}_#{class_name}"
-      if instance_variable_defined?(var) && instance_variable_get(var)
+      if instance_variable_defined?(var) && instance_variable_get(var) && !["model", "model_view"].include?(class_name)
         instance_variable_get(var)
       else
         instance = if class_name == "collection"
@@ -133,6 +133,8 @@ class Ruhoh
         elsif ["collection_view", "watcher", "compiler"].include?(class_name)
           collection = load_class_instance_for("collection", resource)
           get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(collection)
+        elsif ["model", "model_view"].include?(class_name)
+          get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(@ruhoh, opts)
         elsif class_name == "client"
           collection = load_class_instance_for("collection", resource)
           get_module_namespace_for(resource).const_get(camelize(class_name).to_sym).new(collection, opts)
