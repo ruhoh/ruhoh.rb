@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Pages
-  class Collection < Ruhoh::Base::Page::Collection
+  class Collection < Ruhoh::Base::Pages::Collection
   end
 end

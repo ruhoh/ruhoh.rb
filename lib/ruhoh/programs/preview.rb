@@ -57,7 +57,7 @@ class Ruhoh
         # The generic Page::Previewer is used to render any/all page-like resources,
         # since they likely have arbitrary urls based on permalink settings.
         map '/' do
-          run Ruhoh::Base::Page::Previewer.new(ruhoh)
+          run Ruhoh::Base::Pages::Previewer.new(ruhoh)
         end
       }
     end

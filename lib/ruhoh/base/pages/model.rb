@@ -1,4 +1,4 @@
-module Ruhoh::Base::Page
+module Ruhoh::Base::Pages
   class Model < Ruhoh::Base::Model
 
     FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m

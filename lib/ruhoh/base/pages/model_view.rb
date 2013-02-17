@@ -1,4 +1,4 @@
-module Ruhoh::Base::Page
+module Ruhoh::Base::Pages
   class ModelView < Ruhoh::Base::ModelView
 
     # Default order by alphabetical title name.

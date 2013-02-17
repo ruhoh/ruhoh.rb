@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Pages
-  class Watcher < Ruhoh::Base::Page::Watcher
+  class Watcher < Ruhoh::Base::Pages::Watcher
   end
 end

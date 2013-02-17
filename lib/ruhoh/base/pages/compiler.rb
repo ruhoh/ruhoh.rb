@@ -1,5 +1,5 @@
 require 'nokogiri'
-module Ruhoh::Base::Page
+module Ruhoh::Base::Pages
   class Compiler < Ruhoh::Base::Compiler
     def run
       pages = @ruhoh.db.__send__(resource_name)

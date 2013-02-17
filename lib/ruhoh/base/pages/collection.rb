@@ -1,4 +1,4 @@
-module Ruhoh::Base::Page
+module Ruhoh::Base::Pages
   class Collection < Ruhoh::Base::Collection
 
     def config

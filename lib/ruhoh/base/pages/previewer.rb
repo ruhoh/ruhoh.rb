@@ -1,5 +1,5 @@
 # Public: Rack application used to render singular pages via their URL.
-module Ruhoh::Base::Page
+module Ruhoh::Base::Pages
   class Previewer
 
     def initialize(ruhoh)

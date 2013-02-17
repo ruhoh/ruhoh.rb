@@ -1,4 +1,4 @@
 module Ruhoh::Resources::Pages
-  class Client < Ruhoh::Base::Page::Client
+  class Client < Ruhoh::Base::Pages::Client
   end
 end
