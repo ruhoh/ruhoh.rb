@@ -1,5 +1,5 @@
 require 'digest'
-module Ruhoh::Base::Asset
+module Ruhoh::Base::Assets
   class Compiler < Ruhoh::Base::Compiler
     # A basic compiler task which copies each valid collection resource file to the compiled folder.
     # Valid files are identified by their pointers.

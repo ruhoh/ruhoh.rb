@@ -1,6 +1,6 @@
 require 'sprockets'
 module Ruhoh::Resources::Javascripts
-  class Compiler < Ruhoh::Base::Asset::Compiler
+  class Compiler < Ruhoh::Base::Assets::Compiler
     def run
       Ruhoh::Friend.say { cyan "Javascripts: (using sprockets)" }
       collection = @ruhoh.resources.load_collection('javascripts')

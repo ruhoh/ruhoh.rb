@@ -1,6 +1,6 @@
 require 'sprockets'
 module Ruhoh::Resources::Stylesheets
-  class Compiler < Ruhoh::Base::Asset::Compiler
+  class Compiler < Ruhoh::Base::Assets::Compiler
     def run
       Ruhoh::Friend.say { cyan "Stylesheets: (using sprockets)" }
       collection = @ruhoh.resources.load_collection('stylesheets')
