@@ -21,7 +21,7 @@ module Ruhoh::Base::Pages
     end
 
     def latest
-      latest = @ruhoh.db.config(resource_name)['latest']
+      latest = @collection.config['latest']
       latest ||= 10
       (latest.to_i > 0) ? all[0, latest.to_i] : all
     end
@@ -29,7 +29,7 @@ module Ruhoh::Base::Pages
     # current_page is set via a compiler or previewer
     # in which it can discern what current_page to serve
     def paginator
-      per_page = @ruhoh.db.config(resource_name)["paginator"]["per_page"] rescue 5
+      per_page = @collection.config["paginator"]["per_page"] rescue 5
       current_page = master.page_data['current_page'].to_i
       current_page = current_page.zero? ? 1 : current_page
       offset = (current_page-1)*per_page
@@ -40,7 +40,7 @@ module Ruhoh::Base::Pages
     end
 
     def paginator_navigation
-      config = @ruhoh.db.config(resource_name)["paginator"] || {}
+      config = @collection.config["paginator"] || {}
       page_count = all.length
       total_pages = (page_count.to_f/config["per_page"]).ceil
       current_page = master.page_data['current_page'].to_i

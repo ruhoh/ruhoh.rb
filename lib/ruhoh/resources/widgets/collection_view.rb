@@ -3,7 +3,7 @@ module Ruhoh::Resources::Widgets
 
     def widget(name)
       page_config = (master.page_data["widgets"][name] || {}) rescue {}
-      config = (@ruhoh.db.config('widgets')[name] || {}).merge(page_config)
+      config = (@collection.config[name] || {}).merge(page_config)
       return '' if config['enable'].to_s == 'false'
 
       pointer = @ruhoh.db.widgets["#{name}/#{(config['use'] || "default")}.html"]['pointer'] rescue nil

@@ -29,8 +29,9 @@ module Ruhoh::Base::Pages
       path = env['PATH_INFO'].reverse.chomp("/").reverse
       resource = path.split('/').first
       return nil unless @ruhoh.resources.exist?(resource)
-
-      config = @ruhoh.db.config(resource)["paginator"] || {}
+      
+      collection = @ruhoh.resources.load_collection(resource)
+      config = collection.config["paginator"] || {}
       page_number = path.split('/').pop
 
       view = @ruhoh.master_view({"resource" => resource})

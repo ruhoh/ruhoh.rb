@@ -22,7 +22,7 @@ module Ruhoh::Base::Pages
     end
 
     def pagination
-      config = @ruhoh.db.config(resource_name)["paginator"] || {}
+      config = @collection.config["paginator"] || {}
       resource_name = self.resource_name
       if config["enable"] == false
         Ruhoh::Friend.say { yellow "#{resource_name} paginator: disabled - skipping." }
@@ -54,7 +54,7 @@ module Ruhoh::Base::Pages
     end
 
     def rss
-      config = @ruhoh.db.config(resource_name)["rss"] || {}
+      config = @collection.config["rss"] || {}
       resource_name = self.resource_name
       if config["enable"] == false
         Ruhoh::Friend.say { yellow "#{resource_name} RSS: disabled - skipping." }
