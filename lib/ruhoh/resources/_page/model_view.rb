@@ -33,7 +33,8 @@ module Ruhoh::Resources::Page
     end
     
     def is_active_page
-      id == master.page_data['id']
+      breadcrumbs = (master.page_data['breadcrumbs'] || []) + [ master.page_data['id'] ]
+      breadcrumbs.include?(id)
     end
     
     # Truncate the page content relative to a line_count limit.
