@@ -7,21 +7,21 @@ module Ruhoh::Base::Pages
     include Ruhoh::Views::Helpers::Categories
 
     def all
-      @ruhoh.db.__send__(resource_name).each_value.map { |data|
+      generate.each_value.map { |data|
         next if (File.basename(File.dirname(data['id'])) == "drafts")
         new_model_view(data)
       }.compact.sort
     end
 
     def drafts
-      @ruhoh.db.__send__(resource_name).each_value.map { |data|
+      generate.each_value.map { |data|
         next unless (File.basename(File.dirname(data['id'])) == "drafts")
         new_model_view(data)
       }.compact.sort
     end
 
     def latest
-      latest = @collection.config['latest']
+      latest = config['latest']
       latest ||= 10
       (latest.to_i > 0) ? all[0, latest.to_i] : all
     end
@@ -29,7 +29,7 @@ module Ruhoh::Base::Pages
     # current_page is set via a compiler or previewer
     # in which it can discern what current_page to serve
     def paginator
-      per_page = @collection.config["paginator"]["per_page"] rescue 5
+      per_page = config["paginator"]["per_page"] rescue 5
       current_page = master.page_data['current_page'].to_i
       current_page = current_page.zero? ? 1 : current_page
       offset = (current_page-1)*per_page
@@ -40,17 +40,17 @@ module Ruhoh::Base::Pages
     end
 
     def paginator_navigation
-      config = @collection.config["paginator"] || {}
+      paginator_config = config["paginator"] || {}
       page_count = all.length
-      total_pages = (page_count.to_f/config["per_page"]).ceil
+      total_pages = (page_count.to_f/paginator_config["per_page"]).ceil
       current_page = master.page_data['current_page'].to_i
       current_page = current_page.zero? ? 1 : current_page
   
       pages = total_pages.times.map { |i| 
-        url = if i.zero? && config["root_page"]
-          config["root_page"]
+        url = if i.zero? && paginator_config["root_page"]
+          paginator_config["root_page"]
         else
-          "#{config["namespace"]}/#{i+1}"
+          "#{paginator_config["namespace"]}/#{i+1}"
         end
         
         {

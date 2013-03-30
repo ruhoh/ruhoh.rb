@@ -41,7 +41,7 @@ module Ruhoh::Base::Pages
 
     # Public: Update draft filenames to their corresponding titles.
     def titleize
-      @ruhoh.db.__send__(@collection.resource_name).each do |id, data|
+      @collection.generate.each do |id, data|
         next unless File.basename(data['id']) =~ /^untitled/
         new_name = Ruhoh::Utils.to_slug(data['title'])
         new_file = "#{new_name}#{File.extname(data['id'])}"
@@ -56,12 +56,11 @@ module Ruhoh::Base::Pages
     end
 
     def drafts
-      _list(_drafts)
+      _list(@collection.drafts)
     end
 
     def list
-      data = @ruhoh.resources.load_collection_view(@collection.resource_name).all
-      _list(data)
+      _list(@collection.all)
     end
 
     protected
@@ -102,10 +101,6 @@ module Ruhoh::Base::Pages
           plain "View drafts at the URL: /dash"
         end
       }
-    end
-
-    def _drafts
-      @ruhoh.resources.load_collection_view(@collection.resource_name).drafts
     end
 
     def _list(data)

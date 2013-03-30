@@ -39,7 +39,7 @@ module Ruhoh::Resources::Javascripts
         "#{name}?#{rand()}"
       end
 
-      @ruhoh.to_url(@collection.url_endpoint, path)
+      @ruhoh.to_url(url_endpoint, path)
     end
 
   end

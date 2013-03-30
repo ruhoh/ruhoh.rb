@@ -39,7 +39,7 @@ module Ruhoh::Resources::Stylesheets
         "#{name}?#{rand()}"
       end
 
-      @ruhoh.to_url(@collection.url_endpoint, path)
+      @ruhoh.to_url(url_endpoint, path)
     end
   end
 end

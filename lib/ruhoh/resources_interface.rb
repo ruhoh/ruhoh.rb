@@ -125,21 +125,34 @@ class Ruhoh
       if instance_variable_defined?(var) && instance_variable_get(var) && !["model", "model_view"].include?(class_name)
         instance_variable_get(var)
       else
-        klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
-
         instance = if class_name == "collection"
+          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
           i = klass.new(@ruhoh)
           i.resource_name = resource
           i
-        elsif ["collection_view", "watcher", "compiler"].include?(class_name)
+        elsif ["collection_view"].include?(class_name)
+          klass = get_module_namespace_for(resource)
           collection = load_class_instance_for("collection", resource)
-          klass.new(collection)
+          if klass.const_defined?(camelize("collection_view"))
+            klass.const_get(camelize("collection_view")).new(collection)
+          else
+            Ruhoh::Base::CollectionView.new(collection)
+          end
+
+        elsif ["watcher", "compiler"].include?(class_name)
+          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
+          collection = load_class_instance_for("collection", resource)
+          view = load_class_instance_for("collection_view", resource, collection)
+          klass.new(view)
         elsif ["model", "model_view"].include?(class_name)
+          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
           klass.new(@ruhoh, opts)
         elsif class_name == "client"
-          collection = load_class_instance_for("collection", resource)
-          klass.new(collection, opts)
+          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
+          view = load_class_instance_for("collection_view", resource)
+          klass.new(view, opts)
         else
+          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
           klass.new(@ruhoh)
         end
 

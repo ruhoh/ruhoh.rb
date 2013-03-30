@@ -131,13 +131,14 @@ module Ruhoh::Views
       collection_view
     end
 
-    # Takes an Array or string of resource ids and generates the resource objects
+    # Takes an Array or string of resource ids and generates the resource objects.
     # Uses method_missing to catch calls to 'to_<resource>` contextual helper.
     # @returns[Array] the resource model view objects or raw data hash.
     def resource_generator_for(resource, sub_context)
       collection_view = load_collection_view_for(resource)
+      collection_data = collection_view.generate
       Array(sub_context).map { |id|
-        data = @ruhoh.db.__send__(resource)[id] || {}
+        data = collection_data[id] || {}
         if collection_view && collection_view.respond_to?(:new_model_view)
           collection_view.new_model_view(data)
         else
@@ -147,16 +148,17 @@ module Ruhoh::Views
     end
 
     def process_layouts
+      layouts = @ruhoh.resources.load_collection_view("layouts").generate
       if @page_data['layout']
-        @sub_layout = @ruhoh.db.layouts[@page_data['layout']]
+        @sub_layout = layouts[@page_data['layout']]
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
       elsif @page_data['layout'] != false
         # try default
-        @sub_layout = @ruhoh.db.layouts[@pointer["resource"]]
+        @sub_layout = layouts[@pointer["resource"]]
       end
 
       if @sub_layout && @sub_layout['data']['layout']
-        @master_layout = @ruhoh.db.layouts[@sub_layout['data']['layout']]
+        @master_layout = layouts[@sub_layout['data']['layout']]
         raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
       end
       

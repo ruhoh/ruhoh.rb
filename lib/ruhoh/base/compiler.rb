@@ -6,9 +6,5 @@ module Ruhoh::Base
       @ruhoh = collection.ruhoh
       @collection = collection
     end
-
-    def resource_name
-      @collection.resource_name
-    end
   end
 end

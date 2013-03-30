@@ -13,10 +13,5 @@ module Ruhoh::Base
     # noop - override in inheriting class
     def update(path)
     end
-
-    def resource_name
-      @collection.resource_name
-    end
-
   end
 end

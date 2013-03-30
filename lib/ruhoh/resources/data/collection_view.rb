@@ -5,7 +5,7 @@ module Ruhoh::Resources::Data
 
     def initialize(collection)
       @ruhoh = collection.ruhoh
-      super(@ruhoh.db.__send__(collection.resource_name))
+      super(collection.generate)
     end
 
     def [](attribute)

@@ -2,8 +2,8 @@ require 'nokogiri'
 module Ruhoh::Base::Pages
   class Compiler < Ruhoh::Base::Compiler
     def run
-      pages = @ruhoh.db.__send__(resource_name)
-      resource_name = self.resource_name
+      pages = @collection.generate
+      resource_name = @collection.resource_name
       Ruhoh::Friend.say { cyan "#{resource_name.capitalize}: (#{pages.count} #{resource_name})" }
       
       FileUtils.cd(@ruhoh.paths.compiled) {
@@ -23,13 +23,13 @@ module Ruhoh::Base::Pages
 
     def pagination
       config = @collection.config["paginator"] || {}
-      resource_name = self.resource_name
+      resource_name = @collection.resource_name
       if config["enable"] == false
         Ruhoh::Friend.say { yellow "#{resource_name} paginator: disabled - skipping." }
         return
       end
 
-      pages_count = @ruhoh.resources.load_collection_view(resource_name).all.length
+      pages_count = @collection.all.length
       total_pages = (pages_count.to_f/config["per_page"]).ceil
 
       Ruhoh::Friend.say { cyan "#{resource_name} paginator: (#{total_pages} pages)" }
@@ -55,15 +55,14 @@ module Ruhoh::Base::Pages
 
     def rss
       config = @collection.config["rss"] || {}
-      resource_name = self.resource_name
+      resource_name = @collection.resource_name
       if config["enable"] == false
         Ruhoh::Friend.say { yellow "#{resource_name} RSS: disabled - skipping." }
         return
       end
 
       limit = config["limit"] || 20
-      collection_view = @ruhoh.resources.load_collection_view(resource_name)
-      pages = collection_view.all.first(limit)
+      pages = @collection.all.first(limit)
       Ruhoh::Friend.say { cyan "#{resource_name} RSS: (first #{limit} pages)" }
       
       feed = Nokogiri::XML::Builder.new do |xml|

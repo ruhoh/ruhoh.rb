@@ -7,7 +7,7 @@ module Ruhoh::Views::Helpers
         categories_url = url and break if @ruhoh.db.routes.key?(url)
       }
       dict = {}
-      @ruhoh.db.__send__(resource_name).each_value do |resource|
+      generate.each_value do |resource|
         Array(resource['categories']).each do |cat|
           cat = Array(cat).join('/')
           if dict[cat]

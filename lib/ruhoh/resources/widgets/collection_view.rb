@@ -3,10 +3,10 @@ module Ruhoh::Resources::Widgets
 
     def widget(name)
       page_config = (master.page_data["widgets"][name] || {}) rescue {}
-      config = (@collection.config[name] || {}).merge(page_config)
-      return '' if config['enable'].to_s == 'false'
+      widget_config = (config[name] || {}).merge(page_config)
+      return '' if widget_config['enable'].to_s == 'false'
 
-      pointer = @ruhoh.db.widgets["#{name}/#{(config['use'] || "default")}.html"]['pointer'] rescue nil
+      pointer = generate["#{name}/#{(widget_config['use'] || "default")}.html"]['pointer'] rescue nil
       return '' unless pointer
 
       data = @ruhoh.db.update(pointer)
@@ -19,17 +19,17 @@ module Ruhoh::Resources::Widgets
       # However the inline in this case is set as implementation defaults 
       # and meant to be overridden by user specific data.
       view.render(content, {
-        "this_config" => data.merge(config),
-        "this_path" => @ruhoh.to_url(@collection.url_endpoint, name)
+        "this_config" => data.merge(widget_config),
+        "this_path" => @ruhoh.to_url(url_endpoint, name)
       })
     end
 
     def method_missing(name, *args, &block)
-      @collection.widgets.include?(name.to_s) ? widget(name.to_s) : super
+      __getobj__.widgets.include?(name.to_s) ? widget(name.to_s) : super
     end
 
     def respond_to?(method)
-      @collection.widgets.include?(method.to_s) ? true : super
+      __getobj__.widgets.include?(method.to_s) ? true : super
     end
 
   end

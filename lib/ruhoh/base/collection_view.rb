@@ -1,10 +1,11 @@
+require 'delegate'
 module Ruhoh::Base
-  class CollectionView
+  class CollectionView < SimpleDelegator
     attr_accessor :master
 
     def initialize(collection)
       @ruhoh = collection.ruhoh
-      @collection = collection
+      super(collection)
     end
 
     def new_model_view(data={})
@@ -13,10 +14,6 @@ module Ruhoh::Base
       model_view.collection = self
       model_view.master = master
       model_view
-    end
-
-    def resource_name
-      @collection.resource_name
     end
   end
 end
