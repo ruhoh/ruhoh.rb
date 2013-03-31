@@ -30,8 +30,9 @@ module Ruhoh::Resources::Layouts
       end
 
       FileUtils.mkdir_p File.dirname(filename)
+      scaffolds = @ruhoh.resources.load_collection("scaffolds").generate
       File.open(filename, 'w:UTF-8') do |page|
-        page.puts @ruhoh.db.scaffolds['layout.html'].to_s
+        page.puts scaffolds['layout.html'].to_s
       end
 
       Ruhoh::Friend.say {

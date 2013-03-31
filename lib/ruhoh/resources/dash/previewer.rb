@@ -5,7 +5,8 @@ module Ruhoh::Resources::Dash
     end
 
     def call(env)
-      view = @ruhoh.master_view(@ruhoh.db.dash)
+      data = @ruhoh.resources.load_collection("dash").generate
+      view = @ruhoh.master_view(data)
       [200, {'Content-Type' => 'text/html'}, [view.render_full]]
     end
   end

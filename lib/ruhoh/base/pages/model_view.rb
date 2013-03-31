@@ -3,7 +3,7 @@ module Ruhoh::Base::Pages
 
     # Default order by alphabetical title name.
     def <=>(other)
-      sort = @ruhoh.db.config(@collection.resource_name)["sort"] || []
+      sort = @collection.config["sort"] || []
       attribute = sort[0] || "title"
       direction = sort[1] || "asc"
 
@@ -59,9 +59,8 @@ module Ruhoh::Base::Pages
     # so blank lines don't count toward the limit.
     # Always break the content on a blank line only so result stays formatted nicely.
     def summary
-      resource = pointer["resource"]
       content, id = self.get_page_content
-      line_limit = @ruhoh.db.config(resource)['summary_lines']
+      line_limit = @collection.config['summary_lines']
       line_count = 0
       line_breakpoint = content.lines.count
 

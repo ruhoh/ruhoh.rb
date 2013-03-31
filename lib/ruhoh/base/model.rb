@@ -4,10 +4,11 @@ module Ruhoh::Base
     def initialize(ruhoh, pointer)
       @ruhoh = ruhoh
       @pointer = pointer
+      @collection = @ruhoh.resources.load_collection(@pointer['resource'])
     end
     
     def config
-      @ruhoh.db.config(@pointer['resource'])
+      @collection.config
     end
     
   end
