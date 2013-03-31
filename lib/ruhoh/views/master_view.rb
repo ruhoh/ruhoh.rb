@@ -43,7 +43,7 @@ module Ruhoh::Views
     end
     
     def urls
-      @ruhoh.db.urls
+      @ruhoh.url_endpoints
     end
     
     def content

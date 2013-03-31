@@ -9,7 +9,7 @@ module Ruhoh::Resources::Javascripts
         env.append_path(File.join(h["path"], @collection.namespace))
       end
 
-      compiled_path = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["javascripts"], @ruhoh.paths.compiled)
+      compiled_path = Ruhoh::Utils.url_to_path(@collection.url_endpoint, @ruhoh.paths.compiled)
       FileUtils.mkdir_p compiled_path
 
       manifest = Sprockets::Manifest.new(env, compiled_path)

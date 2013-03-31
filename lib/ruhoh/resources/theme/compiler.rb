@@ -16,7 +16,7 @@ module Ruhoh::Resources::Theme
 
       Ruhoh::Friend.say { cyan "Theme: ('#{collection.namespace}' copying non-resource files)" }
 
-      theme = Ruhoh::Utils.url_to_path(@ruhoh.db.urls["theme"], @ruhoh.paths.compiled)
+      theme = Ruhoh::Utils.url_to_path(@collection.url_endpoint, @ruhoh.paths.compiled)
       FileUtils.mkdir_p theme
 
       self.files.each do |file|
