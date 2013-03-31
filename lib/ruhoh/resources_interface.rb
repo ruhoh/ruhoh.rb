@@ -126,8 +126,12 @@ class Ruhoh
         instance_variable_get(var)
       else
         instance = if class_name == "collection"
-          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
-          i = klass.new(@ruhoh)
+          klass = get_module_namespace_for(resource)
+          i = if klass.const_defined?(camelize(class_name))
+            klass.const_get(camelize(class_name)).new(@ruhoh)
+          else
+            Ruhoh::Base::Collection.new(@ruhoh)
+          end
           i.resource_name = resource
           i
         elsif ["collection_view"].include?(class_name)
