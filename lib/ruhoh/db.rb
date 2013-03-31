@@ -11,20 +11,6 @@ class Ruhoh
       @config = {}
       @urls = {}
       @paths = {}
-      @routes = {}
-    end
-
-    def route_add(route, pointer)
-      @routes[route] = pointer
-    end
-
-    def route_delete(route)
-      @routes.delete(route)
-    end
-
-    def routes_initialize
-      @ruhoh.resources.acting_as_pages.each {|r| __send__(r) }
-      @routes
     end
 
     # Get a data endpoint from pointer

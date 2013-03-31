@@ -23,8 +23,8 @@ class Ruhoh
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
 
       # initialize the routes dictionary for all page resources.
-      ruhoh.db.routes_initialize
-      
+      ruhoh.routes.generate
+
       Ruhoh::Program.watch(ruhoh) if opts[:watch]
       Rack::Builder.new {
         use Rack::Lint

@@ -12,7 +12,7 @@ module Ruhoh::Base::Pages
       # Always remove trailing slash if sent unless it's the root page.
       env['PATH_INFO'].chomp!("/") unless env['PATH_INFO'] == "/"
 
-      pointer = @ruhoh.db.routes[env['PATH_INFO']]
+      pointer = @ruhoh.routes.get_pointer(env['PATH_INFO'])
       view = pointer ? @ruhoh.master_view(pointer) : paginator_view(env)
 
       if view
