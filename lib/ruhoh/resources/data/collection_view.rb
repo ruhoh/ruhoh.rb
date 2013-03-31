@@ -5,11 +5,16 @@ module Ruhoh::Resources::Data
 
     def initialize(collection)
       @ruhoh = collection.ruhoh
-      super(collection.generate)
+      @collection = collection
+      super(@collection.generate)
     end
 
     def [](attribute)
       __send__(attribute)
+    end
+
+    def generate
+      @collection.generate
     end
   end
 end
