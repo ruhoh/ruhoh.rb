@@ -6,7 +6,7 @@ module Ruhoh::Resources::Widgets
       data['id'] = @pointer['id']
 
       {
-        "#{@pointer['id']}" => data
+        @pointer['id'] => data
       }
     end
   end

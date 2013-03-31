@@ -9,7 +9,7 @@ module Ruhoh::Resources::Widgets
       pointer = generate["#{name}/#{(widget_config['use'] || "default")}.html"]['pointer'] rescue nil
       return '' unless pointer
 
-      data = @ruhoh.db.update(pointer)
+      data = @ruhoh.db.get(pointer)
       content = @ruhoh.db.content(pointer)
       view = @ruhoh.master_view('')
 
