@@ -8,6 +8,8 @@ module Ruhoh::Views
     
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
+      @partials = @ruhoh.resources.load_collection("partials").generate
+
       if pointer_or_content.is_a?(Hash)
         @page_data = @ruhoh.db.get(pointer_or_content)
         @page_data = {} unless @page_data.is_a?(Hash)
@@ -49,7 +51,7 @@ module Ruhoh::Views
     end
 
     def partial(name)
-      p = @ruhoh.db.partials[name.to_s]
+      p = @partials[name.to_s]
       Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
       p.to_s + "\n" # newline ensures proper markdown rendering.
     end
