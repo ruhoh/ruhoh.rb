@@ -40,7 +40,8 @@ class Ruhoh
       
       
       puts "loading client: #{cmd}"
-      client = @ruhoh.resources.load_client(cmd, data)
+      collection = @ruhoh.resources.load_collection(cmd)
+      client = collection.load_client(data)
       
       Ruhoh::Friend.say { 
         red "method '#{data[:args][1]}' not found for #{client.class}"
@@ -66,11 +67,12 @@ class Ruhoh
       options = @opt_parser.help
       resources = [{"methods" => Help}]
       resources += @ruhoh.resources.all.map {|name|
-        next unless @ruhoh.resources.client?(name)
-        next unless @ruhoh.resources.client(name).const_defined?(:Help)
+        collection = @ruhoh.resources.load_collection(name)
+        next unless collection.client?
+        next unless collection.client.const_defined?(:Help)
         {
           "name" => name,
-          "methods" => @ruhoh.resources.client(name).const_get(:Help)
+          "methods" => collection.client.const_get(:Help)
         }
       }.compact
       

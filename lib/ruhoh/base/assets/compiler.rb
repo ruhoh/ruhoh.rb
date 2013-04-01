@@ -32,8 +32,7 @@ module Ruhoh::Base::Assets
       end
 
       # Update the paths to the digest format:
-      collection_view = @ruhoh.resources.load_collection_view(collection.namespace)
-      collection_view._cache.merge!(manifest)
+      @collection.load_collection_view._cache.merge!(manifest)
     end
   end
 end

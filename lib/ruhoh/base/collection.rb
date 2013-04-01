@@ -87,8 +87,8 @@ module Ruhoh::Base
       dict = {}
       files(id, &block).each { |pointer|
         pointer["resource"] = resource_name
-        result = if @ruhoh.resources.model?(resource_name)
-          @ruhoh.resources.load_model(resource_name, pointer).generate
+        result = if model?
+          load_model(pointer).generate
         else
           {
             pointer['id'] => pointer
@@ -144,6 +144,89 @@ module Ruhoh::Base
       excludes = Array(config['exclude']).map { |node| Regexp.new(node) }
       excludes.each { |regex| return false if filepath =~ regex }
       true
+    end
+
+    %w{
+      collection_view
+      model
+      model_view
+      client
+      compiler
+      watcher
+      previewer
+    }.each do |method_name|
+      define_method(method_name) do
+        get_module_namespace.const_get(camelize(method_name).to_sym)
+      end
+
+      define_method("#{method_name}?") do
+        get_module_namespace.const_defined?(camelize(method_name).to_sym)
+      end
+    end
+
+    def load_collection_view
+      @_collection_view ||= collection_view? ?
+                              collection_view.new(self) :
+                              Ruhoh::Base::CollectionView.new(self)
+    end
+
+    def load_model(opts)
+      model.new(@ruhoh, opts)
+    end
+
+    def load_model_view(opts)
+      model_view.new(@ruhoh, opts)
+    end
+
+    def load_client(opts)
+      @_client ||= client.new(load_collection_view, opts)
+    end
+
+    def load_compiler
+      @_compiler ||= compiler.new(load_collection_view)
+    end
+
+    def load_watcher(*args)
+      @_watcher ||= watcher.new(load_collection_view)
+    end
+
+    def load_previewer(*args)
+      @_previewer ||= previewer.new(@ruhoh)
+    end
+
+    protected
+
+    # Load the registered resource else default to Pages if not configured.
+    # @returns[Constant] the resource's module namespace
+    def get_module_namespace
+      type = @ruhoh.config[resource_name]["use"] rescue nil
+      if type
+        if @ruhoh.resources.registered.include?(type)
+          Ruhoh::Resources.const_get(camelize(type))
+        elsif @ruhoh.resources.base.include?(type)
+          Ruhoh::Base.const_get(camelize(type))
+        else
+          klass = camelize(type)
+          Friend.say {
+            red "#{resource_name} resource set to use:'#{type}' in config.yml but Ruhoh::Resources::#{klass} does not exist."
+          }
+          abort
+        end
+      else
+        if @ruhoh.resources.registered.include?(resource_name)
+          Ruhoh::Resources.const_get(camelize(resource_name))
+        else
+          Ruhoh::Base.const_get(:Pages)
+        end
+      end
+    end
+
+    def camelize(name)
+      self.class.camelize(name)
+    end
+
+    def self.camelize(name)
+      name.to_s.split('_').map {|a| a.capitalize}.join
     end
   end
 end

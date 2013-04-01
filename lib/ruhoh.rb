@@ -169,8 +169,9 @@ class Ruhoh
     compilers.unshift('javascripts')
     
     compilers.each do |name|
-      next unless @resources.compiler?(name)
-      @resources.load_compiler(name).run
+      collection = @resources.load_collection(name)
+      next unless collection.compiler?
+      collection.load_compiler.run
     end
     
     # Run extra compiler tasks if available:

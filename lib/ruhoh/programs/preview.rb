@@ -39,10 +39,10 @@ class Ruhoh
           next if h["name"] == "base_path"
           next unless ruhoh.resources.exists?(h["name"])
           map h["url"] do
-            if ruhoh.resources.previewer?(h["name"])
-              run ruhoh.resources.load_previewer(h["name"])
+            collection = ruhoh.resources.load_collection(h["name"])
+            if collection.previewer?
+              run collection.load_previewer
             else
-              collection = ruhoh.resources.load_collection(h["name"])
               try_files = collection.paths.reverse.map do |data|
                 Rack::File.new(File.join(data["path"], collection.namespace))
               end

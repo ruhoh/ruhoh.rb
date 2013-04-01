@@ -126,8 +126,10 @@ module Ruhoh::Views
     # Uses method_missing to catch calls to resource namespace.
     # @returns[CollectionView|nil] for the calling resource.
     def load_collection_view_for(resource)
-      return nil unless @ruhoh.resources.collection_view?(resource)
-      collection_view = @ruhoh.resources.load_collection_view(resource)
+      collection = @ruhoh.resources.load_collection(resource)
+      return nil unless collection.collection_view?
+
+      collection_view = collection.load_collection_view
       collection_view.master = self
       collection_view
     end
@@ -149,7 +151,7 @@ module Ruhoh::Views
     end
 
     def process_layouts
-      layouts = @ruhoh.resources.load_collection_view("layouts").generate
+      layouts = @ruhoh.resources.load_collection("layouts").generate
       if @page_data['layout']
         @sub_layout = layouts[@page_data['layout']]
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout

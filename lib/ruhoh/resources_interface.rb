@@ -18,23 +18,14 @@ class Ruhoh
   class ResourcesInterface
     Whitelist = %w{
       collection
-      collection_view
-      model
-      model_view
-      client
-      compiler
-      watcher
-      previewer
     }
-    
-    Whitelist.each do |method_name|
-      define_method(method_name) do |name|
-        get_module_namespace_for(name).const_get(camelize(method_name).to_sym)
-      end
 
-      define_method("#{method_name}?") do |name|
-        get_module_namespace_for(name).const_defined?(camelize(method_name).to_sym)
-      end
+    def collection(resource)
+      get_module_namespace_for(resource).const_get(:Collection)
+    end
+
+    def collection?(resource)
+      get_module_namespace_for(resource).const_defined?(:Collection)
     end
 
     def method_missing(name, *args, &block)
@@ -114,7 +105,7 @@ class Ruhoh
 
     protected
 
-    # Load and cache a given resource class.
+    # Load and cache a given resource collection.
     # This allows you to work with single object instance and perform
     # persistant mutations on it if necessary.
     # @returns[Class Instance] of the resource and class_name given.
@@ -122,46 +113,18 @@ class Ruhoh
       resource, opts = *args
 
       var = "@#{resource}_#{class_name}"
-      if instance_variable_defined?(var) && instance_variable_get(var) && !["model", "model_view"].include?(class_name)
+      if instance_variable_defined?(var) && instance_variable_get(var)
         instance_variable_get(var)
       else
-        instance = if class_name == "collection"
-          klass = get_module_namespace_for(resource)
-          i = if klass.const_defined?(camelize(class_name))
-            klass.const_get(camelize(class_name)).new(@ruhoh)
-          else
-            Ruhoh::Base::Collection.new(@ruhoh)
-          end
-          i.resource_name = resource
-          i
-        elsif ["collection_view"].include?(class_name)
-          klass = get_module_namespace_for(resource)
-          collection = load_class_instance_for("collection", resource)
-          if klass.const_defined?(camelize("collection_view"))
-            klass.const_get(camelize("collection_view")).new(collection)
-          else
-            Ruhoh::Base::CollectionView.new(collection)
-          end
-
-        elsif ["watcher", "compiler"].include?(class_name)
-          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
-          collection = load_class_instance_for("collection", resource)
-          view = load_class_instance_for("collection_view", resource, collection)
-          klass.new(view)
-        elsif ["model", "model_view"].include?(class_name)
-          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
-          klass.new(@ruhoh, opts)
-        elsif class_name == "client"
-          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
-          view = load_class_instance_for("collection_view", resource)
-          klass.new(view, opts)
+        klass = get_module_namespace_for(resource)
+        instance = if klass.const_defined?(camelize(class_name))
+          klass.const_get(camelize(class_name)).new(@ruhoh)
         else
-          klass = get_module_namespace_for(resource).const_get(camelize(class_name).to_sym)
-          klass.new(@ruhoh)
+          Ruhoh::Base::Collection.new(@ruhoh)
         end
-
+        instance.resource_name = resource
         instance_variable_set(var, instance)
-        instance_variable_get(var)
+        instance
       end
     end
 
