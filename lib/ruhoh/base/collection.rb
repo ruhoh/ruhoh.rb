@@ -55,6 +55,14 @@ module Ruhoh::Base
       end
     end
 
+    def get(pointer)
+      generate[pointer['id']]
+    end
+
+    def find(pointer)
+      load_model(pointer)
+    end
+
     def config
       config = @ruhoh.config[resource_name] || {}
       unless config.is_a?(Hash)

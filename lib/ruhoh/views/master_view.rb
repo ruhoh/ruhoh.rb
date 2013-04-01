@@ -11,12 +11,11 @@ module Ruhoh::Views
       @partials = @ruhoh.resources.load_collection("partials").generate
 
       if pointer_or_content.is_a?(Hash)
-        @page_data = @ruhoh.db.get(pointer_or_content)
+        @pointer = pointer_or_content
+        @page_data = collection.get(pointer_or_content)
         @page_data = {} unless @page_data.is_a?(Hash)
 
         raise "Page #{pointer_or_content['id']} not found in database" unless @page_data
-
-        @pointer = pointer_or_content
       else
         @content = pointer_or_content
         @page_data = {}
@@ -47,7 +46,7 @@ module Ruhoh::Views
     end
     
     def content
-      render(@content || @ruhoh.db.content(@pointer))
+      render(@content || collection.find(@pointer).content)
     end
 
     def partial(name)

@@ -44,7 +44,7 @@ module Ruhoh::Base::Pages
     end
 
     def get_page_content
-      content = @ruhoh.db.content(pointer)
+      content = @collection.find(pointer).content
       [content, id]
     end
     

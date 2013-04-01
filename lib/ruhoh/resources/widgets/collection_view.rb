@@ -9,8 +9,8 @@ module Ruhoh::Resources::Widgets
       pointer = generate["#{name}/#{(widget_config['use'] || "default")}.html"]['pointer'] rescue nil
       return '' unless pointer
 
-      data = @ruhoh.db.get(pointer)
-      content = @ruhoh.db.content(pointer)
+      data = get(pointer)
+      content = find(pointer).content
       view = @ruhoh.master_view('')
 
       # merge the config.yml data into the inline layout data.
