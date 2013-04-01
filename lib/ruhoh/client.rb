@@ -4,7 +4,7 @@ require 'irb'
 require 'benchmark'
 
 class Ruhoh
-  
+
   class Client
     DefaultBlogScaffold = 'git://github.com/ruhoh/blog.git'
     Help = [
@@ -28,40 +28,39 @@ class Ruhoh
       @ruhoh = Ruhoh.new
       cmd = (@args[0] == 'new') ? 'blog' : (@args[0] || 'help')
 
-      return __send__(cmd) if respond_to?(cmd)
-      
       @ruhoh.setup
       @ruhoh.setup_paths
-      
+
+      return __send__(cmd) if respond_to?(cmd)
+
       Ruhoh::Friend.say { 
         red "Resource #{cmd} not found"
         exit 
       } unless @ruhoh.resources.exists?(cmd)
-      
-      
+
       puts "loading client: #{cmd}"
       collection = @ruhoh.resources.load_collection(cmd)
       client = collection.load_client(data)
-      
+
       Ruhoh::Friend.say { 
         red "method '#{data[:args][1]}' not found for #{client.class}"
         exit 
       } unless @args[1] && client.respond_to?(@args[1])
-      
+
       client.__send__(@args[1])
-    end  
-    
+    end
+
     # Thanks rails! https://github.com/rails/rails/blob/master/railties/lib/rails/commands/console.rb
     def console
       require 'pp'
       Ruhoh::ConsoleMethods.env = @args[1]
       IRB::ExtendCommandBundle.send :include, Ruhoh::ConsoleMethods
-      
+
       ARGV.clear # IRB throws an error otherwise.
       IRB.start
     end
     alias_method :c, :console
-    
+
     # Show Client Utility help documentation.
     def help
       options = @opt_parser.help
@@ -75,7 +74,7 @@ class Ruhoh
           "methods" => collection.client.const_get(:Help)
         }
       }.compact
-      
+
       Ruhoh::Friend.say { 
         plain "Ruhoh is a nifty, modular static blog generator."
         plain "It is the Universal Static Blog API."
@@ -97,14 +96,14 @@ class Ruhoh
         end
       }
     end
-    
+
     # Public: Compile to static website.
     def compile
       puts Benchmark.measure {
         Ruhoh::Program.compile(@args[1])
       }
     end
-    
+
     # Public: Create a new blog at the directory provided.
     def blog
       name = @args[1]
@@ -146,7 +145,7 @@ class Ruhoh
         end
       }
     end
-    
+
     def ask(message, valid_options)
       if valid_options
         answer = get_stdin("#{message} #{valid_options.to_s.gsub(/"/, '').gsub(/, /,'/')} ") while !valid_options.include?(answer)
@@ -160,6 +159,6 @@ class Ruhoh
       print message
       STDIN.gets.chomp
     end
-    
-  end #Client
-end #Ruhoh
+
+  end
+end
