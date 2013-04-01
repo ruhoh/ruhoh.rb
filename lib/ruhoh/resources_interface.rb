@@ -16,9 +16,6 @@ end
 
 class Ruhoh
   class ResourcesInterface
-    Whitelist = %w{
-      collection
-    }
 
     def collection(resource)
       get_module_namespace_for(resource).const_get(:Collection)
@@ -28,21 +25,23 @@ class Ruhoh
       get_module_namespace_for(resource).const_defined?(:Collection)
     end
 
-    def method_missing(name, *args, &block)
-      resource = name.to_s.gsub(/^load_/, '')
-      if Whitelist.include?(resource)
-        load_class_instance_for(resource, *args)
+    # Load and cache a given resource collection.
+    # This allows you to work with single object instance and perform
+    # persistant mutations on it if necessary.
+    # @returns[Class Instance] of the resource and class_name given.
+    def load_collection(resource)
+      var = "@#{resource}_collection"
+      if instance_variable_defined?(var) && instance_variable_get(var)
+        instance_variable_get(var)
       else
-        super
+        instance =  collection?(resource) ?
+                      get_module_namespace_for(resource).const_get(:Collection).new(@ruhoh) :
+                      Ruhoh::Base::Collection.new(@ruhoh)
+        instance.resource_name = resource
+        instance_variable_set(var, instance)
+        instance
       end
     end
-
-    def respond_to?(method)
-      resource = method.gsub(/^load_/, '')
-      return true if Whitelist.include?(resource)
-      super
-    end
-
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
@@ -87,7 +86,7 @@ class Ruhoh
         next unless discover.include?(resource)
         resource
       end.compact
-
+      
       pages
     end
 
@@ -104,29 +103,6 @@ class Ruhoh
     alias_method :exist?, :exists?
 
     protected
-
-    # Load and cache a given resource collection.
-    # This allows you to work with single object instance and perform
-    # persistant mutations on it if necessary.
-    # @returns[Class Instance] of the resource and class_name given.
-    def load_class_instance_for(class_name, *args)
-      resource, opts = *args
-
-      var = "@#{resource}_#{class_name}"
-      if instance_variable_defined?(var) && instance_variable_get(var)
-        instance_variable_get(var)
-      else
-        klass = get_module_namespace_for(resource)
-        instance = if klass.const_defined?(camelize(class_name))
-          klass.const_get(camelize(class_name)).new(@ruhoh)
-        else
-          Ruhoh::Base::Collection.new(@ruhoh)
-        end
-        instance.resource_name = resource
-        instance_variable_set(var, instance)
-        instance
-      end
-    end
 
     # Load the registered resource else default to Pages if not configured.
     # @returns[Constant] the resource's module namespace
