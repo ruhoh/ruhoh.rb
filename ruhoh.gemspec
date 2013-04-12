@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   # dependencies defined in Gemfile
   s.add_dependency 'rack', "~> 1.4"
   s.add_dependency 'mustache', "~> 0.99"
-  s.add_dependency 'directory_watcher', "~> 1.4"
+  s.add_dependency 'directory_watcher', "~> 1.4.1"
   s.add_dependency 'redcarpet', "~> 2.1"
   s.add_dependency 'nokogiri', "~> 1.5"
   
