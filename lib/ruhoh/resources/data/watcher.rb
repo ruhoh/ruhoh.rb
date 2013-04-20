@@ -5,7 +5,7 @@ module Ruhoh::Resources::Data
     end
   
     def update(path)
-      @ruhoh.db.clear(:data)
+      @ruhoh.cache.clear(:data)
     end
   end
 end

@@ -21,7 +21,7 @@ require 'ruhoh/converter'
 require 'ruhoh/views/master_view'
 
 require 'ruhoh/resources_interface'
-require 'ruhoh/db'
+require 'ruhoh/cache'
 require 'ruhoh/routes'
 require 'ruhoh/url_endpoints'
 require 'ruhoh/programs/preview'
@@ -33,7 +33,7 @@ class Ruhoh
   end
   
   attr_accessor :log, :env
-  attr_reader :config, :paths, :root, :base, :db, :resources, :routes, :url_endpoints
+  attr_reader :config, :paths, :root, :base, :cache, :resources, :routes, :url_endpoints
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   @log = Ruhoh::Logger.new
@@ -41,7 +41,7 @@ class Ruhoh
   
   def initialize
     @resources = Ruhoh::ResourcesInterface.new(self)
-    @db = Ruhoh::DB.new(self)
+    @cache = Ruhoh::Cache.new(self)
     @routes = Ruhoh::Routes.new(self)
     @url_endpoints = Ruhoh::UrlEndpoints.new(self)
   end
@@ -84,7 +84,8 @@ class Ruhoh
     @paths.base = @base
     @paths.system = File.join(Ruhoh::Root, "system")
     @paths.compiled = @config["compiled"]
-    theme = @db.config('theme')['name']
+
+    theme = @resources.load_collection("theme").config["name"]
     if theme
       Ruhoh::Friend.say { plain "Using theme: \"#{theme}\""}
       @paths.theme = File.join(@base, theme)

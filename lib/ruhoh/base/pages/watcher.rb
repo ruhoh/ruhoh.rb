@@ -7,7 +7,6 @@ module Ruhoh::Base::Pages
     def update(path)
       path = path.gsub(/^.+\//, '')
       @ruhoh.routes.delete(path)
-      @ruhoh.db.update("resource" => @collection.namespace, "id" => path)
     end
   end
 end

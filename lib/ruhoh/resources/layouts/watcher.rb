@@ -5,7 +5,7 @@ module Ruhoh::Resources::Layouts
     end
 
     def update(path)
-      @ruhoh.db.clear(:layouts)
+      @ruhoh.cache.clear(:layouts)
     end
   end
 end

@@ -5,7 +5,7 @@ module Ruhoh::Resources::Partials
     end
 
     def update(path)
-      @ruhoh.db.clear(:partials)
+      @ruhoh.cache.clear(:partials)
     end
   end
 end

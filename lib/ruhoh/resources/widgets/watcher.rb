@@ -5,7 +5,7 @@ module Ruhoh::Resources::Widgets
     end
 
     def update(path)
-      @ruhoh.db.clear(:widgets)
+      @ruhoh.cache.clear(:widgets)
     end
   end
 end

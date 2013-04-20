@@ -5,8 +5,8 @@ module Ruhoh::Resources::Theme
     end
 
     def update(path)
-      @ruhoh.db.clear(:widgets)
-      @ruhoh.db.clear(:layouts)
+      @ruhoh.cache.clear(:widgets)
+      @ruhoh.cache.clear(:layouts)
     end
   end
 end
