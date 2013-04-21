@@ -1,6 +1,5 @@
 module Ruhoh::Base
   class ModelView < SimpleDelegator
-    attr_accessor :master
 
     def initialize(model)
       super(model)
@@ -17,10 +16,6 @@ module Ruhoh::Base
           end
         end
       end
-    end
-
-    def collection_view
-      @model.collection.load_collection_view
     end
 
     def <=>(other)

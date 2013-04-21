@@ -33,11 +33,7 @@ module Ruhoh::Views
 
     # Delegate #page to the kind of resource this view is modeling.
     def page
-      return @page if @page
-      return nil unless collection
-      view = collection.load_model_view(@pointer)
-      view.master = self
-      @page = view
+      collection ? collection.find_by_id(@pointer['id']) : nil
     end
 
     def collection
@@ -164,12 +160,9 @@ module Ruhoh::Views
     # Uses method_missing to catch calls to resource namespace.
     # @returns[CollectionView|nil] for the calling resource.
     def load_collection_view_for(resource)
-      collection = @ruhoh.resources.load_collection(resource)
-      return nil unless collection.collection_view?
-
-      collection_view = collection.load_collection_view
-      collection_view.master = self
-      collection_view
+      view = @ruhoh.resources.load_collection(resource)
+      view.master = self
+      view
     end
 
     # Transforms an Array or String of resource ids into their corresponding resource objects.
@@ -178,17 +171,7 @@ module Ruhoh::Views
     def resource_generator_for(resource, sub_context)
       collection_view = load_collection_view_for(resource)
       Array(sub_context).map { |id|
-        data = collection_view.find_by_name(id) || {}
-        if collection_view
-          view = collection_view.find_by_name(id)
-          if view && view.respond_to?(:master)
-            view.master = self
-          end
-
-          view
-        else
-          data
-        end
+        collection_view.find_by_name(id)
       }.compact
     end
   end

@@ -7,19 +7,15 @@ module Ruhoh::Base::Pages
     include Ruhoh::Views::Helpers::Categories
 
     def all
-      dictionary.each_value.map { |model|
-        next if (File.basename(File.dirname(model.id)) == "drafts")
-        model.master = master
-        model
-      }.compact.sort
+      dictionary.each_value.find_all { |model|
+        File.basename(File.dirname(model.id)) != "drafts"
+      }.sort
     end
 
     def drafts
-      dictionary.each_value.map { |model|
-        next unless (File.basename(File.dirname(model.id)) == "drafts")
-        model.master = master
-        model
-      }.compact.sort
+      dictionary.each_value.find_all { |model|
+        File.basename(File.dirname(model.id)) == "drafts"
+      }.sort
     end
 
     def latest

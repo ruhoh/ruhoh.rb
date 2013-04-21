@@ -38,6 +38,8 @@ class Ruhoh
                       get_module_namespace_for(resource).const_get(:Collection).new(@ruhoh) :
                       Ruhoh::Base::Collection.new(@ruhoh)
         instance.resource_name = resource
+        # Wrap in the collection view
+        instance = instance.load_collection_view
         instance_variable_set(var, instance)
         instance
       end
