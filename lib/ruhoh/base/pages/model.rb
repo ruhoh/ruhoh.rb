@@ -5,12 +5,14 @@ module Ruhoh::Base::Pages
     DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
     Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
+    # @returns[Hash Object] Top page metadata
     def data
       return @data if @data
       process
       @data
     end
 
+    # @returns[String] Raw (unconverted) page content
     def content
       return @content if @content
       process
@@ -18,12 +20,11 @@ module Ruhoh::Base::Pages
     end
 
     # Process this file. See #parse_page_file
-    # The returned object's format enables it to be merged into this
-    # model's larger "collection" object dictionary.
-    # Example:
-    #   collection = { "id-1" => {..}, "id-2" => {..} }
+    # This model's parent collection calls #process to populate the collection.
+    # Example collection dictionary:
+    #   collection = { "id-1" => { <data> }, "id-2" => { <data> } }
     #
-    # @returns[Dictionary Object] the parsed data+conent from the file.
+    # @returns[Hash Object] the processed data from the file.
     def process
       parsed_page = parse_page_file
       data = parsed_page['data']
@@ -46,6 +47,41 @@ module Ruhoh::Base::Pages
       @ruhoh.cache.set(@pointer['realpath'], parsed_page)
 
       data
+    end
+
+
+    protected
+
+
+    # Primary method to parse the file as a page-like object.
+    # File API is currently defines:
+    #   1. Top YAML meta-data
+    #   2. Page Body
+    #
+    # @returns[Hash Object] processed top meta-data, raw (unconverted) content body
+    def parse_page_file
+      raise "File not found: #{@pointer['realpath']}" unless File.exist?(@pointer['realpath'])
+
+      page = File.open(@pointer['realpath'], 'r:UTF-8') {|f| f.read }
+
+      front_matter = page.match(FMregex)
+      data = front_matter ?
+        (YAML.load(front_matter[0].gsub(/---\n/, "")) || {}) :
+        {}
+
+      result = {
+        "data" => data,
+        "content" => page.gsub(FMregex, '')
+      }
+
+      # variable cache
+      @data = data
+      @content = result['content']
+
+      result
+    rescue Psych::SyntaxError => e
+      Ruhoh.log.error("ERROR in #{path}: #{e.message}")
+      nil
     end
 
     def formatted_date(date)
@@ -137,39 +173,6 @@ module Ruhoh::Base::Pages
       url = '/' if url.empty?
 
       @ruhoh.to_url(url)
-    end
-
-    protected
-
-    # Primary method to parse the file as a page-like object.
-    # File API is currently defines:
-    #   1. Top YAML meta-data
-    #   2. Page Body
-    #
-    # @returns[Hash Object] processed top meta-data, raw (unconverted) content body
-    def parse_page_file
-      raise "File not found: #{@pointer['realpath']}" unless File.exist?(@pointer['realpath'])
-
-      page = File.open(@pointer['realpath'], 'r:UTF-8') {|f| f.read }
-
-      front_matter = page.match(FMregex)
-      data = front_matter ?
-        (YAML.load(front_matter[0].gsub(/---\n/, "")) || {}) :
-        {}
-
-      result = {
-        "data" => data,
-        "content" => page.gsub(FMregex, '')
-      }
-
-      # variable cache
-      @data = data
-      @content = result['content']
-
-      result
-    rescue Psych::SyntaxError => e
-      Ruhoh.log.error("ERROR in #{path}: #{e.message}")
-      nil
     end
   end
 end
