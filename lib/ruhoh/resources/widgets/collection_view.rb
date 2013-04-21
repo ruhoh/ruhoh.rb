@@ -6,7 +6,7 @@ module Ruhoh::Resources::Widgets
       widget_config = (config[name] || {}).merge(page_config)
       return '' if widget_config['enable'].to_s == 'false'
 
-      model = find_by_name("#{ name }/#{ (widget_config['use'] || "default") }")
+      model = find("#{ name }/#{ (widget_config['use'] || "default") }")
       return '' unless model
 
       view = @ruhoh.master_view('')

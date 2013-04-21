@@ -8,19 +8,10 @@ module Ruhoh::Base
       @ruhoh = ruhoh
     end
 
-
-
-    def find(pointer)
-      load_model(pointer)
-    end
-
-    def find_by_id(id)
-      dictionary[id]
-    end
-
-    def find_by_name(name)
-      return dictionary[name] if dictionary.key?(name) # Support legacy id finder
-      key = dictionary.keys.find{ |a| a.split('.')[0] == name }
+    def find(name_or_pointer)
+      name_or_pointer = name_or_pointer['id'] if name_or_pointer.is_a?(Hash)
+      return dictionary[name_or_pointer] if dictionary.key?(name_or_pointer)
+      key = dictionary.keys.find{ |a| a.split('.')[0] == name_or_pointer }
       key ? dictionary[key] : nil
     end
 

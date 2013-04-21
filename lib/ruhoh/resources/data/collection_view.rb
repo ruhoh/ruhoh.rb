@@ -5,7 +5,7 @@ module Ruhoh::Resources::Data
 
     extend Forwardable
 
-    def_instance_delegators :@collection, :dictionary, :find_by_id, :find_by_name, :load_model_view
+    def_instance_delegators :@collection, :dictionary, :find, :load_model_view
 
     def initialize(collection)
       @ruhoh = collection.ruhoh

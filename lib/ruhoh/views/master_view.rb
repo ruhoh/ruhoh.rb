@@ -12,7 +12,7 @@ module Ruhoh::Views
 
       if pointer_or_content.is_a?(Hash)
         @pointer = pointer_or_content
-        @page_data = collection.find_by_id(pointer_or_content['id'])
+        @page_data = collection.find(pointer_or_content)
         @page_data = {} unless @page_data.is_a?(Hash)
 
         raise "Page not found: #{ pointer_or_content }" unless @page_data
@@ -33,7 +33,7 @@ module Ruhoh::Views
 
     # Delegate #page to the kind of resource this view is modeling.
     def page
-      collection ? collection.find_by_id(@pointer['id']) : nil
+      collection ? collection.find(@pointer) : nil
     end
 
     def collection
@@ -50,7 +50,7 @@ module Ruhoh::Views
 
     # NOTE: newline ensures proper markdown rendering.
     def partial(name)
-      partial = @ruhoh.resources.load_collection("partials").find_by_name(name.to_s)
+      partial = @ruhoh.resources.load_collection("partials").find(name.to_s)
       partial ?
         partial.process.to_s + "\n" :
         Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } 
@@ -101,15 +101,15 @@ module Ruhoh::Views
     def process_layouts
       layouts_collection = @ruhoh.resources.load_collection("layouts")
       if @page_data['layout']
-        @sub_layout = layouts_collection.find_by_name(@page_data['layout'])
+        @sub_layout = layouts_collection.find(@page_data['layout'])
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
       elsif @page_data['layout'] != false
         # try default
-        @sub_layout = layouts_collection.find_by_name(@pointer["resource"])
+        @sub_layout = layouts_collection.find(@pointer["resource"])
       end
 
       if @sub_layout && @sub_layout.layout
-        @master_layout = layouts_collection.find_by_name(@sub_layout.layout)
+        @master_layout = layouts_collection.find(@sub_layout.layout)
         raise "Layout does not exist: #{ @sub_layout.layout }" unless @master_layout
       end
 
@@ -171,7 +171,7 @@ module Ruhoh::Views
     def resource_generator_for(resource, sub_context)
       collection_view = load_collection_view_for(resource)
       Array(sub_context).map { |id|
-        collection_view.find_by_name(id)
+        collection_view.find(id)
       }.compact
     end
   end
