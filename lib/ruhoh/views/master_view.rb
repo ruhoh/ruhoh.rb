@@ -8,6 +8,7 @@ module Ruhoh::Views
     
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
+      define_resource_collection_namespaces(ruhoh)
 
       if pointer_or_content.is_a?(Hash)
         @pointer = pointer_or_content
@@ -20,7 +21,7 @@ module Ruhoh::Views
         @page_data = {}
       end
     end
-    
+
     def render_full
       process_layouts
       render(expand_layouts)
@@ -99,64 +100,7 @@ module Ruhoh::Views
       path
     end
 
-    def method_missing(name, *args, &block)
-      # Suport for calling resource namespace
-      if @ruhoh.resources.exist?(name.to_s)
-        return load_collection_view_for(name.to_s)
-      end
-
-      # Suport for calling ?to_resource contextual block helpers
-      resource = name.to_s.gsub(/^to_/, '')
-      if @ruhoh.resources.exist?(resource)
-        return resource_generator_for(resource, *args)
-      end
-
-      super
-    end
-
-    def respond_to?(method)
-      # Suport for calling resource namespace
-      return true if @ruhoh.resources.exist?(method.to_s)
-
-      # Suport for calling ?to_resource contextual block helpers
-      return true if @ruhoh.resources.exist?(method.to_s.gsub(/^to_/, ''))
-
-      super
-    end
-
     protected
-
-    # Load collection views dynamically when calling a resources name.
-    # Uses method_missing to catch calls to resource namespace.
-    # @returns[CollectionView|nil] for the calling resource.
-    def load_collection_view_for(resource)
-      collection = @ruhoh.resources.load_collection(resource)
-      return nil unless collection.collection_view?
-
-      collection_view = collection.load_collection_view
-      collection_view.master = self
-      collection_view
-    end
-
-    # Transforms an Array or String of resource ids into their corresponding resource objects.
-    # Uses method_missing to catch calls to 'to_<resource>` contextual helper.
-    # @returns[Array] the resource modelView objects or raw data hash.
-    def resource_generator_for(resource, sub_context)
-      collection_view = load_collection_view_for(resource)
-      Array(sub_context).map { |id|
-        data = collection_view.find_by_name(id) || {}
-        if collection_view
-          view = collection_view.find_by_name(id)
-          if view && view.respond_to?(:master)
-            view.master = self
-          end
-
-          view
-        else
-          data
-        end
-      }.compact
-    end
 
     def process_layouts
       layouts_collection = @ruhoh.resources.load_collection("layouts")
@@ -195,6 +139,57 @@ module Ruhoh::Views
       end
 
       layout
+    end
+
+    private
+
+    # Dynamically add method proxies to resource collections
+    # This is how collections are accessed throughout mustache's global context.
+    # Also support calling ?to_<resource> contextual block helpers
+    def define_resource_collection_namespaces(ruhoh)
+      ruhoh.resources.all.each do |method_name|
+        (class << self; self; end).class_eval do
+          define_method(method_name) do
+            load_collection_view_for(method_name.to_s)
+          end
+
+          define_method("to_#{method_name}") do |*args|
+            resource_generator_for(method_name, *args)
+          end
+        end
+      end
+    end
+
+    # Load collection views dynamically when calling a resources name.
+    # Uses method_missing to catch calls to resource namespace.
+    # @returns[CollectionView|nil] for the calling resource.
+    def load_collection_view_for(resource)
+      collection = @ruhoh.resources.load_collection(resource)
+      return nil unless collection.collection_view?
+
+      collection_view = collection.load_collection_view
+      collection_view.master = self
+      collection_view
+    end
+
+    # Transforms an Array or String of resource ids into their corresponding resource objects.
+    # Uses method_missing to catch calls to 'to_<resource>` contextual helper.
+    # @returns[Array] the resource modelView objects or raw data hash.
+    def resource_generator_for(resource, sub_context)
+      collection_view = load_collection_view_for(resource)
+      Array(sub_context).map { |id|
+        data = collection_view.find_by_name(id) || {}
+        if collection_view
+          view = collection_view.find_by_name(id)
+          if view && view.respond_to?(:master)
+            view.master = self
+          end
+
+          view
+        else
+          data
+        end
+      }.compact
     end
   end
 end
