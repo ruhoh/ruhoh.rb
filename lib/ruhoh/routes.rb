@@ -8,7 +8,7 @@ class Ruhoh
       @routes = {}
     end
 
-    def generate
+    def process_all
       @ruhoh.resources.acting_as_pages.each do |r|
         @ruhoh.resources.load_collection(r).generate
       end

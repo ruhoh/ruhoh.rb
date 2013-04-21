@@ -7,24 +7,24 @@ module Ruhoh::Base::Pages
 
     def data
       return @data if @data
-      generate
+      process
       @data
     end
 
     def content
       return @content if @content
-      generate
+      process
       @content
     end
 
-    # Generate this filepath. See #parse_page_file
+    # Process this file. See #parse_page_file
     # The returned object's format enables it to be merged into this
     # model's larger "collection" object dictionary.
     # Example:
     #   collection = { "id-1" => {..}, "id-2" => {..} }
     #
     # @returns[Dictionary Object] the parsed data+conent from the file.
-    def generate
+    def process
       parsed_page = parse_page_file
       data = parsed_page['data']
 

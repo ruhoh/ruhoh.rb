@@ -1,6 +1,6 @@
 module Ruhoh::Resources::Dash
   class Model < Ruhoh::Base::Pages::Model
-    def generate
+    def process
       @pointer
     end
   end

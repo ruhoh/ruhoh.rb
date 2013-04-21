@@ -135,9 +135,9 @@ module Ruhoh::Views
       collection_view
     end
 
-    # Takes an Array or string of resource ids and generates the resource objects.
+    # Transforms an Array or String of resource ids into their corresponding resource objects.
     # Uses method_missing to catch calls to 'to_<resource>` contextual helper.
-    # @returns[Array] the resource model view objects or raw data hash.
+    # @returns[Array] the resource modelView objects or raw data hash.
     def resource_generator_for(resource, sub_context)
       collection_view = load_collection_view_for(resource)
       Array(sub_context).map { |id|

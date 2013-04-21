@@ -27,7 +27,7 @@ module Ruhoh::Base
     def dictionary
       cached = @ruhoh.cache.get(resource_name)
       return cached if cached
-      @ruhoh.cache.set(resource_name, generate)
+      @ruhoh.cache.set(resource_name, process_all)
     end
 
 
@@ -99,7 +99,7 @@ module Ruhoh::Base
     # block - (Optional) block.
     #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
     #   Return true/false for whether the file is valid/invalid.
-    #   Note it is preferred to pass the block to #generate as #files is a low-level method.
+    #   Note it is preferred to pass the block to #process_all as #files is a low-level method.
     #
     # @returns[Array] pointers.
     def files(id=nil, &block)
@@ -218,24 +218,24 @@ module Ruhoh::Base
 
     private
 
-    # Generate all data resources for this data endpoint.
+    # Process all data resources for this data endpoint.
     #
     # id - (Optional) String or Array.
-    #   Generate a single data resource at id.
+    #   Process a single data resource at id.
     # block - (Optional) block.
     #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
     #   Return true/false for whether the file is valid/invalid.
     #   Example:
-    #     Generate only files startng with the letter "a" :
-    #     generate {|id| id.start_with?("a") }
+    #     Process only files startng with the letter "a" :
+    #     process_all {|id| id.start_with?("a") }
     #
     # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
-    def generate(id=nil, &block)
+    def process_all(id=nil, &block)
       dict = {}
       files(id, &block).each { |pointer|
         result = if model?
           {
-            pointer['id'] => load_model(pointer).generate
+            pointer['id'] => load_model(pointer).process
           }
         else
           {

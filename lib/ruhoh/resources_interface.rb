@@ -67,7 +67,7 @@ class Ruhoh
 
     # discover all the resource mappings
     def discover
-      return FileUtils.cd(@ruhoh.base) {
+      FileUtils.cd(@ruhoh.base) {
         return Dir['*'].select { |x| 
           File.directory?(x) && !["plugins"].include?(x)
         }
@@ -76,11 +76,8 @@ class Ruhoh
 
     def acting_as_pages
       r = registered.dup # registered non-pages
-      r.delete("pages")
-      r.delete("posts")
-
       pages = @ruhoh.config.map do |resource, config|
-        next if resource == "theme"
+        next if ["theme", "compiled"].include?(resource)
         next if (config && config["use"] && config["use"] != "pages")
         next if r.include?(resource)
         next unless discover.include?(resource)

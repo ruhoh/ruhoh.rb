@@ -10,7 +10,7 @@ module Ruhoh::Resources::Theme
     end
 
     # noop
-    def generate
+    def process_all
       {}
     end
   end

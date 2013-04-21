@@ -1,6 +1,6 @@
 module Ruhoh::Resources::Layouts
   class Model < Ruhoh::Base::Model
-    def generate
+    def process
       id = File.basename(@pointer['id'], File.extname(@pointer['id']))
       data = parse_layout_file(@pointer['realpath'])
       data
