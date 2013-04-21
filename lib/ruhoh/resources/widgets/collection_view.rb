@@ -6,11 +6,9 @@ module Ruhoh::Resources::Widgets
       widget_config = (config[name] || {}).merge(page_config)
       return '' if widget_config['enable'].to_s == 'false'
 
-      pointer = generate["#{name}/#{(widget_config['use'] || "default")}.html"]['pointer'] rescue nil
-      return '' unless pointer
+      data = find_by_id("#{name}/#{(widget_config['use'] || "default")}.html")
+      return '' unless data
 
-      data = get(pointer)
-      content = find(pointer).content
       view = @ruhoh.master_view('')
 
       # merge the config.yml data into the inline layout data.
@@ -18,7 +16,7 @@ module Ruhoh::Resources::Widgets
       # in that inline should always override config level.
       # However the inline in this case is set as implementation defaults 
       # and meant to be overridden by user specific data.
-      view.render(content, {
+      view.render(find(data['pointer']).content, {
         "this_config" => data.merge(widget_config),
         "this_path" => @ruhoh.to_url(url_endpoint, name)
       })

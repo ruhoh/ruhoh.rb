@@ -7,7 +7,7 @@ module Ruhoh::Views::Helpers
         categories_url = url and break if @ruhoh.routes.exists?(url)
       }
       dict = {}
-      generate.each_value do |resource|
+      dictionary.each_value do |resource|
         Array(resource['categories']).each do |cat|
           cat = Array(cat).join('/')
           if dict[cat]

@@ -8,6 +8,30 @@ module Ruhoh::Base
       @ruhoh = ruhoh
     end
 
+
+
+    def find(pointer)
+      load_model(pointer)
+    end
+
+    def find_by_id(id)
+      dictionary[id]
+    end
+
+    def find_by_name(id)
+      key = dictionary.keys.find{ |a| a.split('.')[0] == id }
+      key ? dictionary[key] : nil
+    end
+
+    # Public API for returning this collection's dictionary of data.
+    def dictionary
+      cached = @ruhoh.cache.get(resource_name)
+      return cached if cached
+      @ruhoh.cache.set(resource_name, generate)
+    end
+
+
+
     def resource_name
       return @resource_name if @resource_name
       parts = self.class.name.split("::")
@@ -55,49 +79,12 @@ module Ruhoh::Base
       end
     end
 
-    def get(pointer)
-      generate[pointer['id']]
-    end
-
-    def find(pointer)
-      load_model(pointer)
-    end
-
     def config
       config = @ruhoh.config[resource_name] || {}
       unless config.is_a?(Hash)
         Ruhoh.log.error("'#{resource_name}' config key in config.yml is a #{config.class}; it needs to be a Hash (object).")
       end
       config
-    end
-
-    # Generate all data resources for this data endpoint.
-    #
-    # id - (Optional) String or Array.
-    #   Generate a single data resource at id.
-    # block - (Optional) block.
-    #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
-    #   Return true/false for whether the file is valid/invalid.
-    #   Example:
-    #     Generate only files startng with the letter "a" :
-    #     generate {|id| id.start_with?("a") }
-    #
-    # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
-    def generate(id=nil, &block)
-      dict = {}
-      files(id, &block).each { |pointer|
-        pointer["resource"] = resource_name
-        result = if model?
-          load_model(pointer).generate
-        else
-          {
-            pointer['id'] => pointer
-          }
-        end
-        dict.merge!(result)
-      }
-      Ruhoh::Utils.report(self.resource_name, dict, [])
-      dict
     end
 
     # Collect all files (as mapped by data resources) for this data endpoint.
@@ -114,7 +101,7 @@ module Ruhoh::Base
     #   Return true/false for whether the file is valid/invalid.
     #   Note it is preferred to pass the block to #generate as #files is a low-level method.
     #
-    # Returns Array of file hashes.
+    # @returns[Array] pointers.
     def files(id=nil, &block)
       a = []
       Array(self.paths.map{|h| h["path"]}).each do |path|
@@ -170,12 +157,12 @@ module Ruhoh::Base
                               Ruhoh::Base::CollectionView.new(self)
     end
 
-    def load_model(opts)
-      model.new(@ruhoh, opts)
+    def load_model(pointer)
+      model.new(@ruhoh, pointer)
     end
 
-    def load_model_view(opts)
-      model_view.new(@ruhoh, opts)
+    def load_model_view(pointer)
+      model_view.new(@ruhoh, pointer)
     end
 
     def load_client(opts)
@@ -227,6 +214,38 @@ module Ruhoh::Base
 
     def self.camelize(name)
       name.to_s.split('_').map {|a| a.capitalize}.join
+    end
+
+    private
+
+    # Generate all data resources for this data endpoint.
+    #
+    # id - (Optional) String or Array.
+    #   Generate a single data resource at id.
+    # block - (Optional) block.
+    #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
+    #   Return true/false for whether the file is valid/invalid.
+    #   Example:
+    #     Generate only files startng with the letter "a" :
+    #     generate {|id| id.start_with?("a") }
+    #
+    # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
+    def generate(id=nil, &block)
+      dict = {}
+      files(id, &block).each { |pointer|
+        result = if model?
+          {
+            pointer['id'] => load_model(pointer).generate
+          }
+        else
+          {
+            pointer['id'] => pointer
+          }
+        end
+        dict.merge!(result)
+      }
+      Ruhoh::Utils.report(resource_name, dict, [])
+      dict
     end
   end
 end

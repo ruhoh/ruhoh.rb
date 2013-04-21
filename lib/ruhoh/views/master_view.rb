@@ -8,11 +8,10 @@ module Ruhoh::Views
     
     def initialize(ruhoh, pointer_or_content)
       @ruhoh = ruhoh
-      @partials = @ruhoh.resources.load_collection("partials").generate
 
       if pointer_or_content.is_a?(Hash)
         @pointer = pointer_or_content
-        @page_data = collection.get(pointer_or_content)
+        @page_data = collection.find_by_id(pointer_or_content['id'])
         @page_data = {} unless @page_data.is_a?(Hash)
 
         raise "Page #{pointer_or_content['id']} not found in database" unless @page_data
@@ -49,10 +48,12 @@ module Ruhoh::Views
       render(@content || collection.find(@pointer).content)
     end
 
+    # NOTE: newline ensures proper markdown rendering.
     def partial(name)
-      p = @partials[name.to_s]
-      Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } if p.nil?
-      p.to_s + "\n" # newline ensures proper markdown rendering.
+      partial = @ruhoh.resources.load_collection("partials").find_by_name(name.to_s)
+      partial ?
+        partial.to_s + "\n" :
+        Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } 
     end
 
     def to_json(sub_context)
@@ -139,9 +140,8 @@ module Ruhoh::Views
     # @returns[Array] the resource model view objects or raw data hash.
     def resource_generator_for(resource, sub_context)
       collection_view = load_collection_view_for(resource)
-      collection_data = collection_view.generate
       Array(sub_context).map { |id|
-        data = collection_data[id] || {}
+        data = collection_view.find_by_id(id) || {}
         if collection_view && collection_view.respond_to?(:new_model_view)
           collection_view.new_model_view(data)
         else
@@ -151,17 +151,17 @@ module Ruhoh::Views
     end
 
     def process_layouts
-      layouts = @ruhoh.resources.load_collection("layouts").generate
+      layouts_collection = @ruhoh.resources.load_collection("layouts")
       if @page_data['layout']
-        @sub_layout = layouts[@page_data['layout']]
+        @sub_layout = layouts_collection.find_by_name(@page_data['layout'])
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
       elsif @page_data['layout'] != false
         # try default
-        @sub_layout = layouts[@pointer["resource"]]
+        @sub_layout = layouts_collection.find_by_name(@pointer["resource"])
       end
 
       if @sub_layout && @sub_layout['data']['layout']
-        @master_layout = layouts[@sub_layout['data']['layout']]
+        @master_layout = layouts_collection.find_by_name(@sub_layout['data']['layout'])
         raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
       end
       

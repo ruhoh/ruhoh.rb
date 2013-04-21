@@ -7,14 +7,14 @@ module Ruhoh::Base::Pages
     include Ruhoh::Views::Helpers::Categories
 
     def all
-      generate.each_value.map { |data|
+      dictionary.each_value.map { |data|
         next if (File.basename(File.dirname(data['id'])) == "drafts")
         new_model_view(data)
       }.compact.sort
     end
 
     def drafts
-      generate.each_value.map { |data|
+      dictionary.each_value.map { |data|
         next unless (File.basename(File.dirname(data['id'])) == "drafts")
         new_model_view(data)
       }.compact.sort

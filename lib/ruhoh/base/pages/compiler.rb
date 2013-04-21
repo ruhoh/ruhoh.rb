@@ -2,7 +2,7 @@ require 'nokogiri'
 module Ruhoh::Base::Pages
   class Compiler < Ruhoh::Base::Compiler
     def run
-      pages = @collection.generate
+      pages = @collection.dictionary
       resource_name = @collection.resource_name
       Ruhoh::Friend.say { cyan "#{resource_name.capitalize}: (#{pages.count} #{resource_name})" }
       
@@ -64,7 +64,7 @@ module Ruhoh::Base::Pages
       limit = config["limit"] || 20
       pages = @collection.all.first(limit)
       Ruhoh::Friend.say { cyan "#{resource_name} RSS: (first #{limit} pages)" }
-      data = @ruhoh.resources.load_collection("data").generate
+      data = @ruhoh.resources.load_collection("data").dictionary
 
       feed = Nokogiri::XML::Builder.new do |xml|
        xml.rss(:version => '2.0') {

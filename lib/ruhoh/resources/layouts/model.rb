@@ -1,12 +1,9 @@
 module Ruhoh::Resources::Layouts
   class Model < Ruhoh::Base::Model
     def generate
-      dict = {}
       id = File.basename(@pointer['id'], File.extname(@pointer['id']))
       data = parse_layout_file(@pointer['realpath'])
-      data['id'] = id
-      dict[id] = data
-      dict
+      data
     end
     
     def parse_layout_file(*args)

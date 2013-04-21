@@ -6,15 +6,19 @@ module Ruhoh::Resources::Data
     def initialize(collection)
       @ruhoh = collection.ruhoh
       @collection = collection
-      super(@collection.generate)
+      super(@collection.dictionary)
     end
 
     def [](attribute)
       __send__(attribute)
     end
 
-    def generate
-      @collection.generate
+    def dictionary
+      @collection.dictionary
+    end
+
+    def find_by_id(id)
+      @collection.find_by_id(id)
     end
   end
 end

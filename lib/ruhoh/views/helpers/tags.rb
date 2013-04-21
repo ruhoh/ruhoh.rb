@@ -7,7 +7,7 @@ module Ruhoh::Views::Helpers
         tags_url = url and break if @ruhoh.routes.exists?(url)
       }
       dict = {}
-      generate.each_value do |resource|
+      dictionary.each_value do |resource|
         Array(resource['tags']).each do |tag|
           if dict[tag]
             dict[tag]['count'] += 1

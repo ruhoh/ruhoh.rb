@@ -1,10 +1,9 @@
 module Ruhoh::Resources::Partials
   class Model < Ruhoh::Base::Model
     def generate
-      dict = {}
-      name = @pointer['id'].chomp(File.extname(@pointer['id']))
-      File.open(@pointer['realpath'], 'r:UTF-8') { |f| dict[name] = f.read }
-      dict
+      return File.open(@pointer['realpath'], 'r:UTF-8') { |f| 
+        return f.read
+      }
     end
   end
 end

@@ -4,10 +4,7 @@ module Ruhoh::Resources::Widgets
       data = parse_page_file['data']
       data['pointer'] = @pointer
       data['id'] = @pointer['id']
-
-      {
-        @pointer['id'] => data
-      }
+      data
     end
   end
 end
