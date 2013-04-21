@@ -37,7 +37,7 @@ module Ruhoh::Base::Pages
       data['title'] = data['title'] || filename_data['title']
       data['date'] ||= filename_data['date'].to_s
       data['url'] = permalink(data)
-      data['layout'] = config['layout'] if data['layout'].nil?
+      data['layout'] = collection.config['layout'] if data['layout'].nil?
 
       # Register this route for the previewer
       @ruhoh.routes.add(data['url'], @pointer)
@@ -123,7 +123,7 @@ module Ruhoh::Base::Pages
     # Another blatently stolen method from Jekyll
     # The category is only the first one if multiple categories exist.
     def permalink(page_data)
-      format = page_data['permalink'] || config['permalink']
+      format = page_data['permalink'] || collection.config['permalink']
       format ||= "/:path/:filename"
 
       url = if format.include?(':')
@@ -166,7 +166,7 @@ module Ruhoh::Base::Pages
         url = url.gsub(%r{#{File.extname(url)}$}, '.html')
       end
 
-      unless (page_data['permalink_ext'] || config['permalink_ext'])
+      unless (page_data['permalink_ext'] || collection.config['permalink_ext'])
         url = url.gsub(/index.html$/, '').gsub(/\.html$/, '')
       end
 
