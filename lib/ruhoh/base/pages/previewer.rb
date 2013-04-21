@@ -15,10 +15,14 @@ module Ruhoh::Base::Pages
       pointer = @ruhoh.routes.get_pointer(env['PATH_INFO'])
       view = pointer ? @ruhoh.master_view(pointer) : paginator_view(env)
 
+      Ruhoh::Friend.say {
+        plain "- previewing page:"
+        plain "   #{pointer.inspect}"
+      }
       if view
         [200, {'Content-Type' => 'text/html'}, [view.render_full]]
       else
-        raise "Page id not found for url: #{env['PATH_INFO']}"
+        raise "Page id not found for url: '#{env['PATH_INFO']}' using pointer: #{pointer.inspect}"
       end
     end
 
