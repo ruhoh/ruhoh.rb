@@ -141,7 +141,7 @@ module Ruhoh::Views
     def resource_generator_for(resource, sub_context)
       collection_view = load_collection_view_for(resource)
       Array(sub_context).map { |id|
-        data = collection_view.find_by_id(id) || {}
+        data = collection_view.find_by_name(id) || {}
         if collection_view && collection_view.respond_to?(:new_model_view)
           collection_view.new_model_view(data)
         else

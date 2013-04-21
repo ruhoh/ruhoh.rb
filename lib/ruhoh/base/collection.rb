@@ -18,8 +18,9 @@ module Ruhoh::Base
       dictionary[id]
     end
 
-    def find_by_name(id)
-      key = dictionary.keys.find{ |a| a.split('.')[0] == id }
+    def find_by_name(name)
+      return dictionary[name] if dictionary.key?(name) # Support legacy id finder
+      key = dictionary.keys.find{ |a| a.split('.')[0] == name }
       key ? dictionary[key] : nil
     end
 
