@@ -5,20 +5,6 @@ module Ruhoh::Base::Pages
     DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
     Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
-    # @returns[Hash Object] Top page metadata
-    def data
-      return @data if @data
-      process
-      @data
-    end
-
-    # @returns[String] Raw (unconverted) page content
-    def content
-      return @content if @content
-      process
-      @content
-    end
-
     # Process this file. See #parse_page_file
     # This model's parent collection calls #process to populate the collection.
     # Example collection dictionary:

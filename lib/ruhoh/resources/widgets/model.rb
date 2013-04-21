@@ -1,10 +1,10 @@
 module Ruhoh::Resources::Widgets
   class Model < Ruhoh::Base::Pages::Model
     def process
-      data = parse_page_file['data']
-      data['pointer'] = @pointer
-      data['id'] = @pointer['id']
-      data
+      parsed = parse_page_file
+      @data = parsed['data']
+      @content = parsed['content']
+      parsed
     end
   end
 end

@@ -10,7 +10,9 @@ class Ruhoh
 
     def process_all
       @ruhoh.resources.acting_as_pages.each do |r|
-        @ruhoh.resources.load_collection(r).dictionary
+        @ruhoh.resources.load_collection(r).dictionary.values.each { |a|
+          a.process
+        }
       end
 
       @routes

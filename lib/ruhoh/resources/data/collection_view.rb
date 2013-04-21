@@ -3,6 +3,10 @@ module Ruhoh::Resources::Data
     attr_accessor :collection
     attr_accessor :master
 
+    extend Forwardable
+
+    def_instance_delegators :@collection, :dictionary, :find_by_id, :find_by_name, :load_model_view
+
     def initialize(collection)
       @ruhoh = collection.ruhoh
       @collection = collection
@@ -13,12 +17,5 @@ module Ruhoh::Resources::Data
       __send__(attribute)
     end
 
-    def dictionary
-      @collection.dictionary
-    end
-
-    def find_by_id(id)
-      @collection.find_by_id(id)
-    end
   end
 end

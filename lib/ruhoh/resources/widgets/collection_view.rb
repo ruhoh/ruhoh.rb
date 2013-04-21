@@ -6,8 +6,8 @@ module Ruhoh::Resources::Widgets
       widget_config = (config[name] || {}).merge(page_config)
       return '' if widget_config['enable'].to_s == 'false'
 
-      data = find_by_id("#{name}/#{(widget_config['use'] || "default")}.html")
-      return '' unless data
+      model = find_by_name("#{ name }/#{ (widget_config['use'] || "default") }")
+      return '' unless model
 
       view = @ruhoh.master_view('')
 
@@ -16,8 +16,8 @@ module Ruhoh::Resources::Widgets
       # in that inline should always override config level.
       # However the inline in this case is set as implementation defaults 
       # and meant to be overridden by user specific data.
-      view.render(find(data['pointer']).content, {
-        "this_config" => data.merge(widget_config),
+      view.render(model.content, {
+        "this_config" => model.data.merge(widget_config),
         "this_path" => @ruhoh.to_url(url_endpoint, name)
       })
     end

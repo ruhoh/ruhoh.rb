@@ -3,7 +3,7 @@ module Ruhoh::Base::Pages
 
     # Default order by alphabetical title name.
     def <=>(other)
-      sort = @collection.config["sort"] || []
+      sort = collection_view.config["sort"] || []
       attribute = sort[0] || "title"
       direction = sort[1] || "asc"
 
@@ -23,11 +23,11 @@ module Ruhoh::Base::Pages
     end
 
     def categories
-      collection.to_categories(super)
+      collection_view.to_categories(data['categories'])
     end
 
     def tags
-      collection.to_tags(super)
+      collection_view.to_tags(data['tags'])
     end
 
     # Lazy-load the page body.
@@ -38,16 +38,10 @@ module Ruhoh::Base::Pages
     # reference a file.
     def content
       return @content if @content
-      content, id = self.get_page_content
-      content = master.render(content)
+      content = master.render(@model.content)
       Ruhoh::Converter.convert(content, id)
     end
 
-    def get_page_content
-      content = @collection.find(pointer).content
-      [content, id]
-    end
-    
     def is_active_page
       id == master.page_data['id']
     end
@@ -59,10 +53,9 @@ module Ruhoh::Base::Pages
     # so blank lines don't count toward the limit.
     # Always break the content on a blank line only so result stays formatted nicely.
     def summary
-      content, id = self.get_page_content
-      line_limit = @collection.config['summary_lines']
+      line_limit = collection_view.config['summary_lines']
       line_count = 0
-      line_breakpoint = content.lines.count
+      line_breakpoint = @model.content.lines.count
 
       content.lines.each_with_index do |line, i|
         if line =~ /^\s*$/  # line with only whitespace
@@ -92,7 +85,7 @@ module Ruhoh::Base::Pages
 
     def next
       return unless id
-      all_cache = collection.all
+      all_cache = collection_view.all
       index = all_cache.index {|p| p["id"] == id}
       return unless index && (index-1 >= 0)
       _next = all_cache[index-1]
@@ -102,7 +95,7 @@ module Ruhoh::Base::Pages
 
     def previous
       return unless id
-      all_cache = collection.all
+      all_cache = collection_view.all
       index = all_cache.index {|p| p["id"] == id}
       return unless index && (index+1 >= 0)
       prev = all_cache[index+1]

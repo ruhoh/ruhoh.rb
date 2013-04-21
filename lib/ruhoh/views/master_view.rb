@@ -14,7 +14,7 @@ module Ruhoh::Views
         @page_data = collection.find_by_id(pointer_or_content['id'])
         @page_data = {} unless @page_data.is_a?(Hash)
 
-        raise "Page #{pointer_or_content['id']} not found in database" unless @page_data
+        raise "Page not found: #{ pointer_or_content }" unless @page_data
       else
         @content = pointer_or_content
         @page_data = {}
@@ -33,7 +33,10 @@ module Ruhoh::Views
     # Delegate #page to the kind of resource this view is modeling.
     def page
       return @page if @page
-      @page = collection ? collection.new_model_view(@page_data) : nil
+      return nil unless collection
+      view = collection.load_model_view(@pointer)
+      view.master = self
+      @page = view
     end
 
     def collection
@@ -45,14 +48,14 @@ module Ruhoh::Views
     end
     
     def content
-      render(@content || collection.find(@pointer).content)
+      render(@content || page.content)
     end
 
     # NOTE: newline ensures proper markdown rendering.
     def partial(name)
       partial = @ruhoh.resources.load_collection("partials").find_by_name(name.to_s)
       partial ?
-        partial.to_s + "\n" :
+        partial.process.to_s + "\n" :
         Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } 
     end
 
@@ -142,8 +145,13 @@ module Ruhoh::Views
       collection_view = load_collection_view_for(resource)
       Array(sub_context).map { |id|
         data = collection_view.find_by_name(id) || {}
-        if collection_view && collection_view.respond_to?(:new_model_view)
-          collection_view.new_model_view(data)
+        if collection_view
+          view = collection_view.find_by_name(id)
+          if view && view.respond_to?(:master)
+            view.master = self
+          end
+
+          view
         else
           data
         end
@@ -160,13 +168,13 @@ module Ruhoh::Views
         @sub_layout = layouts_collection.find_by_name(@pointer["resource"])
       end
 
-      if @sub_layout && @sub_layout['data']['layout']
-        @master_layout = layouts_collection.find_by_name(@sub_layout['data']['layout'])
-        raise "Layout does not exist: #{@sub_layout['data']['layout']}" unless @master_layout
+      if @sub_layout && @sub_layout.layout
+        @master_layout = layouts_collection.find_by_name(@sub_layout.layout)
+        raise "Layout does not exist: #{ @sub_layout.layout }" unless @master_layout
       end
-      
-      @page_data['sub_layout'] = @sub_layout['id'] rescue nil
-      @page_data['master_layout'] = @master_layout['id'] rescue nil
+
+      @page_data['sub_layout'] = @sub_layout.id
+      @page_data['master_layout'] = @master_layout.id
       @page_data
     end
     
@@ -174,18 +182,18 @@ module Ruhoh::Views
     # Pages may have a single master_layout, a master_layout + sub_layout, or no layout.
     def expand_layouts
       if @sub_layout
-        layout = @sub_layout['content']
+        layout = @sub_layout.content
 
         # If a master_layout is found we need to process the sub_layout
         # into the master_layout using mustache.
-        if @master_layout && @master_layout['content']
-          layout = render(@master_layout['content'], {"content" => layout})
+        if @master_layout && @master_layout.content
+          layout = render(@master_layout.content, {"content" => layout})
         end
       else
         # Minimum layout if no layout defined.
         layout = page ? '{{{ page.content }}}' : '{{{ content }}}'
       end
-      
+
       layout
     end
   end

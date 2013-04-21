@@ -1,9 +1,9 @@
 module Ruhoh::Base
   class Collection
 
-    attr_accessor :resource_name
+    attr_accessor :resource_name, :master
     attr_reader :ruhoh
-
+    
     def initialize(ruhoh)
       @ruhoh = ruhoh
     end
@@ -159,11 +159,15 @@ module Ruhoh::Base
     end
 
     def load_model(pointer)
-      model.new(@ruhoh, pointer)
+      model? ?
+        model.new(@ruhoh, pointer) :
+        Ruhoh::Base::Model.new(@ruhoh, pointer)
     end
 
     def load_model_view(pointer)
-      model_view.new(@ruhoh, pointer)
+      model_view? ? 
+        model_view.new(load_model(pointer)) :
+        Ruhoh::Base::ModelView.new(load_model(pointer))
     end
 
     def load_client(opts)
@@ -234,16 +238,9 @@ module Ruhoh::Base
     def process_all(id=nil, &block)
       dict = {}
       files(id, &block).each { |pointer|
-        result = if model?
-          {
-            pointer['id'] => load_model(pointer).process
-          }
-        else
-          {
-            pointer['id'] => pointer
-          }
-        end
-        dict.merge!(result)
+        dict.merge!({
+          pointer['id'] => load_model_view(pointer)
+        })
       }
       Ruhoh::Utils.report(resource_name, dict, [])
       dict

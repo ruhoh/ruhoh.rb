@@ -7,8 +7,8 @@ module Ruhoh::Views::Helpers
         tags_url = url and break if @ruhoh.routes.exists?(url)
       }
       dict = {}
-      dictionary.each_value do |resource|
-        Array(resource['tags']).each do |tag|
+      dictionary.each_value do |model|
+        Array(model.data['tags']).each do |tag|
           if dict[tag]
             dict[tag]['count'] += 1
           else
@@ -20,7 +20,7 @@ module Ruhoh::Views::Helpers
             }
           end 
 
-          dict[tag][resource_name] << resource['id']
+          dict[tag][resource_name] << model.id
         end
       end  
       dict["all"] = dict.each_value.map { |tag| tag }
