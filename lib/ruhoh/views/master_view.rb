@@ -50,7 +50,7 @@ module Ruhoh::Views
 
     # NOTE: newline ensures proper markdown rendering.
     def partial(name)
-      partial = @ruhoh.resources.load_collection("partials").find(name.to_s)
+      partial = partials.find(name.to_s)
       partial ?
         partial.process.to_s + "\n" :
         Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } 
@@ -99,17 +99,16 @@ module Ruhoh::Views
     protected
 
     def process_layouts
-      layouts_collection = @ruhoh.resources.load_collection("layouts")
       if @page_data['layout']
-        @sub_layout = layouts_collection.find(@page_data['layout'])
+        @sub_layout = layouts.find(@page_data['layout'])
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
       elsif @page_data['layout'] != false
         # try default
-        @sub_layout = layouts_collection.find(@pointer["resource"])
+        @sub_layout = layouts.find(@pointer["resource"])
       end
 
       if @sub_layout && @sub_layout.layout
-        @master_layout = layouts_collection.find(@sub_layout.layout)
+        @master_layout = layouts.find(@sub_layout.layout)
         raise "Layout does not exist: #{ @sub_layout.layout }" unless @master_layout
       end
 
