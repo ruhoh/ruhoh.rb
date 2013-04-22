@@ -3,6 +3,7 @@ module Ruhoh::Base
     attr_reader :pointer, :ruhoh
 
     def initialize(ruhoh, pointer)
+      raise "Cannot instantiate a model with a nil pointer" unless pointer
       @ruhoh = ruhoh
       @pointer = pointer
     end
