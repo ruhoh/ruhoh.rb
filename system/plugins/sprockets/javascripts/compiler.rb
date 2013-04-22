@@ -17,7 +17,7 @@ module Ruhoh::Resources::Javascripts
       manifest.compile(assets)
 
       # Update the stylesheet paths to the digest format:
-      @collection.load_collection_view._cache.merge!(manifest.assets)
+      @collection._cache.merge!(manifest.assets)
     end
   end
 end
