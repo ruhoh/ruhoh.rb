@@ -43,11 +43,11 @@ module Ruhoh::Views
     def collection
       @pointer["resource"] ? __send__(@pointer["resource"]) : nil
     end
-    
+
     def urls
-      @ruhoh.url_endpoints
+      @ruhoh.url_endpoints.urls
     end
-    
+
     def content
       render(@content || page.content)
     end
