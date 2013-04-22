@@ -3,11 +3,20 @@ module Ruhoh::Base
 
     attr_accessor :resource_name, :master
     attr_reader :ruhoh
-    
+
     def initialize(ruhoh)
       @ruhoh = ruhoh
     end
 
+    # Public API for finding a model instance inside this collection
+    # @param[String or Hash]
+    #  String - id (filename) with full extension, e.g: about-me.md
+    #  String - name (filename) without the extension e.g: about-me
+    #           Returns the first matched filename.
+    #           See implementation for how match is determined.
+    #  Hash   - File pointer
+    #
+    # @returns[model or nil] the model is always wrapped in its view.
     def find(name_or_pointer)
       name_or_pointer = name_or_pointer['id'] if name_or_pointer.is_a?(Hash)
       return dictionary[name_or_pointer] if dictionary.key?(name_or_pointer)
@@ -15,14 +24,13 @@ module Ruhoh::Base
       key ? dictionary[key] : nil
     end
 
-    # Public API for returning this collection's dictionary of data.
+    # Public API
+    # @returns[Hash object] collection's dictionary of data.
     def dictionary
       cached = @ruhoh.cache.get(resource_name)
       return cached if cached
       @ruhoh.cache.set(resource_name, process_all)
     end
-
-
 
     def resource_name
       return @resource_name if @resource_name
