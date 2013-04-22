@@ -9,7 +9,7 @@ module Ruhoh::Resources::Widgets
       model = find("#{ name }/#{ (widget_config['use'] || "default") }")
       return '' unless model
 
-      view = @ruhoh.master_view('')
+      view = @ruhoh.master_view({})
 
       # merge the config.yml data into the inline layout data.
       # Note this is reversing the normal hierarchy 

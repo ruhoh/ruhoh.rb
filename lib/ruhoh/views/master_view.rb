@@ -6,19 +6,23 @@ module Ruhoh::Views
     attr_reader :sub_layout, :master_layout
     attr_accessor :page_data
     
-    def initialize(ruhoh, pointer_or_content)
+    def initialize(ruhoh, pointer_or_data)
       @ruhoh = ruhoh
       define_resource_collection_namespaces(ruhoh)
 
-      if pointer_or_content.is_a?(Hash)
-        @pointer = pointer_or_content
-        @page_data = collection.find(pointer_or_content)
-        @page_data = {} unless @page_data.is_a?(Hash)
+      if pointer_or_data['id']
+        @pointer = pointer_or_data
+        @page = collection.find(pointer_or_data)
+        unless @page
+          raise "Could not find the page with pointer: #{ pointer_or_data }" +
+            "Finding this page is required because an 'id' key is being passed."
+        end
 
-        raise "Page not found: #{ pointer_or_content }" unless @page_data
+        @page_data = @page.data.dup # legacy...working on removing this..
       else
-        @content = pointer_or_content
-        @page_data = {}
+        @content = pointer_or_data['content']
+        @page_data = pointer_or_data
+        @pointer = pointer_or_data
       end
     end
 
@@ -37,7 +41,7 @@ module Ruhoh::Views
     end
 
     def collection
-      __send__(@pointer["resource"])
+      @pointer["resource"] ? __send__(@pointer["resource"]) : nil
     end
     
     def urls
@@ -111,12 +115,8 @@ module Ruhoh::Views
         @master_layout = layouts.find(@sub_layout.layout)
         raise "Layout does not exist: #{ @sub_layout.layout }" unless @master_layout
       end
-
-      @page_data['sub_layout'] = @sub_layout.id
-      @page_data['master_layout'] = @master_layout.id
-      @page_data
     end
-    
+
     # Expand the layout(s).
     # Pages may have a single master_layout, a master_layout + sub_layout, or no layout.
     def expand_layouts
