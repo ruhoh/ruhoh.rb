@@ -13,16 +13,26 @@ module Ruhoh::Base::Pages
       env['PATH_INFO'].chomp!("/") unless env['PATH_INFO'] == "/"
 
       pointer = @ruhoh.routes.get_pointer(env['PATH_INFO'])
-      view = pointer ? @ruhoh.master_view(pointer) : paginator_view(env)
-
       Ruhoh::Friend.say {
         plain "- previewing page:"
         plain "   #{pointer.inspect}"
       }
+
+      view = pointer ? @ruhoh.master_view(pointer) : paginator_view(env)
+
       if view
         [200, {'Content-Type' => 'text/html'}, [view.render_full]]
       else
-        raise "Page id not found for url: '#{env['PATH_INFO']}' using pointer: #{pointer.inspect}"
+        message = "No generated page URL matches '#{ env['PATH_INFO'] }'" +
+          " using file pointer: '#{ pointer.inspect }'."
+
+        if pointer.nil?
+          message += " Since the file pointer was nil" +
+            " we tried to load a pagination view but it didn't work;" +
+            "\n Expected the format to be: '<valid_resource_name>/page_number'"
+        end
+
+        raise message
       end
     end
 
@@ -31,12 +41,14 @@ module Ruhoh::Base::Pages
     # need a way to register pagination namespaces then search the register. 
     def paginator_view(env)
       path = env['PATH_INFO'].reverse.chomp("/").reverse
-      resource = path.split('/').first
-      return nil unless @ruhoh.resources.exist?(resource)
-      
+      parts = path.split('/')
+      return false unless parts.count == 2
+      resource = parts[0]
+      page_number = parts[1]
+      return false unless @ruhoh.resources.exist?(resource)
+
       collection = @ruhoh.resources.load_collection(resource)
       config = collection.config["paginator"] || {}
-      page_number = path.split('/').pop
 
       view = @ruhoh.master_view({"resource" => resource})
       view.page_data = {
@@ -49,6 +61,5 @@ module Ruhoh::Base::Pages
     def favicon
       [200, {'Content-Type' => 'image/x-icon'}, ['']]
     end
-
   end
 end
