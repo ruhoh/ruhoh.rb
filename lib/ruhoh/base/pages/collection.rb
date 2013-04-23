@@ -1,5 +1,6 @@
 module Ruhoh::Base::Pages
-  class Collection < Ruhoh::Base::Collection
+  class Collection
+    include Ruhoh::Base::Collectable
 
     def config
       hash = super

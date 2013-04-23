@@ -1,8 +1,11 @@
 module Ruhoh::Base
-  class Collection
 
-    attr_accessor :resource_name, :master
-    attr_reader :ruhoh
+  module Collectable
+
+    def self.included(klass)
+      klass.__send__(:attr_accessor, :resource_name, :master)
+      klass.__send__(:attr_reader, :ruhoh)
+    end
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
@@ -213,11 +216,7 @@ module Ruhoh::Base
     end
 
     def camelize(name)
-      self.class.camelize(name)
-    end
-
-    def self.camelize(name)
-      name.to_s.split('_').map {|a| a.capitalize}.join
+      name.to_s.split('_').map { |a| a.capitalize }.join
     end
 
     private
@@ -245,4 +244,9 @@ module Ruhoh::Base
       dict
     end
   end
+
+  class Collection
+    include Collectable
+  end
+
 end

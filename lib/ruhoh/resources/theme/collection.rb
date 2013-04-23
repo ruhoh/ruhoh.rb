@@ -1,5 +1,6 @@
 module Ruhoh::Resources::Theme
-  class Collection < Ruhoh::Base::Collection
+  class Collection
+    include Ruhoh::Base::Collectable
 
     def url_endpoint
       "/assets"
