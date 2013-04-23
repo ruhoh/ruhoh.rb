@@ -66,7 +66,10 @@ module Ruhoh::Base::Pages
 
       result
     rescue Psych::SyntaxError => e
-      Ruhoh.log.error("ERROR in #{path}: #{e.message}")
+      Ruhoh.log.error("Psych::SyntaxError while parsing top YAML Metadata in #{ @pointer['realpath'] }\n" +
+        "#{ e.message }\n" +
+        "Try validating the YAML metadata using http://yamllint.com"
+      )
       nil
     end
 
