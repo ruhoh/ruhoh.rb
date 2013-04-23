@@ -157,7 +157,7 @@ module Ruhoh::Base
     def load_collection_view
       @_collection_view ||= collection_view? ?
                               collection_view.new(self) :
-                              Ruhoh::Base::CollectionView.new(self)
+                              self
     end
 
     def load_model(pointer)

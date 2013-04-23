@@ -3,8 +3,8 @@ module Ruhoh::Views::Helpers
     # Category dictionary
     def categories
       categories_url = nil
-      [@ruhoh.to_url("categories"), @ruhoh.to_url("categories.html")].each { |url|
-        categories_url = url and break if @ruhoh.routes.exists?(url)
+      [ruhoh.to_url("categories"), ruhoh.to_url("categories.html")].each { |url|
+        categories_url = url and break if ruhoh.routes.exists?(url)
       }
       dict = {}
       dictionary.each_value do |model|

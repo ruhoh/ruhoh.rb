@@ -2,7 +2,7 @@ require 'ruhoh/views/helpers/categories'
 require 'ruhoh/views/helpers/tags'
 module Ruhoh::Base::Pages
 
-  class CollectionView < Ruhoh::Base::CollectionView
+  class CollectionView < SimpleDelegator
     include Ruhoh::Views::Helpers::Tags
     include Ruhoh::Views::Helpers::Categories
 
@@ -52,7 +52,7 @@ module Ruhoh::Base::Pages
         end
         
         {
-          "url" => @ruhoh.to_url(url),
+          "url" => ruhoh.to_url(url),
           "name" => "#{i+1}",
           "is_active_page" => (i+1 == current_page)
         }

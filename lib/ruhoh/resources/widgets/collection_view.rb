@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Widgets
-  class CollectionView < Ruhoh::Base::CollectionView
+  class CollectionView < SimpleDelegator
 
     def widget(name)
       page_config = (master.page_data["widgets"][name] || {}) rescue {}
@@ -9,7 +9,7 @@ module Ruhoh::Resources::Widgets
       model = find("#{ name }/#{ (widget_config['use'] || "default") }")
       return '' unless model
 
-      view = @ruhoh.master_view({})
+      view = ruhoh.master_view({})
 
       # merge the config.yml data into the inline layout data.
       # Note this is reversing the normal hierarchy 
@@ -18,7 +18,7 @@ module Ruhoh::Resources::Widgets
       # and meant to be overridden by user specific data.
       view.render(model.content, {
         "this_config" => model.data.merge(widget_config),
-        "this_path" => @ruhoh.to_url(url_endpoint, name)
+        "this_path" => ruhoh.to_url(url_endpoint, name)
       })
     end
 

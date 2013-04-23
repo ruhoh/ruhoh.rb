@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Data
-  class CollectionView < Ruhoh::Base::CollectionView
+  class CollectionView < SimpleDelegator
 
     def initialize(collection)
       super(collection)

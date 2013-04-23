@@ -9,6 +9,7 @@ require 'time'
 require 'cgi'
 require 'fileutils'
 require 'ostruct'
+require 'delegate'
 
 require 'mustache'
 

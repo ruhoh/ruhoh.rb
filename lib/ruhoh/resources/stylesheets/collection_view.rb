@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Stylesheets
-  class CollectionView < Ruhoh::Base::CollectionView
+  class CollectionView < SimpleDelegator
     attr_accessor :_cache
 
     def initialize(collection)
@@ -39,7 +39,7 @@ module Ruhoh::Resources::Stylesheets
         "#{name}?#{rand()}"
       end
 
-      @ruhoh.to_url(url_endpoint, path)
+      ruhoh.to_url(url_endpoint, path)
     end
   end
 end

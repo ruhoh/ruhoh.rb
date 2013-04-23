@@ -157,7 +157,7 @@ module Ruhoh::Views
 
     # Load collection views dynamically when calling a resources name.
     # Uses method_missing to catch calls to resource namespace.
-    # @returns[CollectionView|nil] for the calling resource.
+    # @returns[CollectionView] for the calling resource.
     def load_collection_view_for(resource)
       view = @ruhoh.resources.load_collection(resource)
       view.master = self
