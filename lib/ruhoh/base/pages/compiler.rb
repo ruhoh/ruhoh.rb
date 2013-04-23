@@ -78,7 +78,7 @@ module Ruhoh::Base::Pages
                xml.title_ page.title
                xml.link "#{@ruhoh.config['production_url']}#{page.url}"
                xml.pubDate_ page.date if page.date
-               xml.description_ (page.description ? page.description : view.render_content)
+               xml.description_ (page.try(:description) ? page.description : view.render_content)
              }
            end
          }

@@ -30,6 +30,11 @@ module Ruhoh::Base
     def process
       @pointer
     end
-    
+
+    def try(method)
+      return __send__(method) if respond_to?(method)
+      return data[method] if data.key?(method.to_s)
+      false
+    end
   end
 end
