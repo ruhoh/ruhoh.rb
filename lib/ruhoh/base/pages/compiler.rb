@@ -1,5 +1,5 @@
 require 'nokogiri'
-module Ruhoh::Base::Pages
+module Ruhoh::Resources::Pages
   class Compiler
     include Ruhoh::Base::Compilable
 

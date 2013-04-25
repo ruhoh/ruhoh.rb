@@ -1,4 +1,4 @@
-module Ruhoh::Base::Pages
+module Ruhoh::Resources::Pages
   class Collection
     include Ruhoh::Base::Collectable
 

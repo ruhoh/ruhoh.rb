@@ -1,6 +1,6 @@
 require 'ruhoh/views/helpers/categories'
 require 'ruhoh/views/helpers/tags'
-module Ruhoh::Base::Pages
+module Ruhoh::Resources::Pages
 
   class CollectionView < SimpleDelegator
     include Ruhoh::Views::Helpers::Tags

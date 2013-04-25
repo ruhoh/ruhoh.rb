@@ -210,7 +210,7 @@ module Ruhoh::Base
         if @ruhoh.resources.registered.include?(resource_name)
           Ruhoh::Resources.const_get(camelize(resource_name))
         else
-          Ruhoh::Base.const_get(:Pages)
+          Ruhoh::Resources.const_get(:Pages)
         end
       end
     end

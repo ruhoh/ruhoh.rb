@@ -1,4 +1,4 @@
-module Ruhoh::Base::Pages
+module Ruhoh::Resources::Pages
   class Watcher < Ruhoh::Base::Watcher
     def match(path)
       path =~ %r{^#{@collection.namespace}}

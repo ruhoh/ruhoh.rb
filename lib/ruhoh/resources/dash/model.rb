@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Dash
-  class Model < Ruhoh::Base::Pages::Model
+  class Model < Ruhoh::Resources::Pages::Model
     def process
       @pointer
     end

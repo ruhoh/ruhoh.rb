@@ -81,7 +81,7 @@ class Ruhoh
       pages = @ruhoh.config.map do |resource, config|
         next if ["theme", "compiled"].include?(resource)
         next if (config && config["use"] && config["use"] != "pages")
-        next if r.include?(resource)
+        next if r.include?(resource) && resource != "pages" #temp hack
         next unless discover.include?(resource)
         resource
       end.compact
@@ -123,7 +123,7 @@ class Ruhoh
         if registered.include?(resource)
           Ruhoh::Resources.const_get(camelize(resource))
         else
-          Ruhoh::Base.const_get(:Pages)
+          Ruhoh::Resources.const_get(:Pages)
         end
       end
     end
