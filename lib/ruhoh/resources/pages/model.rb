@@ -1,5 +1,5 @@
 module Ruhoh::Resources::Pages
-  class Model < Ruhoh::Base::Model
+  class Model
     include Ruhoh::Base::PageLike
   end
 end

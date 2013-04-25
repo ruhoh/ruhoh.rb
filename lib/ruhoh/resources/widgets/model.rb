@@ -1,6 +1,7 @@
 module Ruhoh::Resources::Widgets
-  class Model < Ruhoh::Base::Model
+  class Model
     include Ruhoh::Base::PageLike
+
     def process
       parsed = parse_page_file
       @data = parsed['data']

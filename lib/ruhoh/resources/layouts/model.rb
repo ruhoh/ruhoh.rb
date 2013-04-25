@@ -1,5 +1,6 @@
 module Ruhoh::Resources::Layouts
-  class Model < Ruhoh::Base::Model
+  class Model
+    include Ruhoh::Base::Modelable
 
     def process
       parse_layout_file(@pointer['realpath'])
