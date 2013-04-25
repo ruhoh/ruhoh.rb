@@ -1,4 +1,5 @@
 module Ruhoh::Resources::Javascripts
-  class Compiler < Ruhoh::Base::Assets::Compiler
+  class Compiler
+    include Ruhoh::Base::CompilableAsset
   end
 end

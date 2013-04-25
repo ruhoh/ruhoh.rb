@@ -10,6 +10,7 @@ require 'cgi'
 require 'fileutils'
 require 'ostruct'
 require 'delegate'
+require 'digest'
 
 require 'mustache'
 

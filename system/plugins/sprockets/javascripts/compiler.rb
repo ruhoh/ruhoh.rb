@@ -1,6 +1,8 @@
 require 'sprockets'
 module Ruhoh::Resources::Javascripts
-  class Compiler < Ruhoh::Base::Assets::Compiler
+  class Compiler
+    include Ruhoh::Base::Compilable
+
     def run
       Ruhoh::Friend.say { cyan "Javascripts: (using sprockets)" }
       env = Sprockets::Environment.new
