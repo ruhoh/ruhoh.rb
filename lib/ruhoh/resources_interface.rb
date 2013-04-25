@@ -1,10 +1,7 @@
 module Ruhoh::Resources ; end
 # Require all the resources
 FileUtils.cd(File.join(File.dirname(__FILE__), 'base')) do
-  Dir['*.rb'].each do |f|
-    require File.join(File.dirname(__FILE__), 'base', f)
-  end
-  Dir[File.join('*', '*.rb')].each do |f|
+  (Dir['*.rb'] + Dir[File.join('*', '*.rb')]).each do |f|
     require File.join(File.dirname(__FILE__), 'base', f)
   end
 end
