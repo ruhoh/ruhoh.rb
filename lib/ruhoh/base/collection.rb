@@ -245,6 +245,9 @@ module Ruhoh::Base
     end
   end
 
+  # Generic base implementation of a Collection class.
+  # All collections use this class by default
+  # unless the Collection class is explicitly defined for the resource.
   class Collection
     include Collectable
   end
