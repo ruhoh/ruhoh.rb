@@ -1,5 +1,7 @@
 module Ruhoh::Resources::Media
-  class Compiler < Ruhoh::Base::Compiler
+  class Compiler
+    include Ruhoh::Base::Compilable
+
     #  TODO: Use the asset compiler.
     # We can't use it now because there is automatic digest support
     # but currently no way to dynamically update all media links in views with digest path.

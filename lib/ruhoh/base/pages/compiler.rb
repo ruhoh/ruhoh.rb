@@ -1,6 +1,8 @@
 require 'nokogiri'
 module Ruhoh::Base::Pages
-  class Compiler < Ruhoh::Base::Compiler
+  class Compiler
+    include Ruhoh::Base::Compilable
+
     def run
       pages = @collection.dictionary
       resource_name = @collection.resource_name
