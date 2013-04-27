@@ -1,8 +1,6 @@
 module Ruhoh::Resources::Theme
-  class Watcher < Ruhoh::Base::Watcher
-    def match(path)
-      path =~ Regexp.new("^#{@collection.namespace}")
-    end
+  class Watcher
+    include Ruhoh::Base::Watchable
 
     def update(path)
       @ruhoh.cache.clear(:widgets)

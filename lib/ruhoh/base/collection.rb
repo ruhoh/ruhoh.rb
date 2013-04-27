@@ -181,7 +181,9 @@ module Ruhoh::Base
     end
 
     def load_watcher(*args)
-      @_watcher ||= watcher.new(load_collection_view)
+      @_watcher ||= watcher? ?
+        watcher.new(load_collection_view) :
+        Ruhoh::Base::Watcher.new(load_collection_view)
     end
 
     def load_previewer(*args)

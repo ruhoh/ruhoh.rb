@@ -34,11 +34,9 @@ class Ruhoh
           path = event['path'].gsub(ruhoh.paths.base + '/', '')
 
           watchers = ruhoh.resources.all.map {|name|
-            next unless ruhoh.resources.watcher?(name)
-            collection = ruhoh.resources.load_collection(name)
-            collection.load_watcher
-          }.compact
-          
+            ruhoh.resources.load_collection(name).load_watcher
+          }
+
           watchers.each {|watcher|
             next unless watcher.match(path)
             watcher.update(path)
