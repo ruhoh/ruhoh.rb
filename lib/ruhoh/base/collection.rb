@@ -108,9 +108,9 @@ module Ruhoh::Base
     def files(id=nil, &block)
       a = []
       Array(self.paths.map{|h| h["path"]}).each do |path|
-        namespaced_path = File.join(path, namespace)
-        next unless File.directory?(namespaced_path)
-        FileUtils.cd(namespaced_path) {
+        current_path = File.join(path, resource_name)
+        next unless File.directory?(current_path)
+        FileUtils.cd(current_path) {
           file_array = (id ? Array(id) : Dir[self.glob])
           file_array.each { |id|
 
