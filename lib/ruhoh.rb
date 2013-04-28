@@ -64,7 +64,11 @@ class Ruhoh
   def reset
     @base = Dir.getwd
   end
-  
+
+  def collection(resource)
+    @resources.load_collection(resource)
+  end
+
   def config
     config = Ruhoh::Utils.parse_yaml_file(@base, "config.yml") || {}
     config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : "compiled"
@@ -87,7 +91,7 @@ class Ruhoh
     @paths.system = File.join(Ruhoh::Root, "system")
     @paths.compiled = @config["compiled"]
 
-    theme = @resources.load_collection("theme").config["name"]
+    theme = collection("theme").config["name"]
     if theme
       Ruhoh::Friend.say { plain "Using theme: \"#{theme}\""}
       @paths.theme = File.join(@base, theme)
@@ -172,7 +176,7 @@ class Ruhoh
     compilers.unshift('javascripts')
     
     compilers.each do |name|
-      collection = @resources.load_collection(name)
+      collection = collection(name)
       next unless collection.compiler?
       collection.load_compiler.run
     end

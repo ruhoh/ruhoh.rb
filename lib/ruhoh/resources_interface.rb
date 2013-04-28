@@ -74,10 +74,14 @@ class Ruhoh
       pool.keep_if { |resource|
         config = @ruhoh.config[resource]
         if (config && config["use"]) 
-          return config["use"] == "pages"
+          config["use"] == "pages"
+        else
+          if resource == "pages"
+            true
+          else
+            !registered.include?(resource)
+          end
         end
-        return true if resource == "pages"
-        !registered.include?(resource)
       }
     end
 

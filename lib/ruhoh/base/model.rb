@@ -25,7 +25,7 @@ module Ruhoh::Base
     end
 
     def collection
-      @ruhoh.resources.load_collection(@pointer['resource'])
+      @ruhoh.collection(@pointer['resource'])
     end
 
     # Override this to process custom data

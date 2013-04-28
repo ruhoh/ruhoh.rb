@@ -39,7 +39,7 @@ class Ruhoh
           next if h["name"] == "base_path"
           next unless ruhoh.resources.exists?(h["name"])
           map h["url"] do
-            collection = ruhoh.resources.load_collection(h["name"])
+            collection = ruhoh.collection(h["name"])
             if collection.previewer?
               run collection.load_previewer
             else

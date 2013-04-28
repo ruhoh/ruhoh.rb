@@ -48,7 +48,7 @@ module Ruhoh::Resources::Pages
       return false unless @ruhoh.resources.exist?(resource)
       return false if page_number.to_i.zero?
 
-      collection = @ruhoh.resources.load_collection(resource)
+      collection = @ruhoh.collection(resource)
       config = collection.config["paginator"] || {}
 
       view = @ruhoh.master_view({"resource" => resource})
