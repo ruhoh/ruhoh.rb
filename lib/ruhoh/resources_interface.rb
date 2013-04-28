@@ -30,7 +30,7 @@ class Ruhoh
     def load_collection(resource)
       return @collections[resource] if @collections[resource]
       instance =  collection?(resource) ?
-                    get_module_namespace_for(resource).const_get(:Collection).new(@ruhoh) :
+                    collection(resource).new(@ruhoh) :
                     Ruhoh::Base::Collection.new(@ruhoh)
       instance.resource_name = resource
       @collections[resource] = instance.load_collection_view
@@ -42,9 +42,7 @@ class Ruhoh
     end
 
     def all
-      a = (discover + registered).uniq
-      a.delete("compiled")
-      a
+      (discover + registered).uniq
     end
 
     def base
@@ -63,29 +61,24 @@ class Ruhoh
     def discover
       FileUtils.cd(@ruhoh.base) {
         return Dir['*'].select { |x| 
-          File.directory?(x) && !["plugins"].include?(x)
+          File.directory?(x) && !["plugins", 'compiled'].include?(x)
         }
       }
     end
 
     def acting_as_pages
       pool = discover
-      registered_non_pages = registered.dup
-      registered_non_pages.delete('pages')
       theme = @ruhoh.config['theme']['name'] rescue nil
+      pool.delete(theme)
 
-      pool -= (registered_non_pages + ['compiled', 'theme', theme])
-      pool.delete_if { |page|
-        config = @ruhoh.config[page]
-        (config && config["use"] && config["use"] != "pages")
+      pool.keep_if { |resource|
+        config = @ruhoh.config[resource]
+        if (config && config["use"]) 
+          return config["use"] == "pages"
+        end
+        return true if resource == "pages"
+        !registered.include?(resource)
       }
-    end
-
-    def non_pages
-      a = (discover + registered) - acting_as_pages 
-      a.delete("theme")
-      a.delete("compiled") # TODO: remove user-defined compiled folder.
-      a
     end
 
     def exists?(name)
