@@ -25,25 +25,20 @@ class Ruhoh
     # Load and cache a given resource collection.
     # This allows you to work with single object instance and perform
     # persistant mutations on it if necessary.
+    # Note the collection is always wrapped in its view.
     # @returns[Class Instance] of the resource and class_name given.
     def load_collection(resource)
-      var = "@#{resource}_collection"
-      if instance_variable_defined?(var) && instance_variable_get(var)
-        instance_variable_get(var)
-      else
-        instance =  collection?(resource) ?
-                      get_module_namespace_for(resource).const_get(:Collection).new(@ruhoh) :
-                      Ruhoh::Base::Collection.new(@ruhoh)
-        instance.resource_name = resource
-        # Wrap in the collection view
-        instance = instance.load_collection_view
-        instance_variable_set(var, instance)
-        instance
-      end
+      return @collections[resource] if @collections[resource]
+      instance =  collection?(resource) ?
+                    get_module_namespace_for(resource).const_get(:Collection).new(@ruhoh) :
+                    Ruhoh::Base::Collection.new(@ruhoh)
+      instance.resource_name = resource
+      @collections[resource] = instance.load_collection_view
     end
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
+      @collections = {}
     end
 
     def all
