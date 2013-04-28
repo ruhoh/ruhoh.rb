@@ -74,16 +74,16 @@ class Ruhoh
     end
 
     def acting_as_pages
-      r = registered.dup # registered non-pages
-      pages = @ruhoh.config.map do |resource, config|
-        next if ["theme", "compiled"].include?(resource)
-        next if (config && config["use"] && config["use"] != "pages")
-        next if r.include?(resource) && resource != "pages" #temp hack
-        next unless discover.include?(resource)
-        resource
-      end.compact
-      
-      pages
+      pool = discover
+      registered_non_pages = registered.dup
+      registered_non_pages.delete('pages')
+      theme = @ruhoh.config['theme']['name'] rescue nil
+
+      pool -= (registered_non_pages + ['compiled', 'theme', theme])
+      pool.delete_if { |page|
+        config = @ruhoh.config[page]
+        (config && config["use"] && config["use"] != "pages")
+      }
     end
 
     def non_pages
