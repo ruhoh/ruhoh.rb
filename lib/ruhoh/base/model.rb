@@ -1,5 +1,7 @@
 module Ruhoh::Base
   module Modelable
+    include Observable
+    
     def self.included(klass)
       klass.__send__(:attr_reader, :pointer, :ruhoh)
     end
@@ -67,13 +69,10 @@ module Ruhoh::Base
       data['url'] = permalink(data)
       data['layout'] = collection.config['layout'] if data['layout'].nil?
 
-      # Register this route for the previewer
-      @ruhoh.routes.add(data['url'], @pointer)
-
-      #cache
       parsed_page['data'] = data
-      @ruhoh.cache.set(@pointer['realpath'], parsed_page)
 
+      changed
+      notify_observers(parsed_page)
       data
     end
 

@@ -2,6 +2,13 @@ module Ruhoh::Resources::Pages
   class Collection
     include Ruhoh::Base::Collectable
 
+    # model observer callback.
+    def update(model_data)
+      # Register this route for the previewer
+      @ruhoh.routes.add(model_data['data']['url'], model_data['data']['pointer'])
+      @ruhoh.cache.set(model_data['data']['pointer']['realpath'], model_data)
+    end
+
     def config
       hash = super
       hash['permalink'] ||= "/:path/:filename"

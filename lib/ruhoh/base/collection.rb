@@ -42,6 +42,14 @@ module Ruhoh::Base
       Ruhoh::Utils.underscore(parts.pop)
     end
 
+    # Implemented via Observable module
+    # See http://ruby-doc.org/stdlib-1.9.3/libdoc/observer/rdoc/Observable.html
+    # Collection subscribes to its child models.
+    # #update is called on model #process.
+    # noop
+    def update(model_data)
+    end
+
     def namespace
       Ruhoh::Utils.underscore(resource_name)
     end
@@ -161,9 +169,11 @@ module Ruhoh::Base
     end
 
     def load_model(pointer)
-      model? ?
-        model.new(@ruhoh, pointer) :
-        Ruhoh::Base::Model.new(@ruhoh, pointer)
+      _model = model? ?
+                model.new(@ruhoh, pointer) :
+                Ruhoh::Base::Model.new(@ruhoh, pointer)
+      _model.add_observer(self)
+      _model
     end
 
     def load_model_view(pointer)
