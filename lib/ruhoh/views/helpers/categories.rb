@@ -4,7 +4,7 @@ module Ruhoh::Views::Helpers
     def categories
       categories_url = nil
       [ruhoh.to_url("categories"), ruhoh.to_url("categories.html")].each { |url|
-        categories_url = url and break if ruhoh.routes.exists?(url)
+        categories_url = url and break if ruhoh.routes.find(url)
       }
       dict = {}
       dictionary.each_value do |model|

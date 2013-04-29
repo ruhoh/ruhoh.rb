@@ -12,7 +12,7 @@ module Ruhoh::Resources::Pages
       # Always remove trailing slash if sent unless it's the root page.
       env['PATH_INFO'].chomp!("/") unless env['PATH_INFO'] == "/"
 
-      pointer = @ruhoh.routes.get_pointer(env['PATH_INFO'])
+      pointer = @ruhoh.routes.find(env['PATH_INFO'])
       Ruhoh::Friend.say {
         plain "- previewing page:"
         plain "   #{pointer.inspect}"

@@ -4,7 +4,7 @@ module Ruhoh::Resources::Pages
 
     def update(path)
       path = path.gsub(/^.+\//, '')
-      @ruhoh.routes.delete(path)
+      collection.routes_delete(path)
     end
   end
 end

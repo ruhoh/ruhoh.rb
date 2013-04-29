@@ -4,7 +4,7 @@ module Ruhoh::Views::Helpers
     def tags
       tags_url = nil
       [ruhoh.to_url("tags"), ruhoh.to_url("tags.html")].each { |url|
-        tags_url = url and break if ruhoh.routes.exists?(url)
+        tags_url = url and break if ruhoh.routes.find(url)
       }
       dict = {}
       dictionary.each_value do |model|
