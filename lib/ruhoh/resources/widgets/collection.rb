@@ -15,10 +15,8 @@ module Ruhoh::Resources::Widgets
     # @returns[Array] registered widget names.
     def widgets
       names = []
-      Array(paths.map{|h| h["path"]}).each do |path|
-        namespaced_path = File.join(path, namespace)
-        next unless File.directory?(namespaced_path)
-        FileUtils.cd(namespaced_path) {
+      paths.each do |path|
+        FileUtils.cd(path) {
           names += Dir["*"]
         }
       end

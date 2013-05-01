@@ -100,7 +100,27 @@ class Ruhoh
 
     @paths
   end
-  
+
+  # Default paths to the 3 levels of the cascade.
+  def cascade
+    a = [
+      {
+        "name" => "system",
+        "path" => paths.system
+      }, 
+      {
+        "name" => "base",
+        "path" => paths.base
+      }
+    ]
+    a << {
+      "name" => "theme",
+      "path" => paths.theme
+    } if paths.theme
+
+    a
+  end
+
   def setup_plugins
     ensure_paths
 

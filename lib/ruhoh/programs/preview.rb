@@ -43,11 +43,11 @@ class Ruhoh
             if collection.previewer?
               run collection.load_previewer
             else
-              try_files = collection.paths.reverse.map do |data|
-                Rack::File.new(File.join(data["path"], collection.namespace))
-              end
-
-              run Rack::Cascade.new(try_files)
+              run Rack::Cascade.new(
+                collection.paths.reverse.map { |path|
+                  Rack::File.new(path)
+                }
+              )
             end
           end
         end

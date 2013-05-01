@@ -62,22 +62,12 @@ module Ruhoh::Base
 
     # Default paths to the 3 levels of the cascade.
     def paths
-      a = [
-        {
-          "name" => "system",
-          "path" => @ruhoh.paths.system
-        }, 
-        {
-          "name" => "base",
-          "path" => @ruhoh.paths.base
-        }
-      ]
-      a << {
-        "name" => "theme",
-        "path" => @ruhoh.paths.theme
-      } if @ruhoh.paths.theme
+      Array(@ruhoh.cascade.map{|h| h["path"]}).map { |path|
+        collection_path = File.join(path, resource_name)
+        next unless File.directory?(collection_path)
 
-      a
+        collection_path
+      }.compact
     end
 
     # Does this resource have any valid paths to process?
@@ -85,9 +75,7 @@ module Ruhoh::Base
     # False means there are no directories on any cascade level.
     # @returns[Boolean]
     def paths?
-      !!Array(paths.map{ |h| h["path"] }).find do |path|
-        File.directory?(File.join(path, namespace))
-      end
+      !paths.empty?
     end
 
     def config
@@ -115,13 +103,11 @@ module Ruhoh::Base
     # @returns[Array] pointers.
     def files(id=nil, &block)
       a = []
-      Array(self.paths.map{|h| h["path"]}).each do |path|
-        current_path = File.join(path, resource_name)
-        next unless File.directory?(current_path)
-        FileUtils.cd(current_path) {
+      paths.each do |path|
+        FileUtils.cd(path) {
           file_array = (id ? Array(id) : Dir[self.glob])
           file_array.each { |id|
-
+            next unless (File.exist?(id) && FileTest.file?(id))
             next unless(block_given? ? yield(id, self) : valid_file?(id))
 
             a << {
@@ -135,9 +121,8 @@ module Ruhoh::Base
       a
     end
 
+
     def valid_file?(filepath)
-      return false unless File.exist? filepath
-      return false if FileTest.directory?(filepath)
       return false if filepath.start_with?('.')
       excludes = Array(config['exclude']).map { |node| Regexp.new(node) }
       excludes.each { |regex| return false if filepath =~ regex }
