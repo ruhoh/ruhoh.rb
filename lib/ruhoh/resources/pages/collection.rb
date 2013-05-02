@@ -3,7 +3,7 @@ module Ruhoh::Resources::Pages
     def routes
       return @routes if @routes
       @routes = {}
-      process_all
+      dictionary
       @routes
     end
 

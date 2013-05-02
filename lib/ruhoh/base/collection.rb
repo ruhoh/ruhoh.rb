@@ -26,11 +26,15 @@ module Ruhoh::Base
     end
 
     # Public API
-    # @returns[Hash object] collection's dictionary of data.
+    # @return[Hash] dictionary of models { "id" => Model }
     def dictionary
-      cached = @ruhoh.cache.get(resource_name)
-      return cached if cached
-      @ruhoh.cache.set(resource_name, process_all)
+      dict = {}
+      files.values.each { |pointer|
+        dict.merge!({
+          pointer['id'] => find(pointer)
+        })
+      }
+      dict
     end
 
     def resource_name
@@ -226,31 +230,6 @@ module Ruhoh::Base
 
     def camelize(name)
       name.to_s.split('_').map { |a| a.capitalize }.join
-    end
-
-    private
-
-    # Process all data resources for this data endpoint.
-    #
-    # id - (Optional) String or Array.
-    #   Process a single data resource at id.
-    # block - (Optional) block.
-    #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
-    #   Return true/false for whether the file is valid/invalid.
-    #   Example:
-    #     Process only files startng with the letter "a" :
-    #     process_all {|id| id.start_with?("a") }
-    #
-    # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
-    def process_all(id=nil, &block)
-      dict = {}
-      files(id, &block).values.each { |pointer|
-        dict.merge!({
-          pointer['id'] => load_model_view(pointer)
-        })
-      }
-      Ruhoh::Utils.report(resource_name, dict, [])
-      dict
     end
   end
 

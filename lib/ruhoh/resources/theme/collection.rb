@@ -11,7 +11,7 @@ module Ruhoh::Resources::Theme
     end
 
     # noop
-    def process_all
+    def dictionary
       {}
     end
   end
