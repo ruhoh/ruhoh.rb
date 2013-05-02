@@ -11,20 +11,18 @@ module Ruhoh::Base
       @ruhoh = ruhoh
     end
 
-    # Public API for finding a model instance inside this collection
-    # @param[String or Hash]
+    # Public API for finding a resource from this collection
+    # @param name_or_pointer [String, Hash]
+    #  Hash   - File pointer
     #  String - id (filename) with full extension, e.g: about-me.md
     #  String - name (filename) without the extension e.g: about-me
     #           Returns the first matched filename.
     #           See implementation for how match is determined.
-    #  Hash   - File pointer
     #
-    # @returns[model or nil] the model is always wrapped in its view.
+    # @return[model, nil] the model is always wrapped in its view.
     def find(name_or_pointer)
-      name_or_pointer = name_or_pointer['id'] if name_or_pointer.is_a?(Hash)
-      return dictionary[name_or_pointer] if dictionary.key?(name_or_pointer)
-      key = dictionary.keys.find{ |a| a.split('.')[0] == name_or_pointer }
-      key ? dictionary[key] : nil
+      pointer = find_file(name_or_pointer)
+      pointer ? load_model_view(pointer) : nil
     end
 
     # Public API
@@ -84,6 +82,19 @@ module Ruhoh::Base
         Ruhoh.log.error("'#{resource_name}' config key in config.yml is a #{config.class}; it needs to be a Hash (object).")
       end
       config
+    end
+
+    # @param key [String, Hash]
+    #  String - id (filename) with full extension, e.g: about-me.md
+    #  String - name (filename) without the extension e.g: about-me
+    #           Returns the first matched filename.
+    #           See implementation for how match is determined.
+    #  Hash   - File pointer
+    #
+    # @return [pointer, nil]
+    def find_file(key)
+      return key if key.is_a?(Hash) # assume valid pointer
+      files[key] || files.find{ |a| key == a['id'].split('.')[0] }
     end
 
     # Collect all files (as mapped by data resources) for this data endpoint.
