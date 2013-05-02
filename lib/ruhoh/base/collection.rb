@@ -90,19 +90,18 @@ module Ruhoh::Base
     # Each resource can have 3 file references, one per each cascade level.
     # The file hashes are collected in order 
     # so they will overwrite eachother if found.
-    # Returns Array of file data hashes.
-    # 
-    # id - (Optional) String or Array.
+
+    # @param id [String, Array] Optional.
     #   Collect all files for a single data resource.
     #   Can be many files due to the cascade.
-    # block - (Optional) block.
+    # @param [block] Optional.
     #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
     #   Return true/false for whether the file is valid/invalid.
     #   Note it is preferred to pass the block to #process_all as #files is a low-level method.
     #
-    # @returns[Array] pointers.
+    # @return[Hash] dictionary of pointers.
     def files(id=nil, &block)
-      a = []
+      dict = {}
       paths.each do |path|
         FileUtils.cd(path) {
           file_array = (id ? Array(id) : Dir[self.glob])
@@ -110,7 +109,7 @@ module Ruhoh::Base
             next unless (File.exist?(id) && FileTest.file?(id))
             next unless(block_given? ? yield(id, self) : valid_file?(id))
 
-            a << {
+            dict[id] = {
               "id" => id,
               "realpath" => File.realpath(id),
               "resource" => resource_name,
@@ -118,9 +117,9 @@ module Ruhoh::Base
           }
         }
       end
-      a
-    end
 
+      dict
+    end
 
     def valid_file?(filepath)
       return false if filepath.start_with?('.')
@@ -232,7 +231,7 @@ module Ruhoh::Base
     # @returns[Hash(dict)] dictionary of data hashes {"id" => {<data>}}
     def process_all(id=nil, &block)
       dict = {}
-      files(id, &block).each { |pointer|
+      files(id, &block).values.each { |pointer|
         dict.merge!({
           pointer['id'] => load_model_view(pointer)
         })
