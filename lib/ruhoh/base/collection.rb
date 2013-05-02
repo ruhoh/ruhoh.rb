@@ -94,7 +94,7 @@ module Ruhoh::Base
     # @return [pointer, nil]
     def find_file(key)
       return key if key.is_a?(Hash) # assume valid pointer
-      files[key] || files.find{ |a| key == a['id'].split('.')[0] }
+      files[key] || files.values.find{ |a| key == a['id'].split('.')[0] }
     end
 
     # Collect all files (as mapped by data resources) for this data endpoint.
