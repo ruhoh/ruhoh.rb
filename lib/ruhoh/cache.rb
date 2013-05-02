@@ -9,15 +9,39 @@ class Ruhoh
     end
 
     def set(key, data)
-      @__cache[key.to_s] = data
+      key = tokenize(key)
+      return nil unless key
+
+      @__cache[key] = data
     end
 
     def get(key)
-      @__cache[key.to_s]
+      key = tokenize(key)
+      return nil unless key
+
+      if @__cache[key]
+        puts "Cache HIT: #{ key }"
+        @__cache[key]
+      end
     end
 
-    def clear(key)
-      @__cache.delete(key.to_s)
+    def delete(key)
+      @__cache.delete(tokenize(key))
+    end
+
+    private
+
+    def tokenize(key)
+      new_key = case key
+                when Hash
+                  key.to_a.sort.to_s.strip
+                when Array
+                  key.sort.to_s.strip
+                else
+                  key.to_s.strip
+                end
+
+      new_key.empty? ? nil : new_key
     end
   end
 end
