@@ -79,7 +79,8 @@ module Ruhoh::Base
     def config
       config = @ruhoh.config[resource_name] || {}
       unless config.is_a?(Hash)
-        Ruhoh.log.error("'#{resource_name}' config key in config.yml is a #{config.class}; it needs to be a Hash (object).")
+        Ruhoh.log.error("'#{resource_name}' config key in config.yml" +
+                        " is a #{config.class}; it needs to be a Hash (object).")
       end
       config
     end
@@ -106,9 +107,9 @@ module Ruhoh::Base
     #   Collect all files for a single data resource.
     #   Can be many files due to the cascade.
     # @param [block] Optional.
-    #   Implement custom validation logic by passing in a block. The block is given (id, self) as args.
+    #   Implement custom validation logic by passing in a block.
+    #   The block is given (id, self) as args.
     #   Return true/false for whether the file is valid/invalid.
-    #   Note it is preferred to pass the block to #process_all as #files is a low-level method.
     #
     # @return[Hash] dictionary of pointers.
     def files(id=nil, &block)
@@ -209,7 +210,8 @@ module Ruhoh::Base
         else
           klass = camelize(type)
           Friend.say {
-            red "#{resource_name} resource set to use:'#{type}' in config.yml but Ruhoh::Resources::#{klass} does not exist."
+            red "#{resource_name} resource set to use:'#{type}' in config.yml" +
+                " but Ruhoh::Resources::#{klass} does not exist."
           }
           abort
         end
