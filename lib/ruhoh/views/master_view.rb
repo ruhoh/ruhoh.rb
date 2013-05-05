@@ -60,6 +60,12 @@ module Ruhoh::Views
         Ruhoh::Friend.say { yellow "partial not found: '#{name}'" } 
     end
 
+    def page_collections
+      @ruhoh.resources.acting_as_pages.map do |a|
+        @ruhoh.collection(a)
+      end
+    end
+
     def to_json(sub_context)
       sub_context.to_json
     end

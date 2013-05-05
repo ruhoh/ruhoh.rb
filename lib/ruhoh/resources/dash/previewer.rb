@@ -5,8 +5,8 @@ module Ruhoh::Resources::Dash
     end
 
     def call(env)
-      data = @ruhoh.resources.load_collection("dash").dictionary
-      view = @ruhoh.master_view(data)
+      pointer = @ruhoh.collection("dash").find_file('index')
+      view = @ruhoh.master_view(pointer)
       [200, {'Content-Type' => 'text/html'}, [view.render_full]]
     end
   end
