@@ -126,6 +126,8 @@ module Ruhoh::Base
     #
     # @return[Hash] dictionary of pointers.
     def files(id=nil, &block)
+      return @dict if (@dict && @ruhoh.env == "production")
+
       dict = {}
       paths.each do |path|
         FileUtils.cd(path) {
@@ -141,6 +143,10 @@ module Ruhoh::Base
             }
           }
         }
+      end
+
+      if @ruhoh.env == "production"
+        @dict = dict
       end
 
       dict
