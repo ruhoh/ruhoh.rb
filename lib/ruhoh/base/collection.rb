@@ -22,7 +22,10 @@ module Ruhoh::Base
     # @return[model, nil] the model is always wrapped in its view.
     def find(name_or_pointer)
       pointer = find_file(name_or_pointer)
-      pointer ? load_model_view(pointer) : nil
+      return nil unless pointer
+
+      @ruhoh.cache.get(pointer['realpath']) ||
+      @ruhoh.cache.set(pointer['realpath'], load_model_view(pointer))
     end
 
     # Public API
