@@ -32,6 +32,8 @@ module Ruhoh::Base
 
     # Override this to process custom data
     def process
+      changed
+      notify_observers(@pointer)
       @pointer
     end
 
