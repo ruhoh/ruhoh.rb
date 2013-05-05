@@ -7,9 +7,9 @@ module Ruhoh::Resources::Javascripts
 
     def initialize(ruhoh)
       environment = Sprockets::Environment.new
-      collection = ruhoh.resources.load_collection('javascripts')
-      collection.paths.reverse.each do |h|
-        environment.append_path(File.join(h["path"], collection.namespace))
+      collection = ruhoh.collection('javascripts')
+      collection.paths.reverse.each do |path|
+        environment.append_path(path)
       end
       @environment = environment
     end
