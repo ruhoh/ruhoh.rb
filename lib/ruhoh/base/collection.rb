@@ -92,6 +92,12 @@ module Ruhoh::Base
       config
     end
 
+    # NOOP
+    # touch a model.
+    # Used to perform custom regeneration logic against a model.
+    def touch(name_or_pointer)
+    end
+
     # @param key [String, Hash]
     #  String - id (filename) with full extension, e.g: about-me.md
     #  String - name (filename) without the extension e.g: about-me

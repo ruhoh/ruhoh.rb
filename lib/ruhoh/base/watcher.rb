@@ -1,20 +1,20 @@
 module Ruhoh::Base
   module Watchable
     def self.included(klass)
-      klass.__send__(:attr_accessor, :collection, :ruhoh)
+      klass.__send__(:attr_accessor, :collection)
     end
 
     def initialize(collection)
-      @ruhoh = collection.ruhoh
       @collection = collection
     end
 
-    def match(path)
-      path =~ %r{^#{ collection.namespace }}
-    end
-
     def update(path)
-      collection.ruhoh.cache.clear(collection.resource_name)
+      # Drop the resource namespace
+      matcher = File::ALT_SEPARATOR ?
+                  %r{^.+(#{ File::SEPARATOR }|#{ File::ALT_SEPARATOR })} :
+                  %r{^.+#{ File::SEPARATOR }}
+
+      collection.touch(path.gsub(matcher, ''))
     end
   end
 
