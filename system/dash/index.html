@@ -101,6 +101,9 @@
     ul.page-list li {
       margin-bottom:3px;
     }  
+    ul.page-list li.draft {
+      background-color:#EEE;
+    }
     ul.page-list li a{
       display:block;
       overflow:hidden;
@@ -127,60 +130,43 @@
   </style>
 </head>
 <body>
-<div id="wrapper">
-  
-  <div id="nav-wrapper">
-    <ul id="nav">
-      <li><a href="#drafts" class="active">Drafts</a></li>
-      <li><a href="#public">Posts</a></li>
-      <li><a href="#pages">Pages</a></li>
-    </ul>
+  <div id="wrapper">
+
+    <div id="nav-wrapper">
+      <ul id="nav">
+      {{# page_collections }}
+        <li><a href="#{{ resource_name }}">{{ resource_name }}</a></li>
+      {{/ page_collections }}
+      </ul>
+    </div>
+
+  {{# page_collections }}
+    <div id="{{ resource_name }}" class="page-pane">
+      <ul class="page-list">
+        {{# drafts }}
+          <li class="draft">
+            <a href="{{url}}">
+              <span class="title">{{title}}</span>
+              <span class="date">{{date}}</span>
+              <br><span class="id">{{id}}</span></small>
+            </a>
+          </li>
+        {{/ drafts }}
+
+        {{# all }}
+          <li>
+            <a href="{{url}}">
+              <span class="title">{{title}}</span>
+              <span class="date">{{date}}</span>
+              <br><span class="id">{{id}}</span></small>
+            </a>
+          </li>
+        {{/ all }}
+      </ul>
+    </div>
+  {{/ page_collections }}
   </div>
 
-  <div id="drafts" class="page-pane">
-    <ul class="page-list">
-      {{#posts.drafts}}
-        <li>
-          <a href="{{url}}">
-            <span class="title">{{title}}</span>
-            <span class="date">{{date}}</span>
-            <br><span class="id">{{id}}</span></small>
-          </a>
-        </li>
-      {{/posts.drafts}}
-    </ul>
-  </div>  
-
-  <div id="public" class="page-pane" style="display:none">
-    <ul class="page-list">
-  {{#posts.all}}
-    <li>
-      <a href="{{url}}">
-        <span class="title">{{title}}</span>
-        <span class="date">{{date}}</span>
-        <br><span class="id">{{id}}</span></small>
-      </a>
-    </li>
-  {{/posts.all}}
-    </ul>
-  </div>
-
-  <div id="pages" class="page-pane" style="display:none">
-    <ul class="page-list">
-    {{#pages.all}}
-      <li>
-        <a href="{{url}}">
-          <span class="title">{{title}}</span>
-          <span class="date">{{date}}</span>
-          <br><span class="id">{{id}}</span></small>
-        </a>
-      </li>
-    {{/pages.all}}
-    </ul>
-  </div>
-
-</div>
-  
   <script>
     // Tabs is a small script for showing/hiding the different page lists.
     // This mostly likely only works in modern browsers but
@@ -206,6 +192,8 @@
           var id = e.target.href.split('#')[1];
           document.getElementById(id).style.display = 'block';
         }, false)
+
+        Tabs.nav.children[0].children[0].click();
       },
       
       clearActive : function(){
