@@ -29,6 +29,14 @@ module Ruhoh::Resources::Pages
       @ruhoh.cache.set(model_data['data']['pointer']['realpath'], model_data)
     end
 
+    # Easy way to regenerate a model
+    # Used in the file watcher implementation.
+    def touch(name_or_pointer)
+      pointer = find_file(name_or_pointer)
+      routes_delete(pointer)
+      find(name_or_pointer) # find/load so the route is regenerated
+    end
+
     def config
       hash = super
       hash['permalink'] ||= "/:path/:filename"
