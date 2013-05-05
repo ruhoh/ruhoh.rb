@@ -52,12 +52,12 @@ module Ruhoh::Base
     Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
     # Process this file. See #parse_page_file
-    # This model's parent collection calls #process to populate the collection.
-    # Example collection dictionary:
-    #   collection = { "id-1" => { <data> }, "id-2" => { <data> } }
-    #
-    # @returns[Hash Object] the processed data from the file.
+    # @return[Hash] the processed data from the file.
+    #   ex:
+    #   { "content" => "..", "data" => { "key" => "value" } }
     def process
+      return {} unless file?
+
       parsed_page = parse_page_file
       data = parsed_page['data']
 
@@ -79,6 +79,14 @@ module Ruhoh::Base
     end
 
     protected
+
+    # Is the resource backed by a physical file in the filesystem?
+    # For example the pagination system uses a page-stub
+    # that has no reference to an actual file.
+    # @return[Boolean]
+    def file?
+      !!@pointer['realpath']
+    end
 
     # Primary method to parse the file as a page-like object.
     # File API is currently defines:
