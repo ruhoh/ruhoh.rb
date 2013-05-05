@@ -16,7 +16,7 @@ module Ruhoh::Resources::Media
       compiled_path = Ruhoh::Utils.url_to_path(@ruhoh.to_url(@collection.url_endpoint), @ruhoh.paths.compiled)
       FileUtils.mkdir_p compiled_path
       
-      @collection.files.each do |pointer|
+      @collection.files.values.each do |pointer|
         compiled_file = File.join(compiled_path, pointer['id'])
         FileUtils.mkdir_p File.dirname(compiled_file)
         FileUtils.cp_r pointer['realpath'], compiled_file

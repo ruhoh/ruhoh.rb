@@ -15,7 +15,7 @@ module Ruhoh::Resources::Javascripts
       FileUtils.mkdir_p compiled_path
 
       manifest = Sprockets::Manifest.new(env, compiled_path)
-      assets = @collection.files.map{ |p| p["id"] }
+      assets = @collection.files.values.map{ |p| p["id"] }
       manifest.compile(assets)
 
       # Update the stylesheet paths to the digest format:

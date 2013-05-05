@@ -33,7 +33,7 @@ module Ruhoh::Base
       FileUtils.mkdir_p compiled_path
       
       manifest = {}
-      @collection.files.each do |pointer|
+      @collection.files.values.each do |pointer|
         digest = Digest::MD5.file(pointer['realpath']).hexdigest
         digest_file = pointer['id'].sub(/\.(\w+)$/) { |ext| "-#{digest}#{ext}" }
         manifest[pointer['id']] = digest_file
