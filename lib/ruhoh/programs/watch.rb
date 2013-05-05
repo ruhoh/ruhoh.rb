@@ -12,18 +12,8 @@ class Ruhoh
       Ruhoh::Friend.say {
         cyan "=> Start watching: #{ruhoh.paths.base}"
       }
-
-      glob = ''
-
-      # Watch all files in all sub directories
-      Dir.chdir(ruhoh.paths.base) {
-        dirs = Dir['*'].select { |x| File.directory?(x) }
-        dirs = dirs.map { |x| "#{x}/**/*" }
-        dirs += ['*']
-        glob = dirs
-      }
       dw = DirectoryWatcher.new(ruhoh.paths.base, {
-        :glob => glob, 
+        :glob => "**/*", 
         :pre_load => true
       })
       dw.interval = 1
