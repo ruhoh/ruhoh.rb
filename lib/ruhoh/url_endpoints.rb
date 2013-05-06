@@ -11,7 +11,7 @@ class Ruhoh
       return @urls if @urls.keys.length > 1 # consider base_url
 
       @ruhoh.collections.all.each do |name|
-        collection = @ruhoh.collections.load_collection(name)
+        collection = @ruhoh.collection(name)
         next unless collection.respond_to?(:url_endpoint)
         @urls[name] = @ruhoh.to_url(collection.url_endpoint)
       end

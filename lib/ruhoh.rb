@@ -59,7 +59,7 @@ class Ruhoh
   end
 
   def collection(resource)
-    @collections.load_collection(resource)
+    @collections.load(resource)
   end
 
   def config

@@ -39,7 +39,7 @@ class Ruhoh
       } unless @ruhoh.collections.exists?(cmd)
 
       puts "loading client: #{cmd}"
-      collection = @ruhoh.collections.load_collection(cmd)
+      collection = @ruhoh.collection(cmd)
       client = collection.load_client(data)
 
       Ruhoh::Friend.say { 
@@ -66,7 +66,7 @@ class Ruhoh
       options = @opt_parser.help
       resources = [{"methods" => Help}]
       resources += @ruhoh.collections.all.map {|name|
-        collection = @ruhoh.collections.load_collection(name)
+        collection = @ruhoh.collection(name)
         next unless collection.client?
         next unless collection.client.const_defined?(:Help)
         {

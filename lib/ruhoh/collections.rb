@@ -27,7 +27,7 @@ class Ruhoh
     # persistant mutations on it if necessary.
     # Note the collection is always wrapped in its view.
     # @returns[Class Instance] of the resource and class_name given.
-    def load_collection(resource)
+    def load(resource)
       return @collections[resource] if @collections[resource]
       instance =  collection?(resource) ?
                     collection(resource).new(@ruhoh) :

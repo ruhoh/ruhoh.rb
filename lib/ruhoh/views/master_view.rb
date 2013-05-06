@@ -165,7 +165,7 @@ module Ruhoh::Views
     # Uses method_missing to catch calls to resource namespace.
     # @returns[CollectionView] for the calling resource.
     def load_collection_view_for(resource)
-      view = @ruhoh.collections.load_collection(resource)
+      view = @ruhoh.collection(resource)
       view.master = self
       view
     end
