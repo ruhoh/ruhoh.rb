@@ -34,12 +34,12 @@ class Ruhoh
       return __send__(cmd) if respond_to?(cmd)
 
       Ruhoh::Friend.say { 
-        red "Resource #{cmd} not found"
+        red "Collection '#{cmd}' not found"
         exit 
-      } unless @ruhoh.resources.exists?(cmd)
+      } unless @ruhoh.collections.exists?(cmd)
 
       puts "loading client: #{cmd}"
-      collection = @ruhoh.resources.load_collection(cmd)
+      collection = @ruhoh.collections.load_collection(cmd)
       client = collection.load_client(data)
 
       Ruhoh::Friend.say { 
@@ -65,8 +65,8 @@ class Ruhoh
     def help
       options = @opt_parser.help
       resources = [{"methods" => Help}]
-      resources += @ruhoh.resources.all.map {|name|
-        collection = @ruhoh.resources.load_collection(name)
+      resources += @ruhoh.collections.all.map {|name|
+        collection = @ruhoh.collections.load_collection(name)
         next unless collection.client?
         next unless collection.client.const_defined?(:Help)
         {

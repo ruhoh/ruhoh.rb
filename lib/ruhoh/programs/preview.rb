@@ -38,7 +38,7 @@ class Ruhoh
         ruhoh.url_endpoints.sorted.each do |h|
           # Omit base_path and theme because they are special use-cases.
           next if %w{base_path theme}.include?(h["name"])
-          next unless ruhoh.resources.exists?(h["name"])
+          next unless ruhoh.collections.exists?(h["name"])
           map h["url"] do
             collection = ruhoh.collection(h["name"])
             if collection.previewer?

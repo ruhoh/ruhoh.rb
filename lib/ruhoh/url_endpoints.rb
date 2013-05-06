@@ -1,4 +1,3 @@
-require 'ruhoh/resources_interface'
 class Ruhoh
   class UrlEndpoints
 
@@ -11,8 +10,8 @@ class Ruhoh
       @urls["base_path"] = @ruhoh.base_path
       return @urls if @urls.keys.length > 1 # consider base_url
 
-      @ruhoh.resources.all.each do |name|
-        collection = @ruhoh.resources.load_collection(name)
+      @ruhoh.collections.all.each do |name|
+        collection = @ruhoh.collections.load_collection(name)
         next unless collection.respond_to?(:url_endpoint)
         @urls[name] = @ruhoh.to_url(collection.url_endpoint)
       end

@@ -61,7 +61,7 @@ module Ruhoh::Views
     end
 
     def page_collections
-      @ruhoh.resources.acting_as_pages.map do |a|
+      @ruhoh.collections.acting_as_pages.map do |a|
         @ruhoh.collection(a)
       end
     end
@@ -148,7 +148,7 @@ module Ruhoh::Views
     # This is how collections are accessed throughout mustache's global context.
     # Also support calling ?to_<resource> contextual block helpers
     def define_resource_collection_namespaces(ruhoh)
-      ruhoh.resources.all.each do |method_name|
+      ruhoh.collections.all.each do |method_name|
         (class << self; self; end).class_eval do
           define_method(method_name) do
             load_collection_view_for(method_name.to_s)
@@ -165,7 +165,7 @@ module Ruhoh::Views
     # Uses method_missing to catch calls to resource namespace.
     # @returns[CollectionView] for the calling resource.
     def load_collection_view_for(resource)
-      view = @ruhoh.resources.load_collection(resource)
+      view = @ruhoh.collections.load_collection(resource)
       view.master = self
       view
     end

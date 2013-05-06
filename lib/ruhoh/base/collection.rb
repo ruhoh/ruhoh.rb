@@ -222,9 +222,9 @@ module Ruhoh::Base
     def get_module_namespace
       type = @ruhoh.config[resource_name]["use"] rescue nil
       if type
-        if @ruhoh.resources.registered.include?(type)
+        if @ruhoh.collections.registered.include?(type)
           Ruhoh::Resources.const_get(camelize(type))
-        elsif @ruhoh.resources.base.include?(type)
+        elsif @ruhoh.collections.base.include?(type)
           Ruhoh::Base.const_get(camelize(type))
         else
           klass = camelize(type)
@@ -235,7 +235,7 @@ module Ruhoh::Base
           abort
         end
       else
-        if @ruhoh.resources.registered.include?(resource_name)
+        if @ruhoh.collections.registered.include?(resource_name)
           Ruhoh::Resources.const_get(camelize(resource_name))
         else
           Ruhoh::Resources.const_get(:Pages)

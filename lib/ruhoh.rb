@@ -20,7 +20,7 @@ require 'ruhoh/friend'
 
 require 'ruhoh/converter'
 require 'ruhoh/views/master_view'
-require 'ruhoh/resources_interface'
+require 'ruhoh/collections'
 require 'ruhoh/cache'
 require 'ruhoh/routes'
 require 'ruhoh/url_endpoints'
@@ -33,14 +33,14 @@ class Ruhoh
   end
 
   attr_accessor :log, :env
-  attr_reader :config, :paths, :root, :base, :cache, :resources, :routes, :url_endpoints
+  attr_reader :config, :paths, :root, :base, :cache, :collections, :routes, :url_endpoints
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   @log = Ruhoh::Logger.new
   @root = Root
 
   def initialize
-    @resources = Ruhoh::ResourcesInterface.new(self)
+    @collections = Ruhoh::Collections.new(self)
     @cache = Ruhoh::Cache.new(self)
     @routes = Ruhoh::Routes.new(self)
     @url_endpoints = Ruhoh::UrlEndpoints.new(self)
@@ -59,7 +59,7 @@ class Ruhoh
   end
 
   def collection(resource)
-    @resources.load_collection(resource)
+    @collections.load_collection(resource)
   end
 
   def config
@@ -180,7 +180,7 @@ class Ruhoh
     FileUtils.mkdir_p @paths.compiled
 
     # Run the resource compilers
-    compilers = @resources.all
+    compilers = @collections.all
     # Hack to ensure assets are processed first so post-processing logic reflects in the templates.
     compilers.delete('stylesheets')
     compilers.unshift('stylesheets')

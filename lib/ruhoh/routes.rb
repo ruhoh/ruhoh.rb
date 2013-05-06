@@ -1,4 +1,3 @@
-require 'ruhoh/resources_interface'
 class Ruhoh
   class Routes
     def initialize(ruhoh)
@@ -6,7 +5,7 @@ class Ruhoh
     end
 
     def find(route)
-      @ruhoh.resources.acting_as_pages.each do |r|
+      @ruhoh.collections.acting_as_pages.each do |r|
         next unless @ruhoh.collection(r).routes[route]
         return @ruhoh.collection(r).routes[route]
         break
@@ -21,7 +20,7 @@ class Ruhoh
     # @returns[Hash map]
     def all
       routes = {}
-      @ruhoh.resources.acting_as_pages.each do |r|
+      @ruhoh.collections.acting_as_pages.each do |r|
         routes.merge!(@ruhoh.collection(r).routes)
       end
       routes

@@ -66,7 +66,7 @@ module Ruhoh::Resources::Pages
       limit = config["limit"] || 20
       pages = @collection.all.first(limit)
       Ruhoh::Friend.say { cyan "#{resource_name} RSS: (first #{limit} pages)" }
-      data = @ruhoh.resources.load_collection("data").dictionary
+      data = @ruhoh.collection("data").dictionary
 
       feed = Nokogiri::XML::Builder.new do |xml|
        xml.rss(:version => '2.0') {

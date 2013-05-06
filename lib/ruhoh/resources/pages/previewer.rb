@@ -45,7 +45,7 @@ module Ruhoh::Resources::Pages
       return false unless parts.count == 2
       resource = parts[0]
       page_number = parts[1]
-      return false unless @ruhoh.resources.exist?(resource)
+      return false unless @ruhoh.collections.exist?(resource)
       return false if page_number.to_i.zero?
 
       collection = @ruhoh.collection(resource)

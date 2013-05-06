@@ -12,7 +12,7 @@ FileUtils.cd(File.join(File.dirname(__FILE__), 'resources')) do
 end
 
 class Ruhoh
-  class ResourcesInterface
+  class Collections
 
     def collection(resource)
       get_module_namespace_for(resource).const_get(:Collection)
