@@ -3,7 +3,6 @@ Encoding.default_internal = 'UTF-8'
 require 'yaml'
 require 'psych'
 YAML::ENGINE.yamler = 'psych'
-
 require 'json'
 require 'time'
 require 'cgi'
@@ -20,9 +19,7 @@ require 'ruhoh/utils'
 require 'ruhoh/friend'
 
 require 'ruhoh/converter'
-
 require 'ruhoh/views/master_view'
-
 require 'ruhoh/resources_interface'
 require 'ruhoh/cache'
 require 'ruhoh/routes'
@@ -34,14 +31,14 @@ class Ruhoh
     attr_accessor :log
     attr_reader :names, :root
   end
-  
+
   attr_accessor :log, :env
   attr_reader :config, :paths, :root, :base, :cache, :resources, :routes, :url_endpoints
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   @log = Ruhoh::Logger.new
   @root = Root
-  
+
   def initialize
     @resources = Ruhoh::ResourcesInterface.new(self)
     @cache = Ruhoh::Cache.new(self)
@@ -52,18 +49,13 @@ class Ruhoh
   def master_view(pointer)
     Ruhoh::Views::MasterView.new(self, pointer)
   end
-  
+
   # Public: Setup Ruhoh utilities relative to the current application directory.
   # Returns boolean on success/failure
   def setup(opts={})
-    self.reset
     self.class.log.log_file = opts[:log_file] if opts[:log_file] #todo
-    @base = opts[:source] if opts[:source]
-    !!self.config
-  end
-  
-  def reset
-    @base = Dir.getwd
+    @base = opts[:source] ? opts[:source] : Dir.getwd
+    !!config
   end
 
   def collection(resource)
@@ -83,10 +75,9 @@ class Ruhoh
 
     @config = config
   end
-  
+
   Paths = Struct.new(:base, :theme, :system, :compiled)
   def setup_paths
-    self.ensure_config
     @paths = Paths.new
     @paths.base = @base
     @paths.system = File.join(Ruhoh::Root, "system")
@@ -107,7 +98,7 @@ class Ruhoh
       {
         "name" => "system",
         "path" => paths.system
-      }, 
+      },
       {
         "name" => "base",
         "path" => paths.base
@@ -138,13 +129,13 @@ class Ruhoh
   def env
     @env || 'development'
   end
-  
+
   def base_path
     (env == 'production') ?
       config['base_path'] :
       '/'
   end
-  
+
   # @config['base_path'] is assumed to be well-formed.
   # Always remove trailing slash.
   # Returns String - normalized url with prepended base_path
@@ -153,11 +144,11 @@ class Ruhoh
     url = url.gsub(/\/\//, '/')
     (url == "/") ? url : url.chomp('/')
   end
-  
+
   def relative_path(filename)
     filename.gsub(Regexp.new("^#{@base}/"), '')
   end
-  
+
   # Compile the ruhoh instance (save to disk).
   # Note: This method recursively removes the target directory. Should there be a warning?
   #
@@ -187,7 +178,7 @@ class Ruhoh
     Ruhoh::Friend.say { plain "Compiling for environment: '#{@env}'" }
     FileUtils.rm_r @paths.compiled if File.exist?(@paths.compiled)
     FileUtils.mkdir_p @paths.compiled
-    
+
     # Run the resource compilers
     compilers = @resources.all
     # Hack to ensure assets are processed first so post-processing logic reflects in the templates.
@@ -195,13 +186,13 @@ class Ruhoh
     compilers.unshift('stylesheets')
     compilers.delete('javascripts')
     compilers.unshift('javascripts')
-    
+
     compilers.each do |name|
       collection = collection(name)
       next unless collection.compiler?
       collection.load_compiler.run
     end
-    
+
     # Run extra compiler tasks if available:
     if Ruhoh.const_defined?(:Compiler)
       Ruhoh::Compiler.constants.each {|c|
@@ -215,20 +206,14 @@ class Ruhoh
 
     true
   end
-  
+
   def ensure_setup
     return if @config && @paths
     raise 'Ruhoh has not been fully setup. Please call: Ruhoh.setup'
-  end  
-  
-  def ensure_config
-    return if @config
-    raise 'Ruhoh has not setup config. Please call: Ruhoh.setup'
-  end  
+  end
 
   def ensure_paths
     return if @config && @paths
     raise 'Ruhoh has not setup paths. Please call: Ruhoh.setup'
-  end  
-  
-end # Ruhoh
+  end
+end
