@@ -92,10 +92,10 @@ class Ruhoh
     @paths.system = File.join(Ruhoh::Root, "system")
     @paths.compiled = @config["compiled"]
 
-    theme = collection("theme").config["name"]
+    theme = @config.find{ |resource, data| data['use'] == "theme" }
     if theme
-      Ruhoh::Friend.say { plain "Using theme: \"#{theme}\""}
-      @paths.theme = File.join(@base, theme)
+      Ruhoh::Friend.say { plain "Using theme: \"#{theme[0]}\""}
+      @paths.theme = File.join(@base, theme[0])
     end
 
     @paths
