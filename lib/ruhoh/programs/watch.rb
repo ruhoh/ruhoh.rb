@@ -32,6 +32,8 @@ class Ruhoh
                       File::SEPARATOR
           resource = path.split(separator)[0]
 
+          ruhoh.cache.delete(ruhoh.collection(resource).files_cache_key)
+
           ruhoh.collection(resource).load_watcher.update(path)
         end
       end

@@ -126,7 +126,7 @@ module Ruhoh::Base
     #
     # @return[Hash] dictionary of pointers.
     def files(id=nil, &block)
-      return @dict if (@dict && @ruhoh.env == "production")
+      return @ruhoh.cache.get(files_cache_key) if @ruhoh.cache.get(files_cache_key)
 
       dict = {}
       paths.each do |path|
@@ -145,10 +145,7 @@ module Ruhoh::Base
         }
       end
 
-      if @ruhoh.env == "production"
-        @dict = dict
-      end
-
+      @ruhoh.cache.set(files_cache_key, dict)
       dict
     end
 
@@ -213,6 +210,10 @@ module Ruhoh::Base
 
     def load_previewer(*args)
       @_previewer ||= previewer.new(@ruhoh)
+    end
+
+    def files_cache_key
+      "#{ resource_name }-files"
     end
 
     protected
