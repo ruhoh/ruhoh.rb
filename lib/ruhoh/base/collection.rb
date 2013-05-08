@@ -235,6 +235,13 @@ module Ruhoh::Base
       "#{ resource_name }-files"
     end
 
+    def scaffold
+      pointer = find_file('_scaffold', all: true) || @ruhoh.find_file('_scaffold')
+      return '' unless pointer
+
+      File.open(pointer['realpath'], 'r:UTF-8') { |f| f.read }
+    end
+
     protected
 
     # Load the registered resource else default to Pages if not configured.

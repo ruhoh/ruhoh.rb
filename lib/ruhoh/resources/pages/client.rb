@@ -89,8 +89,8 @@ module Ruhoh::Resources::Pages
       end while File.exist?(filename)
 
       FileUtils.mkdir_p File.dirname(filename)
-      output = @ruhoh.collection("scaffolds").find("#{@collection.resource_name}").to_s
-      output = output.gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
+      output = (@collection.scaffold || '').gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
+
       File.open(filename, 'w:UTF-8') {|f| f.puts output }
 
       resource_name = @collection.resource_name
