@@ -105,10 +105,16 @@ module Ruhoh::Base
     #           See implementation for how match is determined.
     #  Hash   - File pointer
     #
+    # @param opts [Hash] Optional options
+    #  opts[:all] - true to search all files as some may be invalid as resources
+    #
     # @return [pointer, nil]
-    def find_file(key)
+    def find_file(key, opts={})
       return key if key.is_a?(Hash) # assume valid pointer
-      files[key] || files.values.find{ |a| key == a['id'].gsub(/.[^.]+$/, '') }
+
+      dict = opts[:all] ? _all_files : files
+
+      dict[key] || dict.values.find{ |a| key == a['id'].gsub(/.[^.]+$/, '') }
     end
 
     # Collect all files (as mapped by data resources) for this data endpoint.
@@ -128,14 +134,27 @@ module Ruhoh::Base
     def files(id=nil, &block)
       return @ruhoh.cache.get(files_cache_key) if @ruhoh.cache.get(files_cache_key)
 
+      dict = _all_files
+      dict.keep_if do |id, pointer|
+        block_given? ? yield(id, self) : valid_file?(id)
+      end
+
+      @ruhoh.cache.set(files_cache_key, dict)
+      dict
+    end
+
+    # Collect all files within this collection, valid or otherwise.
+    # Each resource can have 3 file references, one per each cascade level.
+    # The file hashes are collected in order and overwrite eachother if found.
+    # This is a low-level method, see #files for the public interface.
+    #
+    # @return[Hash] dictionary of pointers.
+    def _all_files
       dict = {}
       paths.each do |path|
-        FileUtils.cd(path) {
-          file_array = (id ? Array(id) : Dir[self.glob])
-          file_array.each { |id|
-            next unless (File.exist?(id) && FileTest.file?(id))
-            next unless(block_given? ? yield(id, self) : valid_file?(id))
-
+        FileUtils.cd(path) { 
+          Dir[glob].each { |id|
+            next unless File.exist?(id) && FileTest.file?(id)
             dict[id] = {
               "id" => id,
               "realpath" => File.realpath(id),
@@ -145,7 +164,6 @@ module Ruhoh::Base
         }
       end
 
-      @ruhoh.cache.set(files_cache_key, dict)
       dict
     end
 
