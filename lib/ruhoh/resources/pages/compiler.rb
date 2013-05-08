@@ -88,7 +88,7 @@ module Ruhoh::Resources::Pages
       end
 
       FileUtils.cd(@ruhoh.paths.compiled) {
-        compiled_path = CGI.unescape(@ruhoh.to_url(@collection.namespace, "rss.xml"))
+        compiled_path = CGI.unescape(@ruhoh.to_url(@collection.resource_name, "rss.xml"))
         compiled_path = compiled_path.gsub(/^\//, '')
 
         FileUtils.mkdir_p File.dirname(compiled_path)

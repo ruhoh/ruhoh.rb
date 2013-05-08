@@ -6,10 +6,6 @@ module Ruhoh::Resources::Theme
       "/assets"
     end
 
-    def namespace
-      config["name"].to_s
-    end
-
     # noop
     def dictionary
       {}

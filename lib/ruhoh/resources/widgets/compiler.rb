@@ -5,10 +5,10 @@ module Ruhoh::Resources::Widgets
     def run
       collection = @collection
       unless @collection.paths?
-        Ruhoh::Friend.say { yellow "#{collection.namespace.capitalize}: directory not found - skipping." }
+        Ruhoh::Friend.say { yellow "#{collection.resource_name.capitalize}: directory not found - skipping." }
         return
       end
-      Ruhoh::Friend.say { cyan "#{collection.namespace.capitalize}: (copying valid files)" }
+      Ruhoh::Friend.say { cyan "#{collection.resource_name.capitalize}: (copying valid files)" }
 
       compiled_path = Ruhoh::Utils.url_to_path(@ruhoh.to_url(@collection.url_endpoint), @ruhoh.paths.compiled)
       FileUtils.mkdir_p compiled_path

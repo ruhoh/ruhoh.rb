@@ -3,7 +3,7 @@ module Ruhoh::Resources::Stylesheets
     include Ruhoh::Base::Collectable
 
     def url_endpoint
-      "assets/#{namespace}"
+      "assets/#{ resource_name }"
     end
   end
 end

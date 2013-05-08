@@ -41,10 +41,7 @@ module Ruhoh::Base
     end
 
     def resource_name
-      return @resource_name if @resource_name
-      parts = self.class.name.split("::")
-      parts.pop
-      Ruhoh::Utils.underscore(parts.pop)
+      @resource_name ||= self.class.name.split("::").pop
     end
 
     # Implemented via Observable module
@@ -53,10 +50,6 @@ module Ruhoh::Base
     # #update is called on model #process.
     # noop
     def update(model_data)
-    end
-
-    def namespace
-      Ruhoh::Utils.underscore(resource_name)
     end
 
     # The default glob for finding files.

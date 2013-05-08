@@ -8,7 +8,7 @@ module Ruhoh::Resources::Stylesheets
       env = Sprockets::Environment.new
       env.logger = Logger.new(STDOUT)
       @collection.paths.reverse.each do |h|
-        env.append_path(File.join(h["path"], @collection.namespace))
+        env.append_path(File.join(h["path"], @collection.resource_name))
       end
       
       compiled_path = Ruhoh::Utils.url_to_path(@collection.url_endpoint, @ruhoh.paths.compiled)
