@@ -207,6 +207,32 @@ class Ruhoh
     true
   end
 
+  # Find a file in the base cascade directories
+  # @return[Hash, nil] a single file pointer
+  def find_file(key)
+    dict = _all_files
+    dict[key] || dict.values.find{ |a| key == a['id'].gsub(/.[^.]+$/, '') }
+  end
+
+  # Collect all files from the base bascade directories.
+  # @return[Hash] dictionary of file pointers
+  def _all_files
+    dict = {}
+    cascade.map{ |a| a['path'] }.each do |path|
+      FileUtils.cd(path) { 
+        Dir["*"].each { |id|
+          next unless File.exist?(id) && FileTest.file?(id)
+          dict[id] = {
+            "id" => id,
+            "realpath" => File.realpath(id),
+          }
+        }
+      }
+    end
+
+    dict
+  end
+
   def ensure_setup
     return if @config && @paths
     raise 'Ruhoh has not been fully setup. Please call: Ruhoh.setup'
