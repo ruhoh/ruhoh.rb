@@ -151,6 +151,7 @@ module Ruhoh::Base
 
     def valid_file?(filepath)
       return false if filepath.start_with?('.')
+      return false if filepath.start_with?('_')
       excludes = Array(config['exclude']).map { |node| Regexp.new(node) }
       excludes.each { |regex| return false if filepath =~ regex }
       true
