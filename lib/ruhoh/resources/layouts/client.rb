@@ -23,16 +23,17 @@ module Ruhoh::Resources::Layouts
         cyan "ex: ruhoh layouts new splash"
         exit
       } if name.nil?
-      
-      filename = File.join(@ruhoh.paths.theme, "layouts", name.gsub(/\s/, '-').downcase) + ".html"
+
+      filename = File.join((@ruhoh.paths.theme || @ruhoh.paths.base), "layouts", name.gsub(/\s/, '-').downcase) + ".html"
+
       if File.exist?(filename)
         abort("Create new layout: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
       end
 
       FileUtils.mkdir_p File.dirname(filename)
-      scaffolds = @ruhoh.collection("scaffolds").dictionary
+
       File.open(filename, 'w:UTF-8') do |page|
-        page.puts scaffolds['layout.html'].to_s
+        page.puts (@collection.scaffold || '')
       end
 
       Ruhoh::Friend.say {
