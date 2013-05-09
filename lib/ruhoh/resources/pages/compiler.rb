@@ -4,19 +4,19 @@ module Ruhoh::Resources::Pages
     include Ruhoh::Base::Compilable
 
     def run
-      pages = @collection.dictionary
+      pages = @collection.all
       resource_name = @collection.resource_name
       Ruhoh::Friend.say { cyan "#{resource_name.capitalize}: (#{pages.count} #{resource_name})" }
       
       FileUtils.cd(@ruhoh.paths.compiled) {
-        pages.each_value { |data|
+        pages.each do |data|
           view = @ruhoh.master_view(data['pointer'])
 
           FileUtils.mkdir_p File.dirname(view.compiled_path)
           File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
 
           Ruhoh::Friend.say { green "  > #{data['id']}" }
-        }
+        end
       }
 
       pagination
