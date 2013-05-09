@@ -33,12 +33,10 @@ class Ruhoh
 
       return __send__(cmd) if respond_to?(cmd)
 
-      Ruhoh::Friend.say { 
-        red "Collection '#{cmd}' not found"
-        exit 
+      Ruhoh::Friend.say {
+        yellow "-> Autoloading '#{cmd}' as pages collection"
       } unless @ruhoh.collections.exists?(cmd)
 
-      puts "loading client: #{cmd}"
       collection = @ruhoh.collection(cmd)
       client = collection.load_client(data)
 
