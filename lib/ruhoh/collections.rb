@@ -54,7 +54,7 @@ class Ruhoh
     end 
 
     def registered
-      Ruhoh::Resources.constants.map{ |a| a.to_s.downcase }
+      Ruhoh::Resources.constants.map{ |a| a.to_s.downcase }.delete_if{ |a| a == "pages" }
     end
 
     # discover all the resource mappings
