@@ -49,7 +49,7 @@ module Ruhoh::Resources::Pages
       hash['ext'] ||= ".md"
       
       paginator = hash['paginator'] || {}
-      paginator["namespace"] ||=  "/index"
+      paginator["namespace"] ||=  "/#{ resource_name }"
       paginator["namespace"] = paginator["namespace"].to_s
       unless paginator["namespace"].start_with?('/')
         paginator["namespace"] = "/#{paginator["namespace"]}"
