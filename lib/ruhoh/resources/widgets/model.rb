@@ -6,6 +6,10 @@ module Ruhoh::Resources::Widgets
       parsed = parse_page_file
       @data = parsed['data']
       @content = parsed['content']
+
+      changed
+      notify_observers(parsed)
+
       parsed
     end
   end
