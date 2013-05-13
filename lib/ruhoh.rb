@@ -245,4 +245,12 @@ class Ruhoh
     return if @config && @paths
     raise 'Ruhoh has not setup paths. Please call: Ruhoh.setup'
   end
+
+  def self.collection(resource)
+    Collections.load(resource)
+  end
+
+  def self.model(resource)
+    Collections.get_module_namespace_for(resource).const_get(:ModelView)
+  end
 end

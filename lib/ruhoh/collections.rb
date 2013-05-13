@@ -13,6 +13,10 @@ end
 
 class Ruhoh
   class Collections
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
+      @collections = {}
+    end
 
     def collection(resource)
       get_module_namespace_for(resource).const_get(:Collection)
@@ -36,9 +40,10 @@ class Ruhoh
       @collections[resource] = instance.load_collection_view
     end
 
-    def initialize(ruhoh)
-      @ruhoh = ruhoh
-      @collections = {}
+    # Load the CollectionView class for this resource.
+    # Used primarily to as the plugin interface to include modules for mustache.
+    def self.load(resource)
+      get_module_namespace_for(resource).const_get(:CollectionView)
     end
 
     def all
@@ -54,6 +59,10 @@ class Ruhoh
     end 
 
     def registered
+      self.class.registered
+    end
+
+    def self.registered
       Ruhoh::Resources.constants.map{ |a| a.to_s.downcase }.delete_if{ |a| a == "pages" }
     end
 
@@ -96,6 +105,11 @@ class Ruhoh
     # @returns[Constant] the resource's module namespace
     def get_module_namespace_for(resource)
       type = @ruhoh.config[resource]["use"] rescue nil
+
+      self.class.get_module_namespace_for(resource, type)
+    end
+
+    def self.get_module_namespace_for(resource, type=nil)
       if type
         if registered.include?(type)
           Ruhoh::Resources.const_get(camelize(type))
