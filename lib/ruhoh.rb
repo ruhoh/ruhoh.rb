@@ -66,6 +66,9 @@ class Ruhoh
     config = Ruhoh::Utils.parse_yaml_file(@base, "config.yml") || {}
     config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : "compiled"
 
+    config['_root'] ||= {}
+    config['_root']['permalink'] ||= "/:relative_path/:filename"
+
     config['base_path'] = config['base_path'].to_s.strip
     if config['base_path'].empty?
       config['base_path'] = '/'
