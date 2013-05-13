@@ -20,7 +20,6 @@ class Ruhoh
       return nil unless key
 
       if @__cache[key]
-        puts "Cache HIT: #{ key }"
         @__cache[key]
       end
     end
