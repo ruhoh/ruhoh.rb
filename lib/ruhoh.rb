@@ -23,7 +23,6 @@ require 'ruhoh/views/master_view'
 require 'ruhoh/collections'
 require 'ruhoh/cache'
 require 'ruhoh/routes'
-require 'ruhoh/url_endpoints'
 require 'ruhoh/programs/preview'
 
 class Ruhoh
@@ -33,7 +32,7 @@ class Ruhoh
   end
 
   attr_accessor :log, :env
-  attr_reader :config, :paths, :root, :base, :cache, :collections, :routes, :url_endpoints
+  attr_reader :config, :paths, :root, :base, :cache, :collections, :routes
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   @log = Ruhoh::Logger.new
@@ -43,7 +42,6 @@ class Ruhoh
     @collections = Ruhoh::Collections.new(self)
     @cache = Ruhoh::Cache.new(self)
     @routes = Ruhoh::Routes.new(self)
-    @url_endpoints = Ruhoh::UrlEndpoints.new(self)
   end
 
   def master_view(pointer)

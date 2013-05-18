@@ -45,7 +45,7 @@ module Ruhoh::Views
     end
 
     def urls
-      @ruhoh.url_endpoints.urls
+      @ruhoh.collections.url_endpoints
     end
 
     def content

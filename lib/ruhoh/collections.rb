@@ -99,6 +99,24 @@ class Ruhoh
     end
     alias_method :exist?, :exists?
 
+    def url_endpoints
+      urls = {}
+      urls["base_path"] = @ruhoh.base_path
+
+      all.each do |name|
+        collection = load(name)
+        next unless collection.respond_to?(:url_endpoint)
+        urls[name] = @ruhoh.to_url(collection.url_endpoint)
+      end
+
+      urls
+    end
+
+    def url_endpoints_sorted
+      sorted_urls = url_endpoints.each.map {|k, v| {"name" => k, "url" => v} }
+      sorted_urls.sort { |a, b| b["url"].length <=> a["url"].length }
+    end
+
     protected
 
     # Load the registered resource else default to Pages if not configured.

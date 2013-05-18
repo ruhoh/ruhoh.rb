@@ -35,7 +35,7 @@ class Ruhoh
         # Note page-like resources (posts, pages) don't render uniform url endpoints,
         # since presumably they define customized permalinks per singular resource.
         # Page-like resources are handled the root mapping below.
-        ruhoh.url_endpoints.sorted.each do |h|
+        ruhoh.collections.url_endpoints_sorted.each do |h|
           # Omit base_path and theme because they are special use-cases.
           next if %w{base_path theme}.include?(h["name"])
           next unless ruhoh.collections.exists?(h["name"])
