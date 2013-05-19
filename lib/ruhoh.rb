@@ -142,7 +142,7 @@ class Ruhoh
   # Returns String - normalized url with prepended base_path
   def to_url(*args)
     url = base_path + args.join('/')
-    url = url.gsub(/\/\//, '/')
+    url = url.gsub(/\/{2,}/, '/')
     (url == "/") ? url : url.chomp('/')
   end
 
