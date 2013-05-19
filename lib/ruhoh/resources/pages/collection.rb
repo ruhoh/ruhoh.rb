@@ -44,10 +44,16 @@ module Ruhoh::Resources::Pages
       hash['summary_lines'] = hash['summary_lines'].to_i
       hash['latest'] ||= 2
       hash['latest'] = hash['latest'].to_i
-      hash['rss_limit'] ||= 20
-      hash['rss_limit'] = hash['rss_limit'].to_i
-      hash['ext'] ||= ".md"
-      
+
+      rss = hash['rss'] || {}
+      rss['limit'] ||= 20
+      rss['limit'] = rss['limit'].to_i
+      rss["url"] ||=  "/#{ resource_name }"
+      rss["url"] = rss["url"].to_s
+      rss["url"] = "/#{ rss["url"] }" unless rss["url"].start_with?('/')
+      rss["url"] = rss["url"].chomp('/') unless rss["url"] == '/'
+      hash['rss'] = rss
+
       paginator = hash['paginator'] || {}
       paginator["url"] ||=  "/#{ resource_name }/index"
       paginator["url"] = paginator["url"].to_s
