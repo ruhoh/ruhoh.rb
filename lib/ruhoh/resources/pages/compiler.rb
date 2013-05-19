@@ -41,7 +41,7 @@ module Ruhoh::Resources::Pages
           # if a root page is defined we assume it's getting compiled elsewhere.
           next if (i.zero? && config["root_page"])
 
-          url = "#{config["namespace"]}/#{i+1}"
+          url = "#{config["url"]}/#{i+1}"
           view = @ruhoh.master_view({"resource" => resource_name})
           view.page_data = {
             "layout" => config["layout"],

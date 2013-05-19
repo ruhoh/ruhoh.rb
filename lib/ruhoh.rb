@@ -66,6 +66,8 @@ class Ruhoh
 
     config['_root'] ||= {}
     config['_root']['permalink'] ||= "/:relative_path/:filename"
+    config['_root']['paginator'] ||= {}
+    config['_root']['paginator']['url'] ||= "/index/"
 
     config['base_path'] = config['base_path'].to_s.strip
     if config['base_path'].empty?
