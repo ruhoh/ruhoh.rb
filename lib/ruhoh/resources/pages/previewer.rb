@@ -41,10 +41,14 @@ module Ruhoh::Resources::Pages
     # need a way to register pagination namespaces then search the register. 
     def paginator_view(env)
       path = env['PATH_INFO'].reverse.chomp("/").reverse
-      parts = path.split('/')
-      return false unless parts.count == 2
-      resource = parts[0]
-      page_number = parts[1]
+      resource = @ruhoh.collections.paginator_urls.find do |a, b|
+        "/#{ path }" =~ %r{^#{ b }}
+      end
+      resource = resource[0] if resource
+      return false unless resource
+
+      page_number = path.match(/([1-9]+)$/)[0] rescue nil
+
       return false unless @ruhoh.collections.exist?(resource)
       return false if page_number.to_i.zero?
 

@@ -99,6 +99,18 @@ class Ruhoh
     end
     alias_method :exist?, :exists?
 
+    def paginator_urls
+      data = {}
+      all.each do |name|
+        paginator = load(name).config['paginator']['url'] rescue nil
+        next if paginator.nil? || paginator.empty?
+
+        data[name] = @ruhoh.to_url(paginator)
+      end
+
+      data
+    end
+
     def url_endpoints
       urls = {}
       urls["base_path"] = @ruhoh.base_path
