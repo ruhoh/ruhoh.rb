@@ -22,10 +22,10 @@ module Ruhoh::Views::Helpers
 
       pages = total_pages.times.map { |i| 
         url = if i.zero? && paginator_config["root_page"]
-          paginator_config["root_page"]
-        else
-          "#{paginator_config["namespace"]}/#{i+1}"
-        end
+                paginator_config["root_page"]
+              else
+                "#{paginator_config["url"]}/#{i+1}"
+              end
 
         {
           "url" => ruhoh.to_url(url),
