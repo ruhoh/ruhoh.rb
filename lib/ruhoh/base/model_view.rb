@@ -42,8 +42,17 @@ module Ruhoh::Base
       this_data = __send__(attribute)
       other_data = other.__send__(attribute)
       if attribute == "date"
-        this_data = Date.parse(this_data)
-        other_data = Date.parse(other_data)
+        begin
+          this_data = Date.parse(this_data)
+          other_data = Date.parse(other_data)
+        rescue ArgumentError
+          Ruhoh.log.error(
+            "ArgumentError:" +
+            " The '#{ @model.collection.resource_name }' collection is configured to sort based on 'date'" +
+            " but '#{ @model.pointer['id'] }' has no parseable date in its metadata." +
+            " Add date: 'YYYY-MM-DD' to its YAML metadata."
+          )
+        end
         direction = sort[1] || "desc" #default should be reverse
       end
 
