@@ -114,7 +114,7 @@ module Ruhoh::Views
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
       elsif @page_data['layout'] != false
         # try default
-        @sub_layout = layouts.find(@pointer["resource"])
+        @sub_layout = layouts.find(@pointer["resource"], :all => true)
       end
 
       if @sub_layout && @sub_layout.layout
