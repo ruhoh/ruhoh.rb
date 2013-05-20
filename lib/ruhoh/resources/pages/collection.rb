@@ -44,6 +44,7 @@ module Ruhoh::Resources::Pages
       hash['summary_lines'] = hash['summary_lines'].to_i
       hash['latest'] ||= 2
       hash['latest'] = hash['latest'].to_i
+      hash['ext'] ||= ".md"
 
       rss = hash['rss'] || {}
       rss['limit'] ||= 20
