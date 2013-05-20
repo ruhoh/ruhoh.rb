@@ -18,10 +18,12 @@ module Ruhoh::Base
     #  String - name (filename) without the extension e.g: about-me
     #           Returns the first matched filename.
     #           See implementation for how match is determined.
+    # @param opts [Hash] Optional options
+    #  opts[:all] - true to search all files as some may be invalid as resources
     #
     # @return[model, nil] the model is always wrapped in its view.
-    def find(name_or_pointer)
-      pointer = find_file(name_or_pointer)
+    def find(name_or_pointer, opts={})
+      pointer = find_file(name_or_pointer, opts)
       return nil unless pointer
 
       @ruhoh.cache.get(pointer['realpath']) ||
