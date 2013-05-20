@@ -74,12 +74,12 @@ module Ruhoh::Resources::Pages
         ext  = ext.empty? ? @collection.config["ext"] : ext
 
         # filepath vs title
-        name = if file.include?('/')
-          name = File.basename(file, ext).gsub(/\s/, '-')
-          File.join(File.dirname(file), name)
-        else
-          Ruhoh::Utils.to_slug(File.basename(file, ext))
-        end
+        name =  if file.include?('/')
+                  name = File.basename(file, ext).gsub(/\s+/, '-')
+                  File.join(File.dirname(file), name)
+                else
+                  Ruhoh::Utils.to_slug(File.basename(file, ext))
+                end
 
         name = "#{name}-#{@iterator}" unless @iterator.zero?
         filename = opts[:draft] ?
