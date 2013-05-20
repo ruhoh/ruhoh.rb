@@ -110,7 +110,7 @@ module Ruhoh::Views
 
     def process_layouts
       if @page_data['layout']
-        @sub_layout = layouts.find(@page_data['layout'])
+        @sub_layout = layouts.find(@page_data['layout'], :all => true)
         raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
       elsif @page_data['layout'] != false
         # try default
