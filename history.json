@@ -1,5 +1,21 @@
 [
   {
+    "version" : "2.1",
+    "date" : "19.05.2013",
+    "changes" : [
+      "Major release. Internal logic has been drastically changed."
+    ],
+    "features" : [
+      "Support for arbitrary custom collections, e.g. ability to model essays, snippets, posts, etc.",
+      "Page finders can omit file extensions so you can reference the about.md file using 'about'.",
+      "All collections can have their own paginator.",
+      "themes and config.yml are optional implying very basic websites can be built without configuration overhead.",
+      "ruhoh environment is not instantiated, meaning everything exists in its own instance.",
+      "Improved cache management",
+      "Support for asset pipeline."
+    ]
+  },
+  {
     "version" : "1.1",
     "date" : "26.08.2012",
     "changes" : [
