@@ -181,7 +181,7 @@ module Ruhoh::Base
 
         date = Date.parse(page_data['date']) rescue nil
         if date
-          data.merge({
+          data.merge!({
             "year"       => date.strftime("%Y"),
             "month"      => date.strftime("%m"),
             "day"        => date.strftime("%d"),
