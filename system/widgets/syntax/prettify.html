@@ -1,12 +1,11 @@
 ---
-cdn: "http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js"
+cdn: false
 linenums : true
 ---
 
 <!-- Google Prettify -->
-
-<script src="{{ this_config.cdn }}"></script>
-
+{{# this_config.cdn }}<script src="{{ this_config.cdn }}"></script>{{/ this_config.cdn }}
+{{^ this_config.cdn }}<script src="{{this_path}}/javascripts/prettify.js"></script>{{/ this_config.cdn }}
 <script>
   var pres = document.getElementsByTagName("pre");
   for (var i=0; i < pres.length; ++i) {
