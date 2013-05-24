@@ -122,10 +122,6 @@ module Ruhoh::Base
       nil
     end
 
-    def formatted_date(date)
-      Time.parse(date.to_s).strftime('%Y-%m-%d') rescue false
-    end
-
     def parse_page_filename(filename)
       data = *filename.match(DateMatcher)
       data = *filename.match(Matcher) if data.empty?
@@ -179,8 +175,26 @@ module Ruhoh::Base
           "categories" => category || '',
         }
 
-        date = Date.parse(page_data['date']) rescue nil
-        if date
+        uses_date = false
+        %w{ :year :month :day :i_day :i_month }.each do |token|
+          if format.include?(token)
+            uses_date = true
+            break
+          end
+        end
+
+        if uses_date
+          begin
+            date = Time.parse(page_data['date'].to_s)
+          rescue ArgumentError, TypeError
+            Ruhoh.log.error(
+              "ArgumentError:" +
+              " The file '#{ @pointer["realpath"] }' has a permalink '#{ format }'" +
+              " which is date dependant but the date '#{page_data['date']}' could not be parsed." +
+              " Ensure the date's format is: 'YYYY-MM-DD'"
+            )
+          end
+
           data.merge!({
             "year"       => date.strftime("%Y"),
             "month"      => date.strftime("%m"),
