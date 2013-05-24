@@ -67,9 +67,9 @@ module Ruhoh::Resources::Pages
 
     def create(opts={})
       ruhoh = @ruhoh
-
       begin
         file = @args[2] || "untitled"
+        file = file.gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
         ext = File.extname(file).to_s
         ext  = ext.empty? ? @collection.config["ext"] : ext
 
