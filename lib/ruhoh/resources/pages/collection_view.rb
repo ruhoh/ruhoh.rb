@@ -39,11 +39,11 @@ module Ruhoh::Resources::Pages
       collated = []
       pages = all
       pages.each_with_index do |page, i|
-        thisYear = Time.parse(page['date']).strftime('%Y')
-        thisMonth = Time.parse(page['date']).strftime('%B')
+        thisYear = Time.parse(page['date'].to_s).strftime('%Y')
+        thisMonth = Time.parse(page['date'].to_s).strftime('%B')
         if (i-1 >= 0)
-          prevYear = Time.parse(pages[i-1]['date']).strftime('%Y')
-          prevMonth = Time.parse(pages[i-1]['date']).strftime('%B')
+          prevYear = Time.parse(pages[i-1]['date'].to_s).strftime('%Y')
+          prevMonth = Time.parse(pages[i-1]['date'].to_s).strftime('%B')
         end
 
         if(prevYear == thisYear) 
