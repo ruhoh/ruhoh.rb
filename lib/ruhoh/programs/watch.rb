@@ -33,6 +33,7 @@ class Ruhoh
           resource = path.split(separator)[0]
 
           ruhoh.cache.delete(ruhoh.collection(resource).files_cache_key)
+          ruhoh.cache.delete("#{ resource }-all")
 
           ruhoh.collection(resource).load_watcher.update(path)
         end

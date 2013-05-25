@@ -9,9 +9,11 @@ module Ruhoh::Resources::Pages
     include Ruhoh::Views::Helpers::Paginator
 
     def all
-      dictionary.each_value.find_all { |model|
-        File.basename(File.dirname(model.id)) != "drafts"
-      }.sort
+      ruhoh.cache.get("#{ resource_name }-all") ||
+        ruhoh.cache.set("#{ resource_name }-all", dictionary.each_value.find_all { |model|
+              File.basename(File.dirname(model.id)) != "drafts"
+            }.sort
+          )
     end
 
     def drafts
