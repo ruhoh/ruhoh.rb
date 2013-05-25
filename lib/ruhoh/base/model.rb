@@ -99,7 +99,12 @@ module Ruhoh::Base
 
       page = File.open(@pointer['realpath'], 'r:UTF-8') {|f| f.read }
 
-      front_matter = page.match(FMregex)
+      begin
+        front_matter = page.match(FMregex)
+      rescue => e
+        raise "Error trying to read meta-data from #{@pointer['realpath']}.  Check your folder configuration."
+      end
+        
       data = front_matter ?
         (YAML.load(front_matter[0].gsub(/---\n/, "")) || {}) :
         {}
