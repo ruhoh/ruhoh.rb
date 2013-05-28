@@ -1,4 +1,5 @@
 require 'sprockets'
+require 'forwardable'
 module Ruhoh::Resources::Javascripts
   class Previewer
     extend Forwardable
