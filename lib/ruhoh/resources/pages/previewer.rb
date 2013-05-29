@@ -55,10 +55,13 @@ module Ruhoh::Resources::Pages
       collection = @ruhoh.collection(resource)
       config = collection.config["paginator"] || {}
 
+      url = "#{config["url"]}/#{page_number}"
+      
       view = @ruhoh.master_view({"resource" => resource})
       view.page_data = {
         "layout" => config["layout"],
-        "current_page" => page_number
+        "current_page" => page_number,
+        "url" => @ruhoh.to_url(url)
       }
       view
     end
