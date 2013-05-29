@@ -94,9 +94,7 @@ module Ruhoh::Base
     #   in the content, return it.
     # - If summary_lines > 0, truncate after the first complete element where
     #   the number of summary lines is greater than summary_lines.
-    # - If summary_stop_at_header is true, stop before the first header that
-    #   is after some non-empty content. That is, include any headers at the
-    #   top of a post but not subsequent ones.
+    # - If summary_stop_at_header is true, stop before any headers.
     def summary
       # Parse the document
       content_doc = Nokogiri::HTML.fragment(content)
@@ -114,48 +112,30 @@ module Ruhoh::Base
 
       # Create the summary element.
       summary_doc = Nokogiri::XML::Node.new("div", Nokogiri::HTML::Document.new)
+      summary_doc["class"] = "summary"
 
-      # Tracks whether or not non-header content has been included.
-      content_included = false
-      # Tracks whether or not the summary has been truncated.
-      ellipsis = false
+      # All "heading" elements.
+      headings = Nokogiri::HTML::ElementDescription::HEADING + ["header", "hgroup"]
 
       content_doc.children.each do |node|
-        node_type = \
-          if Nokogiri::HTML::ElementDescription::HEADING.include? node.name then
-            :header
-          elsif node.text? and node.text.strip.empty? then
-            :empty
-          else
-            :content
-          end
-
-        if stop_at_header then
-          if node_type == :header then
-            # Don't break if no non-header content has been included.
-            if content_included then
-              ellipsis = true
-              break
-            end
-          elsif node_type == :content then
-            content_included = true
-          end
+        if stop_at_header and headings.include? node.name then
+          summary_doc["class"] += " ellipsis"
+          break
         end
-
 
         if line_limit > 0 and summary_doc.content.lines.length > line_limit then
           # Skip through leftover whitespace. Without this check, the summary
           # can be marked as ellipsis even if it isn't.
-          unless node_type == :empty then
-            ellipsis = true
+          unless node.text? and node.text.strip.empty? then
+            summary_doc["class"] += " ellipsis"
             break
+          else
+            next
           end
-        else
-          summary_doc << node
         end
-      end
 
-      summary_doc["class"] = ellipsis ? "summary ellipsis" : "summary"
+        summary_doc << node
+      end
 
       summary_doc.to_html
     end
