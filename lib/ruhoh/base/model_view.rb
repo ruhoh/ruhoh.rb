@@ -113,7 +113,7 @@ module Ruhoh::Base
       stop_at_header = @model.collection.config['summary_stop_at_header'] if stop_at_header.nil?
 
       # Create the summary element.
-      summary_doc = Nokogiri::XML::Node.new("span", Nokogiri::HTML::Document.new)
+      summary_doc = Nokogiri::XML::Node.new("div", Nokogiri::HTML::Document.new)
 
       # Tracks whether or not non-header content has been included.
       content_included = false
