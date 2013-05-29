@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 module Ruhoh::Base
   module ModelViewable
     def initialize(model)
@@ -87,41 +89,75 @@ module Ruhoh::Base
       id == @model.collection.master.page_data['id']
     end
     
-    # Truncate the page content relative to a line_count limit.
-    # This is optimized for markdown files in which content is largely
-    # blocked into chunks and separating by blank lines.
-    # The line_limit truncates content based on # of content-based lines,
-    # so blank lines don't count toward the limit.
-    # Always break the content on a blank line only so result stays formatted nicely.
+    # Generate a truncated summary.
+    # - If a summary element (`<tag class="summary">...</tag>`) is specified
+    #   in the content, return it.
+    # - If summary_lines > 0, truncate after the first complete element where
+    #   the number of summary lines is greater than summary_lines.
+    # - If summary_stop_at_header is true, stop before the first header that
+    #   is after some non-empty content. That is, include any headers at the
+    #   top of a post but not subsequent ones.
     def summary
-      line_limit = @model.collection.config['summary_lines']
-      line_count = 0
-      line_breakpoint = @model.content.lines.count
+      # Parse the document
+      content_doc = Nokogiri::HTML.fragment(content)
 
-      content.lines.each_with_index do |line, i|
-        if line =~ /^\s*$/  # line with only whitespace
-          if line_count >= line_limit
-            line_breakpoint = i
+      # Return a summary element if specified
+      summary_el = content_doc.at_css('.summary')
+      return summary_el.to_html unless summary_el.nil?
+
+      # Get the configuration parameters
+      # Default to the parameters provided in the page itself
+      line_limit = @model.data['summary_lines']
+      line_limit = @model.collection.config['summary_lines'] if line_limit.nil?
+      stop_at_header = @model.data['summary_stop_at_header']
+      stop_at_header = @model.collection.config['summary_stop_at_header'] if stop_at_header.nil?
+
+      # Create the summary element.
+      summary_doc = Nokogiri::XML::Node.new("span", Nokogiri::HTML::Document.new)
+
+      # Tracks whether or not non-header content has been included.
+      content_included = false
+      # Tracks whether or not the summary has been truncated.
+      ellipsis = false
+
+      content_doc.children.each do |node|
+        node_type = \
+          if Nokogiri::HTML::ElementDescription::HEADING.include? node.name then
+            :header
+          elsif node.text? and node.text.strip.empty? then
+            :empty
+          else
+            :content
+          end
+
+        if stop_at_header then
+          if node_type == :header then
+            # Don't break if no non-header content has been included.
+            if content_included then
+              ellipsis = true
+              break
+            end
+          elsif node_type == :content then
+            content_included = true
+          end
+        end
+
+
+        if line_limit > 0 and summary_doc.content.lines.length > line_limit then
+          # Skip through leftover whitespace. Without this check, the summary
+          # can be marked as ellipsis even if it isn't.
+          unless node_type == :empty then
+            ellipsis = true
             break
           end
         else
-          line_count += 1
+          summary_doc << node
         end
       end
 
-      summary = content.lines.to_a[0, line_breakpoint].join
+      summary_doc["class"] = ellipsis ? "summary ellipsis" : "summary"
 
-      # The summary may be missing some key items needed to render properly.
-      # So search the rest of the content and add it to the summary.
-      content.lines.drop(line_breakpoint).each do |line|
-        # Add lines containing destination urls.
-        if line =~ /^\[[^\]]+\]:/
-          summary << "\n#{line}"
-        end
-      end
-
-      summary = @model.collection.master.render(summary)
-      Ruhoh::Converter.convert(summary, id)
+      summary_doc.to_html
     end
 
     def next
