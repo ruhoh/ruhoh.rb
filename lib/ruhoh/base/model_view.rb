@@ -118,7 +118,7 @@ module Ruhoh::Base
       headings = Nokogiri::HTML::ElementDescription::HEADING + ["header", "hgroup"]
 
       content_doc.children.each do |node|
-        if stop_at_header && headings.include? node.name
+        if stop_at_header && headings.include?(node.name)
           summary_doc["class"] += " ellipsis"
           break
         end
