@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__), '..', 'previewer.rb')
 module Ruhoh::Resources::Javascripts
   class Previewer
     include Ruhoh::SprocketsPlugin::Previewer
