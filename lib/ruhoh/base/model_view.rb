@@ -118,15 +118,15 @@ module Ruhoh::Base
       headings = Nokogiri::HTML::ElementDescription::HEADING + ["header", "hgroup"]
 
       content_doc.children.each do |node|
-        if stop_at_header and headings.include? node.name then
+        if stop_at_header && headings.include? node.name
           summary_doc["class"] += " ellipsis"
           break
         end
 
-        if line_limit > 0 and summary_doc.content.lines.length > line_limit then
+        if line_limit > 0 && summary_doc.content.lines.to_a.length > line_limit
           # Skip through leftover whitespace. Without this check, the summary
           # can be marked as ellipsis even if it isn't.
-          unless node.text? and node.text.strip.empty? then
+          unless node.text? && node.text.strip.empty?
             summary_doc["class"] += " ellipsis"
             break
           else
