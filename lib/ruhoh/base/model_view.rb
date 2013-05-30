@@ -97,7 +97,8 @@ module Ruhoh::Base
     # - If summary_stop_at_header is true, stop before any headers.
     def summary
       # Parse the document
-      content_doc = Nokogiri::HTML.fragment(content)
+      full_content = @ruhoh.master_view(@model.pointer).render_content
+      content_doc = Nokogiri::HTML.fragment(full_content)
 
       # Return a summary element if specified
       summary_el = content_doc.at_css('.summary')
