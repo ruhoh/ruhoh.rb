@@ -9,14 +9,12 @@ module Ruhoh::Resources::Widgets
       model = find("#{ name }/#{ (widget_config['use'] || "default") }")
       return '' unless model
 
-      view = ruhoh.master_view({})
-
       # merge the config.yml data into the inline layout data.
       # Note this is reversing the normal hierarchy 
       # in that inline should always override config level.
       # However the inline in this case is set as implementation defaults 
       # and meant to be overridden by user specific data.
-      view.render(model.content, {
+      master.render(model.content, {
         "this_config" => model.data.merge(widget_config),
         "this_path" => ruhoh.to_url(url_endpoint, name)
       })
