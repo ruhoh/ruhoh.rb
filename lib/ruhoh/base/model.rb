@@ -219,7 +219,7 @@ module Ruhoh::Base
       end
 
       unless (page_data['permalink_ext'] || collection.config['permalink_ext'])
-        url = url.gsub(/index.html$/, '').gsub(/\.html$/, '')
+        url = url.gsub(/index.html$/, '').gsub(/\.html$/, '/')
       end
 
       url = '/' if url.empty?

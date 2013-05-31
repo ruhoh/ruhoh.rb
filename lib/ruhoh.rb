@@ -147,7 +147,6 @@ class Ruhoh
   def to_url(*args)
     url = base_path + args.join('/')
     url = url.gsub(/\/{2,}/, '/')
-    (url == "/") ? url : url.chomp('/')
   end
 
   def relative_path(filename)
@@ -256,3 +255,4 @@ class Ruhoh
     Collections.get_module_namespace_for(resource).const_get(:ModelView)
   end
 end
+
