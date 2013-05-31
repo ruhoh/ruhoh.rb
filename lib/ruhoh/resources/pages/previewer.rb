@@ -9,9 +9,6 @@ module Ruhoh::Resources::Pages
     def call(env)
       return favicon if env['PATH_INFO'] == '/favicon.ico'
 
-      # Always remove trailing slash if sent unless it's the root page.
-      env['PATH_INFO'].chomp!("/") unless env['PATH_INFO'] == "/"
-
       pointer = @ruhoh.routes.find(env['PATH_INFO'])
       Ruhoh::Friend.say {
         plain "- previewing page:"
@@ -21,7 +18,7 @@ module Ruhoh::Resources::Pages
       view = pointer ? @ruhoh.master_view(pointer) : paginator_view(env)
 
       if view
-        [200, {'Content-Type' => 'text/html'}, [view.render_full]]
+        [200, {'Content-Type' => 'text/html; charset=utf-8'}, [view.render_full]]
       else
         message = "No generated page URL matches '#{ env['PATH_INFO'] }'" +
           " using file pointer: '#{ pointer.inspect }'."
