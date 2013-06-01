@@ -102,7 +102,8 @@ module Ruhoh::Base
       begin
         front_matter = page.match(FMregex)
       rescue => e
-        raise "Error trying to read meta-data from #{@pointer['realpath']}.  Check your folder configuration."
+        raise "Error trying to read meta-data from #{@pointer['realpath']}." +
+        " Check your folder configuration.  Error details: #{e}"
       end
         
       data = front_matter ?
