@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 module Ruhoh::Base
   module ModelViewable
     def initialize(model)
@@ -87,41 +89,56 @@ module Ruhoh::Base
       id == @model.collection.master.page_data['id']
     end
     
-    # Truncate the page content relative to a line_count limit.
-    # This is optimized for markdown files in which content is largely
-    # blocked into chunks and separating by blank lines.
-    # The line_limit truncates content based on # of content-based lines,
-    # so blank lines don't count toward the limit.
-    # Always break the content on a blank line only so result stays formatted nicely.
+    # Generate a truncated summary.
+    # - If a summary element (`<tag class="summary">...</tag>`) is specified
+    #   in the content, return it.
+    # - If summary_lines > 0, truncate after the first complete element where
+    #   the number of summary lines is greater than summary_lines.
+    # - If summary_stop_at_header is true, stop before any headers.
     def summary
-      line_limit = @model.collection.config['summary_lines']
-      line_count = 0
-      line_breakpoint = @model.content.lines.count
+      # Parse the document
+      full_content = @ruhoh.master_view(@model.pointer).render_content
+      content_doc = Nokogiri::HTML.fragment(full_content)
 
-      content.lines.each_with_index do |line, i|
-        if line =~ /^\s*$/  # line with only whitespace
-          if line_count >= line_limit
-            line_breakpoint = i
+      # Return a summary element if specified
+      summary_el = content_doc.at_css('.summary')
+      return summary_el.to_html unless summary_el.nil?
+
+      # Get the configuration parameters
+      # Default to the parameters provided in the page itself
+      line_limit = @model.data['summary_lines']
+      line_limit = @model.collection.config['summary_lines'] if line_limit.nil?
+      stop_at_header = @model.data['summary_stop_at_header']
+      stop_at_header = @model.collection.config['summary_stop_at_header'] if stop_at_header.nil?
+
+      # Create the summary element.
+      summary_doc = Nokogiri::XML::Node.new("div", Nokogiri::HTML::Document.new)
+      summary_doc["class"] = "summary"
+
+      # All "heading" elements.
+      headings = Nokogiri::HTML::ElementDescription::HEADING + ["header", "hgroup"]
+
+      content_doc.children.each do |node|
+        if stop_at_header && headings.include?(node.name)
+          summary_doc["class"] += " ellipsis"
+          break
+        end
+
+        if line_limit > 0 && summary_doc.content.lines.to_a.length > line_limit
+          # Skip through leftover whitespace. Without this check, the summary
+          # can be marked as ellipsis even if it isn't.
+          unless node.text? && node.text.strip.empty?
+            summary_doc["class"] += " ellipsis"
             break
+          else
+            next
           end
-        else
-          line_count += 1
         end
+
+        summary_doc << node
       end
 
-      summary = content.lines.to_a[0, line_breakpoint].join
-
-      # The summary may be missing some key items needed to render properly.
-      # So search the rest of the content and add it to the summary.
-      content.lines.drop(line_breakpoint).each do |line|
-        # Add lines containing destination urls.
-        if line =~ /^\[[^\]]+\]:/
-          summary << "\n#{line}"
-        end
-      end
-
-      summary = @model.collection.master.render(summary)
-      Ruhoh::Converter.convert(summary, id)
+      summary_doc.to_html
     end
 
     def next

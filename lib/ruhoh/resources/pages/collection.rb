@@ -42,6 +42,7 @@ module Ruhoh::Resources::Pages
       hash['permalink'] ||= "/:path/:filename"
       hash['summary_lines'] ||= 20
       hash['summary_lines'] = hash['summary_lines'].to_i
+      hash['summary_stop_at_header'] ||= false
       hash['latest'] ||= 2
       hash['latest'] = hash['latest'].to_i
       hash['ext'] ||= ".md"
