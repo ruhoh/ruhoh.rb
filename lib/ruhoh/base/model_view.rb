@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'set'
 
 module Ruhoh::Base
   module ModelViewable
@@ -94,7 +95,10 @@ module Ruhoh::Base
     #   in the content, return it.
     # - If summary_lines > 0, truncate after the first complete element where
     #   the number of summary lines is greater than summary_lines.
-    # - If summary_stop_at_header is true, stop before any headers.
+    # - If summary_stop_at_header is a number n, stop before the nth header.
+    # - If summary_stop_at_header is true, stop before the first header after
+    #   content has been included. In other words, don't count headers at the
+    #   top of the page.
     def summary
       # Parse the document
       full_content = @ruhoh.master_view(@model.pointer).render_content
@@ -106,10 +110,11 @@ module Ruhoh::Base
 
       # Get the configuration parameters
       # Default to the parameters provided in the page itself
-      line_limit = @model.data['summary_lines']
-      line_limit = @model.collection.config['summary_lines'] if line_limit.nil?
-      stop_at_header = @model.data['summary_stop_at_header']
-      stop_at_header = @model.collection.config['summary_stop_at_header'] if stop_at_header.nil?
+      model_data = @model.data
+      collection_config = @model.collection.config
+      line_limit = model_data['summary_lines'] || collection_config['summary_lines']
+      stop_at_header = model_data['summary_stop_at_header']
+      stop_at_header = collection_config['summary_stop_at_header'] if stop_at_header.nil?
 
       # Create the summary element.
       summary_doc = Nokogiri::XML::Node.new("div", Nokogiri::HTML::Document.new)
@@ -118,10 +123,21 @@ module Ruhoh::Base
       # All "heading" elements.
       headings = Nokogiri::HTML::ElementDescription::HEADING + ["header", "hgroup"]
 
+
       content_doc.children.each do |node|
-        if stop_at_header && headings.include?(node.name)
-          summary_doc["class"] += " ellipsis"
-          break
+
+        if stop_at_header == true
+          # Detect first header after content
+          if not (headings.include?(node.name) && node.content.empty?)
+            stop_at_header = 1
+          end
+        elsif stop_at_header.is_a?(Integer) && headings.include?(node.name)
+          if stop_at_header > 1
+            stop_at_header -= 1;
+          else
+            summary_doc["class"] += " ellipsis"
+            break
+          end
         end
 
         if line_limit > 0 && summary_doc.content.lines.to_a.length > line_limit
