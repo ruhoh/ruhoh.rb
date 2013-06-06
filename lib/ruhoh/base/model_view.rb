@@ -44,10 +44,7 @@ module Ruhoh::Base
       this_data = __send__(attribute)
       other_data = other.__send__(attribute)
       if attribute == "date"
-        begin
-          this_data = Time.parse(this_data.to_s)
-          other_data = Time.parse(other_data.to_s)
-        rescue ArgumentError, TypeError
+        if this_data.nil? || other_data.nil?
           Ruhoh.log.error(
             "ArgumentError:" +
             " The '#{ @model.collection.resource_name }' collection is configured to sort based on 'date'" +
