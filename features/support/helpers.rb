@@ -56,6 +56,11 @@ def get_compiled_file(path)
 end
 
 def this_compiled_file
+  unless @filepath
+    raise "Your step definition is trying to reference 'this' compiled file" +
+          " but you haven't provided a file reference." +
+          " This probably just means using 'my compiled site should have the file \"sample.md\"' first."
+  end
   get_compiled_file(@filepath)
 end
 
