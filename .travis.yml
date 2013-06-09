@@ -2,10 +2,8 @@ language: ruby
 rvm:
   - 1.9.2
   - 1.9.3
-branches:
-  only:
-    - getting_tests_to_pass
-gemfile: Gemfile
+script: "bundle exec cucumber -r features"
 notifications:
   recipients:
     - ben.biddington@gmail.com
+    - plusjade@gmail.com
