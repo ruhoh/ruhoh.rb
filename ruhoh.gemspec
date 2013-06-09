@@ -20,6 +20,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'redcarpet', "~> 2.1"
   s.add_dependency 'nokogiri', "~> 1.5"
 
+  s.add_development_dependency 'cucumber'
+  s.add_development_dependency 'capybara'
+  s.add_development_dependency 'rspec-expectations'
+
   s.files = `git ls-files`.
               split("\n").
               sort.
