@@ -26,7 +26,7 @@ Feature: Data
         """
     When I compile my site
     Then my compiled site should have the file "index.html"
-      And this file should contain the content node "name:jade"
-      And this file should contain the content node "city:alhambra"
-      And this file should contain the content node "li:mango"
-      And this file should contain the content node "li:kiwi"
+      And this file should contain the content node "name|jade"
+      And this file should contain the content node "city|alhambra"
+      And this file should contain the content node "li|mango"
+      And this file should contain the content node "li|kiwi"

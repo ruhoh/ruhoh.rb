@@ -24,7 +24,7 @@ Feature: Page Conversion
       | essays/hello.md   |  #cookie dough |
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
-      And this file should contain the content node "h1:cookie dough"
+      And this file should contain the content node "h1|cookie dough"
 
   Scenario: Converting a .markdown document
     Given some files with values:
@@ -32,4 +32,4 @@ Feature: Page Conversion
       | essays/hello.markdown |  _cookie dough_ |
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
-      And this file should contain the content node "em:cookie dough"
+      And this file should contain the content node "em|cookie dough"

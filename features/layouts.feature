@@ -18,7 +18,7 @@ Feature: Layouts
       | essays/hello.md   | meepio |
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
-      And this file should contain the content node "div#minimal-layout:meepio"
+      And this file should contain the content node "div#minimal-layout|meepio"
 
   Scenario: Defining a layout in page metadata.
     Given some files with values:
@@ -27,7 +27,7 @@ Feature: Layouts
       | essays/hello.md   | meepio                  | custom  |
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
-      And this file should contain the content node "div#minimal-layout:meepio"
+      And this file should contain the content node "div#minimal-layout|meepio"
 
   Scenario: Defining a layout and sub layout.
     Given some files with values:
@@ -37,5 +37,5 @@ Feature: Layouts
       | essays/hello.md    | cookie dough                 | essays  |
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
-      And this file should contain the content node "div#minimal-layout:cookie dough"
-      And this file should contain the content node "div#minimal-sub-layout:cookie dough"
+      And this file should contain the content node "div#minimal-layout|cookie dough"
+      And this file should contain the content node "div#minimal-sub-layout|cookie dough"

@@ -31,8 +31,8 @@ Feature: Widgets
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
       And this file should have the content "Cool lesson"
-      And this file should have the content node "tracking:123"
-      And this file should have the content node "address:seattle"
+      And this file should have the content node "tracking|123"
+      And this file should have the content node "address|seattle"
 
   Scenario: Rendering a custom defined widget with configuration overrides
     Given the file "config.yml" with body:
@@ -61,10 +61,10 @@ Feature: Widgets
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
       And this file should have the content "Cool lesson"
-      And this file should have the content node "tracking:987"
-      And this file should have the content node "address:Berkeley"
-      And this file should NOT have the content node "tracking:123"
-      And this file should NOT have the content node "address:seattle"
+      And this file should have the content node "tracking|987"
+      And this file should have the content node "address|Berkeley"
+      And this file should NOT have the content node "tracking|123"
+      And this file should NOT have the content node "address|seattle"
 
   Scenario: Rendering a custom defined widget with assets
     Given the file "widgets/foo/default.html" with body:
@@ -79,5 +79,5 @@ Feature: Widgets
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
       And this file should have the content "Cool lesson"
-      And this file should have the content node "path:/assets/widgets/foo/style.css"
+      And this file should have the content node "path|/assets/widgets/foo/style.css"
       And my compiled site should have the file "assets/widgets/foo/style.css"
