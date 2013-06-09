@@ -40,7 +40,7 @@ end
 
 Then(/^this file (should|should NOT) (?:have|contain) the content node "(.*?)\|(.*?)"$/) do |matcher, node, content|
   if matcher == "should"
-    this_compiled_file.__send__(matcher, have_selector(node))
+    this_compiled_file.__send__(matcher, have_selector(node, visible: false))
   end
   Nokogiri::HTML(this_compiled_file).css(node).text.__send__(matcher, have_content(content))
 end
