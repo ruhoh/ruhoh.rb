@@ -15,7 +15,7 @@ module Ruhoh::Resources::Widgets
       # However the inline in this case is set as implementation defaults 
       # and meant to be overridden by user specific data.
       master.render(model.content, {
-        "this_config" => model.data.merge(widget_config),
+        "this_config" => Ruhoh::Utils.deep_merge(model.data, widget_config),
         "this_path" => ruhoh.to_url(url_endpoint, name)
       })
     end
