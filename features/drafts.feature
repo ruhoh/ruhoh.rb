@@ -5,16 +5,16 @@ Feature: Drafts
 
   Scenario: Defining a draft
     Given some files with values:
-      | file | body |
-      | essays/drafts/hello.md | |
+      | file |
+      | essays/drafts/hello.md |
     When I compile my site
     Then my compiled site should NOT have the file "essays/drafts/hello/index.html"
     Then my compiled site should NOT have the file "essays/hello/index.html"
 
   Scenario: Defining a nested draft
     Given some files with values:
-      | file | body |
-      | essays/one/two/drafts/hello.md |  |
+      | file |
+      | essays/one/two/drafts/hello.md |
     When I compile my site
     Then my compiled site should NOT have the file "essays/one/two/drafts/hello/index.html"
     Then my compiled site should NOT have the file "essays/one/two/hello/index.html"

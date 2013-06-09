@@ -1,4 +1,4 @@
-Feature: Tags
+Feature: Categories
   As a content publisher
   I want to add categories to pages
   so that I can better organize and provide better access to my content for my readers

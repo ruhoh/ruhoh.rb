@@ -1,7 +1,7 @@
 Feature: Data
   As a content publisher
   I want to define arbitrary data objects
-  so that I can use quickly display and iterate through this data within my content.
+  so I can quickly display and iterate through this data within my content
 
   Scenario: Defining a basic data structure in data.yml
     Given the file "data.yml" with body:

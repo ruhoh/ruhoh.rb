@@ -1,4 +1,4 @@
-# The following text samples are taken from "How the leopard got his sports" by Rudyard Kipling
+# The following text samples are taken from "How the leopard got his spots" by Rudyard Kipling
 # which, to my knowledge, is in the public domain. source: http://www.world-english.org/stories.htm
 Feature: Summary
   As a content publisher
