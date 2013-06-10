@@ -1,5 +1,28 @@
 [
   {
+    "version" : "2.2",
+    "date" : "09.06.2013",
+    "changes" : [
+      "@binaryphile updates google analytics tracking script",
+      "@stebalien overhauls page.summary internal implementation",
+    ],
+    "features" : [
+      "Cache the collection#all call to improve performance.",
+      "@stebalien introduces more powerful controls over page.summary",
+      "@lynnfaraday adds page.url to the previewer page data.",
+      "Add cucumber integration tests",
+      "@caspervonb adds system level widgets.syntax to act as unified syntax highlighting widget"
+    ],
+    "bugs" : [
+      "@tlupfer fixes date metadata not being substituted in permalinks",
+      "@stebalien fixes sprockets plugin",
+      "@caspervonb makes widgets compiler respect model excludes",
+      "Avoid data parse errors by always converting to string",
+      "Improve error messages for a few parse error cases",
+      "Fix widget config not deep merging with default widget config",
+    ]
+  },
+  {
     "version" : "2.1",
     "date" : "19.05.2013",
     "changes" : [
