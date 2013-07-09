@@ -30,6 +30,7 @@ class Ruhoh
 
       @ruhoh.setup
       @ruhoh.setup_paths
+      @ruhoh.setup_plugins
 
       return __send__(cmd) if respond_to?(cmd)
 
@@ -66,11 +67,10 @@ class Ruhoh
       resources += @ruhoh.collections.all.map {|name|
         collection = @ruhoh.collection(name)
         next unless collection.client?
-        next unless collection.client.const_defined?(:Help)
-        {
-          "name" => name,
-          "methods" => collection.client.const_get(:Help)
+        helps = collection.client.constants.inject([]) {
+          |acc,c| acc += collection.client.const_get(c) if c.to_s.start_with?('Help')
         }
+        { "name" => name, "methods" => helps } unless helps.empty?
       }.compact
 
       Ruhoh::Friend.say { 
