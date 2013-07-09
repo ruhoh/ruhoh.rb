@@ -230,8 +230,8 @@ module Ruhoh::Base
       "#{ resource_name }-files"
     end
 
-    def scaffold
-      pointer = find_file('_scaffold', all: true) || @ruhoh.find_file('_scaffold')
+    def scaffold file = '_scaffold'
+      pointer = find_file(file, all: true) || @ruhoh.find_file(file)
       return '' unless pointer
 
       File.open(pointer['realpath'], 'r:UTF-8') { |f| f.read }
