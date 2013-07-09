@@ -89,7 +89,9 @@ module Ruhoh::Resources::Pages
       end while File.exist?(filename)
 
       FileUtils.mkdir_p File.dirname(filename)
-      output = (@collection.scaffold || '').gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
+      output = (@collection.scaffold || '').
+                gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d')).
+                gsub('{{TITLE}}', file.gsub(/.*?\//, ''))
 
       File.open(filename, 'w:UTF-8') {|f| f.puts output }
 
