@@ -8,9 +8,10 @@ class Ruhoh
       
       def self.convert(content)
         require 'redcarpet'
-        markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(:with_toc_data => true),
+        markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(:with_toc_data => true, :encoding => 'UTF-8'),
           :autolink => true, 
           :fenced_code_blocks => true, 
+          :encoding => 'UTF-8'
         )
         markdown.render(content)
       end
