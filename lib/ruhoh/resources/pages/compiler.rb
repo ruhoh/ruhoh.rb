@@ -72,6 +72,7 @@ module Ruhoh::Resources::Pages
        xml.rss(:version => '2.0') {
          xml.channel {
            xml.title_ data['title']
+           xml.description_ (data['description'] ? data['description'] : data['title'])
            xml.link_ @ruhoh.config['production_url']
            xml.pubDate_ Time.now          
            pages.each do |page|
