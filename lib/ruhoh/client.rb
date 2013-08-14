@@ -30,6 +30,7 @@ class Ruhoh
 
       @ruhoh.setup
       @ruhoh.setup_paths
+      @ruhoh.setup_plugins
 
       return __send__(cmd) if respond_to?(cmd)
 
