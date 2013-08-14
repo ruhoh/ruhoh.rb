@@ -34,6 +34,15 @@ Then(/^my compiled site (should|should NOT) have the file "(.*?)"$/) do |matcher
   }
 end
 
+Then(/^my compiled site (should|should NOT) have the (?:directory|folder) "(.*?)"$/) do |matcher, path|
+  @filepath = path
+  FileUtils.cd(@ruhoh.paths.compiled) {
+    # Done this way so the error output is more informative.
+    files = Dir.glob("**/*").delete_if{ |a| File.file?(a) }
+    files.__send__(matcher, include(path)) 
+  }
+end
+
 Then(/^this file (should|should NOT) (?:have|contain) the content "(.*?)"$/) do |matcher, content|
   this_compiled_file.__send__(matcher, have_content(content))
 end
