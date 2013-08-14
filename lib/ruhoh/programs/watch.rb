@@ -27,15 +27,22 @@ class Ruhoh
             yellow "Watch [#{Time.now.strftime("%H:%M:%S")}] [Update #{path}] : #{args.size} files changed"
           }
 
-          separator = File::ALT_SEPARATOR ?
-                      %r{#{ File::SEPARATOR }|#{ File::ALT_SEPARATOR }} :
-                      File::SEPARATOR
-          resource = path.split(separator)[0]
+          if path == "config.yml"
+            ruhoh.config true
+          else
+            separator = File::ALT_SEPARATOR ?
+                        %r{#{ File::SEPARATOR }|#{ File::ALT_SEPARATOR }} :
+                        File::SEPARATOR
+            resource = path.split(separator)[0]
 
-          ruhoh.cache.delete(ruhoh.collection(resource).files_cache_key)
-          ruhoh.cache.delete("#{ resource }-all")
+            ruhoh.cache.delete(ruhoh.collection(resource).files_cache_key)
+            ruhoh.cache.delete("#{ resource }-all")
 
-          ruhoh.collection(resource).load_watcher.update(path)
+            puts("HERE", resource)
+
+            ruhoh.collection(resource).load_watcher.update(path)
+            puts(ruhoh.collection(resource))
+          end
         end
       end
 

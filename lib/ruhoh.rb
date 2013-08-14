@@ -60,7 +60,9 @@ class Ruhoh
     @collections.load(resource)
   end
 
-  def config
+  def config(reload=false)
+    return @config unless (reload or @config.nil?)
+
     config = Ruhoh::Utils.parse_yaml_file(@base, "config.yml") || {}
     config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : "compiled"
 
