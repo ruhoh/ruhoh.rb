@@ -63,13 +63,34 @@ module Ruhoh::Resources::Pages
       _list(@collection.all)
     end
 
+    # Public - renders the scaffold, if available, for this resource.
+    def render_scaffold
+      (@collection.scaffold || '')
+        .gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
+    end
+
     protected
 
     def create(opts={})
-      ruhoh = @ruhoh
+      filename = ensure_unique_filename(@args[2], opts)
+      FileUtils.mkdir_p File.dirname(filename)
 
+      File.open(filename, 'w:UTF-8') { |f| f.puts render_scaffold }
+
+      ruhoh = @ruhoh
+      resource_name = @collection.resource_name
+      Ruhoh::Friend.say { 
+        green "New #{resource_name}:"
+        green "  > #{ruhoh.relative_path(filename)}"
+        if opts[:draft]
+          plain "View drafts at the URL: /dash"
+        end
+      }
+    end
+
+    def ensure_unique_filename(original_filename, opts)
       begin
-        file = @args[2] || "untitled"
+        file = original_filename || "untitled"
         ext = File.extname(file).to_s
         ext  = ext.empty? ? @collection.config["ext"] : ext
 
@@ -78,7 +99,7 @@ module Ruhoh::Resources::Pages
                   name = File.basename(file, ext).gsub(/\s+/, '-')
                   File.join(File.dirname(file), name)
                 else
-                  Ruhoh::Utils.to_slug(File.basename(file, ext))
+                  Ruhoh::StringFormat.clean_slug(File.basename(file, ext))
                 end
 
         name = "#{name}-#{@iterator}" unless @iterator.zero?
@@ -88,19 +109,7 @@ module Ruhoh::Resources::Pages
         @iterator += 1
       end while File.exist?(filename)
 
-      FileUtils.mkdir_p File.dirname(filename)
-      output = (@collection.scaffold || '').gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
-
-      File.open(filename, 'w:UTF-8') {|f| f.puts output }
-
-      resource_name = @collection.resource_name
-      Ruhoh::Friend.say { 
-        green "New #{resource_name}:"
-        green "  > #{ruhoh.relative_path(filename)}"
-        if opts[:draft]
-          plain "View drafts at the URL: /dash"
-        end
-      }
+      filename
     end
 
     def _list(data)
