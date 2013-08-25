@@ -54,6 +54,29 @@ Feature: Page Permalinks
     When I compile my site
     Then my compiled site should have the file "essays/2012/1/2/hello/index.html"
 
+  Scenario: Custom permalink format in page metadata using explicit html extension
+    Given some files with values:
+    | file              | permalink      |
+    | essays/hello.md   | :filename.html |
+    When I compile my site
+    Then my compiled site should have the file "hello.html"
+
+  Scenario: Custom permalink format in page metadata using explicit convertable extension
+    Given some files with values:
+    | file              | permalink      |
+    | essays/hello.md   | :filename.md   |
+    When I compile my site
+    Then my compiled site should have the file "hello.md"
+
+  Scenario: Custom permalink format in page metadata using explicit arbitrary extension
+    Given some files with values:
+    | file              | permalink      |
+    | essays/hello.md   | :filename.derp |
+    When I compile my site
+    Then my compiled site should have the file "hello.derp"
+
+## Literal permalink
+
   Scenario: Literal permalink format in page metadata.
     Given some files with values:
     | file              | permalink | body |
