@@ -102,7 +102,7 @@ module Ruhoh::Base
     def summary
       # Parse the document
       full_content = @ruhoh.master_view(@model.pointer).render_content
-      content_doc = Nokogiri::HTML.fragment(full_content)
+      content_doc = Nokogiri::HTML.fragment(full_content, 'UTF-8')
 
       # Return a summary element if specified
       summary_el = content_doc.at_css('.summary')

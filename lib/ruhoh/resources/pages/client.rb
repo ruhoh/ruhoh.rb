@@ -63,13 +63,11 @@ module Ruhoh::Resources::Pages
       _list(@collection.all)
     end
 
-    protected
+    private
 
-    def create(opts={})
-      ruhoh = @ruhoh
-
+    def filename_and_title(s=nil,opts={})
       begin
-        file = @args[2] || "untitled"
+        file = s || "untitled"
         ext = File.extname(file).to_s
         ext  = ext.empty? ? @collection.config["ext"] : ext
 
@@ -87,9 +85,19 @@ module Ruhoh::Resources::Pages
           File.join(@ruhoh.paths.base, @collection.resource_name, "#{name}#{ext}")
         @iterator += 1
       end while File.exist?(filename)
+      [filename, file.gsub(/.*?\//, '')]
+    end
+
+    protected
+
+    def create(opts={})
+      ruhoh = @ruhoh
+      filename, title = filename_and_title @args[2], opts
 
       FileUtils.mkdir_p File.dirname(filename)
-      output = (@collection.scaffold || '').gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
+      output = (@collection.scaffold || '').
+                gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d')).
+                gsub('{{TITLE}}', title)
 
       File.open(filename, 'w:UTF-8') {|f| f.puts output }
 

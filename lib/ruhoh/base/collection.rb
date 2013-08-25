@@ -117,7 +117,7 @@ module Ruhoh::Base
     # The file hashes are collected in order 
     # so they will overwrite eachother if found.
 
-    # @param id [String, Array] Optional.
+    # @param fid [String, Array] Optional.
     #   Collect all files for a single data resource.
     #   Can be many files due to the cascade.
     # @param [block] Optional.
@@ -126,7 +126,7 @@ module Ruhoh::Base
     #   Return true/false for whether the file is valid/invalid.
     #
     # @return[Hash] dictionary of pointers.
-    def files(id=nil, &block)
+    def files(fid=nil, &block)
       return @ruhoh.cache.get(files_cache_key) if @ruhoh.cache.get(files_cache_key)
 
       dict = _all_files
@@ -230,8 +230,8 @@ module Ruhoh::Base
       "#{ resource_name }-files"
     end
 
-    def scaffold
-      pointer = find_file('_scaffold', all: true) || @ruhoh.find_file('_scaffold')
+    def scaffold file = '_scaffold'
+      pointer = find_file(file, all: true) || @ruhoh.find_file(file)
       return '' unless pointer
 
       File.open(pointer['realpath'], 'r:UTF-8') { |f| f.read }

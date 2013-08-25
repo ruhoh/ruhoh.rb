@@ -68,7 +68,7 @@ module Ruhoh::Resources::Pages
       Ruhoh::Friend.say { cyan "#{resource_name} RSS: (first #{limit} pages)" }
       data = @ruhoh.collection("data").dictionary
 
-      feed = Nokogiri::XML::Builder.new do |xml|
+      feed = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
        xml.rss(:version => '2.0') {
          xml.channel {
            xml.title_ data['title']
