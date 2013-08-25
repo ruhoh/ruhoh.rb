@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/ruhoh/ruhoh.rb.png?label=ready)](https://waffle.io/ruhoh/ruhoh.rb)  
 [![Build Status](https://travis-ci.org/ruhoh/ruhoh.rb.png?branch=master)](https://travis-ci.org/ruhoh/ruhoh.rb)
 
 ## Ruhoh is the Universal Static Blog API
