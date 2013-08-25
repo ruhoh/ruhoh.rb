@@ -43,7 +43,7 @@ module Ruhoh::Resources::Pages
     def titleize
       @collection.dictionary.each do |id, data|
         next unless File.basename(data['id']) =~ /^untitled/
-        new_name = Ruhoh::Utils.to_slug(data['title'])
+        new_name = Ruhoh::StringFormat.clean_slug(data['title'])
         new_file = "#{new_name}#{File.extname(data['id'])}"
         old_file = File.basename(data['id'])
         next if old_file == new_file

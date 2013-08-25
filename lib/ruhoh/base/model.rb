@@ -68,7 +68,7 @@ module Ruhoh::Base
 
       data['title'] = data['title'] || filename_data['title']
       data['date'] ||= filename_data['date'].to_s
-      data['url'] = permalink(data)
+      data['url'] = url(data)
       data['layout'] = collection.config['layout'] if data['layout'].nil?
 
       parsed_page['data'] = data
@@ -157,80 +157,19 @@ module Ruhoh::Base
         file_slug = @pointer['id'].split('/')[-2]
       end
 
-      file_slug.gsub(/[^\p{Word}+]/u, ' ').gsub(/\b\w/){$&.upcase}
+      Ruhoh::StringFormat.titleize(file_slug)
     end
 
-    # Another blatently stolen method from Jekyll
-    # The category is only the first one if multiple categories exist.
-    def permalink(page_data)
-      format = page_data['permalink'] || collection.config['permalink']
-      format ||= "/:path/:filename"
+    def url(page_data)
+      page_data['permalink_ext'] ||= collection.config['permalink_ext']
 
-      url = if format.include?(':')
-        title = Ruhoh::Utils.to_url_slug(page_data['title'])
-        filename = File.basename(page_data['id'])
-        category = Array(page_data['categories'])[0]
-        category = category.split('/').map {|c| Ruhoh::Utils.to_url_slug(c) }.join('/') if category
-        relative_path = File.dirname(page_data['id'])
-        relative_path = "" if relative_path == "."
-        data = {
-          "title"      => title,
-          "filename"   => filename,
-          "path"      => File.join(@pointer["resource"], relative_path),
-          "relative_path" => relative_path,
-          "categories" => category || '',
-        }
+      format = page_data['permalink'] ||
+               collection.config['permalink'] ||
+               "/:path/:filename"
 
-        uses_date = false
-        %w{ :year :month :day :i_day :i_month }.each do |token|
-          if format.include?(token)
-            uses_date = true
-            break
-          end
-        end
+      slug = Ruhoh::UrlSlug.new(page_data: page_data, format: format)
 
-        if uses_date
-          begin
-            date = Time.parse(page_data['date'].to_s)
-          rescue ArgumentError, TypeError
-            Ruhoh.log.error(
-              "ArgumentError:" +
-              " The file '#{ @pointer["realpath"] }' has a permalink '#{ format }'" +
-              " which is date dependant but the date '#{page_data['date']}' could not be parsed." +
-              " Ensure the date's format is: 'YYYY-MM-DD'"
-            )
-          end
-
-          data.merge!({
-            "year"       => date.strftime("%Y"),
-            "month"      => date.strftime("%m"),
-            "day"        => date.strftime("%d"),
-            "i_day"      => date.strftime("%d").to_i.to_s,
-            "i_month"    => date.strftime("%m").to_i.to_s,
-          })
-        end
-
-        data.inject(format) { |result, token|
-          result.gsub(/:#{Regexp.escape token.first}/, token.last)
-        }.gsub(/\/+/, "/")
-      else
-        # Use the literal permalink if it is a non-tokenized string.
-        format.gsub(/^\//, '').split('/').map {|p| CGI::escape(p) }.join('/')
-      end
-
-      # Only recognize extensions registered from a 'convertable' module.
-      # This means 'non-convertable' extensions should pass-through.
-      if Ruhoh::Converter.extensions.include?(File.extname(url))
-        url = url.gsub(%r{#{File.extname(url)}$}, '.html')
-      end
-
-      unless (page_data['permalink_ext'] || collection.config['permalink_ext'])
-        url = url.gsub(/index.html$/, '').gsub(/\.html$/, '')
-      end
-
-      url = '/' if url.empty?
-
-      @ruhoh.to_url(url)
+      @ruhoh.to_url(slug.generate)
     end
   end
 

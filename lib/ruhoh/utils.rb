@@ -21,18 +21,7 @@ class Ruhoh
       parts = parts.unshift(base) if base
       File.__send__(:join, parts)
     end    
-    
-    def self.to_url_slug(title)
-      CGI::escape self.to_slug(title)
-    end
-    
-    # My Post Title ===> my-post-title
-    def self.to_slug(title)
-      title = title.to_s.downcase.strip.gsub(/[^\p{Word}+]/u, '-')
-      title.gsub(/^\-+/, '').gsub(/\-+$/, '').gsub(/\-+/, '-')
-    end
-    
-    
+
     def self.report(name, collection, invalid)
       output = "#{collection.count}/#{collection.count + invalid.count} #{name} processed."
       if collection.empty? && invalid.empty?
@@ -73,17 +62,5 @@ class Ruhoh
 
       Object.module_eval("::#{$1}", __FILE__, __LINE__)
     end
-    
-    # Thanks ActiveSupport: http://stackoverflow.com/a/1509939/101940
-    def self.underscore(string)
-      string.
-      to_s.
-      gsub(/::/, '/').
-      gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-      gsub(/([a-z\d])([A-Z])/,'\1_\2').
-      tr("-", "_").
-      downcase
-    end
-    
   end
-end #Ruhoh
+end

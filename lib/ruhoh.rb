@@ -23,6 +23,8 @@ require 'ruhoh/views/master_view'
 require 'ruhoh/collections'
 require 'ruhoh/cache'
 require 'ruhoh/routes'
+require 'ruhoh/string_format'
+require 'ruhoh/url_slug'
 require 'ruhoh/programs/preview'
 
 class Ruhoh

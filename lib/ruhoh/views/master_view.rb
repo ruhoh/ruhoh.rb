@@ -93,7 +93,7 @@ module Ruhoh::Views
     # Handy for transforming ids into css-classes in your views.
     # @returns[String]
     def to_slug(sub_context)
-      Ruhoh::Utils.to_slug(sub_context)
+      Ruhoh::StringFormat.clean_slug(sub_context)
     end
     
     # Public: Formats the path to the compiled file based on the URL.
