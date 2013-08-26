@@ -1,10 +1,29 @@
 [
   {
+    "version" : "2.3",
+    "date" : "25.08.2013",
+    "changes" : [
+      "(Internal) Ruhoh::CleanUrl and Ruhoh::StringFormat better encapsulate url-slug generation.",
+      "(Internal) page.summary is now single-purpose Ruhoh::Summarizer service."
+    ],
+    "features" : [
+      "Add ability to use: 'ignore' to ignore a collection folder.",
+      "Add ability to use: 'static' to serve a collection folder staticly.",
+      "Add title into base scaffold if defined from CLI."
+    ],
+    "bugs" : [
+      "Fix plugins not running on the CLI.",
+      "Fix permalinks not persisting explicit extentions, e.g. .html",
+      "Expose urls.production and urls.production_url in the view."
+    ]
+  }
+  ,
+  {
     "version" : "2.2",
     "date" : "09.06.2013",
     "changes" : [
       "@binaryphile updates google analytics tracking script",
-      "@stebalien overhauls page.summary internal implementation",
+      "@stebalien overhauls page.summary internal implementation"
     ],
     "features" : [
       "Cache the collection#all call to improve performance.",
@@ -19,7 +38,7 @@
       "@caspervonb makes widgets compiler respect model excludes",
       "Avoid data parse errors by always converting to string",
       "Improve error messages for a few parse error cases",
-      "Fix widget config not deep merging with default widget config",
+      "Fix widget config not deep merging with default widget config"
     ]
   },
   {
