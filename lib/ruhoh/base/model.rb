@@ -39,7 +39,7 @@ module Ruhoh::Base
 
     def try(method)
       return __send__(method) if respond_to?(method)
-      return data[method] if data.key?(method.to_s)
+      return data[method.to_s] if data.key?(method.to_s)
       false
     end
   end
