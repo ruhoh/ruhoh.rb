@@ -67,6 +67,7 @@ module Ruhoh::Resources::Pages
     def render_scaffold
       (@collection.scaffold || '')
         .gsub('{{DATE}}', Time.now.strftime('%Y-%m-%d'))
+        .gsub('{{TITLE}}', @args[2])
     end
 
     protected
