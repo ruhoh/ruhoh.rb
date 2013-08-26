@@ -36,8 +36,8 @@ class Ruhoh
         # since presumably they define customized permalinks per singular resource.
         # Page-like resources are handled the root mapping below.
         ruhoh.collections.url_endpoints_sorted.each do |h|
-          # Omit base_path and theme because they are special use-cases.
-          next if %w{base_path theme}.include?(h["name"])
+          # Omit theme because they are special use-cases.
+          next if %w{ theme }.include?(h["name"])
           map h["url"] do
             collection = ruhoh.collection(h["name"])
             if collection.previewer?
