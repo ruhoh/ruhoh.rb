@@ -1,5 +1,5 @@
-require 'nokogiri'
 require 'set'
+require 'ruhoh/summarizer'
 
 module Ruhoh::Base
   module ModelViewable
@@ -89,72 +89,21 @@ module Ruhoh::Base
     def is_active_page
       id == @model.collection.master.page_data['id']
     end
-    
-    # Generate a truncated summary.
-    # - If a summary element (`<tag class="summary">...</tag>`) is specified
-    #   in the content, return it.
-    # - If summary_lines > 0, truncate after the first complete element where
-    #   the number of summary lines is greater than summary_lines.
-    # - If summary_stop_at_header is a number n, stop before the nth header.
-    # - If summary_stop_at_header is true, stop before the first header after
-    #   content has been included. In other words, don't count headers at the
-    #   top of the page.
+
     def summary
-      # Parse the document
-      full_content = @ruhoh.master_view(@model.pointer).render_content
-      content_doc = Nokogiri::HTML.fragment(full_content)
-
-      # Return a summary element if specified
-      summary_el = content_doc.at_css('.summary')
-      return summary_el.to_html unless summary_el.nil?
-
-      # Get the configuration parameters
-      # Default to the parameters provided in the page itself
       model_data = @model.data
       collection_config = @model.collection.config
-      line_limit = model_data['summary_lines'] || collection_config['summary_lines']
-      stop_at_header = model_data['summary_stop_at_header']
-      stop_at_header = collection_config['summary_stop_at_header'] if stop_at_header.nil?
 
-      # Create the summary element.
-      summary_doc = Nokogiri::XML::Node.new("div", Nokogiri::HTML::Document.new)
-      summary_doc["class"] = "summary"
+      line_limit = model_data['summary_lines'] ||
+                   collection_config['summary_lines']
+      stop_at_header = model_data['summary_stop_at_header'] ||
+                       collection_config['summary_stop_at_header']
 
-      # All "heading" elements.
-      headings = Nokogiri::HTML::ElementDescription::HEADING + ["header", "hgroup"]
-
-
-      content_doc.children.each do |node|
-
-        if stop_at_header == true
-          # Detect first header after content
-          if not (headings.include?(node.name) && node.content.empty?)
-            stop_at_header = 1
-          end
-        elsif stop_at_header.is_a?(Integer) && headings.include?(node.name)
-          if stop_at_header > 1
-            stop_at_header -= 1;
-          else
-            summary_doc["class"] += " ellipsis"
-            break
-          end
-        end
-
-        if line_limit > 0 && summary_doc.content.lines.to_a.length > line_limit
-          # Skip through leftover whitespace. Without this check, the summary
-          # can be marked as ellipsis even if it isn't.
-          unless node.text? && node.text.strip.empty?
-            summary_doc["class"] += " ellipsis"
-            break
-          else
-            next
-          end
-        end
-
-        summary_doc << node
-      end
-
-      summary_doc.to_html
+      Ruhoh::Summarizer.new({
+        content: @ruhoh.master_view(@model.pointer).render_content,
+        line_limit: line_limit,
+        stop_at_header: stop_at_header
+      }).generate
     end
 
     def next
