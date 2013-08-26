@@ -115,6 +115,7 @@ class Ruhoh
       urls = {}
       urls["base_path"] = @ruhoh.base_path
       urls["production_url"] = @ruhoh.config["production_url"]
+      urls["production"] = @ruhoh.config["production_url"]
 
       all.each do |name|
         collection = load(name)
