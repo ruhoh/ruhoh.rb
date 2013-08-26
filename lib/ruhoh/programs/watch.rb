@@ -38,10 +38,7 @@ class Ruhoh
             ruhoh.cache.delete(ruhoh.collection(resource).files_cache_key)
             ruhoh.cache.delete("#{ resource }-all")
 
-            puts("HERE", resource)
-
             ruhoh.collection(resource).load_watcher.update(path)
-            puts(ruhoh.collection(resource))
           end
         end
       end
