@@ -46,6 +46,7 @@ module Ruhoh::Resources::Pages
           view.page_data = {
             "layout" => config["layout"],
             "current_page" => (i+1),
+            "total_pages" => total_pages,
             "url" => @ruhoh.to_url(url)
           }
           FileUtils.mkdir_p File.dirname(view.compiled_path)
