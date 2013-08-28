@@ -1,20 +1,6 @@
 class Ruhoh
   module Utils
-    
-    FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
-    
-    def self.parse_yaml_file(*args)
-      filepath = File.__send__ :join, args
-      return nil unless File.exist? filepath
 
-      file = File.open(filepath, 'r:UTF-8') {|f| f.read }
-      yaml = YAML.load(file) || {}
-      yaml
-    rescue Psych::SyntaxError => e
-      Ruhoh.log.error("ERROR in #{filepath}: #{e.message}")
-      nil
-    end
-    
     def self.url_to_path(url, base=nil)
       url = url.gsub(/^\//, '')
       parts = url.split('/')

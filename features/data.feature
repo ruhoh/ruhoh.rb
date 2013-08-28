@@ -30,3 +30,34 @@ Feature: Data
       And this file should contain the content node "city|alhambra"
       And this file should contain the content node "li|mango"
       And this file should contain the content node "li|kiwi"
+
+  Scenario: Defining a basic data structure in data.json
+    Given the file "data.json" with body:
+      """
+      {
+        "address": {
+          "city": "alhambra"
+        }, 
+        "name": "jade", 
+        "fruits": [
+          "mango", 
+          "kiwi"
+        ]
+      }
+      """
+      And the file "_root/index.html" with body:
+        """
+        <name>{{ data.name }}</name>
+        <city>{{ data.address.city }}</city>
+        <ul>
+        {{# data.fruits }}
+          <li>{{ . }}</li>
+        {{/ data.fruits }}
+        </ul>
+        """
+    When I compile my site
+    Then my compiled site should have the file "index.html"
+      And this file should contain the content node "name|jade"
+      And this file should contain the content node "city|alhambra"
+      And this file should contain the content node "li|mango"
+      And this file should contain the content node "li|kiwi"
