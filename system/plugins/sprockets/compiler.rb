@@ -21,10 +21,9 @@ module Ruhoh::SprocketsPlugin
         env.append_path(path)
       end
 
-      compiled_path = Ruhoh::Utils.url_to_path(@ruhoh.to_url(collection.url_endpoint), @ruhoh.paths.compiled)
-      FileUtils.mkdir_p compiled_path
+      compile_collection_path
 
-      manifest = Sprockets::Manifest.new(env, compiled_path)
+      manifest = Sprockets::Manifest.new(env, @collection.compiled_path)
       assets = collection.files.values.map{ |p|
         Ruhoh::Friend.say { green "  > #{p['id']}" }
         p["id"]

@@ -143,6 +143,11 @@ class Ruhoh
       '/'
   end
 
+  def compiled_path(url)
+    path = File.expand_path(File.join(paths.compiled, url)).gsub(/\/{2,}/, '/')
+    CGI.unescape(path)
+  end
+
   # @config['base_path'] is assumed to be well-formed.
   # Always remove trailing slash.
   # Returns String - normalized url with prepended base_path

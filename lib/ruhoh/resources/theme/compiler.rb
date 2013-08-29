@@ -2,27 +2,14 @@ module Ruhoh::Resources::Theme
   class Compiler
     include Ruhoh::Base::Compilable
 
-    def run
-      copy
-    end
-
     # Copies all assets over to the compiled site.
     # Note the compiled assets are namespaced at /assets/
-    def copy
-      collection = @collection
-      unless @collection.paths?
-        Ruhoh::Friend.say { yellow "#{collection.resource_name.capitalize}: directory not found - skipping." }
-        return
-      end
-
-      Ruhoh::Friend.say { cyan "Theme: ('#{collection.resource_name}' copying non-resource files)" }
-
-      theme = Ruhoh::Utils.url_to_path(@collection.url_endpoint, @ruhoh.paths.compiled)
-      FileUtils.mkdir_p theme
+    def run
+      return unless setup_compilable
 
       self.files.each do |file|
         original_file = File.join(@ruhoh.paths.theme, file)
-        compiled_file = File.join(theme, file)
+        compiled_file = File.join(@collection.compiled_path, file)
         FileUtils.mkdir_p File.dirname(compiled_file)
         FileUtils.cp_r original_file, compiled_file
         Ruhoh::Friend.say { green "  > #{file}" }

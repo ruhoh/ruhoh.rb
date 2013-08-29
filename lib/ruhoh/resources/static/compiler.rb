@@ -9,19 +9,10 @@ module Ruhoh::Resources::Static
     #
     # @returns Nothing.
     def run
-      collection = @collection
-
-      unless @collection.paths?
-        Ruhoh::Friend.say { yellow "#{collection.resource_name.capitalize}: directory not found - skipping." }
-        return
-      end
-      Ruhoh::Friend.say { cyan "#{collection.resource_name.capitalize}: (copying valid files)" }
-
-      compiled_path = Ruhoh::Utils.url_to_path(@ruhoh.to_url(@collection.url_endpoint), @ruhoh.paths.compiled)
-      FileUtils.mkdir_p compiled_path
+      return unless setup_compilable
 
       @collection.files.values.each do |pointer|
-        compiled_file = File.join(compiled_path, pointer['id'])
+        compiled_file = File.join(@collection.compiled_path, pointer['id'])
 
         FileUtils.mkdir_p File.dirname(compiled_file)
         FileUtils.cp_r pointer['realpath'], compiled_file

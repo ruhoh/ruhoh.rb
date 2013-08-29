@@ -7,17 +7,16 @@ module Ruhoh::Resources::Pages
       pages = @collection.all
       resource_name = @collection.resource_name
       Ruhoh::Friend.say { cyan "#{resource_name.capitalize}: (#{pages.count} #{resource_name})" }
-      
-      FileUtils.cd(@ruhoh.paths.compiled) {
-        pages.each do |data|
-          view = @ruhoh.master_view(data['pointer'])
 
-          FileUtils.mkdir_p File.dirname(view.compiled_path)
-          File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
+      pages.each do |data|
+        view = @ruhoh.master_view(data['pointer'])
 
-          Ruhoh::Friend.say { green "  > #{data['id']}" }
-        end
-      }
+        FileUtils.mkdir_p File.dirname(view.compiled_path)
+        File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
+
+        Ruhoh::Friend.say { green "  > #{data['id']}" }
+      end
+
 
       pagination
       rss
@@ -35,24 +34,22 @@ module Ruhoh::Resources::Pages
       total_pages = (pages_count.to_f/config["per_page"]).ceil
 
       Ruhoh::Friend.say { cyan "#{resource_name} paginator: (#{total_pages} pages)" }
-      
-      FileUtils.cd(@ruhoh.paths.compiled) {
-        total_pages.times.map { |i| 
-          # if a root page is defined we assume it's getting compiled elsewhere.
-          next if (i.zero? && config["root_page"])
 
-          url = "#{config["url"]}/#{i+1}"
-          view = @ruhoh.master_view({"resource" => resource_name})
-          view.page_data = {
-            "layout" => config["layout"],
-            "current_page" => (i+1),
-            "total_pages" => total_pages,
-            "url" => @ruhoh.to_url(url)
-          }
-          FileUtils.mkdir_p File.dirname(view.compiled_path)
-          File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
-          Ruhoh::Friend.say { green "  > #{view.page_data['url']}" }
+      total_pages.times.map { |i| 
+        # if a root page is defined we assume it's getting compiled elsewhere.
+        next if (i.zero? && config["root_page"])
+
+        url = "#{config["url"]}/#{i+1}"
+        view = @ruhoh.master_view({"resource" => resource_name})
+        view.page_data = {
+          "layout" => config["layout"],
+          "current_page" => (i+1),
+          "total_pages" => total_pages,
+          "url" => @ruhoh.to_url(url)
         }
+        FileUtils.mkdir_p File.dirname(view.compiled_path)
+        File.open(view.compiled_path, 'w:UTF-8') { |p| p.puts view.render_full }
+        Ruhoh::Friend.say { green "  > #{view.page_data['url']}" }
       }
     end
 
@@ -89,15 +86,12 @@ module Ruhoh::Resources::Pages
        }
       end
 
-      FileUtils.cd(@ruhoh.paths.compiled) {
-        compiled_path = CGI.unescape(@ruhoh.to_url(config['url'], "rss.xml"))
-        compiled_path = compiled_path.gsub(/^\//, '')
+      compiled_path = @ruhoh.compiled_path(@ruhoh.to_url(config['url'], "rss.xml"))
 
-        FileUtils.mkdir_p File.dirname(compiled_path)
-        File.open(compiled_path, 'w'){ |p| p.puts feed.to_xml }
+      FileUtils.mkdir_p File.dirname(compiled_path)
+      File.open(compiled_path, 'w'){ |p| p.puts feed.to_xml }
 
-        Ruhoh::Friend.say { green "  > #{compiled_path}" }
-      }
+      Ruhoh::Friend.say { green "  > #{compiled_path}" }
     end
   end
 end

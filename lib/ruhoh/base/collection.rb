@@ -237,6 +237,10 @@ module Ruhoh::Base
       File.open(pointer['realpath'], 'r:UTF-8') { |f| f.read }
     end
 
+    def compiled_path
+      @compiled_path ||= @ruhoh.compiled_path(@ruhoh.to_url(url_endpoint))
+    end
+
     protected
 
     # Load the registered resource else default to Pages if not configured.

@@ -108,7 +108,7 @@ module Ruhoh::Views
     #
     # Returns: [String] The relative path to the compiled file for this page.
     def compiled_path
-      path = CGI.unescape(@page_data['url']).gsub(/^\//, '') #strip leading slash.
+      path = @ruhoh.compiled_path(@page_data['url'])
       path = "index.html" if path.empty?
       path += '/index.html' unless path =~ /\.\w+$/
       path

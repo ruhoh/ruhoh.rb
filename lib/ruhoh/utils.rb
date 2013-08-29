@@ -1,13 +1,6 @@
 class Ruhoh
   module Utils
 
-    def self.url_to_path(url, base=nil)
-      url = url.gsub(/^\//, '')
-      parts = url.split('/')
-      parts = parts.unshift(base) if base
-      File.__send__(:join, parts)
-    end    
-
     def self.report(name, collection, invalid)
       output = "#{collection.count}/#{collection.count + invalid.count} #{name} processed."
       if collection.empty? && invalid.empty?

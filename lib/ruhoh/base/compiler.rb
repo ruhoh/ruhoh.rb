@@ -9,6 +9,26 @@ module Ruhoh::Base
       @ruhoh = collection.ruhoh
       @collection = collection
     end
+
+    def setup_compilable
+      return false unless collection_exists?
+
+      compile_collection_path
+    end
+
+    def compile_collection_path
+      FileUtils.mkdir_p(@collection.compiled_path)
+    end
+
+    def collection_exists?
+      collection = @collection
+      unless @collection.paths?
+        Ruhoh::Friend.say { yellow "#{ collection.resource_name.capitalize }: directory not found - skipping." }
+        return false
+      end
+      Ruhoh::Friend.say { cyan "#{ collection.resource_name.capitalize }: (copying valid files)" }
+      true
+    end
   end
 
   module CompilableAsset
@@ -22,24 +42,15 @@ module Ruhoh::Base
     #
     # @returns Nothing.
     def run
-      collection = @collection
+      return unless setup_compilable
 
-      unless @collection.paths?
-        Ruhoh::Friend.say { yellow "#{collection.resource_name.capitalize}: directory not found - skipping." }
-        return
-      end
-      Ruhoh::Friend.say { cyan "#{collection.resource_name.capitalize}: (copying valid files)" }
-
-      compiled_path = Ruhoh::Utils.url_to_path(@ruhoh.to_url(@collection.url_endpoint), @ruhoh.paths.compiled)
-      FileUtils.mkdir_p compiled_path
-      
       manifest = {}
       @collection.files.values.each do |pointer|
         digest = Digest::MD5.file(pointer['realpath']).hexdigest
         digest_file = pointer['id'].sub(/\.(\w+)$/) { |ext| "-#{digest}#{ext}" }
         manifest[pointer['id']] = digest_file
 
-        compiled_file = File.join(compiled_path, digest_file)
+        compiled_file = File.join(@collection.compiled_path, digest_file)
         FileUtils.mkdir_p File.dirname(compiled_file)
         FileUtils.cp_r pointer['realpath'], compiled_file
         Ruhoh::Friend.say { green "  > #{pointer['id']}" }
