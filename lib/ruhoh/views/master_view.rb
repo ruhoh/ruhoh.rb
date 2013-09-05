@@ -3,7 +3,6 @@ require 'ruhoh/views/rmustache'
 module Ruhoh::Views
   module Helpers ; end
   class MasterView < RMustache
-    attr_reader :sub_layout, :master_layout
     attr_accessor :page_data
     
     def initialize(ruhoh, pointer_or_data)
@@ -27,8 +26,13 @@ module Ruhoh::Views
     end
 
     def render_full
-      process_layouts
-      render(expand_layouts)
+      if page_layouts.empty?
+        render_content
+      else
+        page_layouts.drop(1).reduce(render(page_layouts.first.content)) do |c, l|
+          render(l.content, :content => c)
+        end
+      end
     end
 
     def render_content
@@ -112,38 +116,31 @@ module Ruhoh::Views
 
     protected
 
-    def process_layouts
-      if @page_data['layout']
-        @sub_layout = layouts.find(@page_data['layout'], :all => true)
-        raise "Layout does not exist: #{@page_data['layout']}" unless @sub_layout
+    def page_layouts
+      return @page_layouts unless @page_layouts.nil?
+
+      layout = if @page_data['layout']
+        layouts.find(@page_data['layout'], :all => true) or raise "Layout does not exist: #{@page_data['layout']}"
       elsif @page_data['layout'] != false
         # try default
-        @sub_layout = layouts.find(@pointer["resource"], :all => true)
+        layouts.find(@pointer['resource'], :all => true)
       end
 
-      if @sub_layout && @sub_layout.layout
-        @master_layout = layouts.find(@sub_layout.layout)
-        raise "Layout does not exist: #{ @sub_layout.layout }" unless @master_layout
-      end
-    end
-
-    # Expand the layout(s).
-    # Pages may have a single master_layout, a master_layout + sub_layout, or no layout.
-    def expand_layouts
-      if @sub_layout
-        layout = @sub_layout.content
-
-        # If a master_layout is found we need to process the sub_layout
-        # into the master_layout using mustache.
-        if @master_layout && @master_layout.content
-          layout = render(@master_layout.content, {"content" => layout})
-        end
+      @page_layouts = if layout.nil?
+        []
       else
-        # Minimum layout if no layout defined.
-        layout = page ? '{{{ page.content }}}' : '{{{ content }}}'
-      end
+        page_layouts = [layout]
+        until layout.layout.nil?
+          layout = layouts.find(layout.layout) or raise "Layout does not exist: #{layout.layout}"
 
-      layout
+          raise "Layout cycle detected when rendering #{@pointer}: \n #{
+            (page_layouts<<layout).map{|l| l.pointer["realpath"]}.join("\n")
+          }" if page_layouts.include?(layout)
+
+          page_layouts << layout
+        end
+        page_layouts
+      end
     end
 
     private

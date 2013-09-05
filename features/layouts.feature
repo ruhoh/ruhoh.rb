@@ -39,3 +39,18 @@ Feature: Layouts
     Then my compiled site should have the file "essays/hello/index.html"
       And this file should contain the content node "div#minimal-layout|cookie dough"
       And this file should contain the content node "div#minimal-sub-layout|cookie dough"
+
+  Scenario: Defining more than two layouts.
+    Given some files with values:
+      | file               | body                                                           | layout  |
+      | layouts/outer.md | <div id="minimal-outer-layout">outer {{{ content }}}</div>                 |         |
+      | layouts/inner.md   | <div id="minimal-inner-layout">inner {{{ content }}}</div>           | outer |
+      | layouts/essays.md  | <div id="minimal-layout">{{{ content }}}</div>             | inner   |
+      | essays/hello.md    | cookie dough                                                   | essays  |
+    When I compile my site
+    Then my compiled site should have the file "essays/hello/index.html"
+      And this file should contain the content node "div#minimal-outer-layout|inner"
+      And this file should contain the content node "div#minimal-inner-layout|cookie dough"
+      And this file should NOT contain the content node "div#minimal-inner-layout|outer"
+      And this file should NOT contain the content node "div#minimal-layout|outer"
+      And this file should NOT contain the content node "div#minimal-layout|inner"
