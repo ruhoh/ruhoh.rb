@@ -146,7 +146,7 @@ class Ruhoh
         else
           klass = camelize(type)
           Friend.say {
-            red "#{resource} resource set to use:'#{type}' in config.yml but Ruhoh::Resources::#{klass} does not exist."
+            red "#{resource} resource set to use:'#{type}' in config but Ruhoh::Resources::#{klass} does not exist."
           }
           abort
         end

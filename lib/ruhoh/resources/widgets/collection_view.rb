@@ -9,7 +9,7 @@ module Ruhoh::Resources::Widgets
       model = find("#{ name }/#{ (widget_config['use'] || "default") }")
       return '' unless model
 
-      # merge the config.yml data into the inline layout data.
+      # merge the config data into the inline layout data.
       # Note this is reversing the normal hierarchy 
       # in that inline should always override config level.
       # However the inline in this case is set as implementation defaults 

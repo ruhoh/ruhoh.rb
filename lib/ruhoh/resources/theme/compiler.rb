@@ -39,7 +39,7 @@ module Ruhoh::Resources::Theme
       }
     end
 
-    # Checks a given asset filepath against any user-defined exclusion rules in theme.yml
+    # Checks a given asset filepath against any user-defined exclusion rules in config
     # Omit layouts, stylesheets, javascripts, media as they are handled by their respective resources.
     # @returns[Boolean]
     def is_valid_asset?(filepath)

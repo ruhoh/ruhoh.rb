@@ -47,7 +47,6 @@ module Ruhoh::Base
   module PageLike
     include Modelable
 
-    FMregex = /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
     DateMatcher = /^(.+\/)*(\d+-\d+-\d+)-(.*)(\.[^.]+)$/
     Matcher = /^(.+\/)*(.*)(\.[^.]+)$/
 
@@ -88,44 +87,17 @@ module Ruhoh::Base
       !!@pointer['realpath']
     end
 
-    # Primary method to parse the file as a page-like object.
-    # File API is currently defines:
-    #   1. Top YAML meta-data
-    #   2. Page Body
-    #
+    # See Ruhoh::Parse.page_file
     # @returns[Hash Object] processed top meta-data, raw (unconverted) content body
     def parse_page_file
       raise "File not found: #{@pointer['realpath']}" unless File.exist?(@pointer['realpath'])
-
-      page = File.open(@pointer['realpath'], 'r:UTF-8') {|f| f.read }
-
-      begin
-        front_matter = page.match(FMregex)
-      rescue => e
-        raise "Error trying to read meta-data from #{@pointer['realpath']}." +
-        " Check your folder configuration.  Error details: #{e}"
-      end
-        
-      data = front_matter ?
-        (YAML.load(front_matter[0].gsub(/---\n/, "")) || {}) :
-        {}
-
-      result = {
-        "data" => data,
-        "content" => page.gsub(FMregex, '')
-      }
+      result = Ruhoh::Parse.page_file(@pointer['realpath'])
 
       # variable cache
-      @data = data
+      @data = result["data"]
       @content = result['content']
 
       result
-    rescue Psych::SyntaxError => e
-      Ruhoh.log.error("Psych::SyntaxError while parsing top YAML Metadata in #{ @pointer['realpath'] }\n" +
-        "#{ e.message }\n" +
-        "Try validating the YAML metadata using http://yamllint.com"
-      )
-      nil
     end
 
     def parse_page_filename(filename)

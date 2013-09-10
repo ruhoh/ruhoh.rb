@@ -81,7 +81,7 @@ module Ruhoh::Base
     def config
       config = @ruhoh.config[resource_name] || {}
       unless config.is_a?(Hash)
-        Ruhoh.log.error("'#{resource_name}' config key in config.yml" +
+        Ruhoh.log.error("'#{resource_name}' config key in config" +
                         " is a #{config.class}; it needs to be a Hash (object).")
       end
       config
@@ -251,7 +251,7 @@ module Ruhoh::Base
         else
           klass = camelize(type)
           Friend.say {
-            red "#{resource_name} resource set to use:'#{type}' in config.yml" +
+            red "#{resource_name} resource set to use:'#{type}' in config" +
                 " but Ruhoh::Resources::#{klass} does not exist."
           }
           abort

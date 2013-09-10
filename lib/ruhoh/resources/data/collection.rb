@@ -3,7 +3,7 @@ module Ruhoh::Resources::Data
     include Ruhoh::Base::Collectable
 
     def dictionary
-      Ruhoh::Utils.parse_yaml_file(@ruhoh.paths.base, "#{resource_name}.yml") || {}
+      Ruhoh::Parse.data_file(@ruhoh.paths.base, resource_name) || {}
     end
   end
 end
