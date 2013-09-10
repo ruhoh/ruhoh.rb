@@ -146,6 +146,10 @@ class Ruhoh
   end
 
   def compiled_path(url)
+    if config['compile_as_root']
+      url = url.gsub(/^#{ base_path.chomp('/') }\/?/, '')
+    end
+
     path = File.expand_path(File.join(paths.compiled, url)).gsub(/\/{2,}/, '/')
     CGI.unescape(path)
   end
