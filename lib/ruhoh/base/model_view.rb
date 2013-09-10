@@ -1,4 +1,3 @@
-require 'set'
 require 'ruhoh/summarizer'
 
 module Ruhoh::Base

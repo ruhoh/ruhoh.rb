@@ -47,7 +47,7 @@ class Ruhoh
     end
 
     def all
-      (discover + registered).uniq
+      (discover + registered).to_a
     end
 
     def base
@@ -67,12 +67,19 @@ class Ruhoh
     end
 
     # discover all the resource mappings
+    # @return[Set]
     def discover
-      FileUtils.cd(@ruhoh.base) {
-        return Dir['*'].select { |x| 
-          File.directory?(x) && !["plugins", 'compiled'].include?(x)
-        }
-      }
+      results = Set.new
+
+      @ruhoh.cascade.each do |h|
+        FileUtils.cd(h["path"]) do
+          results += Dir['*'].select { |x|
+            File.directory?(x) && !["plugins", 'compiled'].include?(x)
+          }
+        end
+      end
+
+      results
     end
 
     def acting_as_pages

@@ -8,6 +8,7 @@ require 'ostruct'
 require 'delegate'
 require 'digest'
 require 'observer'
+require 'set'
 
 require 'mustache'
 
