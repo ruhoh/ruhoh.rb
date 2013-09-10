@@ -56,7 +56,6 @@ class Ruhoh
     end
 
     def self.yaml(file)
-      puts "YAML parser"
       YAML.load(file) || {}
     rescue Psych::SyntaxError => e
       Ruhoh.log.error("ERROR in #{filepath}: #{e.message}")
@@ -64,12 +63,10 @@ class Ruhoh
     end
 
     def self.json(file)
-      puts "JSON parser"
       JSON.load(file) || {}
     end
 
     def self.yaml_for_pages(front_matter, filepath)
-      puts "YAML frontmatter"
       return {} unless front_matter
       YAML.load(front_matter[0].gsub(/---\n/, "")) || {}
     rescue Psych::SyntaxError => e
@@ -81,7 +78,6 @@ class Ruhoh
     end
 
     def self.json_for_pages(front_matter, filepath)
-      puts "JSON frontmatter"
       return {} unless front_matter
       JSON.load(front_matter[0]) || {}
     end
