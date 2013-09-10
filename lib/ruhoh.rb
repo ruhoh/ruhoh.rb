@@ -1,8 +1,5 @@
 # encoding: UTF-8
 Encoding.default_internal = 'UTF-8'
-require 'yaml'
-require 'psych'
-YAML::ENGINE.yamler = 'psych'
 require 'json'
 require 'time'
 require 'cgi'
@@ -17,6 +14,7 @@ require 'mustache'
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
+require 'ruhoh/parse'
 
 require 'ruhoh/converter'
 require 'ruhoh/views/master_view'
@@ -65,7 +63,7 @@ class Ruhoh
   def config(reload=false)
     return @config unless (reload or @config.nil?)
 
-    config = Ruhoh::Utils.parse_yaml_file(@base, "config.yml") || {}
+    config = Ruhoh::Parse.data_file(@base, "config") || {}
     config['compiled'] = config['compiled'] ? File.expand_path(config['compiled']) : "compiled"
 
     config['_root'] ||= {}

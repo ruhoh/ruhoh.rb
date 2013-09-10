@@ -40,11 +40,17 @@ def make_file(opts)
   metadata = data.empty? ? '' : data.to_yaml.to_s + "\n---\n"
 
   File.open(path, "w+") { |file|
-    file.puts <<-TEXT
+    if metadata.empty?
+      file.puts <<-TEXT
+#{ opts[:body] }
+TEXT
+    else
+      file.puts <<-TEXT
 #{ metadata }
 
 #{ opts[:body] }
 TEXT
+    end
   }
 end
 

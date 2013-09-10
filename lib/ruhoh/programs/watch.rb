@@ -27,7 +27,7 @@ class Ruhoh
             yellow "Watch [#{Time.now.strftime("%H:%M:%S")}] [Update #{path}] : #{args.size} files changed"
           }
 
-          if path == "config.yml"
+          if %w{ config.json config.yml config.yaml }.include?(path)
             ruhoh.config true
           else
             separator = File::ALT_SEPARATOR ?
