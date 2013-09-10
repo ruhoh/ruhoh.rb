@@ -138,9 +138,11 @@ class Ruhoh
   end
 
   def base_path
-    (env == 'production') ?
-      config['base_path'] :
-      '/'
+    return '/' unless (env == 'production')
+
+    string = config['base_path'].chomp('/').reverse.chomp('/').reverse
+    return '/' if string.empty? || string == '/'
+    "/#{ string }/"
   end
 
   def compiled_path(url)
