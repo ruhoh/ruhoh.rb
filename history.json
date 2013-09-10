@@ -1,5 +1,27 @@
 [
   {
+    "version" : "2.4",
+    "date" : "10.09.2013",
+    "changes" : [
+      "(Internal) Add Ruhoh::Parse service to parse various file formats.",
+      "Remove psych gem dependency for yaml parsing. Native yaml lib should still work for ruby 1.9.2+"
+    ],
+    "features" : [
+      "@stebalien exposes total_pages in pagination view.",
+      "@stebalien adds spport for unlimited nested sub-layouts.",
+      "Support JSON data-type in config, data, and page metadata.",
+      "Add 'compile_as_root' configuration setting to automated hosting on sub-directory style web-hosts."
+    ],
+    "bugs" : [
+      "Don't choke on 'theme' check if them config not formatted correctly.",
+      "Ensure base_path is well-formed with leading and trailing slash.",
+      "Expose urls.production and urls.production_url in the view.",
+      "data.yml/data.json should be discoverable on every cascade level.",
+      "Allow collections to be discoverable from all cascade levels."
+    ]
+  }
+  ,
+  {
     "version" : "2.3",
     "date" : "25.08.2013",
     "changes" : [
