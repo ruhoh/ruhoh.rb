@@ -236,7 +236,7 @@ class Ruhoh
     dict[key] || dict.values.find{ |a| key == a['id'].gsub(/.[^.]+$/, '') }
   end
 
-  # Collect all files from the base bascade directories.
+  # Collect all files from the base cascade directories.
   # @return[Hash] dictionary of file pointers
   def _all_files
     dict = {}
