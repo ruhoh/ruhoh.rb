@@ -1,7 +1,7 @@
+require 'benchmark'
+
 require 'ruhoh/programs/compile'
 require 'ruhoh/console_methods'
-require 'irb'
-require 'benchmark'
 
 module Ruhoh::Publish; end
 Dir[File.join(File.dirname(__FILE__), 'publish', '*.rb')].each { |f|
@@ -34,9 +34,12 @@ class Ruhoh
       @args = data[:args]
       @options = data[:options]
       @opt_parser = data[:opt_parser]
-      @ruhoh = Ruhoh.new
+
       cmd = (@args[0] == 'new') ? 'blog' : (@args[0] || 'help')
 
+      return server if %w(s serve server).include?(cmd)
+
+      @ruhoh = Ruhoh.new
       @ruhoh.setup
       @ruhoh.setup_paths
       @ruhoh.setup_plugins
@@ -60,6 +63,7 @@ class Ruhoh
 
     # Thanks rails! https://github.com/rails/rails/blob/master/railties/lib/rails/commands/console.rb
     def console
+      require 'irb'
       require 'pp'
       Ruhoh::ConsoleMethods.env = @args[1]
       IRB::ExtendCommandBundle.send :include, Ruhoh::ConsoleMethods
@@ -111,6 +115,16 @@ class Ruhoh
         Ruhoh::Program.compile(@args[1])
       }
     end
+
+    def server
+      require 'rack'
+      Rack::Server.start({ 
+        app: Ruhoh::Program.preview,
+        Port: (@args[1] || 9292)
+      })
+    end
+    alias_method :s, :server
+    alias_method :serve, :server
 
     def publish
       service = @args[1].to_s.downcase.capitalize
