@@ -14,7 +14,7 @@ class Ruhoh
       front_matter = nil
       format = nil
       page = File.open(filepath, 'r:UTF-8') { |f| f.read }
-      first_line = page.lines.first
+      first_line = page.lines.first.to_s
 
       begin
         if (first_line.strip == '---')
