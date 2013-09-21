@@ -1,4 +1,5 @@
 require 'ruhoh/views/rmustache'
+require 'ruhoh/views/helpers/simple_proxy'
 
 module Ruhoh::Views
   module Helpers ; end
@@ -103,7 +104,16 @@ module Ruhoh::Views
     def to_slug(sub_context)
       Ruhoh::StringFormat.clean_slug(sub_context)
     end
-    
+
+    def gist
+      @gist ||= Ruhoh::Views::Helpers::SimpleProxy.new({
+        matcher: /^[0-9]+$/,
+        function: -> input {
+          "<script src=\"https://gist.github.com/#{ input }.js\"></script>"
+        }
+      })
+    end
+
     # Public: Formats the path to the compiled file based on the URL.
     #
     # Returns: [String] The relative path to the compiled file for this page.

@@ -10,8 +10,20 @@ cdn:
 {{^ this_config.cdn.enable }}<script src="{{this_path}}/javascripts/prettify.js"></script>{{/ this_config.cdn.enable }}
 <script>
   var pres = document.getElementsByTagName("pre");
+  var is_gist_present = document.getElementsByClassName("gist"); is_gist_present = is_gist_present.length > 0;
+
   for (var i=0; i < pres.length; ++i) {
-    pres[i].className = "prettyprint {{# this_config.linenums }}linenums{{/this_config.linenums}}";
+    var is_valid;
+    if(is_gist_present) {
+      is_valid = pres[i].getElementsByTagName("code"); 
+      is_valid = (is_valid.length > 0);
+    } else {
+      is_valid = true;
+    }
+
+    if(is_valid) {
+      pres[i].className = "prettyprint {{# this_config.linenums }}linenums{{/this_config.linenums}}";
+    }
   }
   prettyPrint();
 </script>
