@@ -116,7 +116,7 @@ module Ruhoh::Resources::Pages
     def _list(data)
       if @options.verbose
         Ruhoh::Friend.say {
-          data.each_value do |p|
+          data.each do |p|
             cyan("- #{p['id']}")
             plain("  title: #{p['title']}") 
             plain("  url: #{p['url']}")
