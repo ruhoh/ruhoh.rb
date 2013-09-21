@@ -3,9 +3,8 @@ module Ruhoh::Resources::Partials
     include Ruhoh::Base::Modelable
 
     def process
-      return File.open(@pointer['realpath'], 'r:UTF-8') { |f| 
-        return f.read
-      }
+      content = File.open(@pointer['realpath'], 'r:UTF-8') { |f| f.read }
+      Ruhoh::Converter.convert(content, @pointer['id'])
     end
   end
 end
