@@ -1,3 +1,4 @@
+require 'ruhoh/ui/page_not_found'
 # Public: Rack application used to render singular pages via their URL.
 module Ruhoh::Resources::Pages
   class Previewer
@@ -23,16 +24,7 @@ module Ruhoh::Resources::Pages
       if view
         [200, {'Content-Type' => 'text/html'}, [view.render_full]]
       else
-        message = "No generated page URL matches '#{ env['PATH_INFO'] }'" +
-          " using file pointer: '#{ pointer.inspect }'."
-
-        if pointer.nil?
-          message += " Since the file pointer was nil" +
-            " we tried to load a pagination view but it didn't work;" +
-            "\n Expected the format to be: '<valid_resource_name>/page_number'"
-        end
-
-        raise message
+        Ruhoh::UI::PageNotFound.new(@ruhoh, pointer).call(env)
       end
     end
 

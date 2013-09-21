@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        margin:0;
+        padding:0;
+        font-family: monospace;
+        color: #424254;
+      }
+      h1, h2, h3, h4, h5 {
+        line-height: 1.2em;
+      }
+      div, p, ul {
+        line-height: 1.5em;
+      }
+      textarea {
+        display:block;
+        height:250px;
+        width:100%;
+        padding:0;
+        border:1px solid #ccc;
+      }
+      button {
+        font-size:1.4em;
+        width:100%;
+        padding:5px;
+        cursor: pointer;
+      }
+
+      #wrapper {
+        padding:20px;
+      }
+      .pane {
+        display:inline-block;
+        width:45%;
+        vertical-align: top;
+      }
+      .error {
+        color: #CC2A41;
+      }
+      #heading {
+        background-color: #CC2A41;
+        color:#FFF;
+        padding: 10px 20px;
+        margin:0;
+        font-weight: normal;
+      }
+      .success {
+        background-color: #64908A;
+        color:#FFF;
+        border:0;
+      }
+      .success:hover {
+        background-color: hsl(172, 18%, 38%)
+      }
+      pre, code {
+        background-color: #eee;
+        padding:3px;
+      }
+    </style>
+  <head>
+  </body>
+    <h1 id="heading">o_O | No generated page URL matches: {{ url }}</h1>
+    <div id="wrapper">
+      <p>
+        {{# pointer }}
+          Using file pointer:
+          <br>
+          <code>{{ pointer.inspect }}</code>
+        {{/ pointer }}
+      </p>
+
+      <p>
+        <strong class="error">NOTE:</strong>
+        <strong>{{ filepath }}</strong> <em>probably</em> represents this URL. We can't be sure as you may have set custom permalinks,
+        <br>but we figure we'd try to help anyway. This service will get better in time ^_^!
+      </p>
+      <div class="pane" style="margin-right:3%">
+        <h2>Create Page Automatically:</h2>
+        <form method="POST">
+          <textarea name="body">{{ content }}</textarea>
+          <button type="submit" class="success">YES - create {{ filepath }} now.</button>
+        </form>
+      </div>
+
+      <div class="pane">
+        <h2>Create Page Manually:</h2>
+        <pre><code>{{ filepath }}</code></pre>
+
+        <p>Write some sample markdown inside the file:</p>
+        <pre><code>{{ content }}</code></pre>
+
+        <p>
+          Save changes and reload the page: <a href="{{ url }}">{{ url }}</a>
+          <br>You should see the updated content =D.
+        </p>
+      </div>
+
+    </div>
+  </body>
+</html>
