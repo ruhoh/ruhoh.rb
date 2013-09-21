@@ -3,6 +3,11 @@ require 'ruhoh/console_methods'
 require 'irb'
 require 'benchmark'
 
+module Ruhoh::Publish; end
+Dir[File.join(File.dirname(__FILE__), 'publish', '*.rb')].each { |f|
+  require f
+}
+
 class Ruhoh
 
   class Client
@@ -15,6 +20,10 @@ class Ruhoh
       {
         "command" => "compile",
         "desc" => "Compile to static website."
+      },
+      {
+        "command" => "publish <service>",
+        "desc" => "Publish site using a given service library"
       },
       {
         "command" => "help",
@@ -101,6 +110,27 @@ class Ruhoh
       puts Benchmark.measure {
         Ruhoh::Program.compile(@args[1])
       }
+    end
+
+    def publish
+      service = @args[1].to_s.downcase.capitalize
+      if service.empty?
+        Ruhoh::Friend.say {
+          red "Specify a publishing service"
+          exit
+        }
+      end
+
+      if Ruhoh::Publish.const_defined?(service.to_sym)
+        publish_config = Ruhoh::Parse.data_file(@ruhoh.base, "publish") || {}
+        Ruhoh::Publish.const_get(service.to_sym).new.run(@args, publish_config[service.downcase])
+      else
+        Ruhoh::Friend.say {
+          red "'#{ service }' not found."
+          plain "Ensure the service class is properly namespaced at Ruhoh::Publish::#{ service }"
+          exit
+        }
+      end
     end
 
     # Public: Create a new blog at the directory provided.
