@@ -2,6 +2,7 @@
 Encoding.default_internal = 'UTF-8'
 require 'json'
 require 'time'
+require 'ruhoh/time'
 require 'cgi'
 require 'fileutils'
 require 'ostruct'
@@ -80,6 +81,8 @@ class Ruhoh
     else
       config['base_path'] += "/" unless config['base_path'][-1] == '/'
     end
+
+    Time.default_format = config['date_format'] || "%Y-%m-%d"
 
     @config = config
   end
