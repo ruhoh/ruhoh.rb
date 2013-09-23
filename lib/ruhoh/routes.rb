@@ -5,7 +5,7 @@ class Ruhoh
     end
 
     def find(route)
-      @ruhoh.collections.acting_as_pages.each do |r|
+      routable.each do |r|
         next unless @ruhoh.collection(r).routes[route]
         return @ruhoh.collection(r).routes[route]
         break
@@ -20,10 +20,16 @@ class Ruhoh
     # @returns[Hash map]
     def all
       routes = {}
-      @ruhoh.collections.acting_as_pages.each do |r|
+      routable.each do |r|
         routes.merge!(@ruhoh.collection(r).routes)
       end
       routes
+    end
+
+    def routable
+       @ruhoh.collections.all.keep_if do |r|
+          @ruhoh.collections.collection(r).include?(Ruhoh::Resources::Pages::Routable) rescue false
+        end
     end
   end
 end
