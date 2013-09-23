@@ -1,5 +1,26 @@
 [
   {
+    "version" : "2.5",
+    "date" : "22.09.2013",
+    "features" : [
+      "@stebalien makes dates formattable",
+      "Add more helpful 404 not_found page for pages that don't exist.",
+      "Add support for `ruhoh server`; builtin web-server spawning.",
+      "Add gist view helper.",
+      "Add SimpleProxy helper object for views.",
+      "Allow converters to run on partials if file ext specified.",
+      "Add command line interface for publish.",
+      "@amanking add Google Analytics support for _setDomainName"
+    ],
+    "bugs" : [
+      "Fix parse error when trying to parse empty file.",
+       "@douo Fix list command fail in verbose mode",
+       "@wwchen fix for drafts ommiting title via terminal.",
+       "@douo routes should trace all routable resources."
+    ]
+  }
+  ,
+  {
     "version" : "2.4",
     "date" : "10.09.2013",
     "changes" : [
