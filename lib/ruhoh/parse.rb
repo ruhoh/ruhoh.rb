@@ -42,13 +42,15 @@ class Ruhoh
     end
 
     def self.data_file(*args)
-      base = File.__send__(:join, args)
+      filepath = File.__send__(:join, args)
+      if File.extname(filepath).to_s.empty?
+        path = nil
+        ["#{ filepath }.json", "#{ filepath }.yml", "#{ filepath }.yaml"].each do |result|
+          filepath = path = result and break if File.exist?(result)
+        end
 
-      filepath = nil
-      ["#{ base }.json", "#{ base }.yml", "#{ base }.yaml"].each do |result|
-        filepath = result and break if File.exist?(result)
+        return nil unless path
       end
-      return nil unless filepath
 
       file = File.open(filepath, 'r:UTF-8') { |f| f.read }
 
