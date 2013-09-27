@@ -7,7 +7,7 @@ module Ruhoh::Resources::Data
     def dictionary
       found_path_prefix = nil
 
-      @ruhoh.cascade.reverse.map do |h|
+      @ruhoh.cascade.paths.reverse.map do |h|
         path_prefix = File.join(h["path"], resource_name)
 
         ["#{ path_prefix }.json", "#{ path_prefix }.yml", "#{ path_prefix }.yaml"].each do |file|

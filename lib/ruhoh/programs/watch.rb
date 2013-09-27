@@ -7,12 +7,10 @@ class Ruhoh
     # The observer triggers data regeneration as files change
     # in order to keep the data up to date in real time.
     def self.watch(ruhoh)
-      ruhoh.ensure_setup
-
       Ruhoh::Friend.say {
-        cyan "=> Start watching: #{ruhoh.paths.base}"
+        cyan "=> Start watching: #{ruhoh.cascade.base}"
       }
-      dw = DirectoryWatcher.new(ruhoh.paths.base, {
+      dw = DirectoryWatcher.new(ruhoh.cascade.base, {
         :glob => "**/*", 
         :pre_load => true
       })
@@ -21,14 +19,14 @@ class Ruhoh
         args.each do |event|
           ruhoh.cache.delete(event['path'])
 
-          path = event['path'].gsub(ruhoh.paths.base + '/', '')
+          path = event['path'].gsub(ruhoh.cascade.base + '/', '')
 
           Ruhoh::Friend.say {
             yellow "Watch [#{Time.now.strftime("%H:%M:%S")}] [Update #{path}] : #{args.size} files changed"
           }
 
           if %w{ config.json config.yml config.yaml }.include?(path)
-            ruhoh.config true
+            ruhoh.config.touch
           else
             separator = File::ALT_SEPARATOR ?
                         %r{#{ File::SEPARATOR }|#{ File::ALT_SEPARATOR }} :

@@ -8,7 +8,7 @@ module Ruhoh::Resources::Theme
       return unless setup_compilable
 
       self.files.each do |file|
-        original_file = File.join(@ruhoh.paths.theme, file)
+        original_file = File.join(@ruhoh.cascade.theme, file)
         compiled_file = File.join(@collection.compiled_path, file)
         FileUtils.mkdir_p File.dirname(compiled_file)
         FileUtils.cp_r original_file, compiled_file
@@ -19,7 +19,7 @@ module Ruhoh::Resources::Theme
     # Returns list of all files from the theme to be compiled.
     # @returns[Array] relative filepaths
     def files
-      FileUtils.cd(@ruhoh.paths.theme) {
+      FileUtils.cd(@ruhoh.cascade.theme) {
         return Dir["**/*"].select { |filepath|
           is_valid_asset?(filepath)
         }

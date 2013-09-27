@@ -51,7 +51,7 @@ module Ruhoh::Views
 
     def urls
       @ruhoh.collections.url_endpoints.merge({
-        'base_path' => @ruhoh.base_path,
+        'base_path' => @ruhoh.config.base_path,
         'production' => @ruhoh.config["production_url"],
         'production_url' => @ruhoh.config["production_url"]
       })

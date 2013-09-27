@@ -29,7 +29,7 @@ TEXT
       body = Mustache.render(template, {
         pointer: @pointer,
         url: @request.path,
-        filepath: File.join(File.basename(@ruhoh.base), filepath),
+        filepath: File.join(File.basename(@ruhoh.cascade.base), filepath),
         content: Content
       })
 

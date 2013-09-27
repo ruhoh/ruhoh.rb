@@ -62,7 +62,7 @@ module Ruhoh::Base
 
     # Default paths to the 3 levels of the cascade.
     def paths
-      Array(@ruhoh.cascade.map{|h| h["path"]}).map { |path|
+      Array(@ruhoh.cascade.paths.map{|h| h["path"]}).map { |path|
         collection_path = File.join(path, resource_name)
         next unless File.directory?(collection_path)
 
@@ -231,7 +231,7 @@ module Ruhoh::Base
     end
 
     def scaffold
-      pointer = find_file('_scaffold', all: true) || @ruhoh.find_file('_scaffold')
+      pointer = find_file('_scaffold', all: true) || @ruhoh.cascade.find_file('_scaffold')
       return '' unless pointer
 
       File.open(pointer['realpath'], 'r:UTF-8') { |f| f.read }

@@ -7,13 +7,10 @@ class Ruhoh
       ruhoh = Ruhoh.new
       ruhoh.setup
       ruhoh.env = 'production'
-      ruhoh.setup_paths
       ruhoh.setup_plugins
-      
+
       if target
-        ruhoh.paths.compiled = File.expand_path(target)
-      elsif ruhoh.config["compiled"]
-        ruhoh.paths.compiled = ruhoh.config["compiled"]
+        ruhoh.config['compiled'] = File.expand_path(target)
       end
 
       ruhoh.compile

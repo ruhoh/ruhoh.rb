@@ -19,7 +19,6 @@ class Ruhoh
       ruhoh = Ruhoh.new
       ruhoh.setup
       ruhoh.env = opts[:env]
-      ruhoh.setup_paths
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
 
       # initialize the routes dictionary for all page resources.

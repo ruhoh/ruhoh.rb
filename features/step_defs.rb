@@ -52,7 +52,7 @@ end
 
 Then(/^my compiled site (should|should NOT) have the file "(.*?)"$/) do |matcher, path|
   @filepath = path
-  FileUtils.cd(@ruhoh.paths.compiled) {
+  FileUtils.cd(@ruhoh.config['compiled']) {
     # Done this way so the error output is more informative.
     files = Dir.glob("**/*").delete_if{ |a| File.directory?(a) }
     files.__send__(matcher, include(path)) 
@@ -61,7 +61,7 @@ end
 
 Then(/^my compiled site (should|should NOT) have the (?:directory|folder) "(.*?)"$/) do |matcher, path|
   @filepath = path
-  FileUtils.cd(@ruhoh.paths.compiled) {
+  FileUtils.cd(@ruhoh.config['compiled']) {
     # Done this way so the error output is more informative.
     files = Dir.glob("**/*").delete_if{ |a| File.file?(a) }
     files.__send__(matcher, include(path)) 
@@ -90,7 +90,7 @@ end
 Then(/^this file (should|should NOT) have the fingerprinted (stylesheets|javascripts) "(.*)"$/) do |matcher, filetype, names|
   names = names.split(/[\s,]+/).map(&:strip)
   files = nil
-  FileUtils.cd(File.join(@ruhoh.paths.compiled, 'assets', filetype)){
+  FileUtils.cd(File.join(@ruhoh.config['compiled'], 'assets', filetype)){
     files = Dir['*']
   }
 

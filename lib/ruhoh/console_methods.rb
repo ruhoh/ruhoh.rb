@@ -9,7 +9,6 @@ class Ruhoh
       @ruhoh = Ruhoh.new
       @ruhoh.setup
       @ruhoh.env = ConsoleMethods.env || 'development'
-      @ruhoh.setup_paths
       @ruhoh
     end
 

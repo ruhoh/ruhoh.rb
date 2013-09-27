@@ -41,7 +41,6 @@ class Ruhoh
 
       @ruhoh = Ruhoh.new
       @ruhoh.setup
-      @ruhoh.setup_paths
       @ruhoh.setup_plugins
 
       return __send__(cmd) if respond_to?(cmd)
@@ -136,7 +135,7 @@ class Ruhoh
       end
 
       if Ruhoh::Publish.const_defined?(service.to_sym)
-        publish_config = Ruhoh::Parse.data_file(@ruhoh.base, "publish") || {}
+        publish_config = Ruhoh::Parse.data_file(@ruhoh.cascade.base, "publish") || {}
         Ruhoh::Publish.const_get(service.to_sym).new.run(@args, publish_config[service.downcase])
       else
         Ruhoh::Friend.say {

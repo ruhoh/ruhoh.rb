@@ -24,7 +24,7 @@ module Ruhoh::Resources::Layouts
         exit
       } if name.nil?
 
-      filename = File.join((@ruhoh.paths.theme || @ruhoh.paths.base), "layouts", name.gsub(/\s/, '-').downcase) + ".html"
+      filename = File.join((@ruhoh.cascade.theme || @ruhoh.cascade.base), "layouts", name.gsub(/\s/, '-').downcase) + ".html"
 
       if File.exist?(filename)
         abort("Create new layout: aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'

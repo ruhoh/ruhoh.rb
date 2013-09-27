@@ -71,7 +71,7 @@ class Ruhoh
     def discover
       results = Set.new
 
-      @ruhoh.cascade.each do |h|
+      @ruhoh.cascade.paths.each do |h|
         FileUtils.cd(h["path"]) do
           results += Dir['*'].select { |x|
             File.directory?(x) && !["plugins", 'compiled'].include?(x)

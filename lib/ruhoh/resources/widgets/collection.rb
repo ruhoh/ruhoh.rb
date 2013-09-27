@@ -4,8 +4,8 @@ module Ruhoh::Resources::Widgets
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
-      @path = File.join(@ruhoh.paths.base, "widgets")
-      @system_path = File.join(@ruhoh.paths.system, "widgets")
+      @path = File.join(@ruhoh.cascade.base, "widgets")
+      @system_path = File.join(@ruhoh.cascade.system, "widgets")
     end
 
     def url_endpoint

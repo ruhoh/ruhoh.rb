@@ -5,14 +5,13 @@ def start
   @ruhoh = Ruhoh.new
   @ruhoh.setup(:source => SampleSitePath)
   @ruhoh.env = :test
-  @ruhoh.setup_paths
   @ruhoh.setup_plugins
 end
 
 def compile
   start
   @ruhoh.env = 'production'
-  @ruhoh.paths.compiled = File.join(SampleSitePath, 'compiled')
+  @ruhoh.config['compiled'] = File.join(SampleSitePath, 'compiled')
   @ruhoh.compile
 end
 
@@ -55,7 +54,7 @@ TEXT
 end
 
 def get_compiled_file(path)
-  FileUtils.cd(@ruhoh.paths.compiled) {
+  FileUtils.cd(@ruhoh.config['compiled']) {
     File.open(path, 'r:UTF-8') { |f| 
       return f.read }
   }
