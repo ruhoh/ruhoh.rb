@@ -1,0 +1,17 @@
+{
+    "base_path" : "/"
+    ,
+    "date_format" : "%Y-%m-%d"
+    ,
+    "compiled" : "compiled"
+    ,
+    "_root" : {
+        "permalink" : "/:relative_path/:filename",
+        "paginator" : {
+            "url" : "/index/"
+        },
+        "rss" : {
+            "url" : "/"
+        }
+    }
+}

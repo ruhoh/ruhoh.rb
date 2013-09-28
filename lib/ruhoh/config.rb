@@ -21,7 +21,8 @@ class Ruhoh
       @config = @config.merge(collections_config)
       @config = @config.merge(find_theme_path(@config))
 
-      defaults
+      Time.default_format = self['date_format']
+      self["compiled"] = File.expand_path(self["compiled"])
 
       changed
       notify_observers(@config)
@@ -29,29 +30,10 @@ class Ruhoh
       self
     end
 
-    def defaults
-      self['compiled'] = self['compiled'] ? File.expand_path(self['compiled']) : "compiled"
-
-      self['_root'] ||= {}
-      self['_root']['permalink'] ||= "/:relative_path/:filename"
-      self['_root']['paginator'] ||= {}
-      self['_root']['paginator']['url'] ||= "/index/"
-      self['_root']['rss'] ||= {}
-      self['_root']['rss']['url'] ||= "/"
-
-      self['base_path'] = self['base_path'].to_s.strip
-      if self['base_path'].empty?
-        self['base_path'] = '/'
-      else
-        self['base_path'] += "/" unless self['base_path'][-1] == '/'
-      end
-
-      Time.default_format = self['date_format'] || "%Y-%m-%d"
-    end
-
     def base_path
       return '/' unless (@ruhoh.env == 'production')
 
+      self['base_path'] += "/" unless self['base_path'][-1] == '/'
       string = self['base_path'].chomp('/').reverse.chomp('/').reverse
       return '/' if string.empty? || string == '/'
       "/#{ string }/"
