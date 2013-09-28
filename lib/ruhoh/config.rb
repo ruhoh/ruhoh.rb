@@ -1,31 +1,25 @@
 class Ruhoh
-  class Config
+  class Config < SimpleDelegator
     include Observable
 
     def initialize(ruhoh)
       @ruhoh = ruhoh
+      @data = {}
+      super(@data)
     end
 
-    def [](key)
-      touch unless @config
-      @config[key]
-    end
-
-    def []=(key, value)
-      touch unless @config
-      @config[key] = value
-    end
-
+    # Regenerate the config data
     def touch
-      @config = @ruhoh.cascade.merge_data_file('config') || {}
-      @config = @config.merge(collections_config)
-      @config = @config.merge(find_theme_path(@config))
+      @data.clear
+      @data.merge!(@ruhoh.cascade.merge_data_file('config') || {})
+      @data.merge!(collections_config)
+      @data.merge!(find_theme_path)
 
-      Time.default_format = self['date_format']
-      self["compiled"] = File.expand_path(self["compiled"])
+      Time.default_format = @data['date_format']
+      @data["compiled"] = File.expand_path(@data["compiled"])
 
       changed
-      notify_observers(@config)
+      notify_observers(@data)
 
       self
     end
@@ -33,14 +27,16 @@ class Ruhoh
     def base_path
       return '/' unless (@ruhoh.env == 'production')
 
-      self['base_path'] += "/" unless self['base_path'][-1] == '/'
-      string = self['base_path'].chomp('/').reverse.chomp('/').reverse
+      @data['base_path'] += "/" unless @data['base_path'][-1] == '/'
+      string = @data['base_path'].chomp('/').reverse.chomp('/').reverse
       return '/' if string.empty? || string == '/'
       "/#{ string }/"
     end
 
-    def find_theme_path(data)
-      theme_name = data.find { |resource, data| data.is_a?(Hash) && data['use'] == "theme" }
+    private
+
+    def find_theme_path
+      theme_name = @data.find { |resource, data| data.is_a?(Hash) && data['use'] == "theme" }
       if theme_name
         Ruhoh::Friend.say { plain "Using theme: \"#{theme_name[0]}\""}
         { "_theme_collection" => theme_name[0] }
@@ -65,10 +61,6 @@ class Ruhoh
       end
 
       data
-    end
-
-    def to_hash
-      @config.dup
     end
   end
 end

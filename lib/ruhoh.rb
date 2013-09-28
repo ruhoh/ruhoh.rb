@@ -59,7 +59,9 @@ class Ruhoh
   end
 
   def config
-    @config ||= Ruhoh::Config.new(self)
+    return @config if @config
+    @config = Ruhoh::Config.new(self)
+    @config.touch
   end
 
   def cascade
