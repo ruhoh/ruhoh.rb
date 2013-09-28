@@ -1,3 +1,4 @@
+module Ruhoh::Base ; end
 module Ruhoh::Resources ; end
 # Require all the resources
 FileUtils.cd(File.join(File.dirname(__FILE__), 'base')) do

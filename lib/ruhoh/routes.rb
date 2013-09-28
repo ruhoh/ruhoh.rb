@@ -28,7 +28,7 @@ class Ruhoh
 
     def routable
        @ruhoh.collections.all.keep_if do |r|
-          @ruhoh.collections.collection(r).include?(Ruhoh::Resources::Pages::Routable) rescue false
+          @ruhoh.collections.collection(r).include?(Ruhoh::Base::Routable) rescue false
         end
     end
   end
