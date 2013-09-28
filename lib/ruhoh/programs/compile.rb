@@ -5,7 +5,6 @@ class Ruhoh
     # to properly omit drafts and other development-only settings.
     def self.compile(target=nil)
       ruhoh = Ruhoh.new
-      ruhoh.setup
       ruhoh.env = 'production'
       ruhoh.setup_plugins
 

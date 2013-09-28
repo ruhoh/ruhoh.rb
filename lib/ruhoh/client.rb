@@ -40,7 +40,6 @@ class Ruhoh
       return server if %w(s serve server).include?(cmd)
 
       @ruhoh = Ruhoh.new
-      @ruhoh.setup
       @ruhoh.setup_plugins
 
       return __send__(cmd) if respond_to?(cmd)

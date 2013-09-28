@@ -17,7 +17,6 @@ class Ruhoh
       opts[:env] ||= 'development'
       
       ruhoh = Ruhoh.new
-      ruhoh.setup
       ruhoh.env = opts[:env]
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
 

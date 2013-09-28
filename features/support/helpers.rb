@@ -2,8 +2,7 @@
 SampleSitePath = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', '__tmp'))
 
 def start
-  @ruhoh = Ruhoh.new
-  @ruhoh.setup(:source => SampleSitePath)
+  @ruhoh = Ruhoh.new(:source => SampleSitePath)
   @ruhoh.env = :test
   @ruhoh.setup_plugins
 end

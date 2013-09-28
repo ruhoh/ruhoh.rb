@@ -7,7 +7,6 @@ class Ruhoh
     def ruhoh
       return @ruhoh if @ruhoh
       @ruhoh = Ruhoh.new
-      @ruhoh.setup
       @ruhoh.env = ConsoleMethods.env || 'development'
       @ruhoh
     end

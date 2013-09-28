@@ -42,7 +42,9 @@ class Ruhoh
   @log = Ruhoh::Logger.new
   @root = Root
 
-  def initialize
+  def initialize(opts={})
+    self.class.log.log_file = opts[:log_file] if opts[:log_file] #todo
+    @base = opts[:source] ? opts[:source] : Dir.getwd
     @collections = Ruhoh::Collections.new(self)
     @cache = Ruhoh::Cache.new(self)
     @routes = Ruhoh::Routes.new(self)
@@ -50,11 +52,6 @@ class Ruhoh
 
   def master_view(pointer)
     Ruhoh::Views::MasterView.new(self, pointer)
-  end
-
-  def setup(opts={})
-    self.class.log.log_file = opts[:log_file] if opts[:log_file] #todo
-    @base = opts[:source] ? opts[:source] : Dir.getwd
   end
 
   def collection(resource)
