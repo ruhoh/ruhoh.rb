@@ -25,7 +25,8 @@ TEXT
     end
 
     def show
-      template = File.open(File.join(File.dirname(__FILE__), 'page_not_found.html'), 'r:UTF-8').read
+      path = @ruhoh.cascade.find_file('page_not_found')['realpath']
+      template = File.open(path, 'r:UTF-8').read
       body = Mustache.render(template, {
         pointer: @pointer,
         url: @request.path,
