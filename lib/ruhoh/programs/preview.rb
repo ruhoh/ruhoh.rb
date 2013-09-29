@@ -1,4 +1,5 @@
 require 'ruhoh/programs/watch'
+require 'ruhoh/ui/dashboard'
 class Ruhoh
   module Program
     # Public: A program for running ruhoh as a rack application
@@ -48,6 +49,10 @@ class Ruhoh
               )
             end
           end
+        end
+
+        map '/dash' do
+          run Ruhoh::UI::Dashboard.new(ruhoh)
         end
 
         # The generic Page::Previewer is used to render any/all page-like resources,
