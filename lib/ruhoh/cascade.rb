@@ -34,7 +34,7 @@ class Ruhoh
 
       data = {}
       realpaths.each do |path|
-        data.merge!(Ruhoh::Parse.data_file(path) || {})
+        data = Ruhoh::Utils.deep_merge(data, (Ruhoh::Parse.data_file(path) || {}))
       end
 
       data

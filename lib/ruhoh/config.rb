@@ -10,11 +10,13 @@ class Ruhoh
 
     # Regenerate the config data
     def touch
-      @data.clear
-      @data.merge!(@ruhoh.cascade.merge_data_file('config') || {})
-      @data.merge!(collections_config)
-      @data.merge!(find_theme_path)
+      data = @ruhoh.cascade.merge_data_file('config') || {}
+      data = Ruhoh::Utils.deep_merge(data, collections_config)
+      data = Ruhoh::Utils.deep_merge(data, find_theme_path)
 
+      @data.clear
+      @data.merge!(data)
+      
       Time.default_format = @data['date_format']
       @data["compiled"] = File.expand_path(@data["compiled"])
 
@@ -54,8 +56,7 @@ class Ruhoh
         FileUtils.cd(path) { 
           Dir["*/config.*"].each { |id|
             next unless File.exist?(id) && FileTest.file?(id)
-
-            data.merge!(Ruhoh::Parse.data_file(File.realpath(id)) || {})
+            data = Ruhoh::Utils.deep_merge(data, (Ruhoh::Parse.data_file(File.realpath(id)) || {}))
           }
         }
       end
