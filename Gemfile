@@ -13,5 +13,5 @@ end
 group :test do
   gem 'cucumber'
   gem 'capybara'
-  gem "rspec-expectations"
+  gem 'rspec'
 end
