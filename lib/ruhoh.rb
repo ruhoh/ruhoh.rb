@@ -133,9 +133,7 @@ class Ruhoh
       sprockets = Dir[File.join(@paths.system, "plugins", "sprockets", "**/*.rb")]
       sprockets.each {|f| require f }
     end
-
-    plugins = Dir[File.join(@base, "plugins", "**/*.rb")]
-    plugins.each {|f| require f } unless plugins.empty?
+    require 'ruhoh/plugins/local_plugins_plugin'
 
     Ruhoh::Plugins::Plugin.run_all self
   end
