@@ -26,6 +26,7 @@ require 'ruhoh/routes'
 require 'ruhoh/string_format'
 require 'ruhoh/url_slug'
 require 'ruhoh/programs/preview'
+require 'ruhoh/plugins/plugin'
 
 class Ruhoh
   class << self
@@ -135,6 +136,8 @@ class Ruhoh
 
     plugins = Dir[File.join(@base, "plugins", "**/*.rb")]
     plugins.each {|f| require f } unless plugins.empty?
+
+    Ruhoh::Plugins::Plugin.run_all self
   end
 
   def env
