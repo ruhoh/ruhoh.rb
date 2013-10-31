@@ -2,6 +2,9 @@
 
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
+require 'bundler'
+Bundler.require :default
+
 require 'ruhoh'
 require 'ruhoh/version'
 require 'ruhoh/client'
@@ -13,7 +16,7 @@ options = Options.new
 
 opt_parser = OptionParser.new do |opts|
   opts.banner = 'Use `ruhoh help` for full command list.'
-  
+
   opts.on("--hg", "Use mercurial (hg) instead of git for source control.") do
     options.hg = true
   end
@@ -21,13 +24,13 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-v", "--[no-]verbose", "Run verbosely. For pages, shows extra title, url meta-data.") do |v|
     options.verbose = v
   end
-    
+
   opts.on("--version", "Display current gem and ruhoh specification versions.") do
     puts "ruhoh " + Ruhoh::VERSION
     puts "RuhohSpec " + Ruhoh::RuhohSpec
     exit 0
   end
-  
+
 end
 opt_parser.parse!
 
