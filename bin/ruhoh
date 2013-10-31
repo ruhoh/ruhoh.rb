@@ -2,8 +2,12 @@
 
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
-require 'bundler'
-Bundler.require :default
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+if File.exists?(ENV['BUNDLE_GEMFILE'])
+  require 'bundler/setup'
+  Bundler.require :default
+end
 
 require 'ruhoh'
 require 'ruhoh/version'
