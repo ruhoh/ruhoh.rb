@@ -61,3 +61,36 @@ Feature: Data
       And this file should contain the content node "city|alhambra"
       And this file should contain the content node "li|mango"
       And this file should contain the content node "li|kiwi"
+
+Scenario: Defining a basic data structure in custom data collection
+  Given a config file with values:
+    | meta | { "use" : "data" } |
+  Given the file "meta.json" with body:
+    """
+    {
+      "address": {
+        "city": "alhambra"
+      }, 
+      "name": "jade", 
+      "fruits": [
+        "mango", 
+        "kiwi"
+      ]
+    }
+    """
+    And the file "_root/index.html" with body:
+      """
+      <name>{{ meta.name }}</name>
+      <city>{{ meta.address.city }}</city>
+      <ul>
+      {{# meta.fruits }}
+        <li>{{ . }}</li>
+      {{/ meta.fruits }}
+      </ul>
+      """
+  When I compile my site
+  Then my compiled site should have the file "index.html"
+    And this file should contain the content node "name|jade"
+    And this file should contain the content node "city|alhambra"
+    And this file should contain the content node "li|mango"
+    And this file should contain the content node "li|kiwi"
