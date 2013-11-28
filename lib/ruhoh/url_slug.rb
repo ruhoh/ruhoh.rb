@@ -20,15 +20,17 @@ class Ruhoh
 
     # @return[String] the dynamic URL with token substitution.
     def dynamic
-      data.inject(@format) { |result, token|
-        result.gsub(/:#{ Regexp.escape(token.first) }/, token.last)
-      }.gsub(/\/+/, "/")
+      cache = data
+      @format.gsub(/:[^\/\.]+/) do |a|
+        Ruhoh::StringFormat.clean_slug_and_escape( cache[$&.gsub(':', '')] )
+      end
     end
 
     def data
-      result = uses_date? ? date_data : {}
+      result = @page_data
+      result = result.merge(date_data) if uses_date?
+
       result.merge({
-        "title"             => title,
         "filename"          => filename,
         "path"              => path,
         "relative_path"     => relative_path,
@@ -53,10 +55,6 @@ class Ruhoh
         " which is date dependant but the date '#{ @page_data['date'] }' could not be parsed." +
         " Ensure the date's format is: 'YYYY-MM-DD'"
       )
-    end
-
-    def title
-      Ruhoh::StringFormat.clean_slug_and_escape(@page_data['title'])
     end
 
     def filename

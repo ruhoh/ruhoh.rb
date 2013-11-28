@@ -54,6 +54,13 @@ Feature: Page Permalinks
     When I compile my site
     Then my compiled site should have the file "essays/2012/1/2/hello/index.html"
 
+  Scenario: Custom permalink format in page metadata using custom metadata attributes.
+    Given some files with values:
+    | file              | permalink | title | arbitrary_name | body |
+    | essays/hello.md   | /:path/:title/:arbitrary_name | Haro World | custom data | |
+    When I compile my site
+    Then my compiled site should have the file "essays/haro-world/custom-data/index.html"
+
   Scenario: Custom permalink format in page metadata using explicit html extension
     Given some files with values:
     | file              | permalink      |
@@ -139,3 +146,12 @@ Feature: Page Permalinks
       | essays/hello.md   | 2012-01-02 | |
     When I compile my site
     Then my compiled site should have the file "essays/2012/1/2/hello/index.html"
+
+  Scenario: Custom permalink format in collection config using custom metadata
+    Given a config file with values:
+      | essays | { "permalink" : "/legacy/:custom_id/:rank" } |
+      And some files with values:
+      | file              | custom_id | rank | body |
+      | essays/hello.md   | 12345 | medium | |
+    When I compile my site
+    Then my compiled site should have the file "legacy/12345/medium/index.html"
