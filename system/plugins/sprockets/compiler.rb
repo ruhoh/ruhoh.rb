@@ -5,6 +5,7 @@ module Ruhoh::SprocketsPlugin
     extend Ruhoh::Base::CompilableAsset
     def run
       env = Sprockets::Environment.new
+      env.css_compressor = :sass
       env.logger = Logger.new(STDOUT)
       env.logger.level = Logger::WARN
 
