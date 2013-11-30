@@ -23,7 +23,7 @@ class Ruhoh
 
       # Return a summary element if specified
       summary_el = content_doc.at_css('.' + SummaryNodeClassName)
-      return summary_el.to_html if summary_el
+      return summary_el.to_html(:encoding => 'UTF-8') if summary_el
 
       # Create the summary element.
       summary_doc = Nokogiri::XML::Node.new("div", Nokogiri::HTML::Document.new)
@@ -59,7 +59,7 @@ class Ruhoh
         summary_doc << node
       end
 
-      summary_doc.to_html
+      summary_doc.to_html(:encoding => 'UTF-8')
     end
   end
 end
