@@ -61,7 +61,7 @@ Feature: Plugins
     Then my compiled site should have the file "index.html"
       And this file should contain the content node "output|thequickbrownfoxjumpsoverthelazydog"
 
-  Scenario: Loading a custom converter from the plugins folder.
+  Scenario: Loading a custom compiler from the plugins folder.
     Given the file "plugins/test_compiler.rb" with body:
       """
       class Ruhoh
