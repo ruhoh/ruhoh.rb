@@ -25,23 +25,6 @@ Feature: Plugins
     Given some files with values:
       | file | date | body |
       | _root/index.html | 2013-12-01 | <date>{{ page.friendly_date }}</date> |
-    Given the file "plugins/test.rb" with body:
-      """
-      module PagesModelViewAddons
-        def friendly_date
-          date.strftime("%B %d, %Y")
-        end
-      end
-      Ruhoh.model('pages').send(:include, PagesModelViewAddons)
-      """
-    When I compile my site
-    Then my compiled site should have the file "index.html"
-      And this file should contain the content node "date|December 01, 2013"
-
-  Scenario: Loading a pages model plugin from the plugins folder.
-    Given some files with values:
-      | file | date | body |
-      | _root/index.html | 2013-12-01 | <date>{{ page.friendly_date }}</date> |
     Given the file "plugins/paged_model_view_addons.rb" with body:
       """
       module PagesModelViewAddons
