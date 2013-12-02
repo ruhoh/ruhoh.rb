@@ -65,7 +65,7 @@ Feature: Data
 Scenario: Defining a basic data structure in custom data collection
   Given a config file with values:
     | meta | { "use" : "data" } |
-  Given the file "meta.json" with body:
+  Given the file "meta/data.json" with body:
     """
     {
       "address": {
@@ -80,12 +80,12 @@ Scenario: Defining a basic data structure in custom data collection
     """
     And the file "_root/index.html" with body:
       """
-      <name>{{ meta.name }}</name>
-      <city>{{ meta.address.city }}</city>
+      <name>{{ meta.data.name }}</name>
+      <city>{{ meta.data.address.city }}</city>
       <ul>
-      {{# meta.fruits }}
+      {{# meta.data.fruits }}
         <li>{{ . }}</li>
-      {{/ meta.fruits }}
+      {{/ meta.data.fruits }}
       </ul>
       """
   When I compile my site
