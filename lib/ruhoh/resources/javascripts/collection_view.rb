@@ -27,8 +27,6 @@ module Ruhoh::Resources::Javascripts
       }.join("\n")
     end
 
-    protected
-
     def make_url(name)
       return name if name =~ /^(http:|https:)?\/\//i
 
