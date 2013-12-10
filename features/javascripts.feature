@@ -58,7 +58,7 @@ Feature: Javascripts
         """
     When I compile my site
     Then my compiled site should have the file "index.html"
-      And the file should have the fingerprinted javascript "base"
+      And this file should have the fingerprinted javascripts "base"
 
   Scenario: Using javascript object to resolve url and id
     Given some files with values:
@@ -74,5 +74,5 @@ Feature: Javascripts
         """
     When I compile my site
     Then my compiled site should have the file "index.html"
-      And the file should have the fingerprinted javascript "app, base, custom"
+      And this file should have the fingerprinted javascripts "app, base, custom"
 
