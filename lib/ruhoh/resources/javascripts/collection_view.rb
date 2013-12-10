@@ -27,6 +27,12 @@ module Ruhoh::Resources::Javascripts
       }.join("\n")
     end
 
+    def all()
+      files.values.map { |pointer|
+        load_model_view(pointer)
+      }
+    end
+
     def make_url(name)
       return name if name =~ /^(http:|https:)?\/\//i
 
