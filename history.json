@@ -1,5 +1,26 @@
 [
   {
+    "version" : "2.6",
+    "date" : "13.12.2013",
+    "changes" : [
+      "config['compiled'] is now config['compiled_path'] and compiled folder is collection ignored.",
+      "Dash is no longer a collection, it is tracked on the root blog level and may be overloaded as normal."
+    ],
+    "features" : [
+      "config file now deep merges itself down the cascade.",
+      "data file now deep merges itself down the cascade.",
+      "page_not_found UI can now be overloaded via the cascade.",
+      "Any page metatdata attribute can be used in custom permalink",
+      "@nicolaracco adds ability to load plugins from gems."
+    ],
+    "bugs" : [
+      "@mudasobwa fix for non-ASCII summaries",
+      "custo data collections now work as expected as per the collection API.",
+      "@richtera enables ?to_javascripts to work with needed fingerpinting inclusion."
+    ]
+  }
+  ,
+  {
     "version" : "2.5",
     "date" : "22.09.2013",
     "features" : [
