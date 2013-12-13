@@ -62,6 +62,51 @@ Feature: Data
       And this file should contain the content node "li|mango"
       And this file should contain the content node "li|kiwi"
 
+
+  Scenario: Defining a basic data structure in data.json and merging with a theme data.json
+    Given a config file with values:
+      | theme-test | { "use" : "theme" } |
+      And the file "data.json" with body:
+      """
+      {
+        "address": {
+          "city": "alhambra"
+        }, 
+        "name": "jade", 
+        "fruits": [
+          "mango", 
+          "kiwi"
+        ]
+      }
+      """
+      And the file "theme-test/data.json" with body:
+        """
+        {
+          "address": {
+            "city": "Berkeley"
+          },
+          "greeting": "Hai!"
+        }
+        """
+      And the file "_root/index.html" with body:
+        """
+        <name>{{ data.name }}</name>
+        <city>{{ data.address.city }}</city>
+        <greeting>{{ data.greeting }}</greeting>
+        <ul>
+        {{# data.fruits }}
+          <li>{{ . }}</li>
+        {{/ data.fruits }}
+        </ul>
+        """
+    When I compile my site
+    Then my compiled site should have the file "index.html"
+      And this file should contain the content node "name|jade"
+      And this file should contain the content node "city|Berkeley"
+      And this file should contain the content node "li|mango"
+      And this file should contain the content node "li|kiwi"
+      And this file should contain the content node "greeting|Hai!"
+
 Scenario: Defining a basic data structure in custom data collection
   Given a config file with values:
     | meta | { "use" : "data" } |

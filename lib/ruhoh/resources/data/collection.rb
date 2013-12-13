@@ -27,21 +27,20 @@ module Ruhoh::Resources::Data
     # TODO: This is ugly but it works. 
     # Should handle data extensions in the cascade more elegantly
     def _support_legacy_api
-      found_path_prefix = nil
+      found_paths = []
 
-      @ruhoh.cascade.paths.reverse.map do |h|
+      @ruhoh.cascade.paths.each do |h|
         path_prefix = File.join(h["path"], resource_name)
 
         ["#{ path_prefix }.json", "#{ path_prefix }.yml", "#{ path_prefix }.yaml"].each do |file|
-          found_path_prefix = path_prefix and break if File.exist?(file)
+          found_paths << path_prefix and break if File.exist?(file)
         end
-
-        break if found_path_prefix
       end
 
-      return {} unless found_path_prefix
+      data = {}
+      found_paths.each { |path| data.merge!(Ruhoh::Parse.data_file(path) || {}) }
 
-      Ruhoh::Parse.data_file(found_path_prefix) || {}
+      data
     end
   end
 end
