@@ -3,10 +3,8 @@ Feature: Pagination
   I want to paginate my pages
   so that my audience can better digest my content
 
-  Scenario: Disabling the paginator for a collection
-    Given a config file with values:
-      | essays | { "paginator" : { "enable" : false } } |
-      And some files with values:
+  Scenario: Paginator is disabled by default.
+    Given some files with values:
         | file | body |
         | essays/hello.md | some hello content |
         | essays/goodbye.md | some goodbye content |
@@ -14,19 +12,21 @@ Feature: Pagination
     When I compile my site
     Then my compiled site should NOT have the file "essays/index/1/index.html"
 
-  Scenario: Defining multiple pages in the same collection
-    Given some files with values:
-      | file | body |
-      | essays/hello.md | some hello content |
-      | essays/goodbye.md | some goodbye content |
-      | essays/caio.md | some caio content |
+  Scenario: Enabling paginator and defining multiple pages in the same collection.
+    Given a config file with values:
+      | essays | { "paginator" : { "enable" : true } } |
+      And some files with values:
+        | file | body |
+        | essays/hello.md | some hello content |
+        | essays/goodbye.md | some goodbye content |
+        | essays/caio.md | some caio content |
     When I compile my site
     Then my compiled site should have the file "essays/index/1/index.html"
       And this file should have the links "/essays/hello, /essays/goodbye, /essays/caio"
 
   Scenario: Configuring per_page and generating multiple pagination pages.
     Given a config file with values:
-      | essays | { "paginator" : { "per_page" : 1 } } |
+      | essays | { "paginator" : { "enable" : true, "per_page" : 1 } } |
       And some files with values:
         | file | body |
         | essays/hello.md | some hello content |
@@ -44,7 +44,7 @@ Feature: Pagination
 
   Scenario: Customizing the paginator url
     Given a config file with values:
-      | essays | { "paginator" : { "url" : "/coolguy/index" } } |
+      | essays | { "paginator" : { "enable" : true, "url" : "/coolguy/index" } } |
       And some files with values:
         | file | body |
         | essays/hello.md | some hello content |

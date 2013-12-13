@@ -25,10 +25,9 @@ module Ruhoh::Resources::Pages
     def pagination
       config = @collection.config["paginator"] || {}
       resource_name = @collection.resource_name
-      if config["enable"] == false
-        Ruhoh::Friend.say { yellow "#{resource_name} paginator: disabled - skipping." }
-        return
-      end
+      return unless config["enable"] == true
+
+      Ruhoh::Friend.say { yellow "#{resource_name} paginator: enabled." }
 
       pages_count = @collection.all.length
       total_pages = (pages_count.to_f/config["per_page"]).ceil
