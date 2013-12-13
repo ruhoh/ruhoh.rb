@@ -18,7 +18,7 @@ class Ruhoh
       @data.merge!(data)
       
       Time.default_format = @data['date_format']
-      @data["compiled"] = File.expand_path(@data["compiled"])
+      @data["compiled_path"] = File.expand_path(@data["compiled_path"])
 
       changed
       notify_observers(@data)

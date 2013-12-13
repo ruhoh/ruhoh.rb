@@ -10,7 +10,7 @@ end
 def compile
   start
   @ruhoh.env = 'production'
-  @ruhoh.config['compiled'] = File.join(SampleSitePath, 'compiled')
+  @ruhoh.config['compiled_path'] = File.join(SampleSitePath, 'compiled')
   @ruhoh.compile
 end
 
@@ -53,7 +53,7 @@ TEXT
 end
 
 def get_compiled_file(path)
-  FileUtils.cd(@ruhoh.config['compiled']) {
+  FileUtils.cd(@ruhoh.config['compiled_path']) {
     File.open(path, 'r:UTF-8') { |f| 
       return f.read }
   }

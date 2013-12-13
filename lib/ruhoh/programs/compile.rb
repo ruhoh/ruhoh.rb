@@ -9,7 +9,7 @@ class Ruhoh
       ruhoh.setup_plugins
 
       if target
-        ruhoh.config['compiled'] = File.expand_path(target)
+        ruhoh.config['compiled_path'] = File.expand_path(target)
       end
 
       ruhoh.compile

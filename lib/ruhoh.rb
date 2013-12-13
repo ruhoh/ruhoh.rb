@@ -96,7 +96,7 @@ class Ruhoh
       url = url.gsub(/^#{ config.base_path.chomp('/') }\/?/, '')
     end
 
-    path = File.expand_path(File.join(config['compiled'], url)).gsub(/\/{2,}/, '/')
+    path = File.expand_path(File.join(config['compiled_path'], url)).gsub(/\/{2,}/, '/')
     CGI.unescape(path)
   end
 
@@ -138,8 +138,8 @@ class Ruhoh
   #  end
   def compile
     Ruhoh::Friend.say { plain "Compiling for environment: '#{@env}'" }
-    FileUtils.rm_r config['compiled'] if File.exist?(config['compiled'])
-    FileUtils.mkdir_p config['compiled']
+    FileUtils.rm_r config['compiled_path'] if File.exist?(config['compiled_path'])
+    FileUtils.mkdir_p config['compiled_path']
 
     # Run the resource compilers
     compilers = @collections.all

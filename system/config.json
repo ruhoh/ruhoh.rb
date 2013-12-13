@@ -3,7 +3,11 @@
     ,
     "date_format" : "%Y-%m-%d"
     ,
-    "compiled" : "compiled"
+    "compiled_path" : "compiled"
+    ,
+    "compiled" : {
+        "use" : "ignore"
+    }
     ,
     "_root" : {
         "permalink" : "/:relative_path/:filename",

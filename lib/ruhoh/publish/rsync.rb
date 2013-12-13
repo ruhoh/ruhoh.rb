@@ -22,9 +22,9 @@ class Ruhoh
       if @config["command"]
         system(@config["command"])
       else
-        system('rsync', File.join(ruhoh.config['compiled'], '.'), '-avz', '--delete', '--exclude', '.git', remote)
+        system('rsync', File.join(ruhoh.config['compiled_path'], '.'), '-avz', '--delete', '--exclude', '.git', remote)
       end
-      FileUtils.rm_r(ruhoh.config['compiled'])
+      FileUtils.rm_r(ruhoh.config['compiled_path'])
     end
 
     private
