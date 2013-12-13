@@ -2,6 +2,13 @@
 
 $:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
 
+# Set up gems listed in the Gemfile.
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
+if File.exists?(ENV['BUNDLE_GEMFILE'])
+  require 'bundler/setup'
+  Bundler.require :default
+end
+
 require 'ruhoh'
 require 'ruhoh/version'
 require 'ruhoh/client'
@@ -13,7 +20,7 @@ options = Options.new
 
 opt_parser = OptionParser.new do |opts|
   opts.banner = 'Use `ruhoh help` for full command list.'
-  
+
   opts.on("--hg", "Use mercurial (hg) instead of git for source control.") do
     options.hg = true
   end
@@ -21,13 +28,13 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-v", "--[no-]verbose", "Run verbosely. For pages, shows extra title, url meta-data.") do |v|
     options.verbose = v
   end
-    
+
   opts.on("--version", "Display current gem and ruhoh specification versions.") do
     puts "ruhoh " + Ruhoh::VERSION
     puts "RuhohSpec " + Ruhoh::RuhohSpec
     exit 0
   end
-  
+
 end
 opt_parser.parse!
 
