@@ -21,9 +21,25 @@ class Ruhoh
     # @return[String] the dynamic URL with token substitution.
     def dynamic
       cache = data
-      @format.gsub(/:[^\/\.]+/) do |a|
-        Ruhoh::StringFormat.clean_slug_and_escape( cache[$&.gsub(':', '')] )
+      result = @format
+                .gsub(/:[^\/\.]+/) { |a| cache[$&.gsub(':', '')] }
+                .gsub('//', '/')
+                .split('/')
+
+      # this is ugly but I'm out of ideas. Help!
+      last = result.pop
+      if uses_extension?
+        last = last
+                .split('.')
+                .map{ |a| Ruhoh::StringFormat.clean_slug_and_escape(a) }
+                .join('.')
+      else
+        last = Ruhoh::StringFormat.clean_slug_and_escape(last)
       end
+
+      result
+        .map{ |a| Ruhoh::StringFormat.clean_slug_and_escape(a) }
+        .join('/') + "/#{ last }"
     end
 
     def data

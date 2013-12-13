@@ -10,6 +10,13 @@ Feature: Page Permalinks
     When I compile my site
     Then my compiled site should have the file "essays/hello/index.html"
 
+  Scenario: Default Permalink format with nested file
+    Given some files with values:
+    | file              | body |
+    | essays/one/two/hello.md   |      |
+    When I compile my site
+    Then my compiled site should have the file "essays/one/two/hello/index.html"
+
 # in-page configuration
 
   Scenario: Custom permalink format in page metadata.
