@@ -16,7 +16,7 @@ class Ruhoh
 
       @data.clear
       @data.merge!(data)
-      
+
       Time.default_format = @data['date_format']
       @data["compiled_path"] = File.expand_path(@data["compiled_path"])
 
@@ -42,18 +42,18 @@ class Ruhoh
       if theme_name
         Ruhoh::Friend.say { plain "Using theme: \"#{theme_name[0]}\""}
         { "_theme_collection" => theme_name[0] }
-      else 
+      else
         { "_theme_collection" => nil }
       end
     end
 
     # Quick and dirty way to scan for config files in collection folders.
-    # This is needed because we don't know which collection defines itself as a theme 
+    # This is needed because we don't know which collection defines itself as a theme
     # so we'll scan for any configs and merge the data to find the theme folder.
     def collections_config
       data = {}
       @ruhoh.cascade.paths.map{ |a| a['path'] }.each do |path|
-        FileUtils.cd(path) { 
+        FileUtils.cd(path) {
           Dir["*/config.*"].each { |id|
             next unless File.exist?(id) && FileTest.file?(id)
             data = Ruhoh::Utils.deep_merge(data, (Ruhoh::Parse.data_file(File.realpath(id)) || {}))
