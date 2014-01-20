@@ -1,6 +1,7 @@
 require 'benchmark'
 
 require 'ruhoh/programs/compile'
+require 'ruhoh/programs/preview'
 require 'ruhoh/console_methods'
 
 module Ruhoh::Publish; end

@@ -7,6 +7,7 @@ class Ruhoh
     def initialize(opts)
       @content = opts[:content] ; opts.delete(:content)
       @opts = opts
+      @opts[:line_limit] ||= 20
     end
 
     # Generate a truncated summary.

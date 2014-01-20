@@ -1,14 +1,10 @@
 module Ruhoh::Views::Helpers
   module Categories
-    # Category dictionary
     def categories
-      categories_url = nil
-      [ruhoh.to_url("categories"), ruhoh.to_url("categories.html")].each { |url|
-        categories_url = url and break if ruhoh.routes.find(url)
-      }
+      categories_url = "categories" # TODO url need to be managed by ruhoh
       dict = {}
-      dictionary.each_value do |model|
-        Array(model.data['categories']).each do |cat|
+      self.each do |item|
+        Array(item.data['categories']).each do |cat|
           cat = Array(cat).join('/')
           if dict[cat]
             dict[cat]['count'] += 1
@@ -16,18 +12,18 @@ module Ruhoh::Views::Helpers
             dict[cat] = { 
               'count' => 1, 
               'name' => cat, 
-              resource_name => [],
+              item.resource => [],
               'url' => "#{categories_url}##{cat}-ref"
             }
           end 
 
-          dict[cat][resource_name] << model.id
+          dict[cat][item.resource] << item.id
         end
       end  
       dict["all"] = dict.each_value.map { |cat| cat }
       dict
     end
-          
+
     # Convert single or Array of category ids (names) to category hash(es).
     def to_categories(sub_context)
       Array(sub_context).map { |id|

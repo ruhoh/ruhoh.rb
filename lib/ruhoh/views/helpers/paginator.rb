@@ -1,39 +1,41 @@
 module Ruhoh::Views::Helpers
   module Paginator
-    # current_page is set via a compiler or previewer
-    # in which it can discern what current_page to serve
-    def paginator
-      per_page = config["paginator"]["per_page"] rescue 5
-      current_page = master.page_data['current_page'].to_i
-      current_page = current_page.zero? ? 1 : current_page
-      offset = (current_page-1)*per_page
 
-      page_batch = all[offset, per_page]
+    # master.page.page_number is set via a compiler or previewer
+    def paginator_config
+      c = config["paginator"] || {}
+      c["per_page"] ||= 5
+      c["url"] ||= "#{ collection_name }/index"
+      c["page_number"] = master.page.page_number.to_i
+      c["page_number"] = 1 if c["page_number"].zero?
+      c
+    end
+
+    # in which it can discern what page_number to serve
+    def paginator
+      offset = (paginator_config["page_number"]-1)*paginator_config["per_page"]
+      page_batch = self[offset, paginator_config["per_page"]]
       raise "Page does not exist" unless page_batch
+
       page_batch
     end
 
     def paginator_navigation
-      paginator_config = config["paginator"] || {}
-      page_count = all.length
-      total_pages = (page_count.to_f/paginator_config["per_page"]).ceil
-      current_page = master.page_data['current_page'].to_i
-      current_page = current_page.zero? ? 1 : current_page
+      total_pages = (self.length.to_f/paginator_config["per_page"]).ceil
 
-      pages = total_pages.times.map { |i| 
+      total_pages.times.map do |i|
         url = if i.zero? && paginator_config["root_page"]
                 paginator_config["root_page"]
               else
-                "#{paginator_config["url"]}/#{i+1}"
+                "#{ paginator_config["url"] }/#{ i + 1 }"
               end
 
         {
-          "url" => ruhoh.to_url(url),
+          "url" => @ruhoh.to_url(url),
           "name" => "#{i+1}",
-          "is_active_page" => (i+1 == current_page)
+          "is_active_page" => (i+1 == paginator_config["page_number"])
         }
-      }
-      pages 
+      end
     end
   end
 end

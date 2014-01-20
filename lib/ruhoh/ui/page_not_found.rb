@@ -14,9 +14,9 @@ module Ruhoh::UI
 - avocados
 TEXT
 
-    def initialize(ruhoh, pointer)
+    def initialize(ruhoh, item)
       @ruhoh = ruhoh
-      @pointer = pointer
+      @item = item
     end
 
     def call(env)
@@ -25,10 +25,10 @@ TEXT
     end
 
     def show
-      path = @ruhoh.cascade.find_file('page_not_found')['realpath']
+      path = @ruhoh.query.where("$shortname" => "page_not_found").first.realpath
       template = File.open(path, 'r:UTF-8').read
       body = Mustache.render(template, {
-        pointer: @pointer,
+        item: @item,
         url: @request.path,
         filepath: File.join(File.basename(@ruhoh.cascade.base), filepath),
         content: Content
@@ -61,7 +61,7 @@ TEXT
                 File.join(*parts) # collection
 
       File.extname(parts.last.to_s).to_s.empty? ?
-        (path + @ruhoh.collection(collection_name).config["ext"]) :
+        (path + (@ruhoh.config.collection(collection_name)["ext"] || '.md')) :
         path
     end
 

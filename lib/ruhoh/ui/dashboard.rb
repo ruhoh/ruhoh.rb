@@ -4,7 +4,7 @@ class Ruhoh::UI::Dashboard
   end
 
   def call(env)
-    path = @ruhoh.cascade.find_file('dashboard')['realpath']
+    path = @ruhoh.query.where("$shortname" => "dashboard").first.realpath
     template = File.open(path, 'r:UTF-8').read
     view = @ruhoh.master_view({"content" => template })
 

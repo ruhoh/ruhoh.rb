@@ -5,10 +5,6 @@
     ,
     "compiled_path" : "compiled"
     ,
-    "compiled" : {
-        "use" : "ignore"
-    }
-    ,
     "_root" : {
         "permalink" : "/:relative_path/:filename",
         "paginator" : {
@@ -17,5 +13,41 @@
         "rss" : {
             "url" : "/"
         }
+    }
+    ,
+    "compiled" : {
+        "use" : "ignore"
+    }
+    ,
+    "plugins" : {
+        "use" : "ignore"
+    }
+    ,
+    "media" : {
+        "use" : "static"
+    }
+    ,    
+    "data" : {
+        "use" : "data"
+    }
+    ,
+    "javascripts" : {
+        "use" : "javascripts"
+    }
+    ,
+    "layouts" : {
+        "use" : "layouts"
+    }
+    ,
+    "partials" : {
+        "use" : "partials"
+    }
+    ,
+    "stylesheets" : {
+        "use" : "stylesheets"
+    }
+    ,
+    "widgets" : {
+        "use" : "widgets"
     }
 }

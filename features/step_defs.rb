@@ -39,7 +39,7 @@ end
 
 Then(/^it (should|should NOT) fail with:$/) do |matcher, content|
   @exception.should_not be_nil
-  Ruhoh.log.buffer.last.__send__(matcher, have_content(content))
+  @exception.__send__(matcher, have_content(content))
 end
 
 Then(/^the log (should|should NOT) include:$/) do |matcher, content|

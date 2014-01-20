@@ -11,24 +11,24 @@ require 'digest'
 require 'observer'
 require 'set'
 
-require 'mustache'
+require 'silly'
 
 require 'ruhoh/logger'
 require 'ruhoh/utils'
 require 'ruhoh/friend'
-require 'ruhoh/parse'
 
-require 'ruhoh/config'
 require 'ruhoh/cascade'
-require 'ruhoh/converter'
-require 'ruhoh/views/master_view'
-require 'ruhoh/collections'
+require 'ruhoh/query'
+require 'ruhoh/config'
 require 'ruhoh/cache'
-require 'ruhoh/routes'
-require 'ruhoh/string_format'
-require 'ruhoh/url_slug'
-require 'ruhoh/programs/preview'
+
+require 'ruhoh/summarizer'
+require 'ruhoh/converter'
+require 'ruhoh/view_renderer'
+
 require 'ruhoh/plugins/plugin'
+
+require 'ruhoh/collections/collections'
 
 class Ruhoh
   class << self
@@ -37,7 +37,7 @@ class Ruhoh
   end
 
   attr_accessor :log, :env
-  attr_reader :root, :cache, :collections, :routes
+  attr_reader :root, :cache, :collections, :query
 
   Root = File.expand_path(File.join(File.dirname(__FILE__), '..'))
   @log = Ruhoh::Logger.new
@@ -46,28 +46,45 @@ class Ruhoh
   def initialize(opts={})
     self.class.log.log_file = opts[:log_file] if opts[:log_file] #todo
     @base = opts[:source] ? opts[:source] : Dir.getwd
-    @collections = Ruhoh::Collections.new(self)
+
+    Query.paths.clear
+    Query.append_path(File.join(Root, "system"))
+    Query.append_path(@base)
+
+    Silly::UrlSlug.add_extensions(Ruhoh::Converter.extensions)
+
+    ruhoh = self
+    Silly::PageModel.before_data = -> data {
+      return data if data["permalink"]
+      collection = data["id"].split('/').first
+      config = ruhoh.config.collection(collection)
+      return data unless config
+
+      config.merge(data)
+    }
+
+
     @cache = Ruhoh::Cache.new(self)
-    @routes = Ruhoh::Routes.new(self)
+    @collections = Ruhoh::Collections.new(self)
   end
 
-  def master_view(pointer)
-    Ruhoh::Views::MasterView.new(self, pointer)
+  def master_view(item)
+    Ruhoh::Views::Renderer.new(self, item)
   end
 
-  def collection(resource)
-    @collections.load(resource)
+  def query
+    Query.new
   end
 
   def config
     return @config if @config
     @config = Ruhoh::Config.new(self)
     @config.touch
+    @config
   end
 
   def cascade
     return @cascade if @cascade
-
     @cascade = Ruhoh::Cascade.new(config)
     @cascade.base = @base
     config.touch
@@ -85,6 +102,8 @@ class Ruhoh
     require 'ruhoh/plugins/local_plugins_plugin'
 
     Ruhoh::Plugins::Plugin.run_all self
+
+    Silly::UrlSlug.add_extensions(Ruhoh::Converter.extensions)
   end
 
   def env
@@ -110,6 +129,13 @@ class Ruhoh
 
   def relative_path(filename)
     filename.gsub(Regexp.new("^#{@base}/"), '')
+  end
+
+  def compiled_path_page(url)
+    path = compiled_path(url)
+    path = "index.html" if path.empty?
+    path += '/index.html' unless path =~ /\.\w+$/
+    path
   end
 
   # Compile the ruhoh instance (save to disk).
@@ -141,19 +167,32 @@ class Ruhoh
     FileUtils.rm_r config['compiled_path'] if File.exist?(config['compiled_path'])
     FileUtils.mkdir_p config['compiled_path']
 
-    # Run the resource compilers
-    compilers = @collections.all
+    compilers = query.list
     # Hack to ensure assets are processed first so post-processing logic reflects in the templates.
-    compilers.delete('stylesheets')
-    compilers.unshift('stylesheets')
-    compilers.delete('javascripts')
-    compilers.unshift('javascripts')
+    if compilers.include?('stylesheets')
+      compilers.delete('stylesheets')
+      compilers.unshift('stylesheets')
+    end
 
+    if compilers.include?('javascripts')
+      compilers.delete('javascripts')
+      compilers.unshift('javascripts')
+    end
 
     compilers.each do |name|
-      collection = collection(name)
-      next unless collection.compiler?
-      collection.load_compiler.run
+      use = config.collection(name)["use"] || name
+
+      next if ["ignore", "layouts", "partials", "data", "theme"].include?(use)
+
+      # TODO: Improve this manual override.
+      if ["javascripts", "stylesheets"].include?(use)
+        use = "asset"
+      end
+
+      compiler = collections.compiler(use)
+      compiler ||= collections.compiler("pages")
+
+      compiler.new(self).run(name)
     end
 
     # Run extra compiler tasks if available:
@@ -168,13 +207,5 @@ class Ruhoh
     end
 
     true
-  end
-
-  def self.collection(resource)
-    Collections.load(resource)
-  end
-
-  def self.model(resource)
-    Collections.get_module_namespace_for(resource).const_get(:ModelView)
   end
 end

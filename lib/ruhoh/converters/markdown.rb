@@ -12,7 +12,7 @@ class Ruhoh
           :autolink => true, 
           :fenced_code_blocks => true, 
         )
-        markdown.render(content)
+        CGI.unescapeHTML(markdown.render(content))
       end
     end
   end

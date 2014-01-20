@@ -11,7 +11,7 @@ Feature: Plugins
           "Hi this is output from the test plugin"
         end
       end
-      Ruhoh::Resources::Pages::CollectionView.send(:include, PagesTest)
+      Ruhoh::Collections::Pages::CollectionView.send(:include, PagesTest)
       """
       And the file "_root/index.html" with body:
         """
@@ -32,7 +32,7 @@ Feature: Plugins
           date.strftime("%B %d, %Y")
         end
       end
-      Ruhoh.model('pages').send(:include, PagesModelViewAddons)
+      Ruhoh::Collections::Pages::ModelView.send(:include, PagesModelViewAddons)
       """
     When I compile my site
     Then my compiled site should have the file "index.html"
