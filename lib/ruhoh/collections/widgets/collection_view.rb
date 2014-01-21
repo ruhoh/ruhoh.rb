@@ -1,8 +1,10 @@
 module Ruhoh::Collections::Widgets
   class CollectionView < SimpleDelegator
+    attr_reader :_widgets_used
     include Ruhoh::Collectable
 
     def initialize(data, ruhoh=nil)
+      @_widgets_used = Set.new
       @ruhoh = ruhoh
 
       data.each do |item|
@@ -13,6 +15,7 @@ module Ruhoh::Collections::Widgets
     end
 
     def widget(name)
+      @_widgets_used << name.to_s
       page_config = (master.page_data["widgets"][name] || {}) rescue {}
       widget_config = (config[name] || {}).merge(page_config)
       return '' if widget_config['enable'].to_s == 'false'

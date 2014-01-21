@@ -179,6 +179,11 @@ class Ruhoh
       compilers.unshift('javascripts')
     end
 
+    # We track which widgets are actually used in the templates.
+    # Therefore, all collections need to run before used widgets are compiled.
+    compilers.delete('widgets')
+    compilers.push('widgets')
+
     compilers.each do |name|
       use = config.collection(name)["use"] || name
 

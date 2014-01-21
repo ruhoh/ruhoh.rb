@@ -6,13 +6,16 @@ module Ruhoh::Collections::Widgets
 
     def run(collection_name)
       pages = @ruhoh.collections.load(collection_name)
+      widgets_used = pages._widgets_used.to_a
 
-      puts "=> Assets for #{collection_name}: #{ pages.count }"
-      Ruhoh::Friend.say { cyan "#{collection_name.capitalize}: (#{pages.count} #{collection_name})" }
+      Ruhoh::Friend.say { 
+        cyan "#{collection_name.capitalize}: (#{pages.count} #{collection_name})"
+        cyan "  Actually used: #{ widgets_used }"
+      }
 
-      manifest = {}
       pages.each do |item|
         next if item.ext == ".html"
+        next unless widgets_used.include?(item.directories[1])
 
         compiled_file = @ruhoh.compiled_path(File.join("assets", item.id))
 
