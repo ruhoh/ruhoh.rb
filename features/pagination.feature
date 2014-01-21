@@ -41,15 +41,3 @@ Feature: Pagination
       And this file should have the links "/essays/hello, /essays/index/1, /essays/index/2"
       And this file should NOT have the links "/essays/index/4"
     Then my compiled site should NOT have the file "essays/index/4/index.html"
-
-  Scenario: Customizing the paginator url
-    Given a config file with values:
-      | essays | { "paginator" : { "enable" : true, "url" : "/coolguy/index" } } |
-      And some files with values:
-        | file | body |
-        | essays/hello.md | some hello content |
-        | essays/goodbye.md | some goodbye content |
-        | essays/caio.md | some caio content |
-    When I compile my site
-    Then my compiled site should have the file "coolguy/index/1/index.html"
-      And this file should have the links "/essays/hello, /essays/goodbye, /essays/caio"
