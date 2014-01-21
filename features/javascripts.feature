@@ -9,7 +9,7 @@ Feature: Javascripts
       | javascripts/base.js | var meep; |
       | javascripts/app.js | console.log('haro world') |
       | javascripts/custom.js | console.log('haro world') |
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         {{# javascripts.load }}
           base.js
@@ -29,7 +29,7 @@ Feature: Javascripts
         | javascripts/base.js | var meep; |
         | sample_theme/javascripts/app.js | console.log('haro world') |
         | sample_theme/javascripts/custom.js | (function() {}) |
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         {{# javascripts.load }}
           base.js
@@ -47,7 +47,7 @@ Feature: Javascripts
       | javascripts/base.js | var meep; |
       | javascripts/app.js | console.log('haro world') |
       | javascripts/custom.js | console.log('haro world') |
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         ---
         custom: base.js
@@ -66,7 +66,7 @@ Feature: Javascripts
       | javascripts/base.js | var meep; |
       | javascripts/app.js | console.log('haro world') |
       | javascripts/custom.js | console.log('haro world') |
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         {{# javascripts.all }}
           <script type="text/javascript" id="{{id}}" src="{{url}}"></script>

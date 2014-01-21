@@ -10,7 +10,7 @@ Feature: Date Formatting
       """
       And some files with values:
         | file              | date    | body            |
-        | _root/index.html  | <date>  | {{ page.date }} |
+        | index.html  | <date>  | {{ page.date }} |
     When I compile my site
     Then my compiled site should have the file "index.html"
       And this file should contain the content "<formated-date>"
@@ -25,7 +25,7 @@ Feature: Date Formatting
   Scenario: Date without a configured date_format
     Given some files with values:
         | file              | date    | body            |
-        | _root/index.html  | 2013.12.11 | {{ page.date }} |
+        | index.html  | 2013.12.11 | {{ page.date }} |
     When I compile my site
     Then my compiled site should have the file "index.html"
       And this file should contain the content "2013-12-11"
@@ -33,7 +33,7 @@ Feature: Date Formatting
   Scenario: Invalid date
     Given some files with values:
         | file              | date  | body            |
-        | _root/index.html  | 0-0   | {{ page.date }} |
+        | index.html  | 0-0   | {{ page.date }} |
     When I try to compile my site
     Then it should fail with:
       """

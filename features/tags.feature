@@ -16,7 +16,7 @@ Feature: Tags
   Scenario: Displaying a collection's tags with counts
     Given some files with values:
       | file | tags | body |
-      | _root/index.md | | {{# essays.tags.all }} <span>{{ name }}-{{ count }}</span> {{/ essays.tags.all }} |
+      | index.md | | {{# essays.tags.all }} <span>{{ name }}-{{ count }}</span> {{/ essays.tags.all }} |
       | essays/hello.md | apple, banana, pear | |
       | essays/goodbye.md | apple, banana, pear, watermelon | |
     When I compile my site
@@ -29,7 +29,7 @@ Feature: Tags
   Scenario: Displaying a specific tag from a collection
     Given some files with values:
       | file | tags | body |
-      | _root/index.md | | {{# essays.tags.banana }} <span>{{ name }}-{{ count }}</span> {{/ essays.tags.banana }} |
+      | index.md | | {{# essays.tags.banana }} <span>{{ name }}-{{ count }}</span> {{/ essays.tags.banana }} |
       | essays/hello.md | apple, banana, pear | |
       | essays/goodbye.md | apple, banana, pear, watermelon | |
     When I compile my site

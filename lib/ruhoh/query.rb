@@ -13,6 +13,11 @@ class Ruhoh
       @paths = self.class.paths
     end
 
+    # Include the root directory as part of allowable collections
+    def list
+      %w{ _root } + super 
+    end
+
     def published
       where("$directories" => { "$ne" => "drafts" })
     end

@@ -6,12 +6,8 @@
     "compiled_path" : "compiled"
     ,
     "_root" : {
-        "permalink" : "/:relative_path/:filename",
-        "paginator" : {
-            "url" : "/index/"
-        },
         "rss" : {
-            "url" : "/"
+            "enable" : false
         }
     }
     ,

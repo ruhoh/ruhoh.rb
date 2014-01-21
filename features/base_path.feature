@@ -7,7 +7,7 @@ Feature: base_path
     Given some files with values:
       | file       | body |
       | config.yml | base_path: '/hello/world' |
-      | _root/index.html | |
+      | index.html | |
       | essays/water.md | <span>{{ page.url }}</span> |
     When I compile my site
     Then my compiled site should have the file "hello/world/index.html"
@@ -18,7 +18,7 @@ Feature: base_path
     Given some files with values:
       | file       | body |
       | config.yml | base_path: '/hello/world' \ncompile_as_root: true  |
-      | _root/index.html | |
+      | index.html | |
       | essays/water.md | <span>{{ page.url }}</span> |
     When I compile my site
     Then my compiled site should have the file "index.html"

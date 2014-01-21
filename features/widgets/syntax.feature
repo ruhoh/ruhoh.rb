@@ -12,7 +12,7 @@ Feature: Syntax widget
       """
     Given some files with values:
       | file                       | body |
-      | _root/index.md            | {{{ widgets.syntax }}} |
+      | index.md            | {{{ widgets.syntax }}} |
     When I compile my site
     Then my compiled site should have the file "index.html"
       And this file should have the content node "script[src='/assets/widgets/syntax/javascripts/prettify.js']|"
@@ -29,7 +29,7 @@ Feature: Syntax widget
       """
     Given some files with values:
       | file                       | body |
-      | _root/index.md            | {{{ widgets.syntax }}} |
+      | index.md            | {{{ widgets.syntax }}} |
     When I compile my site
     Then my compiled site should have the file "index.html"
       And this file should have the content node "script[src='http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js']|"

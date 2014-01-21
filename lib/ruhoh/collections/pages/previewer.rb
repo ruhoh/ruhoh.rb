@@ -37,7 +37,7 @@ module Ruhoh::Collections::Pages
       if parts.count > 1
         query = query.path(parts[0])
       else
-        query = query.path("_root")
+        query = query.path("")
       end
 
       last_element = parts.last.to_s

@@ -14,7 +14,7 @@ Feature: Data
         - mango
         - kiwi
       """
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         <name>{{ data.name }}</name>
         <city>{{ data.address.city }}</city>
@@ -45,7 +45,7 @@ Feature: Data
         ]
       }
       """
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         <name>{{ data.name }}</name>
         <city>{{ data.address.city }}</city>
@@ -88,7 +88,7 @@ Feature: Data
           "greeting": "Hai!"
         }
         """
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         <name>{{ data.name }}</name>
         <city>{{ data.address.city }}</city>
@@ -123,7 +123,7 @@ Scenario: Defining a basic data structure in custom data collection
       ]
     }
     """
-    And the file "_root/index.html" with body:
+    And the file "index.html" with body:
       """
       <name>{{ meta.data.name }}</name>
       <city>{{ meta.data.address.city }}</city>
@@ -171,7 +171,7 @@ Scenario: Defining a basic data structure in custom data collection
       }
       """
 
-    And the file "_root/index.html" with body:
+    And the file "index.html" with body:
       """
       <name>{{ meta.data.name }}</name>
       <greeting>{{ meta.data.greeting }}</greeting>

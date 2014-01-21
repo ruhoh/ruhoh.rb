@@ -9,7 +9,7 @@ Feature: Stylesheets
       | stylesheets/base.css | body { color: black } |
       | stylesheets/app.css | div { color: black } |
       | stylesheets/custom.css | div { color: black } |
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         {{# stylesheets.load }}
           base.css
@@ -29,7 +29,7 @@ Feature: Stylesheets
         | stylesheets/base.css | blah {} |
         | sample_theme/stylesheets/app.css | blah {} |
         | sample_theme/stylesheets/custom.css | blah {} |
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         {{# stylesheets.load }}
           base.css

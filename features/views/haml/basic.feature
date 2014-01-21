@@ -4,8 +4,11 @@ Feature: Haml Basics
   so I can be happy because I like using haml
 
   Scenario: Basic HAML
-  Given the file "_root/index.haml" with body:
+  Given the file "index.haml" with body:
     """
+    ---
+    title: "Home"
+    ---
     %h2
       = 1 + 5
     %p
@@ -14,4 +17,4 @@ Feature: Haml Basics
   When I compile my site
   Then my compiled site should have the file "index.html"
   And this file should contain the content node "h2|6"
-  And this file should contain the content node "p|_root"
+  And this file should contain the content node "p|Home"

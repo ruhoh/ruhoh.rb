@@ -28,9 +28,19 @@ class Ruhoh::Collections
     # at the least, the item's parent collection should return
     config = @ruhoh.config.collection(name)
 
-    pages = @ruhoh.query.path_all(name).published
-    pages = pages.sort(config["sort"]) if config["sort"]
-    pages = pages.to_a #TODO: FIX THIS
+    query = @ruhoh.query
+    # Handle special "_root" case
+    # TODO: Remove hard-coded stuff
+    if (name == "_root")
+      special_files = %w(config Gemfile publish page_not_found dashboard)
+      query = query.path("").where("$shortname" => { "$nin" => special_files })
+    else
+      query = query.path_all(name)
+    end
+
+    query = query.sort(config["sort"]) if config["sort"]
+    query = query.published
+    pages = query.to_a #TODO: FIX THIS
 
     use = config["use"]
 
