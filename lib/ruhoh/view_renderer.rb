@@ -2,6 +2,7 @@ require 'ruhoh/views/helpers/simple_proxy'
 require 'ruhoh/views/context'
 require 'ruhoh/views/mustache_renderer'
 require 'ruhoh/views/erb_renderer'
+require 'ruhoh/views/haml_renderer'
 
 module Ruhoh::Views
   class Renderer
@@ -67,6 +68,8 @@ module Ruhoh::Views
     def view_class(ext)
       if ext == ".erb"
         Ruhoh::Views::ErbRenderer
+      elsif ext == ".haml"
+        Ruhoh::Views::HamlRenderer
       else
         Ruhoh::Views::MustacheRenderer
       end
