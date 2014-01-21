@@ -15,4 +15,5 @@ group :test do
   gem 'cucumber'
   gem 'capybara'
   gem 'rspec'
+  gem 'haml', '~> 4'
 end
