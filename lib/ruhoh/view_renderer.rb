@@ -1,6 +1,7 @@
 require 'ruhoh/views/helpers/simple_proxy'
 require 'ruhoh/views/context'
 require 'ruhoh/views/mustache_renderer'
+require 'ruhoh/views/erb_renderer'
 
 module Ruhoh::Views
   class Renderer
@@ -10,7 +11,7 @@ module Ruhoh::Views
     end
 
     def render_content
-      Ruhoh::Views::MustacheRenderer.render({
+      view_class(@item.ext).render({
         ruhoh: @ruhoh,
         item: @item,
         template: @item.content,
@@ -23,7 +24,7 @@ module Ruhoh::Views
         render_content
       else
         page_layouts.reduce(render_content) do |c, l|
-          Ruhoh::Views::MustacheRenderer.render({
+          view_class(l.ext).render({
             ruhoh: @ruhoh,
             item: @item,
             template: l.content,
@@ -60,6 +61,14 @@ module Ruhoh::Views
           page_layouts << layout
         end
         page_layouts
+      end
+    end
+
+    def view_class(ext)
+      if ext == ".erb"
+        Ruhoh::Views::ErbRenderer
+      else
+        Ruhoh::Views::MustacheRenderer
       end
     end
   end
