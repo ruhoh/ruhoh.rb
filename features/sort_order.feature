@@ -9,7 +9,7 @@ Feature: Page Sort Order
       | essays/hello.md | |
       | essays/zebra.md | |
       | essays/apple.md | |
-      And the file "_root/index.md" with body:
+      And the file "index.md" with body:
       """
       <essays>
         {{# essays.all }}{{ title }}-{{/ essays.all }}
@@ -29,7 +29,7 @@ Feature: Page Sort Order
         | essays/hello.md |
         | essays/zebra.md |
         | essays/apple.md |
-        And the file "_root/index.md" with body:
+        And the file "index.md" with body:
         """
         <essays>
           {{# essays.all }}{{ title }}-{{/ essays.all }}
@@ -50,7 +50,7 @@ Feature: Page Sort Order
         | essays/hello.md | 2013-12-01  |
         | essays/zebra.md | 2013-12-10  |
         | essays/apple.md | 2013-12-25  |
-        And the file "_root/index.md" with body:
+        And the file "index.md" with body:
         """
         <essays>
           {{# essays.all }}{{ title }}-{{/ essays.all }}
@@ -70,7 +70,7 @@ Feature: Page Sort Order
         | essays/hello.md | 2013-12-01  |
         | essays/zebra.md | 2013-12-10  |
         | essays/apple.md | 2013-12-25  |
-        And the file "_root/index.md" with body:
+        And the file "index.md" with body:
         """
         <essays>
           {{# essays.all }}{{ title }}-{{/ essays.all }}
@@ -90,7 +90,7 @@ Feature: Page Sort Order
         | essays/hello.md | 2  |
         | essays/zebra.md | 1  |
         | essays/apple.md | 3  |
-        And the file "_root/index.md" with body:
+        And the file "index.md" with body:
         """
         <essays>
           {{# essays.all }}{{ title }}-{{/ essays.all }}
@@ -110,7 +110,7 @@ Feature: Page Sort Order
         | essays/hello.md | c        |
         | essays/zebra.md | b        |
         | essays/apple.md | a        |
-        And the file "_root/index.md" with body:
+        And the file "index.md" with body:
         """
         <essays>
           {{# essays.all }}{{ title }}-{{/ essays.all }}

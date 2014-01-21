@@ -7,7 +7,7 @@ Feature: Partials
     Given some files with values:
       | file | body |
       | partials/watermelon.html | I like to eat watermelon =) |
-      | _root/index.md | {{> watermelon.html }} |
+      | index.md | {{> watermelon.html }} |
     When I compile my site
     Then my compiled site should have the file "index.html"
       And this file should contain the content "I like to eat watermelon =)"
@@ -16,7 +16,7 @@ Feature: Partials
     Given some files with values:
       | file | body |
       | partials/watermelon.md | ## I like to eat watermelon =) |
-      | _root/index.md | {{> watermelon.md }} |
+      | index.md | {{> watermelon.md }} |
     When I compile my site
     Then my compiled site should have the file "index.html"
       And this file should contain the content node "h2|I like to eat watermelon =)"

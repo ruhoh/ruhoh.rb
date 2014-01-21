@@ -18,7 +18,7 @@ module Ruhoh::Collections::Pages
     end
 
     def resource
-      id.split('/').first
+      @resource ||= id.index('/').nil? ? "_root" : id.split('/').first
     end
 
     def <=>(other)

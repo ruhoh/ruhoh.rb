@@ -16,7 +16,7 @@ Feature: Categories
   Scenario: Displaying a collection's categories with counts
     Given some files with values:
       | file | categories | body |
-      | _root/index.md | | {{# essays.categories.all }} <span>{{ name }}-{{ count }}</span> {{/ essays.categories.all }} |
+      | index.md | | {{# essays.categories.all }} <span>{{ name }}-{{ count }}</span> {{/ essays.categories.all }} |
       | essays/hello.md | apple, banana, pear | |
       | essays/goodbye.md | apple, banana, pear, watermelon | |
     When I compile my site
@@ -29,7 +29,7 @@ Feature: Categories
   Scenario: Displaying a specific categories from a collection
     Given some files with values:
       | file | categories | body |
-      | _root/index.md | | {{# essays.categories.banana }} <span>{{ name }}-{{ count }}</span> {{/ essays.categories.banana }} |
+      | index.md | | {{# essays.categories.banana }} <span>{{ name }}-{{ count }}</span> {{/ essays.categories.banana }} |
       | essays/hello.md | apple, banana, pear | |
       | essays/goodbye.md | apple, banana, pear, watermelon | |
     When I compile my site

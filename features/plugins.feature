@@ -13,7 +13,7 @@ Feature: Plugins
       end
       Ruhoh::Collections::Pages::CollectionView.send(:include, PagesTest)
       """
-      And the file "_root/index.html" with body:
+      And the file "index.html" with body:
         """
         <output>{{ _root.test_plugin_method }}</output>
         """
@@ -24,7 +24,7 @@ Feature: Plugins
   Scenario: Loading a pages model plugin from the plugins folder.
     Given some files with values:
       | file | date | body |
-      | _root/index.html | 2013-12-01 | <date>{{ page.friendly_date }}</date> |
+      | index.html | 2013-12-01 | <date>{{ page.friendly_date }}</date> |
     Given the file "plugins/paged_model_view_addons.rb" with body:
       """
       module PagesModelViewAddons
@@ -41,7 +41,7 @@ Feature: Plugins
   Scenario: Loading a custom converter from the plugins folder.
     Given some files with values:
       | file | body |
-      | _root/index.strip | <output>the quick brown fox jumps over the lazy dog</output> |
+      | index.strip | <output>the quick brown fox jumps over the lazy dog</output> |
     Given the file "plugins/strip_converter.rb" with body:
       """
       class Ruhoh

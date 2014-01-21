@@ -57,7 +57,7 @@ TEXT
       parts.shift # omit root forward slash
 
       path = (parts.length <= 1) ?
-                File.join("_root", (parts.empty? ? "index" : parts.first)) :
+                File.join((parts.empty? ? "index" : parts.first)) :
                 File.join(*parts) # collection
 
       File.extname(parts.last.to_s).to_s.empty? ?
