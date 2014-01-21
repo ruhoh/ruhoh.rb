@@ -139,3 +139,54 @@ Scenario: Defining a basic data structure in custom data collection
     And this file should contain the content node "city|alhambra"
     And this file should contain the content node "li|mango"
     And this file should contain the content node "li|kiwi"
+
+Scenario: Defining a basic data structure in custom data collection
+  Given a config file with value:
+    """
+    { 
+      "meta" : { "use" : "data" },
+      "theme-test" : { "use" : "theme" }
+    }
+    """
+    And the file "meta/data.json" with body:
+    """
+    {
+      "address": {
+        "city": "alhambra"
+      }, 
+      "name": "jade", 
+      "fruits": [
+        "mango", 
+        "kiwi"
+      ]
+    }
+    """
+    And the file "theme-test/meta/data.json" with body:
+      """
+      {
+        "address": {
+          "city": "Berkeley"
+        },
+        "greeting": "Hai!"
+      }
+      """
+
+    And the file "_root/index.html" with body:
+      """
+      <name>{{ meta.data.name }}</name>
+      <greeting>{{ meta.data.greeting }}</greeting>
+      <city>{{ meta.data.address.city }}</city>
+      <ul>
+      {{# meta.data.fruits }}
+        <li>{{ . }}</li>
+      {{/ meta.data.fruits }}
+      </ul>
+      """
+  When I compile my site
+  Then my compiled site should have the file "index.html"
+    And this file should contain the content node "name|jade"
+    And this file should contain the content node "city|Berkeley"
+    And this file should contain the content node "greeting|Hai!"
+    And this file should contain the content node "li|kiwi"
+    And this file should contain the content node "li|mango"
+    And this file should contain the content node "li|kiwi"
