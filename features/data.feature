@@ -16,12 +16,12 @@ Feature: Data
       """
       And the file "index.html" with body:
         """
-        <name>{{ data.name }}</name>
-        <city>{{ data.address.city }}</city>
+        <name>{{ _root.data.name }}</name>
+        <city>{{ _root.data.address.city }}</city>
         <ul>
-        {{# data.fruits }}
+        {{# _root.data.fruits }}
           <li>{{ . }}</li>
-        {{/ data.fruits }}
+        {{/ _root.data.fruits }}
         </ul>
         """
     When I compile my site
@@ -47,12 +47,12 @@ Feature: Data
       """
       And the file "index.html" with body:
         """
-        <name>{{ data.name }}</name>
-        <city>{{ data.address.city }}</city>
+        <name>{{ _root.data.name }}</name>
+        <city>{{ _root.data.address.city }}</city>
         <ul>
-        {{# data.fruits }}
+        {{# _root.data.fruits }}
           <li>{{ . }}</li>
-        {{/ data.fruits }}
+        {{/ _root.data.fruits }}
         </ul>
         """
     When I compile my site
@@ -90,13 +90,13 @@ Feature: Data
         """
       And the file "index.html" with body:
         """
-        <name>{{ data.name }}</name>
-        <city>{{ data.address.city }}</city>
-        <greeting>{{ data.greeting }}</greeting>
+        <name>{{ _root.data.name }}</name>
+        <city>{{ _root.data.address.city }}</city>
+        <greeting>{{ _root.data.greeting }}</greeting>
         <ul>
-        {{# data.fruits }}
+        {{# _root.data.fruits }}
           <li>{{ . }}</li>
-        {{/ data.fruits }}
+        {{/ _root.data.fruits }}
         </ul>
         """
     When I compile my site

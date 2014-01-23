@@ -32,7 +32,7 @@ class Ruhoh::Collections
     # Handle special "_root" case
     # TODO: Remove hard-coded stuff
     if (name == "_root")
-      special_files = %w(config Gemfile publish page_not_found dashboard)
+      special_files = %w(config Gemfile publish page_not_found dashboard data)
       query = query.path("").where("$shortname" => { "$nin" => special_files })
     else
       query = query.path_all(name)

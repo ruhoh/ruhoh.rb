@@ -8,5 +8,11 @@ class Ruhoh
     def config
       @ruhoh.config.collection(collection_name)
     end
+
+    def data
+      return @_data if @_data
+      item = @ruhoh.query.path(collection_name).where("$shortname" => "data").first
+      @_data = item ? item.data : {}
+    end
   end
 end
