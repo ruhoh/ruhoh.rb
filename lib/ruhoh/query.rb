@@ -13,6 +13,10 @@ class Ruhoh
       @paths = self.class.paths
     end
 
+    def path(arg)
+      super(((arg == "_root") ? "" : arg))
+    end
+
     # Include the root directory as part of allowable collections
     def list
       %w{ _root } + super 
