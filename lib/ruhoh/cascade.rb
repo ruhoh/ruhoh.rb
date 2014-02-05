@@ -23,7 +23,7 @@ class Ruhoh
           match = Dir["*"].find { |id|
             File.exist?(id) &&
               FileTest.file?(id) &&
-                id.gsub(/.[^.]+$/, '') == key
+                id.gsub(/.(yml|yaml|json)$/, '') == key
           }
           next unless match
           realpaths << File.realpath(match)
