@@ -67,7 +67,7 @@ module Ruhoh::Resources::Pages
       data = @ruhoh.collection("data").dictionary
 
       feed = Nokogiri::XML::Builder.new do |xml|
-       xml.rss(:version => '2.0') {
+       xml.rss('xmlns:dc' => 'http://purl.org/dc/elements/1.1/', :version => '2.0') {
          xml.channel {
            xml.title_ data['title']
            xml.description_ (data['description'] ? data['description'] : data['title'])
@@ -79,6 +79,7 @@ module Ruhoh::Resources::Pages
                xml.title_ page.title
                xml.link "#{@ruhoh.config['production_url']}#{page.url}"
                xml.pubDate_ page.date if page.date
+               xml['dc'].creator data['author']['name']
                xml.description_ (page.try(:description) ? page.description : view.render_content)
              }
            end
