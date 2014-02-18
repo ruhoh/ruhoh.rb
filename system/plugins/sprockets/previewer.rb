@@ -6,9 +6,9 @@ module Ruhoh::SprocketsPlugin
       extend Forwardable
       def_instance_delegator :@environment, :call
 
-      def initialize(collection)
+      def initialize(cascade)
         environment = Sprockets::Environment.new
-        collection.paths.reverse.each do |path|
+        cascade.each do |path|
           environment.append_path(path)
         end
         @environment = environment

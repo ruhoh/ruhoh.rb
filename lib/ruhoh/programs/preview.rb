@@ -18,7 +18,7 @@ class Ruhoh
     def self.preview(opts={})
       opts[:watch] ||= true
       opts[:env] ||= 'development'
-      
+
       ruhoh = Ruhoh.new
       ruhoh.env = opts[:env]
       ruhoh.setup_plugins unless opts[:enable_plugins] == false
@@ -28,16 +28,34 @@ class Ruhoh
         use Rack::Lint
         use Rack::ShowExceptions
 
-        map '/assets' do
-          # if collection.previewer?
-          #   run collection.load_previewer
-          # else
-          #   run Rack::Cascade.new(
-          #     collection.paths.reverse.map { |path|
-          #       Rack::File.new(path)
-          #     }
-          #   )
-          # end
+        # static collections
+        ruhoh.query.list.each do |collection_name|
+          use = ruhoh.config.collection(collection_name)["use"] || collection_name
+          next unless use == "static"
+          map "/#{ collection_name }" do
+            run Rack::Cascade.new(
+              ruhoh.query.paths.to_a.reverse.map { |path|
+                Rack::File.new("#{ path }/#{ collection_name }")
+              }
+            )
+          end
+        end
+
+        # asset collections
+        %w{ javascripts stylesheets media widgets }.each do |collection_name|
+          map "/assets/#{ collection_name }" do
+            previewer = ruhoh.collections.previewer(collection_name)
+            if previewer
+              paths = ruhoh.query.paths.to_a.reverse.map { |path| "#{ path }/#{ collection_name }" }
+              run previewer.new(paths)
+            else
+              run Rack::Cascade.new(
+                ruhoh.query.paths.to_a.reverse.map { |path|
+                  Rack::File.new("#{ path }/#{ collection_name }")
+                }
+              )
+            end
+          end
         end
 
         map '/dash' do

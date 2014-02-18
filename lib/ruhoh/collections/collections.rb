@@ -83,6 +83,16 @@ class Ruhoh::Collections
     nil
   end
 
+  def previewer(use)
+    namespace = get_namespace(use)
+
+    (namespace && namespace.const_defined?(:Previewer)) ?
+      namespace.const_get(:Previewer) :
+      nil
+  rescue NameError
+    nil
+  end
+
   private
 
   def get_namespace(name)

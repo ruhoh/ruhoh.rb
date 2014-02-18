@@ -1,38 +1,36 @@
 require 'sprockets'
 
-module Ruhoh::SprocketsPlugin
-  module Compiler
-    extend Ruhoh::Base::CompilableAsset
-    def run
+module Ruhoh::Collections::Asset
+  class Compiler
+    def initialize(ruhoh)
+      @ruhoh = ruhoh
+    end
+
+    def run(collection_name)
+      pages = @ruhoh.collections.load(collection_name)
+
+      Ruhoh::Friend.say {
+        cyan "#{collection_name.capitalize}: (#{ pages.count } #{ collection_name }) : (using sprockets)"
+      }
+
       env = Sprockets::Environment.new
       #env.css_compressor = :sass
       env.logger = Logger.new(STDOUT)
       env.logger.level = Logger::WARN
 
-      collection = @collection
-
-      unless collection.paths?
-        Ruhoh::Friend.say { yellow "#{collection.resource_name.capitalize}: directory not found - skipping." }
-        return
-      end
-
-      Ruhoh::Friend.say { cyan "#{collection.resource_name.capitalize}: (using sprockets)" }
-
-      collection.paths.reverse.each do |path|
+      @ruhoh.query.paths.to_a.reverse.each do |path|
         env.append_path(path)
       end
 
-      compile_collection_path
-
-      manifest = Sprockets::Manifest.new(env, @collection.compiled_path)
-      assets = collection.files.values.map{ |p|
-        Ruhoh::Friend.say { green "  > #{p['id']}" }
-        p["id"]
+      manifest = Sprockets::Manifest.new(env, @ruhoh.compiled_path("assets"))
+      assets = pages.map{ |item|
+        Ruhoh::Friend.say { green "  > #{ item.id }" }
+        item.id
       }
       manifest.compile(assets)
 
       # Update the paths to the digest format:
-      @collection._cache.merge!(manifest.assets)
+      pages._cache.merge!(manifest.assets)
     end
   end
 end

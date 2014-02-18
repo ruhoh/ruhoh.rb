@@ -15,5 +15,8 @@ group :test do
   gem 'cucumber'
   gem 'capybara'
   gem 'rspec'
+
+  gem 'sprockets', '~> 2.8'
+  gem 'sass'
   gem 'haml', '~> 4'
 end
