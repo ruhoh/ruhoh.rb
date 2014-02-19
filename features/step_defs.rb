@@ -25,6 +25,10 @@ Given(/^some files with values:$/) do |table|
   end
 end
 
+Given(/^an image at the path "(.*?)"$/) do |path|
+  copy_sample_image(path)
+end
+
 When(/^I try to compile my site$/) do
   begin
     compile

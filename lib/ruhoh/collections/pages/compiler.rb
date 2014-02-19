@@ -12,12 +12,16 @@ module Ruhoh::Collections::Pages
       Ruhoh::Friend.say { cyan "#{ collection_name.capitalize }: (#{ pages.count } #{ collection_name })" }
 
       pages.each do |item|
-        view = @ruhoh.master_view(item)
         path = @ruhoh.compiled_path_page(item.url)
-
         FileUtils.mkdir_p(File.dirname(path))
-        File.open(path, 'w:UTF-8') do |p|
-          p.puts(view.render_full)
+
+        if item.binary?
+          FileUtils.cp_r(item.realpath, path)
+        else
+          view = @ruhoh.master_view(item)
+          File.open(path, 'w:UTF-8') do |p|
+            p.puts(view.render_full)
+          end
         end
 
         Ruhoh::Friend.say { green "  > #{ item.id }" }

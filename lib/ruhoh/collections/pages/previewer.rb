@@ -18,13 +18,17 @@ module Ruhoh::Collections::Pages
       item = find_page(env)
 
       if item
-        view = @ruhoh.master_view(item)
+        if item.binary?
+          Rack::File.new(File.dirname(item.realpath)).call(env)
+        else
+          view = @ruhoh.master_view(item)
 
-        Ruhoh::Friend.say {
-          plain "- previewing page:"
-          plain "   #{ item.id }"
-        }
-        [200, {'Content-Type' => 'text/html'}, [view.render_full]]
+          Ruhoh::Friend.say {
+            plain "- previewing page:"
+            plain "   #{ item.id }"
+          }
+          [200, {'Content-Type' => 'text/html'}, [view.render_full]]
+        end
       else
         Ruhoh::UI::PageNotFound.new(@ruhoh, item).call(env)
       end

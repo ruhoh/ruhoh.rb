@@ -52,6 +52,13 @@ TEXT
   }
 end
 
+def copy_sample_image(path)
+  path = File.join(SampleSitePath, path)
+  FileUtils.mkdir_p(File.dirname(path))
+
+  FileUtils.cp(File.join(File.dirname(__FILE__), 'avatar.jpg'), path)
+end
+
 def get_compiled_file(path)
   FileUtils.cd(@ruhoh.config['compiled_path']) {
     File.open(path, 'r:UTF-8') { |f| 
@@ -74,5 +81,5 @@ Before do
 end
 
 After do
-  FileUtils.remove_dir(SampleSitePath,1) if Dir.exists? SampleSitePath
+  #FileUtils.remove_dir(SampleSitePath,1) if Dir.exists? SampleSitePath
 end
