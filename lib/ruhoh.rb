@@ -51,7 +51,7 @@ class Ruhoh
     Query.append_path(File.join(Root, "system"))
     Query.append_path(@base)
 
-    Silly::UrlSlug.add_extensions(Ruhoh::Converter.extensions)
+    Silly.add_html_extensions(Ruhoh::Converter.extensions)
 
     ruhoh = self
     Silly::PageModel.before_data = -> data {
@@ -103,7 +103,7 @@ class Ruhoh
 
     Ruhoh::Plugins::Plugin.run_all self
 
-    Silly::UrlSlug.add_extensions(Ruhoh::Converter.extensions)
+    Silly.add_html_extensions(Ruhoh::Converter.extensions)
   end
 
   def env

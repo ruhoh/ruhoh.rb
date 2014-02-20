@@ -18,16 +18,22 @@ module Ruhoh::Collections::Pages
       item = find_page(env)
 
       if item
+        Ruhoh::Friend.say {
+          plain "- previewing page:"
+          plain "   #{ item.id }"
+        }
+
         if item.binary?
           Rack::File.new(File.dirname(item.realpath)).call(env)
         else
-          view = @ruhoh.master_view(item)
+          content_type = item.mime_types.first.to_s
+          if content_type.empty?
+            raise "Ruhoh does not have a registered content_type for this file." +
+              "This probably means no converter is registered for the given file extension."
+          end
 
-          Ruhoh::Friend.say {
-            plain "- previewing page:"
-            plain "   #{ item.id }"
-          }
-          [200, {'Content-Type' => 'text/html'}, [view.render_full]]
+          view = @ruhoh.master_view(item)
+          [200, {'Content-Type' => content_type }, [view.render_full]]
         end
       else
         Ruhoh::UI::PageNotFound.new(@ruhoh, item).call(env)
