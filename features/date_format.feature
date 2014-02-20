@@ -28,7 +28,7 @@ Feature: Date Formatting
         | index.html  | 2013.12.11 | {{ page.date }} |
     When I compile my site
     Then my compiled site should have the file "index.html"
-      And this file should contain the content "2013-12-11"
+      And this file should contain the content "11 December, 2013"
 
   Scenario: Invalid date
     Given some files with values:
