@@ -15,6 +15,12 @@ module Ruhoh::Views
     def initialize(opts)
       @ruhoh = opts[:ruhoh]
       @item = opts[:item]
+
+      collection_name = @item.directories.first
+      collection_name = "_root" if collection_name == "."
+
+      @item.collection = load_collection_view_for(collection_name)
+
       @content = opts[:content]
     end
 
@@ -24,8 +30,7 @@ module Ruhoh::Views
     end
 
     def collection
-      page.collection.master = self
-      page.collection
+      @item.collection
     end
 
     # NOTE: newline ensures proper markdown rendering.

@@ -60,7 +60,7 @@ module Ruhoh::Collections::Pages
     end
 
     def is_active_page
-      id == __getobj__.collection.master.page_data['id']
+      id == collection.master.page_data['id']
     end
 
     def config
@@ -83,8 +83,8 @@ module Ruhoh::Collections::Pages
 
     def next
       return unless id
-      all_cache = __getobj__.collection.all
-      index = all_cache.index {|p| p["id"] == id}
+      all_cache = collection.all.to_a
+      index = all_cache.index{ |item| item.id == id }
       return unless index && (index-1 >= 0)
       _next = all_cache[index-1]
       return unless _next
@@ -93,8 +93,8 @@ module Ruhoh::Collections::Pages
 
     def previous
       return unless id
-      all_cache = __getobj__.collection.all
-      index = all_cache.index {|p| p["id"] == id}
+      all_cache = collection.all.to_a
+      index = all_cache.index{ |item| item.id == id }
       return unless index && (index+1 >= 0)
       prev = all_cache[index+1]
       return unless prev
