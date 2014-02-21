@@ -24,20 +24,10 @@ class Ruhoh::Collections
     name = name.to_s
     return @collections[name] if @collections[name]
 
-    #TODO: Optimize this.
-    # at the least, the item's parent collection should return
     config = @ruhoh.config.collection(name)
 
     query = @ruhoh.query
-    # Handle special "_root" case
-    # TODO: Remove hard-coded stuff
-    if (name == "_root")
-      special_files = %w(config Gemfile publish page_not_found dashboard data)
-      query = query.path("").where("$shortname" => { "$nin" => special_files })
-    else
-      query = query.path_all(name)
-    end
-
+    query = (name == "_root") ? query._root : query.path_all(name)
     query = query.sort(config["sort"]) if config["sort"]
     query = query.published
     pages = query.to_a #TODO: FIX THIS

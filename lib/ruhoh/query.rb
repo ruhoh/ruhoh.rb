@@ -22,6 +22,13 @@ class Ruhoh
       %w{ _root } + super 
     end
 
+    # Handle special "_root" case
+    # TODO: Remove hard-coded stuff
+    def _root
+      special_files = %w(config Gemfile publish page_not_found dashboard)
+      path("_root").where("$shortname" => { "$nin" => special_files })
+    end
+
     def published
       where("$directories" => { "$ne" => "drafts" })
     end
