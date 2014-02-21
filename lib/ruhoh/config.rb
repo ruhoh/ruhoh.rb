@@ -10,7 +10,8 @@ class Ruhoh
 
     # Regenerate the config data
     def touch
-      data = @ruhoh.query.where("$shortname" => "config").first.data
+      data = @ruhoh.query.where("$shortname" => "config", "$ext" => { "$in" => %w(.json .yaml .yml) } )
+      data = data.first.data
       data = Ruhoh::Utils.deep_merge(data, collections_config)
       data = Ruhoh::Utils.deep_merge(data, find_theme_path(data))
 
