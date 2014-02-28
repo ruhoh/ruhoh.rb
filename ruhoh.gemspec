@@ -24,8 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'rspec-expectations'
 
-  s.files = `git ls-files`.
-              split("\n").
-              sort.
-              reject { |file| file =~ /^(\.|rdoc|pkg|coverage)/ }
+  s.files = Dir.glob('{system,lib,bin}/**/*') +
+    %w[README.md history.json]
 end
