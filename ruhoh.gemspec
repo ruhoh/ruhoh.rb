@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.description       = 'Ruhoh is a Universal API for your static blog.'
   s.executables       = ["ruhoh"]
   
-  # dependencies defined in Gemfile
   s.add_dependency 'rack', "~> 1.4"
   s.add_dependency 'mustache', "~> 0.99"
   s.add_dependency 'directory_watcher', "~> 1.4.0"
@@ -22,10 +21,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'cucumber'
   s.add_development_dependency 'capybara'
-  s.add_development_dependency 'rspec-expectations'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rake'
 
-  s.files = `git ls-files`.
-              split("\n").
-              sort.
-              reject { |file| file =~ /^(\.|rdoc|pkg|coverage)/ }
+  s.files = Dir.glob('{system,lib,bin}/**/*') +
+    %w[README.md history.json]
 end
