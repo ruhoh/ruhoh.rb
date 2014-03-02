@@ -54,7 +54,7 @@ class Ruhoh
       data = {}
       @ruhoh.cascade.paths.map{ |a| a['path'] }.each do |path|
         FileUtils.cd(path) { 
-          Dir["*/config.*"].each { |id|
+          Dir["*/config.{yml|yaml|json}"].each { |id|
             next unless File.exist?(id) && FileTest.file?(id)
             data = Ruhoh::Utils.deep_merge(data, (Ruhoh::Parse.data_file(File.realpath(id)) || {}))
           }
