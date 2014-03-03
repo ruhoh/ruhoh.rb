@@ -4,11 +4,17 @@ Feature: Stylesheets
   so I can make my content presentation pleasing to the eye and intuitive for my readers
 
   Scenario: Defining stylesheets
-    Given some files with values:
-      | file | body |
-      | stylesheets/base.css | body { color: black } |
-      | stylesheets/app.css | div { color: black } |
-      | stylesheets/custom.css | div { color: black } |
+    Given a config file with value:
+      """
+      {
+        "production_url" : "http://www.fakedomain.com"
+      }
+      """
+      And some files with values:
+        | file | body |
+        | stylesheets/base.css | body { color: black } |
+        | stylesheets/app.css | div { color: black } |
+        | stylesheets/custom.css | div { color: black } |
       And the file "_root/index.html" with body:
         """
         {{# stylesheets.load }}
@@ -22,8 +28,13 @@ Feature: Stylesheets
       And this file should have the fingerprinted stylesheets "base, app, custom"
 
   Scenario: Defining stylesheets in a theme
-    Given a config file with values:
-      | sample_theme | { "use" : "theme" } |
+    Given a config file with value:
+      """
+      {
+        "production_url" : "http://www.fakedomain.com",
+        "sample_theme": { "use" : "theme" }
+      }
+      """
       And some files with values:
         | file | body |
         | stylesheets/base.css | blah {} |
