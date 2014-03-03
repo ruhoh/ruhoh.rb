@@ -2,6 +2,10 @@ Transform(/^(should|should NOT)$/) do |matcher|
   matcher.downcase.gsub(' ', '_')
 end
 
+Given(/^a config file with value:$/) do |string|
+  make_config(JSON.parse(string))
+end
+
 Given(/^a config file with values:$/) do |table|
   data = table.rows_hash
   data.each{ |key, value| data[key] = JSON.parse(value) }

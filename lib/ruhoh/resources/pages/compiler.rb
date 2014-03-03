@@ -7,7 +7,7 @@ module Ruhoh::Resources::Pages
       pages = @collection.all
       resource_name = @collection.resource_name
       Ruhoh::Friend.say { cyan "#{resource_name.capitalize}: (#{pages.count} #{resource_name})" }
-      
+
       FileUtils.cd(@ruhoh.paths.compiled) {
         pages.each do |data|
           view = @ruhoh.master_view(data['pointer'])
@@ -35,9 +35,9 @@ module Ruhoh::Resources::Pages
       total_pages = (pages_count.to_f/config["per_page"]).ceil
 
       Ruhoh::Friend.say { cyan "#{resource_name} paginator: (#{total_pages} pages)" }
-      
+
       FileUtils.cd(@ruhoh.paths.compiled) {
-        total_pages.times.map { |i| 
+        total_pages.times.map { |i|
           # if a root page is defined we assume it's getting compiled elsewhere.
           next if (i.zero? && config["root_page"])
 
@@ -72,15 +72,16 @@ module Ruhoh::Resources::Pages
        xml.rss(:version => '2.0') {
          xml.channel {
            xml.title_ data['title']
-           xml.link_ @ruhoh.config['production_url']
-           xml.pubDate_ Time.now          
+           xml.description_ (data['description'] ? data['description'] : data['title'])
+           xml.link_ production_url
+           xml.pubDate_ Time.now
            pages.each do |page|
              view = @ruhoh.master_view(page.pointer)
              xml.item {
                xml.title_ page.title
-               xml.link "#{@ruhoh.config['production_url']}#{page.url}"
+               xml.link "#{production_url}#{page.url}"
                xml.pubDate_ page.date if page.date
-               xml.description_ (page.try(:description) ? page.description : view.render_content)
+               xml.description_ with_absolute_urls(page.try(:description) ? page.description : view.render_content)
              }
            end
          }
@@ -96,6 +97,29 @@ module Ruhoh::Resources::Pages
 
         Ruhoh::Friend.say { green "  > #{compiled_path}" }
       }
+    end
+
+    private
+
+    def with_absolute_urls(content_html)
+      doc = Nokogiri::HTML::DocumentFragment.parse(content_html)
+      doc.xpath("*[@href|@src]|*//*[@href|@src]").each do |tag|
+        fix_url_in(tag, 'href') || fix_url_in(tag, 'src')
+      end
+      doc.to_s
+    end
+
+    def absolutify_url(url)
+      URI.join(production_url, url)
+    end
+
+    def production_url
+      @ruhoh.config['production_url']
+    end
+
+    def fix_url_in(tag, attribute)
+      return unless tag[attribute]
+      tag[attribute] = absolutify_url(tag[attribute])
     end
   end
 end
