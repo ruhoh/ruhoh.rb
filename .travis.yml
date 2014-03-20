@@ -2,7 +2,9 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-script: "bundle exec cucumber -r features"
+script:
+  - "bundle exec cucumber -r features"
+  - "bundle exec rspec"
 notifications:
   recipients:
     - ben.biddington@gmail.com
