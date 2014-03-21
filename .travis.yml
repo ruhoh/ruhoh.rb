@@ -4,7 +4,7 @@ rvm:
   - 2.0.0
 script:
   - "bundle exec cucumber -r features"
-  - "bundle exec rspec"
+  - "bundle exec rspec --format documentation"
 notifications:
   recipients:
     - ben.biddington@gmail.com
