@@ -20,3 +20,24 @@ Feature: Config
     When I compile my site
     Then my compiled site should have the file "index.html"
       And this file should contain the content node "span|http://hello-world.com"
+
+  Scenario: Compass config.rb files should not be parsed when loading configs
+    Given some files with values:
+      | file       | body |
+      | config.yml | production_url: 'http://hello-world.com' |
+      | config.rb  | this is not YML data |
+      | _root/index.html | <span>{{ urls.production_url }}</span> |
+    When I compile my site
+    Then my compiled site should have the file "index.html"
+      And this file should contain the content node "span|http://hello-world.com"
+
+  Scenario: Config files are properly loaded from subdirectories
+    Given some files with values:
+      | file       | body |
+      | config.rb  | this is not YML data |
+      | template/config.yml | production_url: 'http://hello-world.com' |
+      | template/config.rb  | this is not YML data |
+      | _root/index.html | <span>{{ urls.production_url }}</span> |
+    When I compile my site
+    Then my compiled site should have the file "index.html"
+      And this file should contain the content node "span|http://hello-world.com"

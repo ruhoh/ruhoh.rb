@@ -19,14 +19,14 @@ class Ruhoh
     def merge_data_file(key)
       realpaths = []
       paths.map{ |a| a['path'] }.each do |path|
-        FileUtils.cd(path) { 
-          match = Dir["*"].find { |id|
+        FileUtils.cd(path) {
+          Dir["*"].find_all { |id|
             File.exist?(id) &&
               FileTest.file?(id) &&
                 id.gsub(/.[^.]+$/, '') == key
+          }.each { |match|
+            realpaths << File.realpath(match)
           }
-          next unless match
-          realpaths << File.realpath(match)
         }
       end
 

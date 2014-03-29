@@ -48,13 +48,21 @@ class Ruhoh
         ["#{ filepath }.json", "#{ filepath }.yml", "#{ filepath }.yaml"].each do |result|
           filepath = path = result and break if File.exist?(result)
         end
-
         return nil unless path
       end
 
       file = File.open(filepath, 'r:UTF-8') { |f| f.read }
 
-      File.extname(filepath) == ".json" ? json(file) : yaml(file)
+      case File.extname(filepath)
+      when ".json"
+        json(file)
+      when ".yml"
+        yaml(file)
+      when ".yaml"
+        yaml(file)
+      else
+        {}
+      end
     end
 
     def self.yaml(file)
