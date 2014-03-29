@@ -4,11 +4,17 @@ Feature: Javascripts
   so I can make my content interactive
 
   Scenario: Defining javascripts
-    Given some files with values:
-      | file | body |
-      | javascripts/base.js | var meep; |
-      | javascripts/app.js | console.log('haro world') |
-      | javascripts/custom.js | console.log('haro world') |
+    Given a config file with value:
+      """
+      {
+        "production_url" : "http://www.fakedomain.com"
+      }
+      """
+      And some files with values:
+        | file | body |
+        | javascripts/base.js | var meep; |
+        | javascripts/app.js | console.log('haro world') |
+        | javascripts/custom.js | console.log('haro world') |
       And the file "_root/index.html" with body:
         """
         {{# javascripts.load }}
@@ -22,8 +28,13 @@ Feature: Javascripts
       And this file should have the fingerprinted javascripts "base, app, custom"
 
   Scenario: Defining javascripts in a theme
-    Given a config file with values:
-      | sample_theme | { "use" : "theme" } |
+    Given a config file with value:
+      """
+      {
+        "production_url" : "http://www.fakedomain.com",
+        "sample_theme": { "use" : "theme" }
+      }
+      """
       And some files with values:
         | file | body |
         | javascripts/base.js | var meep; |
@@ -42,11 +53,17 @@ Feature: Javascripts
       And this file should have the fingerprinted javascripts "base, app, custom"
 
   Scenario: Using javascript objects to resolve url
-    Given some files with values:
-      | file | body |
-      | javascripts/base.js | var meep; |
-      | javascripts/app.js | console.log('haro world') |
-      | javascripts/custom.js | console.log('haro world') |
+    Given a config file with value:
+      """
+      {
+        "production_url" : "http://www.fakedomain.com"
+      }
+      """
+      And some files with values:
+        | file | body |
+        | javascripts/base.js | var meep; |
+        | javascripts/app.js | console.log('haro world') |
+        | javascripts/custom.js | console.log('haro world') |
       And the file "_root/index.html" with body:
         """
         ---
@@ -61,11 +78,17 @@ Feature: Javascripts
       And this file should have the fingerprinted javascripts "base"
 
   Scenario: Using javascript object to resolve url and id
-    Given some files with values:
-      | file | body |
-      | javascripts/base.js | var meep; |
-      | javascripts/app.js | console.log('haro world') |
-      | javascripts/custom.js | console.log('haro world') |
+    Given a config file with value:
+      """
+      {
+        "production_url" : "http://www.fakedomain.com"
+      }
+      """
+      And some files with values:
+        | file | body |
+        | javascripts/base.js | var meep; |
+        | javascripts/app.js | console.log('haro world') |
+        | javascripts/custom.js | console.log('haro world') |
       And the file "_root/index.html" with body:
         """
         {{# javascripts.all }}
