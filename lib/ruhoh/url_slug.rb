@@ -22,7 +22,7 @@ class Ruhoh
     def dynamic
       cache = data
       result = @format
-                .gsub(/:[^\/\.]+/) { |a| cache[$&.gsub(':', '')] }
+                .gsub(/:[^\/\.-]+/) { |a| cache[$&.gsub(':', '')] }
                 .gsub('//', '/')
                 .split('/')
 
