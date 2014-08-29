@@ -13,6 +13,9 @@ module Ruhoh::Collections::Static
         ## TODO: HACK get rid of this later.
         parts = item.id.split('/') ; parts.shift
 
+        # HACK
+        collection_name = "assets/#{ collection_name }" if collection_name == "media"
+
         compiled_file = File.join(@ruhoh.compiled_path(collection_name), parts.join('/'))
 
         FileUtils.mkdir_p File.dirname(compiled_file)

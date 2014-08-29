@@ -35,8 +35,7 @@ class Ruhoh::Collections
     use = config["use"]
 
     unless use
-      use = pages.empty? ? name : pages.first.model
-      use = Special.include?(use) ? use : "pages"
+      use = Special.include?(use) ? name : "pages"
     end
 
     namespace = get_namespace(use)

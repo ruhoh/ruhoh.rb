@@ -24,6 +24,10 @@ module Ruhoh::Views
       @content = opts[:content]
     end
 
+    def env
+      @ruhoh.env
+    end
+
     # Delegate #page to the kind of resource this view is modeling.
     def page
       @item
@@ -65,7 +69,7 @@ module Ruhoh::Views
 
       string = name.to_s.gsub(/^to_/, '')
       if name.to_s =~ /^to_/
-        resource_generator_for(string, args)
+        resource_generator_for(string, *args)
       else
         load_collection_view_for(string)
         @ruhoh.collections.load(string)
@@ -90,10 +94,19 @@ module Ruhoh::Views
     # Implements 'to_<resource>` contextual helper.
     # @returns[Array] the resource modelView objects or raw data hash.
     def resource_generator_for(collection_name, sub_context)
-      Array(sub_context).map { |id|
-        load_collection_view_for(collection_name).find{ |a|
-          a.id == File.join(collection_name, id)
-        }
+      Array(sub_context).map { |shortname|
+        if shortname.is_a?(Hash)
+          # TODO: This is a hack.
+          item = Silly::Item.new({})
+          item.data = shortname
+          m = @ruhoh.collections.model_view("pages").new(item, @ruhoh)
+          m.collection = load_collection_view_for(collection_name)
+          m
+        else
+          load_collection_view_for(collection_name).find{ |a|
+            a.shortname == shortname
+          }
+        end
       }.compact
     end
 

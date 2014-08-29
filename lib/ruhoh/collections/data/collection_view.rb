@@ -23,7 +23,7 @@ module Ruhoh::Collections::Data
       data = {}
       files.values.each do |item|
         name = File.basename(item.id, File.extname(item.id)) 
-        data[name] = Ruhoh::Parse.data_file(item.realpath) || {}
+        data[name] = Silly::Parse.data_file(item.realpath) || {}
       end
 
       data
@@ -43,7 +43,7 @@ module Ruhoh::Collections::Data
       end
 
       data = {}
-      found_paths.each { |path| data.merge!(Ruhoh::Parse.data_file(path) || {}) }
+      found_paths.each { |path| data.merge!(Silly::Parse.data_file(path) || {}) }
 
       data
     end

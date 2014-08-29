@@ -21,7 +21,7 @@ module Ruhoh::Collections::Widgets
       return '' if widget_config['enable'].to_s == 'false'
 
       path_id = "widgets/#{ name }/#{ (widget_config['use'] || "default") }"
-      model = find{ |a| a.filename == path_id }
+      model = find{ |item| item.relative_shortname == path_id }
       return '' unless model
 
       # merge the config data into the inline layout data.

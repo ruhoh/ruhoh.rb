@@ -32,6 +32,10 @@ module Ruhoh::Collections::Pages
               "This probably means no converter is registered for the given file extension."
           end
 
+          content_type = File.extname(item.url).empty? ?
+                          item.mime_types.first.to_s :
+                          MIME::Types.type_for(item.url).first.to_s
+
           view = @ruhoh.master_view(item)
           [200, {'Content-Type' => content_type }, [view.render_full]]
         end

@@ -122,6 +122,7 @@ class Ruhoh
   # Always remove trailing slash.
   # Returns String - normalized url with prepended base_path
   def to_url(*args)
+    return args.join('/') if args.join('/') =~ /(http:\/\/|https:\/\/|\/\/)/i
     url = config.base_path + args.join('/')
     url = url.gsub(/\/{2,}/, '/')
     (url == "/") ? url : url.chomp('/')

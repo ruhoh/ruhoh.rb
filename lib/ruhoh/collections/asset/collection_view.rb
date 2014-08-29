@@ -46,7 +46,8 @@ module Ruhoh::Collections::Asset
 
     def make_url(name)
       return name if name =~ /^(http:|https:)?\/\//i
-
+      #  TODO: This should find files regardless of their extension, e.g:
+      # style and style.css
       name = "#{ collection_name }/#{ name }"
       path = if @_cache[name]
                @_cache[name]

@@ -60,7 +60,7 @@ module Ruhoh::Collections::Pages
     end
 
     def is_active_page
-      id == collection.master.page_data['id']
+      id == collection.master.page.id
     end
 
     def config
