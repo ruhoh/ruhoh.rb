@@ -16,7 +16,7 @@ gem 'ruhoh'
 The master branch will refer to the next version and can be used in the Gemfile:
 
 ```ruby
-gem 'ruhoh' :git => "git@github.com:ruhoh/ruhoh.rb.git"
+gem 'ruhoh', :git => "git@github.com:ruhoh/ruhoh.rb.git"
 ```
 
 ### Platforms
