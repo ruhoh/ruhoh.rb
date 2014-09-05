@@ -71,13 +71,13 @@ module Ruhoh::Resources::Pages
            xml.title_ data['title']
            xml.description_ (data['description'] ? data['description'] : data['title'])
            xml.link_ production_url
-           xml.pubDate_ Time.now          
+           xml.pubDate_ Time.now.strftime '%a, %d %b %Y %H:%M:%S %z'
            pages.each do |page|
              view = @ruhoh.master_view(page.pointer)
              xml.item {
                xml.title_ page.title
                xml.link "#{production_url}#{page.url}"
-               xml.pubDate_ page.date if page.date
+               xml.pubDate_ page.date.strftime '%a, %d %b %Y %H:%M:%S %z' if page.date
                xml.description_ with_absolute_urls(page.try(:description) ? page.description : view.render_content)
              }
            end
