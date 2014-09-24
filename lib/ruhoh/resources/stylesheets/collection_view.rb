@@ -23,7 +23,7 @@ module Ruhoh::Resources::Stylesheets
     def load(sub_context)
       stylesheets = sub_context.split("\n").map{ |s| s.gsub(/\s/, '') }.delete_if(&:empty?)
       stylesheets.map { |name|
-        "<link href='#{make_url(name)}' type='text/css' rel='stylesheet' media='all'>"
+        "<link href='#{make_url(name)}' type='text/css' rel='stylesheet' media='all' />"
       }.join("\n")
     end
 
