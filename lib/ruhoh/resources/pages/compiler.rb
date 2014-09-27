@@ -88,7 +88,7 @@ module Ruhoh::Resources::Pages
       compiled_path = @ruhoh.compiled_path(@ruhoh.to_url(config['url'], "rss.xml"))
 
       FileUtils.mkdir_p File.dirname(compiled_path)
-      File.open(compiled_path, 'w'){ |p| p.puts feed.to_xml }
+      File.open(compiled_path, 'w:UTF-8'){ |p| p.puts feed.to_xml }
 
       Ruhoh::Friend.say { green "  > #{compiled_path}" }
     end
