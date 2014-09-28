@@ -3,9 +3,24 @@ require 'sprockets'
 module Ruhoh::SprocketsPlugin
   module Compiler
     extend Ruhoh::Base::CompilableAsset
+
+    def select_compressor( env )
+      if defined?( ::YUI )
+        env.js_compressor  = YUI::JavaScriptCompressor.new(:munge => true, :java_opts=>'-client')
+        env.css_compressor = YUI::CssCompressor.new( :java_opts=>'-client' )
+      end
+      if defined?( ::Uglifier )
+        env.js_compressor = Uglifier.new(mangle: true)
+      end
+      if defined?( ::Closure )
+        env.js_compressor = Closure::Compiler.new
+      end
+    end
+
     def run
       env = Sprockets::Environment.new
-      #env.css_compressor = :sass
+      select_compressor( env )
+
       env.logger = Logger.new(STDOUT)
       env.logger.level = Logger::WARN
 
