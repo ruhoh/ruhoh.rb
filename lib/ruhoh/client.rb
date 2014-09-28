@@ -11,11 +11,17 @@ Dir[File.join(File.dirname(__FILE__), 'publish', '*.rb')].each { |f|
 class Ruhoh
 
   class Client
+    DEFAULT_PORT = 9292
+
     DefaultBlogScaffold = 'git://github.com/ruhoh/blog.git'
     Help = [
       {
         "command" => "new <directory_path>",
         "desc" => "Create a new blog directory based on the Ruhoh specification."
+      },
+      {
+        "command" => "server [port]",
+        "desc" => "Start a local server on the given port (defaults to #{DEFAULT_PORT})."
       },
       {
         "command" => "compile",
@@ -118,7 +124,7 @@ class Ruhoh
       require 'rack'
       Rack::Server.start({ 
         app: Ruhoh::Program.preview,
-        Port: (@args[1] || 9292)
+        Port: (@args[1] || DEFAULT_PORT)
       })
     end
     alias_method :s, :server
@@ -178,8 +184,8 @@ class Ruhoh
         if success
           green "Success! Now do..."
           cyan "  cd #{target_directory}"
-          cyan "  rackup -p9292"
-          cyan "  http://localhost:9292"
+          cyan "  rackup -p#{DEFAULT_PORT}"
+          cyan "  http://localhost:#{DEFAULT_PORT}"
         else
           red "Could not git clone blog scaffold. Please try it manually:"
           cyan "  git clone git://github.com/ruhoh/blog.git #{target_directory}"
