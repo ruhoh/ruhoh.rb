@@ -118,7 +118,8 @@ class Ruhoh
       require 'rack'
       Rack::Server.start({ 
         app: Ruhoh::Program.preview,
-        Port: (@args[1] || 9292)
+        Port: (@args[1] || 9292),
+        Host: (@args[2] || "0.0.0.0")
       })
     end
     alias_method :s, :server
